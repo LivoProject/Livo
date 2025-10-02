@@ -1,0 +1,462 @@
+/* 공통 */
+#main {
+  width: 100vw;
+  height: 100%;
+  background: url(../img/common/logo.svg) no-repeat center / 25%;
+  background-attachment: fixed;
+}
+section {
+  padding: 5rem 0;
+  background-color: var(--color-white);
+}
+.no-image {
+  width: 140px;
+  margin: 1rem auto;
+}
+.badge {
+  width: 3rem;
+  font-family: "Roboto";
+}
+
+/* 메인 슬라이드 */
+#mainSlide {
+  margin-top: 5rem;
+  padding: 0;
+}
+#mainSlide .carousel-img {
+  background-color: var(--color-black);
+  height: 25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+}
+#mainSlide .carousel-img p {
+  font-size: 3rem;
+  color: var(--color-white);
+}
+#mainSlide .carousel-indicators {
+  display: none;
+}
+#mainSlide.carousel-fade .carousel-inner .carousel-item {
+  transition: opacity 1s ease;
+}
+#mainSlide .custom-indicator {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  opacity: 1 !important;
+}
+#mainSlide .number-indicators button {
+  background: none;
+  border: none;
+  color: var(--color-gray);
+  opacity: 0.8;
+  font-weight: 400;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: "Roboto";
+}
+#mainSlide .number-indicators .active {
+  color: var(--color-white);
+  opacity: 1;
+  font-weight: 500;
+}
+#mainSlide .progress-bar {
+  flex: 1;
+  width: 5rem;
+  height: 0.2rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.05rem;
+  overflow: hidden;
+}
+#mainSlide .progress-bar .progress {
+  height: 100%;
+  width: 0%;
+  border-radius: 0.05rem;
+  background: var(--color-white);
+  transition: width 3s linear;
+}
+#mainSlide .play-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* 공지사항 롤링 */
+#noticeRolling {
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  padding: 0;
+  height: 72px;
+  border: var(--border-black);
+}
+#noticeRolling .swiper {
+  height: 100%;
+  position: relative;
+  display: flex;
+}
+#noticeRolling .swiper-slide {
+  display: flex;
+  line-height: 72px;
+  align-items: center;
+}
+#noticeRolling .swiper-slide span {
+  display: inline-block;
+  width: calc(100% - 11rem);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#noticeRolling .custom_btn_wrap {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
+#noticeRolling .btn-swiper {
+  background: #fff;
+  border: var(--border-black);
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#noticeRolling .btn-swiper:hover {
+  background: var(--color-main);
+  color: #fff;
+  border-color: var(--color-main);
+}
+#noticeRolling .bi-megaphone-fill {
+  line-height: 70px;
+  margin-right: 2rem;
+  font-size: 1.5rem;
+}
+
+/* 메인 검색 */
+#MainSearch > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.4rem;
+  padding: 2rem 0 3rem;
+  background-color: #1B5E20;
+}
+#MainSearch .input-group {
+  width: 80%;
+}
+#MainSearch input {
+  border-radius: 0.2rem;
+  position: relative;
+}
+#MainSearch button {
+  padding: 0.625rem 0.625rem;
+  border-radius: 0.2rem;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+#MainSearch .tag-wrap {
+  position: absolute;
+  bottom: -2rem;
+  left: 0;
+}
+#MainSearch .tag-wrap span {
+  display: inline-block;
+  padding: 0.25rem;
+  margin-right: 0.2rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+/* 추천 강좌 */
+#recommend {
+  position: relative;
+}
+#recommend .swiper {
+  padding-bottom: 2rem;
+}
+#recommend .swiper-slide {
+  text-align: center;
+  transform: scale(0.9);
+  opacity: 0.9;
+}
+#recommend .swiper-slide a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+#recommend .swiper-slide-active {
+  transform: scale(1);
+  opacity: 1;
+}
+#recommend .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+#recommend .btn-swiper {
+  position: absolute;
+  top: 61%;
+  transform: translateY(-50%);
+  color: var(--color-black);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+#recommend .btn-swiper:hover {
+  border-color: var(--color-main);
+  color: var(--color-main);
+}
+#recommend #recommendPrev {
+  left: -5px;
+}
+#recommend #recommendNext {
+  right: -5px;
+}
+#recommend #recommendPrev i,
+#recommend #recommendNext i {
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#recommend .swiper-pagination-bullet {
+  opacity: 1;
+  background-color: var(--color-gray);
+}
+#recommend .swiper-pagination-bullet-active {
+  background-color: var(--color-main);
+}
+
+/* 카테고리 */
+#categories {
+  padding-bottom: 10rem;
+}
+#categories .category-icon {
+  font-size: 2rem;
+  background: #f1f1f1;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+#categories .row {
+  justify-content: space-between;
+}
+#categories .category-box {
+  background: #f8f9fa;
+  height: 5rem;
+  border-radius: 0.5rem;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#categories .category-box:hover {
+  background: var(--color-main);
+  color: #fff;
+}
+
+/* 인기강좌 */
+#popular {
+  position: relative;
+  background-color: white;
+  transition: background-color 1s ease;
+  overflow: hidden;
+}
+#popular.active {
+  background-color: black;
+  color: white;
+}
+#popular .swiper-slide {
+  width: 16rem;
+}
+#popular .btn-swiper {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 2px solid var(--color-white);
+  color: white;
+  font-size: 2.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+#popular .btn-swiper:hover {
+  border-color: var(--color-main);
+  color: var(--color-main);
+}
+#popular .custom_btn_wrap {
+  width: 8rem;
+  height: 2rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+#popular .custom_btn_wrap #popularPrev {
+  left: 0;
+}
+#popular .custom_btn_wrap #popularNext {
+  right: 0;
+}
+#popular .custom_btn_wrap #popularPrev i,
+#popular .custom_btn_wrap #popularNext i {
+  font-size: 1.6rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#popular .popular-card {
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+#popular .popular-card:hover {
+  transform: translateY(-8px);
+}
+#popular .popular-card img {
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+#popular .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* 중간 배너 */
+#midBanner {
+  width: 100vw;
+  height: 20rem;
+  position: relative;
+  background: transparent;
+}
+
+/* 정보 */
+#info {
+  display: flex;
+  gap: 1.5rem;
+}
+#info > div {
+  display: flex;
+  justify-content: space-between;
+}
+#info .title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#info .title-wrap i {
+  display: block;
+  font-size: 2rem;
+  transition: all 0.3s;
+  color: var(--color-black);
+}
+#info .title-wrap i:hover {
+  color: var(--color-main);
+  transform: rotate(-90deg);
+}
+#info .board {
+  width: 60%;
+}
+#info .board ul {
+  width: 99%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+#info .board li {
+  display: flex;
+  justify-content: space-between;
+}
+#info .board h3 {
+  margin-top: 0;
+}
+#info .board span {
+  display: inline-block;
+  width: 82%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#info .etc {
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+#info .etc p {
+  width: 10rem;
+  height: 100%;
+  border-radius: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  gap: 1rem;
+}
+
+/* 반응형 */
+@media screen and (max-width: 1140px) {
+  #info > div {
+    flex-wrap: wrap;
+  }
+  #info .board {
+    width: 100%;
+  }
+  #info .etc {
+    width: 100%;
+    margin-top: 4rem;
+  }
+  #info .etc p {
+    width: 100%;
+    height: 4rem;
+  }
+}
+@media screen and (max-width: 768px) {
+   section {
+    padding: 3rem 0;
+  }
+  #categories .col-4:nth-of-type(1),
+  #categories .col-4:nth-of-type(2),
+  #categories .col-4:nth-of-type(3) {
+    margin-bottom: 1rem;
+  }
+  #noticeRolling .bi-megaphone-fill {
+    display: none;
+  }
+  #noticeRolling .swiper-slide span {
+    width: calc(100% - 7rem);
+    padding-left: 1rem;
+  }
+  #recommend .swiper-slide {
+    transform: scale(0.95);
+  }
+  #popular .swiper-slide {
+    width: 14rem;
+  }
+  #midBanner {
+    height: 15rem;
+  }
+}
+
