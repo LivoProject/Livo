@@ -41,6 +41,7 @@
     <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/mypage.css" />
     <link rel="stylesheet" href="/css/lecture.css" />
+    <link rel="stylesheet" href="/css/modal.css" />
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Swiper JS -->
@@ -75,9 +76,6 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="sub.html">강좌</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="sub.html">공지사항</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/mypage">마이페이지</a>

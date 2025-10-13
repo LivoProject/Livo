@@ -1,0 +1,9 @@
+#exampleModal .bi-star-fill {
+    color: var(--color-light-gray);
+    transition: 0.2s;
+    font-size: 2rem;
+}
+#exampleModal .bi-star-fill:hover {
+    color: var(--color-point);
+    transform: scale(1.1);
+}

@@ -8,7 +8,7 @@
   <section id="hero-tagline" class="text-center">
     <div class="container">
       <h2 class="fw-bold mb-2">
-        누구나, 언제 어디서나 배울 수 있는 온라인 캠퍼스
+        누구나, 언제 어디서나 배울 수 있는 온라인 캠퍼스ㄴㄴ
       </h2>
       <p class="text-light">
         전국 대학과 전문기관의 강의를 한 곳에서 만나보세요.
@@ -19,17 +19,19 @@
 
   <!-- 공지사항 롤링 -->
   <section id="noticeRolling">
+    <p>ss</p>
     <div class="swiper mySwiper container">
       <i class="bi bi-megaphone-fill"></i>
       <div class="swiper-wrapper">
+
+        <c:forEach var="i" begin="1" end="5">
+
         <div class="swiper-slide">
           <span>2025년 산업맞춤 단기직무능력인증과정 선정 결과</span>
           <small>2025.05.13</small>
         </div>
-        <div class="swiper-slide">
-          <span>2025년 산업맞춤 단기직무능력인증과정 선정 결과</span>
-          <small>2025.05.13</small>
-        </div>
+
+        </c:forEach>
       </div>
       <!-- 커스텀 버튼 -->
       <div class="custom_btn_wrap">
@@ -51,8 +53,11 @@
     <div class="container">
       <h3>추천 강좌</h3>
       <div class="recommend-grid">
+
+        <c:forEach var="i" begin="1" end="4">
+
         <a href="#" class="card popular-card">
-          <img src="img/common/no-image.png" alt="" />
+          <img src="img/common/no-image.png" alt="" class="no-image"/>
           <button class="play-btn">
             <i class="bi bi-play-fill"></i>
           </button>
@@ -62,39 +67,9 @@
             <p>⭐ 4.8 (1,200명 수강)</p>
           </div>
         </a>
-        <a href="#" class="card popular-card">
-          <img src="img/common/no-image.png" alt="" />
-          <button class="play-btn">
-            <i class="bi bi-play-fill"></i>
-          </button>
-          <div class="card-body">
-            <h6>데이터 분석 입문</h6>
-            <p>KAIST | 김연수 교수</p>
-            <p>⭐ 4.7 (950명 수강)</p>
-          </div>
-        </a>
-        <a href="#" class="card popular-card">
-          <img src="img/common/no-image.png" alt="" />
-          <button class="play-btn">
-            <i class="bi bi-play-fill"></i>
-          </button>
-          <div class="card-body">
-            <h6>HTML/CSS 웹 디자인</h6>
-            <p>이화여대 | 이수빈 교수</p>
-            <p>⭐ 4.9 (2,300명 수강)</p>
-          </div>
-        </a>
-        <a href="#" class="card popular-card">
-          <img src="img/common/no-image.png" alt="" />
-          <button class="play-btn">
-            <i class="bi bi-play-fill"></i>
-          </button>
-          <div class="card-body">
-            <h6>Python 프로그래밍</h6>
-            <p>고려대 | 박정민 교수</p>
-            <p>⭐ 4.8 (1,800명 수강)</p>
-          </div>
-        </a>
+
+        <c:forEach>
+
       </div>
     </div>
   </section>
