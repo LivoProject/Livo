@@ -151,7 +151,8 @@
   justify-content: end;
 }
 #mypage .password-toggle {
-  margin-top: 0.5rem;
+  position: absolute;
+  bottom: -1.5rem;
   transition: 0.3s;
 }
 #mypage .password-toggle:hover {

@@ -14,7 +14,7 @@ public class MypageController {
     }
 
     @GetMapping("/lecture")
-    public String lectures() {
+    public String lecture() {
         return "mypage/lecture";
     }
 
@@ -24,7 +24,12 @@ public class MypageController {
     }
 
     @GetMapping("/bookmark")
-    public String bookmarks() {
+    public String bookmark() {
         return "mypage/bookmark";
+    }
+
+    @GetMapping("/review")
+    public String review() {
+        return "mypage/review";
     }
 }
