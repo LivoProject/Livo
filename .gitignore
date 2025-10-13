@@ -36,6 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
+# macOS system files
+.DS_Store
+
 # 환경 설정 제외
 /src/main/resources/application.properties
 !/src/main/resources/application-example.properties

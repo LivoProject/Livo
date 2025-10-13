@@ -1,0 +1,268 @@
+#mypage {
+  display: flex;
+  min-height: 100vh;
+  margin-top: 5rem;
+}
+#mypage h3 {
+    margin-top: 0;
+}
+#mypage .side-menu {
+  width: 25%;
+  padding: 1rem;
+  border-left: var(--border-black);
+  border-right: var(--border-black);
+  background: #f8f9fa;
+}
+#mypage .side-menu .profile {
+  margin-bottom: 2rem;
+}
+#mypage .side-menu ul {
+  gap: 1rem;
+}
+#mypage .side-menu .nav-link {
+  color: var(--color-black);
+  transition: all 0.3s;
+}
+#mypage .side-menu .nav-link:hover {
+  color: var(--color-main);
+}
+#mypage .side-menu .nav-link.active {
+  background-color: var(--color-main);
+  color: var(--color-white);
+  border-radius: 0.3rem;
+}
+#mypage .welcome-box > div {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+#mypage .welcome-box > div h3 {
+  margin: 0;
+}
+#mypage span {
+  color: var(--color-main);
+}
+#mypage .more-link {
+  color: #444;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+#mypage .more-link:hover {
+    color: var(--color-main);
+}
+#mypage .main-content {
+  width: 75%;
+  padding: 1.5rem;
+}
+#mypage .main-content h6 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+#mypage .card-box {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+#mypage .recent-lecture {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+#mypage .recent-lecture .play-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: var(--color-point);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#mypage .recent-lecture .play-icon i {
+  color: white;
+  font-size: 1.5rem;
+}
+#mypage .card-header {
+  display: flex;
+  justify-content: space-between;
+}
+#mypage .progress {
+  margin: 0.75rem 0;
+  border-radius: 1rem;
+  height: 0.7rem;
+}
+#mypage .progress-bar {
+  background-color: var(--color-point);
+}
+#mypage .lecture-card {
+  height: 100px;
+  background: #eee;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#mypage .card-box ul {
+  margin-top: 1rem;
+}
+#mypage .card-box ul li {
+  padding: 0.5rem 0;
+}
+#mypage .card-box ul li a {
+    transition: 0.3s;
+}
+#mypage .card-box ul li a:hover {
+    color: var(--color-main);
+}
+#mypage .card-box .row {
+  margin-top: 1rem;
+}
+#mypage .card-footer .btn-sm {
+  background-color: var(--color-main);
+  border-color: var(--color-main);
+  color: var(--color-white);
+}
+#mypage .card-footer .btn-sm:hover {
+  background-color: var(--color-point);
+  border-color: var(--color-point);
+}
+#mypage .lecture-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+#mypage .field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+#mypage .form-label {
+  width: 100px;
+  margin-bottom: 0;
+  font-weight: 600;
+  color: var(--color-black);
+}
+#mypage .position-relative {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+#mypage .password-toggle {
+  margin-top: 0.5rem;
+  transition: 0.3s;
+}
+#mypage .password-toggle:hover {
+  color: var(--color-main);
+}
+#mypage .field div {
+  width: 100%;
+}
+#mypage .field div span {
+  color: var(--color-black);
+}
+#mypage .field input::placeholder {
+  color: var(--color-gray);
+}
+#mypage input[type="date"]::-webkit-datetime-edit,
+#mypage input[type="date"]::-webkit-datetime-edit-text,
+#mypage input[type="date"]::-webkit-datetime-edit-year-field,
+#mypage input[type="date"]::-webkit-datetime-edit-month-field,
+#mypage input[type="date"]::-webkit-datetime-edit-day-field {
+  color:var(--border-black)
+}
+#mypage input[type="date"]:invalid::-webkit-datetime-edit,
+#mypage input[type="date"]:invalid::-webkit-datetime-edit-text,
+#mypage input[type="date"]:invalid::-webkit-datetime-edit-year-field,
+#mypage input[type="date"]:invalid::-webkit-datetime-edit-month-field,
+#mypage input[type="date"]:invalid::-webkit-datetime-edit-day-field {
+  color: #999;
+}
+#mypage .gender-group {
+  gap: 1rem;
+  display: flex;
+}
+#mypage .form-control {
+  background: #f9fafb;
+  border: var(--border-black);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  color: var(--color-black);
+}
+#mypage .form-control:focus {
+
+  background: #fff;
+  border-color: var(--color-main);
+  box-shadow: 0 0 0 3px rgba(23, 180, 199, 0.15);
+}
+#mypage .gender-group {
+  margin-top: 4px;
+}
+#mypage .gender-radio {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--color-black);
+}
+#mypage .gender-radio input[type="radio"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: 0.2s;
+}
+#mypage .gender-radio input[type="radio"]:checked {
+  border-color: var(--color-main);
+  background: radial-gradient(var(--color-main) 45%, transparent 46%);
+}
+#mypage .btn-submit {
+  width: 20%;
+  background: var(--color-main);
+  border: none;
+  margin: 0 auto;
+  color: var(--color-white);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.6rem;
+  border-radius: 0.4rem;
+  transition: 0.3s;
+}
+#mypage .btn-submit:hover {
+  background: var(--color-point);
+  color: var(--color-black);
+}
+@media (min-width: 768px) {
+  #mypage .lecture-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  #mypage .lecture-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  #mypage {
+    display: block;
+  }
+  #mypage .side-menu {
+    width: 100%;
+    border-bottom: var(--border-black);
+  }
+  #mypage .main-content {
+    width: 100%;
+  }
+  #mypage .lecture-card {
+    margin-bottom: 1rem;
+  }
+}
