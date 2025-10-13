@@ -1,0 +1,130 @@
+/*.accordion-button {
+    background-color: #e3f6f8!important;
+}*/
+/*
+body,
+html {
+  overflow: hidden;
+}*/
+#lecture {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+#lecture .video-area {
+  flex: 3;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 1.2rem;
+}
+#lecture .curriculum {
+  flex: 1;
+  border-left: 1px solid #ddd;
+  padding: 20px;
+  overflow-y: auto;
+}
+#lecture .progress-wrap {
+  margin: 1.5rem 0;
+}
+#lecture .progress {
+  background: #eee;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+#lecture .progress .bar {
+  height: 100%;
+  background: #2ecc71;
+}
+#lecture .progress-text {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  color: var(--color-gray);
+}
+#lecture .progress-text span {
+  color: var(--color-main);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+#lecture .section > li {
+  margin-bottom: 15px;
+}
+#lecture .section h3 {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  color: #333;
+}
+#lecture .section h3 span {
+  font-size: 0.8rem;
+  color: #777;
+  margin-left: 6px;
+}
+#lecture .list-unstyled li a {
+  display: block;
+  padding: 1.5rem 0;
+  width: 100%;
+  height: 100%;
+  transition: 0.3s all;
+}
+#lecture .list-unstyled li a:hover {
+  color: var(--color-main);
+}
+#lecture .list-unstyled li:first-child a {
+  padding-top: 0;
+}
+#lecture .list-unstyled li:last-child a {
+  padding-bottom: 0;
+}
+#lecture .list-unstyled li a span {
+  margin-left: 0.5rem;
+}
+#lecture .section ul li {
+  font-size: 0.9rem;
+  color: #444;
+  margin-left: 15px;
+  margin-bottom: 4px;
+}
+#lecture .section ul li span {
+  font-size: 0.75rem;
+  color: #888;
+  margin-left: 6px;
+}
+#lecture .video-area {
+  width: 70%;
+}
+#lecture iframe {
+  width: 100%;
+  height: 100vh;
+}
+#lecture .accordion-body {
+  padding: 1.5rem;
+}
+#lecture .accordion-button {
+  background-color: #ededed;
+}
+@media (max-width: 991.98px) {
+  #lecture {
+    flex-direction: column;
+  }
+  #lecture .video-area {
+    width: 100%;
+    flex: none;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+  #lecture iframe {
+    width: 100%;
+    height: 100%;
+  }
+  #lecture .curriculum {
+    flex: none;
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #ddd;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}
