@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
@@ -26,10 +27,10 @@
 
         <c:forEach var="i" begin="1" end="5">
 
-        <div class="swiper-slide">
-          <span>2025년 산업맞춤 단기직무능력인증과정 선정 결과</span>
-          <small>2025.05.13</small>
-        </div>
+            <div class="swiper-slide">
+              <span>2025년 산업맞춤 단기직무능력인증과정 선정 결과</span>
+              <small>2025.05.13</small>
+            </div>
 
         </c:forEach>
       </div>
@@ -56,19 +57,19 @@
 
         <c:forEach var="i" begin="1" end="4">
 
-        <a href="#" class="card popular-card">
-          <img src="img/common/no-image.png" alt="" class="no-image"/>
-          <button class="play-btn">
-            <i class="bi bi-play-fill"></i>
-          </button>
-          <div class="card-body">
-            <h6>AI 딥러닝 기초</h6>
-            <p>POSTECH | 장하준 교수</p>
-            <p>⭐ 4.8 (1,200명 수강)</p>
-          </div>
-        </a>
+            <a href="#" class="card popular-card">
+              <img src="img/common/no-image.png" alt="" class="no-image"/>
+              <button class="play-btn">
+                <i class="bi bi-play-fill"></i>
+              </button>
+              <div class="card-body">
+                <h6>AI 딥러닝 기초</h6>
+                <p>POSTECH | 장하준 교수</p>
+                <p>⭐ 4.8 (1,200명 수강)</p>
+              </div>
+            </a>
 
-        <c:forEach>
+        </c:forEach>
 
       </div>
     </div>
@@ -79,38 +80,27 @@
     <div class="container text-center">
       <h3>카테고리</h3>
       <div class="category-grid">
+
+        <c:forEach var="category" items="${categories}" varStatus="status">
         <a href="#" class="category-box">
-          <i class="bi bi-book"></i>
-          <p>IT</p>
+             <i class="
+               <c:choose>
+                  <c:when test='${status.index == 0}'>bi bi-laptop</c:when>
+                  <c:when test='${status.index == 1}'>bi bi-book</c:when>
+                  <c:when test='${status.index == 2}'>bi bi-film</c:when>
+                  <c:when test='${status.index == 3}'>bi bi-person-arms-up</c:when>
+                  <c:when test='${status.index == 4}'>bi bi-translate</c:when>
+                  <c:when test='${status.index == 5}'>bi bi-people</c:when>
+                  <c:when test='${status.index == 6}'>bi bi-postcard</c:when>
+                  <c:when test='${status.index == 7}'>bi bi-cash-coin</c:when>
+                  <c:otherwise>bi bi-star</c:otherwise>
+               </c:choose>
+            ">
+            </i>
+            <p>${category.categoryName}</p>
         </a>
-        <a href="#" class="category-box">
-          <i class="bi bi-braces"></i>
-          <p>자기계발</p>
-        </a>
-        <a href="#" class="category-box">
-          <i class="bi bi-palette"></i>
-          <p>문화여가</p>
-        </a>
-        <a href="#" class="category-box">
-          <i class="bi bi-graph-up"></i>
-          <p>건강</p>
-        </a>
-        <a href="#" class="category-box">
-          <i class="bi bi-heart-pulse"></i>
-          <p>언어</p>
-        </a>
-        <a href="#" class="category-box">
-          <i class="bi bi-translate"></i>
-          <p>인문사회</p>
-        </a>
-        <a href="#" class="category-box">
-          <i class="bi bi-award"></i>
-          <p>자격증</p>
-        </a>
-        <a href="#" class="category-box">
-          <i class="bi bi-currency-dollar"></i>
-          <p>경제</p>
-        </a>
+        </c:forEach>
+
       </div>
     </div>
   </section>
