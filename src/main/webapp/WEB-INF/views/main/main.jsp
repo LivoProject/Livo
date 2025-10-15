@@ -56,19 +56,26 @@
       <div class="recommend-grid">
 
         <c:forEach var="lecture" items="${recommendedLectures}">
-
-            <a href="#" class="card popular-card">
-              <img src="img/common/no-image.png" alt="" class="no-image"/>
-              <button class="play-btn">
-                <i class="bi bi-play-fill"></i>
-              </button>
-              <div class="card-body">
-                <h6>${lecture.title}</h6>
-                <p>${lecture.tutorName} | <fmt:formatNumber value="${lecture.price}" type="number"/> </p>
-                <p>⭐ 4.8 (1,200명 수강)</p>
+        <a href="#" class="card popular-card">
+         <div style="width: 100%; background-color: #ddd; height: 200px; border-radius: 12px 12px 0 0;"></div>
+          <button class="play-btn">
+            <i class="bi bi-play-fill"></i>
+          </button>
+          <div class="card-body">
+            <h6>${lecture.title}</h6>
+            <p>${lecture.tutorName} | <fmt:formatNumber value="${lecture.price}" type="number"/></p>
+               <div class="card-review">
+                    <div>
+                        <span>⭐4.8</span>
+                        <span>(22)</span>
+                    </div>
+                    <div>
+                        <i class="bi bi-person-fill"></i>
+                        <span>${lecture.reservationCount}</span>
+                    </div>
               </div>
-            </a>
-
+          </div>
+        </a>
         </c:forEach>
 
       </div>
@@ -114,7 +121,7 @@
           <!--  -->
           <div class="swiper-slide">
             <a href="#" class="card popular-card">
-              <img src="img/common/no-image.png" class="no-image" />
+                <div style="width: 100%; background-color: #ddd; height: 200px; border-radius: 12px 12px 0 0;"></div>
               <button class="play-btn">
                 <i class="bi bi-play-fill"></i>
               </button>
@@ -122,7 +129,16 @@
                 <span class="badge bg-danger">HOT</span>
                 <h6>AI 딥러닝 기초</h6>
                 <p>POSTECH | 장하준 교수</p>
-                <p>⭐ 4.8 (1,200명 수강)</p>
+                  <div class="card-review">
+                      <div>
+                          <span>⭐4.8</span>
+                          <span>(22)</span>
+                      </div>
+                      <div>
+                          <i class="bi bi-person-fill"></i>
+                          <span>${lecture.reservationCount}</span>
+                      </div>
+                  </div>
               </div>
             </a>
           </div>
@@ -130,7 +146,7 @@
           <!--  -->
           <div class="swiper-slide">
             <a href="#" class="card popular-card">
-              <img src="img/common/no-image.png" class="no-image" />
+                <div style="width: 100%; background-color: #ddd; height: 200px; border-radius: 12px 12px 0 0;"></div>
               <button class="play-btn">
                 <i class="bi bi-play-fill"></i>
               </button>
@@ -138,7 +154,16 @@
                 <span class="badge bg-danger">HOT</span>
                 <h6>AI 딥러닝 기초</h6>
                 <p>POSTECH | 장하준 교수</p>
-                <p>⭐ 4.8 (1,200명 수강)</p>
+                  <div class="card-review">
+                      <div>
+                          <span>⭐4.8</span>
+                          <span>(22)</span>
+                      </div>
+                      <div>
+                          <i class="bi bi-person-fill"></i>
+                          <span>${lecture.reservationCount}</span>
+                      </div>
+                  </div>
               </div>
             </a>
           </div>
@@ -146,7 +171,7 @@
           <!--  -->
           <div class="swiper-slide">
             <a href="#" class="card popular-card">
-              <img src="img/common/no-image.png" class="no-image" />
+                <div style="width: 100%; background-color: #ddd; height: 200px; border-radius: 12px 12px 0 0;"></div>
               <button class="play-btn">
                 <i class="bi bi-play-fill"></i>
               </button>
@@ -154,7 +179,16 @@
                 <span class="badge bg-danger">HOT</span>
                 <h6>AI 딥러닝 기초</h6>
                 <p>POSTECH | 장하준 교수</p>
-                <p>⭐ 4.8 (1,200명 수강)</p>
+                  <div class="card-review">
+                      <div>
+                          <span>⭐4.8</span>
+                          <span>(22)</span>
+                      </div>
+                      <div>
+                          <i class="bi bi-person-fill"></i>
+                          <span>${lecture.reservationCount}</span>
+                      </div>
+                  </div>
               </div>
             </a>
           </div>
@@ -162,7 +196,7 @@
           <!--  -->
           <div class="swiper-slide">
             <a href="#" class="card popular-card">
-              <img src="img/common/no-image.png" class="no-image" />
+                <div style="width: 100%; background-color: #ddd; height: 200px; border-radius: 12px 12px 0 0;"></div>
               <button class="play-btn">
                 <i class="bi bi-play-fill"></i>
               </button>
@@ -170,7 +204,16 @@
                 <span class="badge bg-danger">HOT</span>
                 <h6>AI 딥러닝 기초</h6>
                 <p>POSTECH | 장하준 교수</p>
-                <p>⭐ 4.8 (1,200명 수강)</p>
+                  <div class="card-review">
+                      <div>
+                          <span>⭐4.8</span>
+                          <span>(22)</span>
+                      </div>
+                      <div>
+                          <i class="bi bi-person-fill"></i>
+                          <span>${lecture.reservationCount}</span>
+                      </div>
+                  </div>
               </div>
             </a>
           </div>
@@ -178,7 +221,7 @@
           <!--  -->
           <div class="swiper-slide">
             <a href="#" class="card popular-card">
-              <img src="img/common/no-image.png" class="no-image" />
+                <div style="width: 100%; background-color: #ddd; height: 200px; border-radius: 12px 12px 0 0;"></div>
               <button class="play-btn">
                 <i class="bi bi-play-fill"></i>
               </button>
@@ -186,7 +229,16 @@
                 <span class="badge bg-danger">HOT</span>
                 <h6>AI 딥러닝 기초</h6>
                 <p>POSTECH | 장하준 교수</p>
-                <p>⭐ 4.8 (1,200명 수강)</p>
+                  <div class="card-review">
+                      <div>
+                          <span>⭐4.8</span>
+                          <span>(22)</span>
+                      </div>
+                      <div>
+                          <i class="bi bi-person-fill"></i>
+                          <span>${lecture.reservationCount}</span>
+                      </div>
+                  </div>
               </div>
             </a>
           </div>
@@ -194,7 +246,7 @@
           <!--  -->
           <div class="swiper-slide">
             <a href="#" class="card popular-card">
-              <img src="img/common/no-image.png" class="no-image" />
+                <div style="width: 100%; background-color: #ddd; height: 200px; border-radius: 12px 12px 0 0;"></div>
               <button class="play-btn">
                 <i class="bi bi-play-fill"></i>
               </button>
@@ -202,7 +254,16 @@
                 <span class="badge bg-danger">HOT</span>
                 <h6>AI 딥러닝 기초</h6>
                 <p>POSTECH | 장하준 교수</p>
-                <p>⭐ 4.8 (1,200명 수강)</p>
+                  <div class="card-review">
+                      <div>
+                          <span>⭐4.8</span>
+                          <span>(22)</span>
+                      </div>
+                      <div>
+                          <i class="bi bi-person-fill"></i>
+                          <span>${lecture.reservationCount}</span>
+                      </div>
+                  </div>
               </div>
             </a>
           </div>

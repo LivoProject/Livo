@@ -336,6 +336,10 @@
   flex-direction: column;
   gap: 0.5rem;
 }
+#main .popular-card .card-review {
+    display: flex;
+    gap: 1rem;
+}
 
 /* 카테고리 */
 #categories {

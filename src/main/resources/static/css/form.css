@@ -1,0 +1,172 @@
+
+#register {
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error{color:#d32f2f;display:block;margin-top:4px}
+.valid{color:#2e7d32;display:block;margin-top:4px}
+
+
+.register-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 450px;
+    padding: 2rem 2.5rem;
+    text-align: left;
+}
+
+.register-container h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-main, #17b4c7);
+    margin-bottom: 2rem;
+}
+
+.register-container button[type="submit"] {
+    width: 100%;
+    background: var(--color-main, #17b4c7);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.7rem;
+    border-radius: 0.5rem;
+    transition: 0.3s;
+}
+
+.register-container button[type="submit"]:hover {
+    background: var(--color-point, #ffcc02);
+    color: #000;
+}
+
+.register-container p {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.register-container p a {
+    color: var(--color-main, #17b4c7);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-container p a:hover {
+    color: var(--color-point, #ffcc02);
+}
+
+#signupForm .field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+#signupForm .signupForm-label {
+    width: 100px;
+    font-weight: 600;
+    color: var(--color-black);
+}
+#signupForm .position-relative {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
+}
+#signupForm .password-toggle {
+    position: absolute;
+    bottom: -1.5rem;
+    transition: 0.3s;
+}
+#signupForm .password-toggle:hover {
+    color: var(--color-main);
+}
+#signupForm .field div {
+    width: 100%;
+}
+#signupForm .field div span {
+    color: var(--color-black);
+}
+#signupForm .field input::placeholder {
+    color: var(--color-gray);
+}
+#signupForm input[type="date"]::-webkit-datetime-edit,
+#signupForm input[type="date"]::-webkit-datetime-edit-text,
+#signupForm input[type="date"]::-webkit-datetime-edit-year-field,
+#signupForm input[type="date"]::-webkit-datetime-edit-month-field,
+#signupForm input[type="date"]::-webkit-datetime-edit-day-field {
+    color:var(--border-black)
+}
+#signupForm input[type="date"]:invalid::-webkit-datetime-edit,
+#signupForm input[type="date"]:invalid::-webkit-datetime-edit-text,
+#signupForm input[type="date"]:invalid::-webkit-datetime-edit-year-field,
+#signupForm input[type="date"]:invalid::-webkit-datetime-edit-month-field,
+#signupForm input[type="date"]:invalid::-webkit-datetime-edit-day-field {
+    color: #999;
+}
+#signupForm .form-label {
+    width: 6rem;
+ }
+#signupForm .gender-group {
+    gap: 1rem;
+    display: flex;
+}
+#signupForm .signupForm-control {
+    background: #f9fafb;
+    border: var(--border-black);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    color: var(--color-black);
+}
+#signupForm .signupForm-control:focus {
+
+    background: #fff;
+    border-color: var(--color-main);
+    box-shadow: 0 0 0 3px rgba(23, 180, 199, 0.15);
+}
+#signupForm .gender-group {
+    margin-top: 4px;
+}
+#signupForm .gender-radio {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--color-black);
+}
+#signupForm .gender-radio input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s;
+}
+#signupForm .gender-radio input[type="radio"]:checked {
+    border-color: var(--color-main);
+    background: radial-gradient(var(--color-main) 45%, transparent 46%);
+}
+#signupForm .btn-submit {
+    width: 7rem;
+    background: var(--color-main);
+    border: none;
+    margin: 0 auto;
+    color: var(--color-white);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.6rem;
+    border-radius: 0.4rem;
+    transition: 0.3s;
+}
+#signupForm .btn-submit:hover {
+    background: var(--color-point);
+    color: var(--color-black);
+}

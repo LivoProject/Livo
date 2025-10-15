@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     // 루트로 오면 main.jsp 렌더
-    @GetMapping({"/", "/main"})
+    @GetMapping({"/home"})
     public String main() {
         return "main/main"; // /WEB-INF/views/main/main.jsp
     }
