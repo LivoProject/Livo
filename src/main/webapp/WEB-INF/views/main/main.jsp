@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
@@ -9,7 +10,7 @@
   <section id="hero-tagline" class="text-center">
     <div class="container">
       <h2 class="fw-bold mb-2">
-        누구나, 언제 어디서나 배울 수 있는 온라인 캠퍼스ㄴㄴ
+        누구나, 언제 어디서나 배울 수 있는 온라인 캠퍼스
       </h2>
       <p class="text-light">
         전국 대학과 전문기관의 강의를 한 곳에서 만나보세요.
@@ -20,7 +21,6 @@
 
   <!-- 공지사항 롤링 -->
   <section id="noticeRolling">
-    <p>ss</p>
     <div class="swiper mySwiper container">
       <i class="bi bi-megaphone-fill"></i>
       <div class="swiper-wrapper">
@@ -55,7 +55,7 @@
       <h3>추천 강좌</h3>
       <div class="recommend-grid">
 
-        <c:forEach var="i" begin="1" end="4">
+        <c:forEach var="lecture" items="${recommendedLectures}">
 
             <a href="#" class="card popular-card">
               <img src="img/common/no-image.png" alt="" class="no-image"/>
@@ -63,8 +63,8 @@
                 <i class="bi bi-play-fill"></i>
               </button>
               <div class="card-body">
-                <h6>AI 딥러닝 기초</h6>
-                <p>POSTECH | 장하준 교수</p>
+                <h6>${lecture.title}</h6>
+                <p>${lecture.tutorName} | <fmt:formatNumber value="${lecture.price}" type="number"/> </p>
                 <p>⭐ 4.8 (1,200명 수강)</p>
               </div>
             </a>

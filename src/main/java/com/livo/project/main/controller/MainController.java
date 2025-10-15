@@ -16,9 +16,15 @@ public class MainController {
 
     @GetMapping("index.html")
     public String mainPage(Model model) {
+        // ✅ 서비스에서 카테고리 + 추천강좌 + 인기강좌 한 번에 조회
         MainDTO mainData = mainService.getMainPageData();
+
+        // ✅ 모델에 담아서 JSP or Thymeleaf로 전달
         model.addAttribute("categories", mainData.getCategories());
-        model.addAttribute("lectures", mainData.getLectures());
+        model.addAttribute("recommendedLectures", mainData.getRecommendedLectures());
+        //model.addAttribute("popularLectures", mainData.getPopularLectures());
+
+        // ✅ main.jsp or main.html 로 이동
         return "main/main";
     }
 }

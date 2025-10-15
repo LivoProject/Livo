@@ -2,9 +2,17 @@ package com.livo.project.main.repository;
 
 import com.livo.project.main.domain.Lecture;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 public interface LectureRepository extends JpaRepository<Lecture, Integer> {
-    List<Lecture> findTop5ByOrderByLectureIdDesc(); // 최신 5개
+    // ✅ 추천 (랜덤 4개)
+    @Query(value = "SELECT * FROM lecture ORDER BY RAND() LIMIT 4", nativeQuery = true)
+    List<Lecture> findRandomLectures();
+
+    // ✅ 인기 (평점 높은 순 5개)
+    //<Lecture> findTop5ByOrderByRatingDesc();
+
 }
