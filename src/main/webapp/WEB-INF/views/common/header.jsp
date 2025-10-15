@@ -43,6 +43,7 @@
     <link rel="stylesheet" href="/css/mypage.css" />
     <link rel="stylesheet" href="/css/lecture.css" />
     <link rel="stylesheet" href="/css/modal.css" />
+    <link rel="stylesheet" href="/css/form.css" />
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Swiper JS -->

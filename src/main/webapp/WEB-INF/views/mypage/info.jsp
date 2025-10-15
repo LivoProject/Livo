@@ -26,35 +26,35 @@
 
         <!-- 비밀번호 -->
         <div class="field">
-        <label for="password" class="form-label">비밀번호</label>
-        <div class="position-relative">
-            <input
-                type="password"
-                class="form-control"
-                id="password"
-                placeholder="영문·숫자·특수문자 8~20자"
-                required
-            />
-            <button
-                class="password-toggle"
-                type="button"
-                aria-label="비밀번호 표시 토글"
-            >
-            보기
-            </button>
-        </div>
+            <label for="password" class="form-label">비밀번호</label>
+            <div class="position-relative">
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="영문·숫자·특수문자 8~20자"
+                    required
+                />
+                <button
+                    class="password-toggle"
+                    type="button"
+                    aria-label="비밀번호 표시 토글"
+                >
+                보기
+                </button>
+            </div>
         </div>
 
         <!-- 닉네임 -->
         <div class="field">
-        <label for="nickname" class="form-label">닉네임</label>
-        <input
-            type="text"
-            class="form-control"
-            id="nickname"
-            placeholder="예: 물살잡이"
-            required
-        />
+            <label for="nickname" class="form-label">닉네임</label>
+            <input
+                type="text"
+                class="form-control"
+                id="nickname"
+                placeholder="예: 물살잡이"
+                required
+            />
         </div>
 
         <!-- 이름 -->

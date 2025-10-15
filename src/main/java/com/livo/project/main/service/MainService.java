@@ -17,8 +17,15 @@ public class MainService {
     private final LectureRepository lectureRepository;
 
     public MainDTO getMainPageData() {
+        // 1️⃣ 카테고리
         List<Category> categories = categoryRepository.findByCategoryLevelOrderByCategoryOrderAsc(1);
-        List<Lecture> lectures = lectureRepository.findTop5ByOrderByLectureIdDesc();
-        return new MainDTO(categories, lectures);
+
+        // 2️⃣ 추천 강좌 (랜덤 4개)
+        List<Lecture> recommended = lectureRepository.findRandomLectures();
+
+        // 3️⃣ 인기 강좌 (평점 높은 순)
+        //List<Lecture> popular = lectureRepository.findTop5ByOrderByRatingDesc();
+
+        return new MainDTO(categories, recommended);
     }
 }
