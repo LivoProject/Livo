@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -88,10 +89,16 @@
             </ul>
 
             <!-- 버튼 영역 -->
-            <div class="header-actions">
-              <button><i class="bi bi-box-arrow-in-right"></i>로그인</button>
-              <button><i class="bi bi-person-plus"></i>회원가입</button>
-            </div>
+              <div class="header-actions">
+                  <!-- 로그인 버튼 -->
+                  <a class="btn btn-link" href="<c:url value='/auth/login'/>">
+                      <i class="bi bi-box-arrow-in-right"></i> 로그인
+                  </a>
+                  <!-- 회원가입 버튼 -->
+                  <a class="btn btn-link" href="<c:url value='/auth/register'/>">
+                      <i class="bi bi-person-plus"></i> 회원가입
+                  </a>
+              </div>
           </div>
         </nav>
       </div>
