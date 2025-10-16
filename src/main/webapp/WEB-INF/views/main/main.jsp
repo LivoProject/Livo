@@ -30,7 +30,7 @@
 <header>
     <div class="container">
         <nav class="navbar navbar-expand-lg">
-            <a class="logo navbar-brand" href="#">LOGO</a>
+            <a class="logo navbar-brand" href="#">로고뭉뭉</a>
 
             <!-- 모바일 토글 버튼 -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
@@ -44,7 +44,7 @@
                         <a class="nav-link" href="index.html">홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="sub.html">강좌</a>
+                        <a class="nav-link" href="/lecture/list">강좌</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="sub.html">공지사항</a>
