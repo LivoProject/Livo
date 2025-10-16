@@ -1,10 +1,12 @@
 /* 공통 색상 */
 :root {
   --color-white: #fff;
-  --color-black: #000;
+  --color-black: #121212;
   --color-gray: #999;
-  --color-main: #00a85d;
-  --border-black: 1px solid #ededed;
+  --color-light-gray: #ddd;
+  --color-main: #17b4c7;
+  --color-point: #ffcc02;
+  --border-black: 1px solid #ddd;
 }
 
 /* 폰트 */
@@ -12,7 +14,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
 /* 헤더 */
-/* 헤더 기본 */
 header {
   width: 100%;
   height: 5rem;
@@ -25,8 +26,11 @@ header {
   z-index: 10;
 }
 header .logo {
+  width: 5rem;
   margin-right: 2rem;
-  font-family: "Roboto";
+}
+header .logo img {
+  width: 100%;
 }
 header .nav-link {
   color: var(--color-text);
@@ -113,7 +117,6 @@ header .header-actions button i {
   color: var(--color-white);
   margin-left: 0.3rem;
 }
-
 /* 푸터 */
 footer {
   height: 10rem;
@@ -126,7 +129,6 @@ footer p {
   font-family: "Roboto";
   color: var(--color-gray);
 }
-
 /* 페이드 효과 */
 .fade-in-up {
   opacity: 0;
@@ -157,13 +159,20 @@ footer p {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+  header .logo {
+    width: 8rem;
+  }
   header .navbar-collapse {
     width: 100vw;
     position: absolute;
     border-top: var(--border-black);
+    border-bottom: var(--border-black);
     top: 59px;
     background-color: var(--color-white);
     padding: 0 1rem;
+  }
+  header .header-actions button:nth-of-type(1)::after {
+    display: none;
   }
   header .logo {
     padding: 0 1rem;
@@ -185,7 +194,6 @@ footer p {
   }
   header .header-actions button {
     width: 100%;
-    padding: 0.75rem; 
     border: 1px solid var(--color-black);
     background: var(--color-white);
     text-align: center;

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 
-public interface LectureRepository extends JpaRepository<Lecture, Integer> {
+public interface LectureRepository2 extends JpaRepository<Lecture, Integer> {
     // 카테고리별 검색
     List<Lecture> findByCategoryId(int categoryId);
 

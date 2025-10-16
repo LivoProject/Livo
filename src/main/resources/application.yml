@@ -1,0 +1,4 @@
+spring:
+  datasource:
+    hikari:
+      connection-timeout: 1000  # 1초
