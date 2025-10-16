@@ -5,6 +5,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <!-- 컨텐츠 -->
+
 <div id="main">
   <!-- 메인 슬라이드-->
   <section id="hero-tagline" class="text-center">
@@ -32,24 +33,26 @@
               <small>2025.05.13</small>
             </div>
 
-        </c:forEach>
-      </div>
-      <!-- 커스텀 버튼 -->
-      <div class="custom_btn_wrap">
-        <button id="swiperPrev" class="btn-swiper">
-          <i class="bi bi-chevron-up"></i>
-        </button>
-        <button id="swiperNext" class="btn-swiper">
-          <i class="bi bi-chevron-down"></i>
-        </button>
-        <button id="swiperToggle" class="btn-swiper">
-          <i class="bi bi-pause-fill"></i>
-        </button>
-      </div>
-    </div>
+
+    </c:forEach>
+  </div>
+  <!-- 커스텀 버튼 -->
+  <div class="custom_btn_wrap">
+    <button id="swiperPrev" class="btn-swiper">
+      <i class="bi bi-chevron-up"></i>
+    </button>
+    <button id="swiperNext" class="btn-swiper">
+      <i class="bi bi-chevron-down"></i>
+    </button>
+    <button id="swiperToggle" class="btn-swiper">
+      <i class="bi bi-pause-fill"></i>
+    </button>
+  </div>
+</div>
   </section>
 
   <!-- 추천 강좌 -->
+
   <section id="recommend">
     <div class="container">
       <h3>추천 강좌</h3>
@@ -63,7 +66,7 @@
           </button>
           <div class="card-body">
             <h6>${lecture.title}</h6>
-            <p>${lecture.tutorName} | <fmt:formatNumber value="${lecture.price}" type="number"/></p>
+            <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/></p>
                <div class="card-review">
                     <div>
                         <span>⭐4.8</span>
@@ -82,7 +85,9 @@
     </div>
   </section>
 
+
   <!-- 카테고리 -->
+
   <section id="categories">
     <div class="container text-center">
       <h3>카테고리</h3>
@@ -112,7 +117,9 @@
     </div>
   </section>
 
+
   <!-- 인기 강좌 -->
+
   <section id="popular">
     <div class="container">
       <div class="swiper mySwiper">
@@ -282,7 +289,9 @@
     </div>
   </section>
 
+
   <!-- 중간 배너 -->
+
   <section id="midBanner">
     <div class="banner-content py-5">
       <h2 class="fw-bold mb-3">지금 인기 강좌 TOP 100 공개!</h2>
@@ -291,7 +300,9 @@
     </div>
   </section>
 
+
   <!-- 공지사항 -->
+
   <section id="info">
     <div class="container">
       <div class="board">
@@ -324,5 +335,6 @@
       </div>
     </div>
   </section>
+
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

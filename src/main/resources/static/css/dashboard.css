@@ -1,0 +1,143 @@
+/* 데스크탑 사이드바 고정 */
+@media (min-width: 1200px) {
+    main {
+        margin-left: 274px;
+    }
+}
+
+/* 카드 간격 */
+.card {
+    margin-bottom: 1rem;
+}
+
+/* 테이블 높이 조절 */
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.tab-pane canvas {
+    width: 100% !important;
+    max-height: 300px;
+}
+
+.sidenav {
+    z-index: 990;
+}
+
+#sidenav-main,
+#sidebarMenu,
+.sidenav {
+    overflow: hidden !important;   /* 스크롤 완전 비활성화 */
+}
+
+.navbar-vertical.navbar-expand-xs.fixed-start {
+    left: 0;
+}
+
+.navbar-vertical.navbar-expand-xs {
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 15.625rem !important;
+    overflow-y: auto;
+    padding: 0;
+    box-shadow: none;
+}
+
+/* .sidenav .navbar-brand {
+  padding: 1.5rem 2rem;
+} */
+.nav-link {
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.sidenav-header {
+    height: auto; /* 자동으로 컨텐츠에 맞게 */
+    padding: 1.5rem 2rem; /* 필요하면 조정 */
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+}
+
+/*notice관련*/
+.card-header {
+    padding: 0.5rem 1rem;
+    margin-bottom: 0;
+    background-color: #fff;
+    border-bottom: 0 solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header:first-child {
+    border-radius: 1rem 1rem 0 0;
+}
+
+.card-header-tabs {
+    margin-right: -0.5rem;
+    margin-bottom: -0.5rem;
+    margin-left: -0.5rem;
+    border-bottom: 0;
+}
+
+.card-header-pills {
+    margin-right: -0.5rem;
+    margin-left: -0.5rem;
+}
+
+.table thead th {
+    padding: 0.75rem 1.5rem;
+    text-transform: capitalize;
+    letter-spacing: 0px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.table {
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: #fff;
+    color: #6c757d;
+    font-weight: 600;
+    border-bottom: 1px solid #dee2e6;
+    text-transform: uppercase; /* 대문자 느낌 */
+    font-size: 0.75rem;
+}
+
+.table tbody tr {
+    background-color: #f8f9fa;
+}
+
+.card {
+    box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+}
+
+.card .card-header {
+    padding: 1.5rem;
+}
+
+/*for form*/
+.form-section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 30px;
+    border: 1px solid #dee2e6;;
+}
+/*for lecture search*/
+label {
+    white-space: nowrap;
+}
+
+#search{
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.nav-pills .nav-link.active {
+    /* background-color: #17b4c7; /* 원하는 색상 */
+    color: #fff;
+    border-radius: 50px;
+}

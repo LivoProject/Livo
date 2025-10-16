@@ -1,0 +1,203 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
+
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
+    <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
+    <div class="container-fluid py-4 px-5">
+        <div class="row">
+            <div class="col">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <ul class="nav nav-pills card-header-pills" id="statsTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="tab1-tab" data-bs-toggle="pill" data-bs-target="#tab1" type="button" role="tab">월별 가입자 수</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab2-tab" data-bs-toggle="pill" data-bs-target="#tab2" type="button" role="tab">월별 강의 예약 수</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab3-tab" data-bs-toggle="pill" data-bs-target="#tab3" type="button" role="tab">강의별 예약 수</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                                <canvas id="chart1"></canvas>
+                            </div>
+                            <div class="tab-pane fade" id="tab2" role="tabpanel">
+                                <canvas id="chart2"></canvas>
+                            </div>
+                            <div class="tab-pane fade" id="tab3" role="tabpanel">
+                                <canvas id="chart3"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body px-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card-title fs-4 fw-semibold">강의 관리</div>
+                                <div class="card-subtitle text-body-secondary mb-4"></div>
+                            </div>
+                        </div>
+                        <div class="table-responsive small">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">강의명</th>
+                                    <th class="text-center">강사명</th>
+                                    <th class="text-center">관리</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td class="text-center">Do it! 점프 투 스프링 부트 3</td>
+                                    <td class="text-center">홍길동</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary">수정</button>
+                                        <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">2</td>
+                                    <td class="text-center">이것이 스프링 부트다 with 자바</td>
+                                    <td class="text-center">김철수</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary">수정</button>
+                                        <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body px-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card-title fs-4 fw-semibold">신고 관리</div>
+                                <div class="card-subtitle text-body-secondary mb-4"></div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive small">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">신고자</th>
+                                    <th class="text-center">신고내용</th>
+                                    <th class="text-center">관리</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td class="text-center">홍길동</td>
+                                    <td class="text-center">부적절한 게시물 신고</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-outline-danger">보류</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">2</td>
+                                    <td class="text-center">김철수</td>
+                                    <td class="text-center">댓글 도배</td>
+                                    <td class="text-center"><button class="btn btn-sm btn-outline-primary">처리완료</button></td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body px-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card-title fs-4 fw-semibold">공지사항 관리</div>
+                                <div class="card-subtitle text-body-secondary mb-4"></div>
+                            </div>
+                        </div>
+                        <div class="table-responsive small">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">제목</th>
+                                    <th class="text-center">내용</th>
+                                    <th class="text-center">관리</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td class="text-center">사이트 점검 안내</td>
+                                    <td class="text-center">10월 15일 오전 2시 점검 예정</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary">수정</button>
+                                        <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-body px-4">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card-title fs-4 fw-semibold">FAQ 관리</div>
+                                <div class="card-subtitle text-body-secondary mb-4"></div>
+                            </div>
+                        </div>
+                        <div class="table-responsive small">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">질문</th>
+                                    <th class="text-center">관리</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td class="text-center">비밀번호를 잊어버렸어요</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary">수정</button>
+                                        <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</main>
+</div>
+</body>
+
+</html>
