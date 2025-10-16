@@ -1,12 +1,13 @@
 package com.livo.project.auth.security;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.auth.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -15,14 +16,23 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User u = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없음: " + email));
+        // 로그인 입력 이메일은 소문자 정규화 권장
+        String normalized = email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
 
-        // status가 null이면 true로 간주 (엔티티 @PrePersist로 기본 true 세팅해두셨다면 사실상 안전)
-        boolean enabled = u.getStatus() == null ? true : u.getStatus();
+        User u = userRepository.findByEmail(normalized)
+                .orElseThrow(() -> new UsernameNotFoundException("잘못된 자격 증명입니다."));
 
-        // roleId 기반 간단 매핑 (추후 Role 엔티티로 대체 권장)
+        // status (null → true), emailVerified(미인증 차단), deletedAt(있으면 잠금 취급)
+        boolean activeStatus   = (u.getStatus() == null) || Boolean.TRUE.equals(u.getStatus());
+        boolean emailVerified  = Boolean.TRUE.equals(u.getEmailVerified());
+        boolean notDeleted     = (u.getDeletedAt() == null);
+
+        boolean enabled        = activeStatus && emailVerified && notDeleted;
+        boolean accountLocked  = !notDeleted;  // 삭제 상태를 잠금으로 해석 (정책에 맞게 조정 가능)
+
+        // roleId 기반 권한 매핑 (roles()는 "ROLE_" 자동 접두)
         String role = switch (u.getRoleId() == null ? 1 : u.getRoleId()) {
             case 9 -> "ADMIN";
             case 5 -> "MANAGER";
@@ -30,11 +40,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         };
 
         return org.springframework.security.core.userdetails.User
-                .withUsername(u.getEmail())
+                .withUsername(u.getEmail())   // DB 저장값(이미 소문자 저장 권장)
                 .password(u.getPassword())
-                .roles(role)               // "ROLE_" 자동 접두
-                .disabled(!enabled)        // 비활성 처리
-                .accountLocked(false)
+                .roles(role)                  // "ROLE_" 접두 자동 부여
+                .disabled(!enabled)           // ← 이메일 미인증/비활성/삭제 시 로그인 차단
+                .accountLocked(accountLocked)
                 .accountExpired(false)
                 .credentialsExpired(false)
                 .build();

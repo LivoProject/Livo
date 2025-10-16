@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,13 +29,13 @@ public class User {
     @Column(nullable = false, length = 254)
     private String email;
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 255)
     private String password;
 
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 40)
     private String nickname;
 
     @Column(length = 20)
@@ -47,18 +48,30 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private Boolean status;
+
+    // 이메일 인증 컬럼
+    @Column(name = "email_verified", nullable = false, columnDefinition = "TINYINT(1)")
+    private Boolean emailVerified = false;
+
+    @Column(name = "email_verified_at")
+    private LocalDateTime emailVerifiedAt;
 
     @PrePersist
     void prePersistDefaultStatus() {
         if (status == null) status = true;
+        if (emailVerified == null) emailVerified = false;
 
     }
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;

@@ -65,6 +65,9 @@ dependencies {
     //hot reload
     implementation 'org.springframework.boot:spring-boot-devtools'
 
+    //mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 
 dependencyManagement {
