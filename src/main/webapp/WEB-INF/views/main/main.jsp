@@ -25,11 +25,11 @@
       <i class="bi bi-megaphone-fill"></i>
       <div class="swiper-wrapper">
 
-        <c:forEach var="i" begin="1" end="5">
+         <c:forEach var="notice" items="${notices}">
 
             <div class="swiper-slide">
-              <span>2025년 산업맞춤 단기직무능력인증과정 선정 결과</span>
-              <small>2025.05.13</small>
+              <span>${notice.title}</span>
+              <small><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd"/></small>
             </div>
 
         </c:forEach>
@@ -300,26 +300,13 @@
           <a href="#"><i class="bi bi-plus-lg"></i></a>
         </div>
         <ul class="list-unstyled">
-          <li>
-            <a href="#">
-              <span>2025년 2학기 수강신청 안내</span><small>2025.02.02</small>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>서버 점검 공지</span><small>2025.02.10</small>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>신규 강좌 오픈 예정</span><small>2025.02.15</small>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>이용약관 변경 안내</span><small>2025.03.01</small>
-            </a>
-          </li>
+            <c:forEach var="notice" items="${notices}">
+              <li>
+                <a href="#">
+                  <span>${notice.title}</span><small><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd"/></small>
+                </a>
+              </li>
+          </c:forEach>
         </ul>
       </div>
     </div>

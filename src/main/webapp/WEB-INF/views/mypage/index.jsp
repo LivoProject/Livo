@@ -10,8 +10,8 @@ file="/WEB-INF/views/common/header.jsp" %>
     <!-- 프로필 / 환영 -->
     <section class="welcome-box mb-4">
       <div>
-        <h3>수빈님, 반가워요!</h3>
-        <p>🌱 <span>100</span>일 째 성장 중</p>
+        <h3>${mypage.username} 님, 반가워요!</h3>
+        <p>🌱 <span>${mypage.joinDays}</span>일 째 성장 중</p>
       </div>
       <p>
         진행 중인 강의 <span>3</span>개 · 이번 주 학습시간 <span>4</span>시간
