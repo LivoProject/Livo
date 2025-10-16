@@ -32,6 +32,7 @@ public class MypageService {
                 .nickname(user.getNickname())
                 .phone(user.getPhone())
                 .birth(user.getBirth())
+                .gender(user.getGender() != null ? user.getGender().name() : null)
                 .role(String.valueOf(user.getRoleId()))
                 .joinDate(created.toString())
                 .joinDays(days)

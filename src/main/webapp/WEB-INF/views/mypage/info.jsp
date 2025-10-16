@@ -95,11 +95,11 @@
             <label class="form-label d-block">성별</label>
             <div class="gender-group">
                 <label class="gender-radio">
-                    <input type="radio" name="gender" value="M" required />
+                    <input type="radio" name="gender" value="M" ${mypage.gender == 'M' ? 'checked' : ''}>
                     <span>남성</span>
                 </label>
                 <label class="gender-radio">
-                    <input type="radio" name="gender" value="F" required />
+                    <input type="radio" name="gender" value="F" ${mypage.gender == 'F' ? 'checked' : ''}>
                     <span>여성</span>
                 </label>
             </div>

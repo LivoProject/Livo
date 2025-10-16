@@ -21,6 +21,7 @@ public class MypageDto {
     private String nickname;
     private String phone;
     private LocalDate birth;
+    private String gender;
     private String role;
     private String joinDate;
     private Long joinDays;
