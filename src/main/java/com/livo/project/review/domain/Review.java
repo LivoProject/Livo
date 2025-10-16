@@ -40,7 +40,7 @@ public class Review {
     private int reservationId; // FK (reservation)
 
     //reservation이랑 연결
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reservationId", referencedColumnName = "reservationId", insertable = false, updatable = false)
     private Reservation reservation;
 }

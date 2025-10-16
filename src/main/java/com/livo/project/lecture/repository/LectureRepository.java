@@ -4,11 +4,12 @@ import com.livo.project.lecture.domain.Lecture;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
-public interface LectureRepository2 extends JpaRepository<Lecture, Integer> {
+@Repository("lectureLectureRepository")
+public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     // 카테고리별 검색
     List<Lecture> findByCategoryId(int categoryId);
 

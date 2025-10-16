@@ -37,7 +37,7 @@ public class Reservation {
     private String email;  // FK (user)
 
     //User랑 연결
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private User user;
 

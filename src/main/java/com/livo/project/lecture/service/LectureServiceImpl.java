@@ -2,6 +2,7 @@ package com.livo.project.lecture.service;
 
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.LectureRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class LectureServiceImpl implements LectureService {
     private final LectureRepository lectureRepository;
 
     // 생성자 주입
-    public LectureServiceImpl(LectureRepository lectureRepository) {
+    public LectureServiceImpl(@Qualifier("lectureLectureRepository")LectureRepository lectureRepository) {
         this.lectureRepository = lectureRepository;
     }
 
