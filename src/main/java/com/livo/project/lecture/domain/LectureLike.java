@@ -29,12 +29,12 @@ public class LectureLike {
     private Date createdAt;
 
     // Lecture 연결
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lectureId", referencedColumnName = "lectureId", insertable = false, updatable = false)
     private Lecture lecture;
 
     // User 연결
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private User user;
 

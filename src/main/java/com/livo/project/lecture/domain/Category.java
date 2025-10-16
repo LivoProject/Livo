@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "LectureCategory")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -22,7 +22,7 @@ public class Category {
 
     private Integer pcategoryID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pcategoryID", insertable = false, updatable = false)
     private Category parentCategory;
 
