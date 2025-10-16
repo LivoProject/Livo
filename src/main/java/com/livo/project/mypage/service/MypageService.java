@@ -5,6 +5,7 @@ import com.livo.project.auth.repository.UserRepository;
 import com.livo.project.mypage.dto.MypageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,8 @@ public class MypageService {
                 .username(user.getName())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
+                .phone(user.getPhone())
+                .birth(user.getBirth())
                 .role(String.valueOf(user.getRoleId()))
                 .joinDate(created.toString())
                 .joinDays(days)
