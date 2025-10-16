@@ -24,4 +24,24 @@ public class adminController {
     public String showLecturePage(){
         return "admin/lecturePage";
     }
+
+    @GetMapping("/lectureForm")
+    public String showLectureForm(){
+        return "admin/lectureForm";
+    }
+
+    @GetMapping("/faqForm")
+    public String showFaqForm(){
+        return "admin/faqForm";
+    }
+
+    @GetMapping("/reportPage")
+    public String showReportPage(){
+        return "admin/reportPage";
+    }
+
+    @GetMapping("/chartPage")
+    public String showChartPage(){
+        return "admin/chartPage";
+    }
 }
