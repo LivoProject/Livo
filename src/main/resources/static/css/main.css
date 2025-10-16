@@ -386,7 +386,9 @@
 #popular .swiper {
   padding: 0.7rem 0.5rem;
 }
-
+#popular .swiper-wrapper {
+    height: auto!important;
+}
 #popular .swiper-slide {
   /*width: 16rem;*/
   width: auto;
