@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Entity
+@Entity(name = "LectureEntity")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -39,7 +39,7 @@ public class Lecture {
 
     private int categoryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId", insertable = false, updatable = false)
     private Category category;
 

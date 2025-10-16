@@ -62,12 +62,10 @@ dependencies {
     implementation "org.springframework.ai:spring-ai-starter-model-openai"
     implementation "org.springframework.ai:spring-ai-vector-store:1.1.0-M3"
 
-    //hot reload
-    implementation 'org.springframework.boot:spring-boot-devtools'
-
     //mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    implementation 'org.springframework.boot:spring-boot-devtools'
 }
 
 dependencyManagement {

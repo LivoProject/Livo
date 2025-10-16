@@ -36,12 +36,12 @@ public class Report {
     private int reviewUId;  // FK (review)
 
     // Review 연결
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewUId", referencedColumnName = "reviewUId", insertable = false, updatable = false)
     private Review review;
 
     // User 연결
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private User user;
 
