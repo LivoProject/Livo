@@ -1,17 +1,18 @@
 package com.livo.project.lecture.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import jakarta.persistence.Id;
 
-@Entity(name = "LectureCategory")
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@Table(name="category")
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "category")
+@Getter
+@Setter
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int categoryId;
@@ -20,11 +21,10 @@ public class Category {
     private int categoryLevel;
     private int categoryOrder;
 
-    private Integer pcategoryID;
-
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "pcategoryID", insertable = false, updatable = false)
-    private Category parentCategory;
+    @JoinColumn(name = "pcategoryID")
+    private Category parent;
 
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<Category> children = new ArrayList<>();
 }
-
