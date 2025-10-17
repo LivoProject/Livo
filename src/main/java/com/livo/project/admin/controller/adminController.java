@@ -1,6 +1,9 @@
 package com.livo.project.admin.controller;
 
+import com.livo.project.admin.service.FaqService;
 import com.livo.project.admin.service.FileService;
+import com.livo.project.faq.domain.Faq;
+import com.livo.project.faq.repository.FaqRepository;
 import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.service.LectureService;
@@ -23,13 +26,20 @@ public class adminController {
     private final LectureService lectureService;
     private final CategoryRepository categoryRepository;
     private final FileService fileService;
-
+    private final FaqService faqService;
     @GetMapping("/dashboard")
     public String showAdminPage(){
         return "admin/dashboard";
     }
     @GetMapping("/faq")
-    public String showFaqPage(){
+    public String showFaqPage(@RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "9") int size,
+                              Model model){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Faq> faqPage = faqService.getFaqPage(pageable);
+
+        model.addAttribute("faqPage",faqPage);
+        model.addAttribute("faq",faqPage.getContent());
         return "admin/faqPage";
     }
     @GetMapping("/notice")
@@ -47,7 +57,7 @@ public class adminController {
 
         model.addAttribute("lecturePage", lecturePage);
         model.addAttribute("lectures", lecturePage.getContent());
-        return "admin/lecturePage"; // ✅ admin 전용 JSP
+        return "admin/lecturePage";
     }
 
     @GetMapping("/lecture/insert")
@@ -94,6 +104,7 @@ public class adminController {
     public String showFaqForm(){
         return "admin/faqForm";
     }
+
 
     @GetMapping("/report")
     public String showReportPage(){
