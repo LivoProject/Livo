@@ -55,7 +55,7 @@ public class FaqService {
     public String refineAnswerWithLLM(String question, double threshold, String model) {
         log.info("Hybrid 방식 RAG 답변 생성 - question='{}', model={}", question, model);
 
-        // 1️⃣ 유사 문서 검색
+        //유사 문서 검색
         SearchRequest request = SearchRequest.builder()
                 .query(question)
                 .topK(5)
@@ -65,20 +65,20 @@ public class FaqService {
         log.info("검색 완료 - 결과 수={}", results.size());
         if (results.isEmpty()) return "results 관련 정보를 찾을 수 없습니다.";
 
-        // 2️⃣ threshold 필터링
+        //threshold 필터링
         List<Document> filtered = results.stream()
                 .filter(doc -> doc.getScore() != null && doc.getScore() > threshold)
                 .toList();
 
         if (filtered.isEmpty()) return "filtered 관련 정보를 찾을 수 없습니다.";
 
-        // 3️⃣ 가장 유사한 문서 하나 또는 상위 n개만 사용
+        //가장 유사한 문서 하나 또는 상위 n개만 사용
         String topContexts = filtered.stream()
                 .limit(3)
                 .map(doc -> doc.getText())
                 .collect(Collectors.joining("\n\n"));
 
-        // 4️⃣ AI에게 "보정용 프롬프트" 전달
+        //AI에게 "보정용 프롬프트" 전달
         String systemPrompt = """
         당신은 고객 문의 답변을 보정하는 AI입니다.
         아래 제공된 FAQ 내용을 참고하여 사용자의 질문에 가장 자연스럽고 정확한 답변을 작성해주세요.

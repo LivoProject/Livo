@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
-public class FaqServiceImpl implements FaqService {
+public class FaqAdminServiceImpl implements FaqAdminService {
     private final FaqRepository faqRepository;
 
     @Override

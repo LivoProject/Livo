@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface FaqService {
+public interface FaqAdminService {
     List<Faq> getFaqAll();
     Page<Faq> getFaqPage(Pageable pageable);
 }

@@ -8,7 +8,8 @@
             <div class="form-section">
                 <h5 class="mb-4 fw-bold">FAQ 등록</h5>
 
-                <form action="/faq/add" method="post">
+                <form action="/admin/faq/save" method="post">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <div class="mb-3">
                         <label for="question" class="form-label">질문</label>
                         <textarea class="form-control" id="question" name="question" rows="3" required></textarea>
