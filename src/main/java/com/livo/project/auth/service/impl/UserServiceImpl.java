@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Optional;
@@ -61,7 +62,9 @@ public class UserServiceImpl implements UserService {
         u.setPhone(phone);
         u.setStatus(true);
         u.setRoleId(1);
-        u.setEmailVerified(false); // 가입 시 미인증
+
+        u.setEmailVerified(true);
+        u.setEmailVerifiedAt(java.time.LocalDateTime.now());
 
         // birth / gender 매핑 (SignUpRequest가 String인 경우 ISO yyyy-MM-dd 가정)
         if (req.getBirth() != null && !req.getBirth().isBlank()) {
