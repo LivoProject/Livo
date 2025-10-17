@@ -7,18 +7,21 @@ import com.livo.project.auth.repository.EmailVerificationRepository;
 import com.livo.project.auth.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationService {
@@ -27,78 +30,125 @@ public class EmailVerificationService {
     private final EmailVerificationRepository repo;
     private final UserRepository userRepo;
 
-    // 인증 링크에 사용할 호스트 (운영/개발 환경별로 properties에서 주입)
-    @Value("${app.host:http://localhost:8080}")
-    private String appHost;
+    @Value("${app.mail.from:}")
+    private String appMailFrom;
 
-    /** 가입 직후: 인증 메일 발송 (기존 토큰 무효화 + 새 토큰 생성) */
+    /* 설정 */
+    private static final int CODE_LENGTH = 6;           // 6자리 숫자
+    private static final int CODE_TTL_MINUTES = 5;      // 유효 5분
+    private static final int RESEND_COOLDOWN_SEC = 60;  // 재전송 쿨다운 60초
+    private static final int MAX_ATTEMPTS = 5;          // 최대 시도 횟수
+
+    /* ===== 코드 전송 ===== */
     @Transactional
-    public void sendVerification(String email) {
-        String normalized = (email == null ? "" : email.trim()).toLowerCase();
+    public SendResult sendCode(String emailRaw) {
+        String email = (emailRaw == null ? "" : emailRaw.trim()).toLowerCase();
+        if (email.isBlank()) return SendResult.fail("이메일을 입력해 주세요.");
 
-        // 기존 미소비 토큰 무효화
-        repo.consumeAllActiveByEmail(normalized);
+        // 쿨다운 체크
+        Optional<EmailVerification> latestOpt =
+                repo.findTopByEmailAndCodeConsumedAtIsNullOrderByCodeExpiresAtDesc(email);
+        if (latestOpt.isPresent() && latestOpt.get().getLastSentAt() != null) {
+            long sec = Duration.between(latestOpt.get().getLastSentAt(), LocalDateTime.now()).getSeconds();
+            long remain = RESEND_COOLDOWN_SEC - sec;
+            if (remain > 0) return SendResult.cooldown(remain);
+        }
 
-        // 원본 토큰 생성 + 해시 저장
-        String rawToken = UUID.randomUUID().toString();
-        String tokenHash = sha256(rawToken);
+        // 기존 활성 코드 무효화(선택)
+        repo.consumeAllActiveCodesByEmail(email);
 
-        EmailVerification ev = new EmailVerification(
-                null,
-                normalized,
-                tokenHash,
-                LocalDateTime.now().plusMinutes(30), // 유효 30분
-                null,
-                null
-        );
+        // 새 코드 생성/저장
+        String code = generateCode();
+        String codeHash = sha256(code);
+
+        EmailVerification ev = EmailVerification.builder()
+                .email(email)
+                .codeHash(codeHash)
+                .codeExpiresAt(LocalDateTime.now().plusMinutes(CODE_TTL_MINUTES))
+                .attemptCount(0)
+                .lastSentAt(LocalDateTime.now())
+                .build();
         repo.save(ev);
 
-        // 인증 링크
-        String link = appHost + "/auth/verify-email?email=" +
-                URLEncoder.encode(normalized, StandardCharsets.UTF_8) +
-                "&token=" + URLEncoder.encode(rawToken, StandardCharsets.UTF_8);
-
-        // 텍스트 메일 발송 (원하면 HTML 메일로 바꿔줄 수 있음)
+        // 메일 발송
         SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setTo(normalized);
-        msg.setSubject("[Livo] 이메일 인증을 완료해주세요");
+        if (appMailFrom != null && !appMailFrom.isBlank()) msg.setFrom(appMailFrom);
+        msg.setTo(email);
+        msg.setSubject("[Livo] 이메일 확인 코드");
         msg.setText("""
-                아래 링크를 30분 내에 클릭하면 이메일 인증이 완료됩니다.
+                아래 6자리 코드를 %d분 내에 입력해 주세요.
 
-                %s
+                인증 코드: %s
 
                 본인이 요청하지 않았다면 이 메일을 무시하셔도 됩니다.
-                """.formatted(link));
-        mailSender.send(msg);
+                """.formatted(CODE_TTL_MINUTES, code));
+
+        try {
+            mailSender.send(msg);
+            log.info("[MAIL] 코드 발송 성공 → {}", email);
+        } catch (MailException e) {
+            log.error("[MAIL] 코드 발송 실패", e);
+            return SendResult.fail("메일 발송 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+        }
+
+        return SendResult.ok("인증 코드를 전송했습니다.");
     }
 
-    /** 인증 링크 클릭: 토큰 검증 후 사용자 활성화 */
+    /* ===== 코드 검증 ===== */
     @Transactional
-    public boolean verify(String email, String rawToken) {
-        String normalized = (email == null ? "" : email.trim()).toLowerCase();
-        String tokenHash = sha256(rawToken);
+    public VerifyResult verifyCode(String emailRaw, String rawCode) {
+        String email = (emailRaw == null ? "" : emailRaw.trim()).toLowerCase();
+        String code = (rawCode == null ? "" : rawCode.trim());
+        if (email.isBlank() || code.isBlank()) {
+            return VerifyResult.fail("이메일과 코드를 모두 입력해 주세요.");
+        }
 
+        String codeHash = sha256(code);
         Optional<EmailVerification> opt =
-                repo.findTopByEmailAndTokenHashAndConsumedAtIsNull(normalized, tokenHash);
-        if (opt.isEmpty()) return false;
+                repo.findTopByEmailAndCodeHashAndCodeConsumedAtIsNull(email, codeHash);
+
+        if (opt.isEmpty()) {
+            // 불일치 시 가장 최근 미소비 레코드의 시도 횟수만 증가(있으면)
+            repo.findTopByEmailAndCodeConsumedAtIsNullOrderByCodeExpiresAtDesc(email)
+                    .ifPresent(ev -> repo.incrementAttemptCount(ev.getId()));
+            return VerifyResult.fail("코드가 일치하지 않습니다.");
+        }
 
         EmailVerification ev = opt.get();
-        if (ev.getExpiresAt().isBefore(LocalDateTime.now())) return false;
 
-        // 토큰 소비
-        ev.setConsumedAt(LocalDateTime.now());
+        // 만료 체크
+        if (ev.getCodeExpiresAt() != null && ev.getCodeExpiresAt().isBefore(LocalDateTime.now())) {
+            ev.setCodeConsumedAt(LocalDateTime.now());
+            repo.save(ev);
+            return VerifyResult.fail("코드가 만료되었습니다. 다시 요청해 주세요.");
+        }
+
+        // 시도횟수 제한
+        if (ev.getAttemptCount() != null && ev.getAttemptCount() >= MAX_ATTEMPTS) {
+            ev.setCodeConsumedAt(LocalDateTime.now());
+            repo.save(ev);
+            return VerifyResult.fail("시도 횟수를 초과했습니다. 코드를 다시 요청해 주세요.");
+        }
+        // 성공 → 소비
+        ev.setCodeConsumedAt(LocalDateTime.now());
         repo.save(ev);
 
-        // 사용자 활성화
-        User user = userRepo.findByEmail(normalized).orElse(null);
-        if (user == null) return false;
+        // 이미 존재하는 사용자면 verified 처리(선택)
+        userRepo.findByEmail(email).ifPresent(u -> {
+            u.setEmailVerified(true);
+            u.setEmailVerifiedAt(LocalDateTime.now());
+        });
 
-        user.setEmailVerified(true);
-        user.setEmailVerifiedAt(LocalDateTime.now());
-        return true;
+        return VerifyResult.ok("인증이 완료되었습니다.");
     }
 
-    /** SHA-256 해시 (원본 토큰은 DB에 저장하지 않음) */
+    /* ===== 유틸/설정 ===== */
+    private String generateCode() {
+        SecureRandom r = new SecureRandom();
+        int n = r.nextInt(1_000_000);
+        return String.format("%06d", n);
+    }
+
     private String sha256(String s) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -109,5 +159,16 @@ public class EmailVerificationService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /* 결과 DTO */
+    public record SendResult(boolean ok, String message, Long cooldownRemainSec) {
+        static SendResult ok(String msg) { return new SendResult(true, msg, 0L); }
+        static SendResult cooldown(long remain) { return new SendResult(false, "잠시 후 다시 요청해 주세요.", Math.max(remain,1)); }
+        static SendResult fail(String msg) { return new SendResult(false, msg, 0L); }
+    }
+    public record VerifyResult(boolean ok, String message) {
+        static VerifyResult ok(String msg) { return new VerifyResult(true, msg); }
+        static VerifyResult fail(String msg) { return new VerifyResult(false, msg); }
     }
 }
