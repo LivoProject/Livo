@@ -59,6 +59,7 @@ public class LectureServiceImpl implements LectureService {
                 .orElseThrow(()-> new IllegalArgumentException("강의를 찾을 수 없습니다."));
         existingLecture.setTitle(updateLecture.getTitle());
         existingLecture.setTutorName(updateLecture.getTutorName());
+        existingLecture.setTutorName(updateLecture.getTutorInfo());
         existingLecture.setContent(updateLecture.getContent());
         existingLecture.setTotalCount(updateLecture.getTotalCount());
         existingLecture.setLectureStart(updateLecture.getLectureStart());
