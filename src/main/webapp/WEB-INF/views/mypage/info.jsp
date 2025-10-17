@@ -14,19 +14,21 @@
     <form id="signupForm" novalidate>
         <!-- 이메일 -->
         <div class="field">
-        <label for="email" class="form-label">이메일</label>
+        <label for="email" class="form-label"><span class="required-mark">*</span>이메일</label>
         <input
             type="email"
             class="form-control"
             id="email"
             placeholder="name@example.com"
+            readonly
             required
+            value="${mypage.email}"
         />
         </div>
 
         <!-- 비밀번호 -->
         <div class="field">
-            <label for="password" class="form-label">비밀번호</label>
+            <label for="password" class="form-label"><span class="required-mark">*</span>비밀번호</label>
             <div class="position-relative">
                 <input
                     type="password"
@@ -47,25 +49,26 @@
 
         <!-- 닉네임 -->
         <div class="field">
-            <label for="nickname" class="form-label">닉네임</label>
+            <label for="nickname" class="form-label"><span class="required-mark">*</span>닉네임</label>
             <input
                 type="text"
                 class="form-control"
                 id="nickname"
-                placeholder="예: 물살잡이"
                 required
+                value="${mypage.nickname}"
             />
         </div>
 
         <!-- 이름 -->
         <div class="field">
-        <label for="name" class="form-label">이름</label>
+        <label for="name" class="form-label"><span class="required-mark">*</span>이름</label>
         <input
             type="text"
             class="form-control"
             id="name"
             placeholder="홍길동"
             required
+            value="${mypage.username}"
         />
         </div>
 
@@ -76,15 +79,15 @@
             type="tel"
             class="form-control"
             id="phone"
-            placeholder="010-1234-5678"
             required
+            value="${mypage.phone}"
         />
         </div>
 
         <!-- 생년월일 -->
         <div class="field">
         <label for="birth" class="form-label">생년월일</label>
-        <input type="date" class="form-control" id="birth" required />
+        <input type="date" class="form-control" id="birth" required value="${mypage.birth}" />
         </div>
 
         <!-- 성별 -->
@@ -92,11 +95,11 @@
             <label class="form-label d-block">성별</label>
             <div class="gender-group">
                 <label class="gender-radio">
-                    <input type="radio" name="gender" value="M" required />
+                    <input type="radio" name="gender" value="M" ${mypage.gender == 'M' ? 'checked' : ''}>
                     <span>남성</span>
                 </label>
                 <label class="gender-radio">
-                    <input type="radio" name="gender" value="F" required />
+                    <input type="radio" name="gender" value="F" ${mypage.gender == 'F' ? 'checked' : ''}>
                     <span>여성</span>
                 </label>
             </div>

@@ -23,8 +23,8 @@ public class MypageController {
             return "redirect:/login"; // 로그인 안되어 있으면 로그인 페이지로
         }
 
-        String email = userDetails.getUsername(); // 로그인 시 username 필드에 email이 들어간 구조일 경우
-        MypageDto mypage = mypageService.getUserData(email);
+        String email = userDetails.getUsername(); // 현재 로그인한 사용자의 email을 가져옴
+        MypageDto mypage = mypageService.getUserData(email); // 위에서 얻은 이메일을 서비스에 넘겨서 해당 사용자의 MypageDto를 가져옴
 
         model.addAttribute("mypage", mypage);
         return "mypage/index";
@@ -36,7 +36,11 @@ public class MypageController {
     }
 
     @GetMapping("/info")
-    public String info() {
+    public String info(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        String email = userDetails.getUsername();
+        MypageDto mypage = mypageService.getUserData(email);
+
+        model.addAttribute("mypage", mypage);
         return "mypage/info";
     }
 
