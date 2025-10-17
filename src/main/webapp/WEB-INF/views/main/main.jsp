@@ -66,7 +66,7 @@
           </button>
           <div class="card-body">
             <h6>${lecture.title}</h6>
-            <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/></p>
+            <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/>></p>
                <div class="card-review">
                     <div>
                         <span>⭐4.8</span>

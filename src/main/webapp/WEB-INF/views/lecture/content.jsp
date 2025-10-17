@@ -183,8 +183,8 @@
                 <li class="list-group-item">
                     <strong>카테고리:</strong>
                     <c:choose>
-                        <c:when test="${lecture.category.parentCategory != null}">
-                            ${lecture.category.parentCategory.categoryName} &gt; ${lecture.category.categoryName}
+                        <c:when test="${lecture.category.parent != null}">
+                            ${lecture.category.parent.categoryName} &gt; ${lecture.category.categoryName}
                         </c:when>
                         <c:otherwise>
                             ${lecture.category.categoryName}

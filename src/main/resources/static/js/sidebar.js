@@ -10,4 +10,18 @@ document.addEventListener("DOMContentLoaded", function() {
             link.classList.remove("active");
         }
     });
+
+    //무료강의 체크박스 관련
+    const priceInput = document.getElementById("price"); // 강의비 input
+    const freeCheck = document.getElementById("isFree"); // 무료 체크
+
+    freeCheck.addEventListener("change", () => {
+        if(freeCheck.checked) {
+            priceInput.value = 0;
+            priceInput.disabled = true;
+        } else {
+            priceInput.disabled = false;
+        }
+    });
+
 });

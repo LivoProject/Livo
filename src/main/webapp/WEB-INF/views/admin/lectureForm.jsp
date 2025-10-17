@@ -18,29 +18,36 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강사 이름</label>
-                        <input type="text" name="instructor" class="form-control" required>
+                        <input type="text" name=tutorName class="form-control" required>
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">강사 소개</label>
-                    <textarea name="intro" class="form-control" rows="2"></textarea>
+                    <textarea name="tutorInfo" class="form-control" rows="2"></textarea>
                 </div>
 
                 <!-- 카테고리 -->
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">상위 카테고리</label>
-                        <select name="mainCategory" class="form-select">
+                        <!--카테고리 레벨이1일때-->
+                        <select id="parentCategory" class="form-select">
+                            <option>IT</option>
                             <option>자기계발</option>
-                            <option>비즈니스</option>
+                            <option>문화여가</option>
+                            <option>건강</option>
+                            <option>언어</option>
+                            <option>인문사회</option>
+                            <option>자격증</option>
+                            <option>경제</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">하위 카테고리</label>
-                        <select name="subCategory" class="form-select">
-                            <option>커뮤니케이션</option>
-                            <option>리더십</option>
+                        <!--카테고리 레벨이2일때-->
+                        <select id="childCategory" name="categoryId" class="form-select">
+
                         </select>
                     </div>
                 </div>
@@ -49,7 +56,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">모집 인원</label>
-                        <input type="number" name="capacity" class="form-control" min="1" value="10">
+                        <input type="number" name="totalCount" class="form-control" min="1" value="10">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강의비</label>
@@ -67,22 +74,22 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">예약 시작일</label>
-                        <input type="datetime-local" name="reserveStart" class="form-control">
+                        <input type="datetime-local" name="reservationStart" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">예약 종료일</label>
-                        <input type="datetime-local" name="reserveEnd" class="form-control">
+                        <input type="datetime-local" name="reservationEnd" class="form-control">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">강의 시작일</label>
-                        <input type="date" name="startDate" class="form-control">
+                        <input type="date" name="lectureStart" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강의 종료일</label>
-                        <input type="date" name="endDate" class="form-control">
+                        <input type="date" name="lectureEnd" class="form-control">
                     </div>
                 </div>
 

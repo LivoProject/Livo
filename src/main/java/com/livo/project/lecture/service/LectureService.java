@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LectureService {
-
+    //강좌 입력(관리자페이지)
+    Lecture saveLecture(Lecture lecture, int categoryId);
     // 강좌 전체 조회
     List<Lecture> findAll();
 
