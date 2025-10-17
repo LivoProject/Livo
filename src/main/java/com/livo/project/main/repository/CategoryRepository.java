@@ -1,6 +1,6 @@
 package com.livo.project.main.repository;
 
-import com.livo.project.main.domain.Category;
+import com.livo.project.lecture.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

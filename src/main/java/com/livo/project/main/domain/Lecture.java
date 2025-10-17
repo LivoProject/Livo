@@ -1,5 +1,6 @@
 package com.livo.project.main.domain;
 
+import com.livo.project.lecture.domain.Category;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

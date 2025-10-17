@@ -1,25 +1,37 @@
 package com.livo.project.lecture.service;
 
+import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.LectureRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.livo.project.main.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class LectureServiceImpl implements LectureService {
 
     private final LectureRepository lectureRepository;
+    private final CategoryRepository categoryRepository;
 
     // 생성자 주입
-    public LectureServiceImpl(@Qualifier("lectureLectureRepository")LectureRepository lectureRepository) {
-        this.lectureRepository = lectureRepository;
-    }
+//    public LectureServiceImpl(@Qualifier("lectureLectureRepository")LectureRepository lectureRepository) {
+//        this.lectureRepository = lectureRepository;
+//    }
 
+    @Override
+    public Lecture saveLecture(Lecture lecture, @RequestParam("categoryId") int categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow();
+        lecture.setCategory(category);
+        return lectureRepository.save(lecture);
+
+    }
     @Override
     public List<Lecture> findAll() {
         return lectureRepository.findAll();

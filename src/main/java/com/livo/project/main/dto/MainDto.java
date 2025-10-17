@@ -1,6 +1,6 @@
 package com.livo.project.main.dto;
 
-import com.livo.project.main.domain.Category;
+import com.livo.project.lecture.domain.Category;
 import com.livo.project.main.domain.Lecture;
 import com.livo.project.main.domain.Notice;
 import lombok.AllArgsConstructor;
