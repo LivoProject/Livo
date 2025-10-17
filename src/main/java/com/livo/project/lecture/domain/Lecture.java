@@ -37,10 +37,11 @@ public class Lecture {
     private int reservationCount = 0;
     private int price;
 
+//    private Boolean isFree=false;
+
     private int categoryId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId", insertable = false, updatable = false)
     private Category category;
-
 }
