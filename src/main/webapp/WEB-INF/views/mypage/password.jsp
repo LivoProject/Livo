@@ -115,12 +115,14 @@
         <div class="mb-3">
             <label class="form-label">현재 비밀번호</label>
             <input type="password" name="currentPassword" id="currentPassword" class="form-control" required>
+            <button class="password-toggle" type="button" aria-label="비밀번호 표시 토글">보기</button>
         </div>
 
         <!-- 새 비밀번호 -->
         <div class="mb-3">
             <label class="form-label">새 비밀번호</label>
             <input type="password" name="newPassword" id="newPassword" class="form-control" required>
+            <button class="password-toggle" type="button" aria-label="비밀번호 표시 토글">보기</button>
             <small id="pwMsg" class="form-text"></small>
         </div>
 
@@ -128,6 +130,7 @@
         <div class="mb-3">
             <label class="form-label">새 비밀번호 확인</label>
             <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required>
+            <button class="password-toggle" type="button" aria-label="비밀번호 표시 토글">보기</button>
             <small id="confirmMsg" class="form-text"></small>
         </div>
 
