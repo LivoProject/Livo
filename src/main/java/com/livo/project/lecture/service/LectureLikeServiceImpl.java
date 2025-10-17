@@ -2,18 +2,16 @@ package com.livo.project.lecture.service;
 
 import com.livo.project.lecture.domain.LectureLike;
 import com.livo.project.lecture.repository.LectureLikeRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class LectureLikeServiceImpl implements LectureLikeService {
 
     private LectureLikeRepository lectureLikeRepository;
-
-    public LectureLikeServiceImpl(LectureLikeRepository lectureLikeRepository) {
-        this.lectureLikeRepository = lectureLikeRepository;
-    }
 
     @Override
     public boolean toggleLike(int lectureId, String email) {

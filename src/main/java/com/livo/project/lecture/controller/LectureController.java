@@ -124,10 +124,7 @@ public class LectureController {
         //리뷰 평균
         Double avgStar = reviewService.getAverageStarByLecture(lectureId);
 
-        //첨부파일
-        List<Attachment> attachments = attachmentService.getAttachmentsByLectureId(lectureId);
-
-        //로그인 및 수강여부 확인 -> 후기 작성 위해! -> 아... 이거 수정 예정...
+        //로그인 및 수강여부 확인 -> 리뷰 작성 위해!
         boolean isLoggedIn = (userDetails != null);
         boolean isEnrolled = false;
         if (isLoggedIn) {
@@ -135,13 +132,17 @@ public class LectureController {
             isEnrolled = reservationService.isUserEnrolled(lectureId, email);
         }
 
+        //첨부파일
+        List<Attachment> attachments = attachmentService.getAttachmentsByLectureId(lectureId);
+
+
         model.addAttribute("lecture", lecture);
         model.addAttribute("chapters", chapters);
         model.addAttribute("reviews", reviews);
         model.addAttribute("avgStar", avgStar);
-        model.addAttribute("attachments", attachments);
         model.addAttribute("isLoggedIn", isLoggedIn);
         model.addAttribute("isEnrolled", isEnrolled);
+        model.addAttribute("attachments", attachments);
 
         return "lecture/content";
     }

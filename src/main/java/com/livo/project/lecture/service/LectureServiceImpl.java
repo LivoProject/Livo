@@ -20,11 +20,6 @@ public class LectureServiceImpl implements LectureService {
     private final LectureRepository lectureRepository;
     private final CategoryRepository categoryRepository;
 
-    // 생성자 주입
-//    public LectureServiceImpl(@Qualifier("lectureLectureRepository")LectureRepository lectureRepository) {
-//        this.lectureRepository = lectureRepository;
-//    }
-
     @Override
     public Lecture saveLecture(Lecture lecture, @RequestParam("categoryId") int categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow();
