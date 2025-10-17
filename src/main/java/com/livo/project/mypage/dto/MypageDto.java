@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-
+/**
+ * 마이페이지 DTO
+ * - 사용자 정보 전송용 객체 (Entity 직접 노출 방지)
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,6 +21,7 @@ public class MypageDto {
     private Long userId;
     private String username;
     private String email;
+    private String password;
     private String nickname;
     private String phone;
     private LocalDate birth;
