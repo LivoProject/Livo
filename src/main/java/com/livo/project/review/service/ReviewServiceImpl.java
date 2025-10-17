@@ -2,18 +2,16 @@ package com.livo.project.review.service;
 
 import com.livo.project.review.domain.Review;
 import com.livo.project.review.repository.ReviewRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
-
-    public ReviewServiceImpl(ReviewRepository reviewRepository) {
-        this.reviewRepository = reviewRepository;
-    }
 
     @Override
     public List<Review> getReviewsByLectureId(int lectureId) {

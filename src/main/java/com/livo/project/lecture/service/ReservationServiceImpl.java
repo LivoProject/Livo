@@ -2,16 +2,14 @@ package com.livo.project.lecture.service;
 
 import com.livo.project.lecture.domain.Reservation;
 import com.livo.project.lecture.repository.ReservationRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-
-    public ReservationServiceImpl(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
 
     @Override
     public void saveReservation(int lectureId, String email) {

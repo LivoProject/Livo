@@ -90,7 +90,7 @@
         <!-- 생년월일 -->
         <div class="field">
             <label class="form-label">생년월일</label><br/>
-            <form:input path="birth" placeholder="yyyy-mm-dd" cssClass="form-control" id="birth"/>
+            <form:input path="birth"  placeholder="yyyymmdd"  type="date" cssClass="form-control" id="birth" />
         </div>
 
         <!-- 성별 -->
