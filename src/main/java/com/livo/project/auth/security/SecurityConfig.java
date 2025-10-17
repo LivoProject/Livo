@@ -67,12 +67,6 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                         .requestMatchers(
                                 "/", "/main", "/favicon.ico", "/error",
-                                //테스트 용으로
-                                "/admin/lecture/save",
-                                "/lecture/uploadImage",
-                                "/admin/lecture",
-                                "/admin/dashboard",
-                                "/admin/lecture/insert",
 
                                 //  로그인/회원가입 페이지 및 처리
                                 "/auth/login",
@@ -89,8 +83,7 @@ public class SecurityConfig {
                                 "/css/**", "/js/**", "/img/**", "/images/**", "/webjars/**"
                         ).permitAll()
                         // 나머지는 인증 필요
-                        //.anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
 
                 /* -------------------------------
