@@ -4,6 +4,7 @@ import com.livo.project.lecture.domain.*;
 import com.livo.project.lecture.service.*;
 import com.livo.project.review.domain.Review;
 import com.livo.project.review.service.ReviewService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/lecture")
 public class LectureController {
@@ -25,16 +27,6 @@ public class LectureController {
     private final ReviewService reviewService;
     private final ReservationService reservationService;
 
-    public LectureController(LectureService lectureService,
-                             ChapterListService chapterListService,
-                             AttachmentService attachmentService,
-                             ReviewService reviewService, ReservationService reservationService) {
-        this.lectureService = lectureService;
-        this.chapterListService = chapterListService;
-        this.attachmentService = attachmentService;
-        this.reviewService = reviewService;
-        this.reservationService = reservationService;
-    }
 
     // 전체 강좌 리스트 (페이징 포함)
     @GetMapping("/list")
