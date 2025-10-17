@@ -13,6 +13,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.NullRequestCache;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+
 
 @Configuration
 @RequiredArgsConstructor
@@ -40,6 +49,45 @@ public class SecurityConfig {
         provider.setPasswordEncoder(encoder);
         return provider;
     }
+    @Bean
+    public AuthenticationSuccessHandler roleBasedSuccessHandler() {
+        return new SavedRequestAwareAuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest req,
+                                                HttpServletResponse res,
+                                                Authentication auth)
+                    throws IOException, ServletException {
+
+                var set = AuthorityUtils.authorityListToSet(auth.getAuthorities());
+
+                //  역할별 세션 시간(초)
+                int adminSecs   = 15 * 60;  // 관리자 15분
+                int managerSecs = 30 * 60;  // 매니저 30분
+                int userSecs    = 60 * 60;  // 일반 60분
+
+                // 세션 확보 후 역할별로 만료 시간 설정
+                var session = req.getSession(true); // 없으면 생성
+                if (set.contains("ROLE_ADMIN")) {
+                    session.setMaxInactiveInterval(adminSecs);
+                } else if (set.contains("ROLE_MANAGER")) {
+                    session.setMaxInactiveInterval(managerSecs);
+                } else {
+                    session.setMaxInactiveInterval(userSecs);
+                }
+
+                // (저장된 요청 체크를 쓰지 않는 구성이라면 바로 역할별 리다이렉트)
+                if (set.contains("ROLE_ADMIN")) {
+                    getRedirectStrategy().sendRedirect(req, res, "/admin/dashboard");
+                } else if (set.contains("ROLE_MANAGER")) {
+                    getRedirectStrategy().sendRedirect(req, res, "/manager");
+                } else {
+                    getRedirectStrategy().sendRedirect(req, res, "/");
+                }
+            }
+        };
+    }
+
+
 
     /**  보안 필터 체인 설정 */
     @Bean
@@ -90,6 +138,11 @@ public class SecurityConfig {
                                 //  정적 리소스 (CSS/JS/이미지 등)
                                 "/css/**", "/js/**", "/img/**", "/images/**", "/webjars/**"
                         ).permitAll()
+
+                                .requestMatchers("/admin/**").hasRole("ADMIN")          //  추가
+                                .requestMatchers("/manager/**").hasAnyRole("ADMIN","MANAGER") // ★추가
+
+
                         // 나머지는 인증 필요
                         .anyRequest().authenticated()
                        // .anyRequest().permitAll()
@@ -131,7 +184,8 @@ public class SecurityConfig {
                         .loginProcessingUrl("/auth/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/", true)
+                        //.defaultSuccessUrl("/", true)
+                        .successHandler(roleBasedSuccessHandler())
                         .failureUrl("/auth/login?error")
                         .permitAll()
                 )

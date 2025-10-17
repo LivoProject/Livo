@@ -90,12 +90,16 @@ public class AuthController {
         var r = emailVerificationService.verifyCode(email, code);
 
         if (r.ok()) {
+            //  이메일 인증 성공: 세션에 상태 저장
             session.setAttribute("VERIFIED_EMAIL", email.toLowerCase());
+
+            //  이 플로우에서만 세션 유지시간 연장(예: 10분)
+            session.setMaxInactiveInterval(10 * 60);
+
             return ResponseEntity.ok(Map.of("success", true, "message", r.message()));
         }
         return ResponseEntity.badRequest().body(Map.of("success", false, "message", r.message()));
     }
-
     // ─────────────────────────────────────────────────────
     // 2) 회원가입 처리 (AJAX/JSON 전용)
     // ─────────────────────────────────────────────────────

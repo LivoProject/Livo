@@ -35,6 +35,10 @@ public class adminController {
     public String showAdminPage(){
         return "admin/dashboard";
     }
+    @GetMapping("")
+    public String redirectToDashboard() {//추가한 메서드
+        return "redirect:/admin/dashboard";
+    }
     @GetMapping("/faq")
     public String showFaqPage(@RequestParam(defaultValue = "0") int page,
                               @RequestParam(defaultValue = "9") int size,
