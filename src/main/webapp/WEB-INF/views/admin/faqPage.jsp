@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
@@ -8,7 +10,7 @@
           <div class="row">
             <div class="col-12">
               <div class="text-end mb-3">
-                <a href="faqForm" class="btn btn-success">새 FAQ 등록</a>
+                <a href="faq/insert" class="btn btn-success">새 FAQ 등록</a>
               </div>
               <div class="card mb-4">
                 <div class="card-header pb-0">
@@ -26,11 +28,20 @@
                         </tr>
                       </thead>
                       <tbody>
-                          <c:forEach var="faq" items="${faqList}">
+                          <c:forEach var="faq" items="${faq}">
                               <tr>
                                   <td class="text-center">${faq.id}</td>
                                   <td class="text-center">${faq.question}</td>
-                                  <td class="text-center">${faq.answer}</td>
+                                  <td class="text-center">
+                                    <c:choose>
+                                        <c:when test="${fn:length(faq.answer) > 100}">
+                                          ${fn:substring(faq.answer, 0, 100)}...
+                                        </c:when>
+                                        <c:otherwise>
+                                          ${faq.answer}
+                                        </c:otherwise>
+                                      </c:choose>
+                                  </td>
                                   <td class="text-center">
                                       <a href="/admin/faq/edit?id=${faq.id}" class="btn btn-sm btn-primary">수정</a>
                                       <form action="/admin/faq/delete" method="post" style="display:inline;">
