@@ -15,7 +15,7 @@
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    width: 450px;
+    width: 560px;
     padding: 2rem 2.5rem;
     text-align: left;
 }
@@ -65,6 +65,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
 }
 #signupForm .signupForm-label {
     width: 100px;
@@ -107,12 +108,18 @@
 #signupForm input[type="date"]:invalid::-webkit-datetime-edit-day-field {
     color: #999;
 }
+#signupForm .form-control {
+    margin-top: 0.5rem;
+}
 #signupForm .form-label {
     width: 6rem;
+    margin-bottom: 0;
+    font-size: 0.9rem;
  }
 #signupForm .gender-group {
     gap: 1rem;
     display: flex;
+    margin-top: 0.5rem;
 }
 #signupForm .signupForm-control {
     background: #f9fafb;
@@ -127,9 +134,6 @@
     background: #fff;
     border-color: var(--color-main);
     box-shadow: 0 0 0 3px rgba(23, 180, 199, 0.15);
-}
-#signupForm .gender-group {
-    margin-top: 4px;
 }
 #signupForm .gender-radio {
     position: relative;

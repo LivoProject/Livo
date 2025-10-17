@@ -3,31 +3,30 @@ package com.livo.project.mypage.service;
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.auth.repository.UserRepository;
 import com.livo.project.mypage.dto.MypageDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Date;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.time.format.DateTimeFormatter;
 
+/**
+ * 마이페이지 서비스
+ * - 유저 데이터 조회 및 수정, 비밀번호 변경 로직 처리
+ */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MypageService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
+    // 마이페이지 기본 데이터 조회
     public MypageDto getUserData(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("유저 없음"));
-
-
-        // 가입일수 계산
-        LocalDate created = user.getCreatedAt().toLocalDate();
-        long days = ChronoUnit.DAYS.between(created, LocalDate.now());
-
-        // 폰번호 010 형식으로 변환
-        // 앞에 +01 를 0 으로 바꾸면 됨
-        // 인덱스 0ㅂ
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         return MypageDto.builder()
                 .userId(user.getId())
@@ -36,13 +35,52 @@ public class MypageService {
                 .nickname(user.getNickname())
                 .phone(user.getPhone())
                 .birth(user.getBirth())
-                .gender(user.getGender() != null ? user.getGender().name() : null)
-                .role(String.valueOf(user.getRoleId()))
-                .joinDate(created.toString())
-                .joinDays(days)
-                // .likedLectures(null) // 나중에 연동 시 교체
-                //.reviews(null)
+                .gender(user.getGender() != null ? user.getGender().toString() : null)
+                .joinDate(user.getCreatedAt() != null ? user.getCreatedAt().toLocalDate().toString() : "")
                 .build();
+    }
 
+    // 일반 정보 수정 (이메일 기반)
+    @Transactional
+    public void updateUserProfile(String email, MypageDto dto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        user.setNickname(dto.getNickname());
+        user.setPhone(dto.getPhone());
+        user.setBirth(dto.getBirth());
+        user.setName(dto.getUsername());
+
+        //  gender만 리플렉션으로 변환해서 세팅 (Entity / Enum import X)
+        if (dto.getGender() != null && !dto.getGender().isBlank()) {
+            try {
+                Class<?> genderClass = Class.forName("com.livo.project.auth.domain.entity.Gender");
+                Object genderEnum = Enum.valueOf((Class<Enum>) genderClass, dto.getGender().toUpperCase());
+                user.getClass().getMethod("setGender", genderClass).invoke(user, genderEnum);
+            } catch (Exception e) {
+                log.warn("⚠️ 잘못된 gender 값: {}", dto.getGender(), e);
+            }
         }
+
+        userRepository.save(user);
+        log.info("✅ 사용자 정보 수정 완료: {}", email);
+    }
+
+    // 비밀번호 변경
+    @Transactional
+    public void updateUserPassword(String currentPassword, String newPassword) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new RuntimeException("현재 비밀번호가 올바르지 않습니다.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        log.info("✅ 비밀번호 변경 완료: {}", email);
+    }
 }
