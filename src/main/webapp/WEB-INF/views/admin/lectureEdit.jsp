@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
+
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
@@ -9,33 +11,41 @@
         <div class="form-section">
             <h5 class="mb-4 fw-bold">강의 등록</h5>
 
-            <form action="/admin/lecture/save" method="post" enctype="multipart/form-data">
+            <form action="/admin/lecture/edit" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                <input type="hidden" name="lectureId" value="${lecture.lectureId}"/>
                 <!-- 기본 정보 -->
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">강의 제목</label>
-                        <input type="text" name="title" class="form-control" required>
+                        <input type="text" name="title" class="form-control" value="${lecture.title}" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강사 이름</label>
-                        <input type="text" name=tutorName class="form-control" required>
+                        <input type="text" name=tutorName class="form-control" value="${lecture.tutorName}" required>
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">강사 소개</label>
-                    <textarea name="tutorInfo" class="form-control" rows="2"></textarea>
+                    <textarea name="tutorInfo" class="form-control" rows="2">${lecture.tutorInfo}</textarea>
                 </div>
 
                 <!-- 카테고리 -->
+                <input type="hidden" id="selectedParentId" value="${lecture.category.parent != null ? lecture.category.parent.categoryId : ''}">
+                <input type="hidden" id="selectedChildId" value="${lecture.category.categoryId}">
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">상위 카테고리</label>
                         <select id="parentCategory" class="form-select">
                             <option value="">상위 카테고리 선택</option>
                             <c:forEach var="p" items="${parents}">
-                                <option value="${p.categoryId}">${p.categoryName}</option>
+                                <option value="${p.categoryId}"
+                                    <c:if test="${lecture.category.parent != null && lecture.category.parent.categoryId == p.categoryId}">
+                                        selected
+                                    </c:if>>
+                                    ${p.categoryName}
+                                </option>
                             </c:forEach>
                         </select>
                     </div>
@@ -51,14 +61,14 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">모집 인원</label>
-                        <input type="number" name="totalCount" class="form-control" min="1" value="10">
+                        <input type="number" name="totalCount" class="form-control" min="1" value="${lecture.totalCount}">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강의비</label>
                         <div class="input-group">
-                            <input type="number" name="price" class="form-control" value="0">
+                            <input type="number" name="price" class="form-control" value="${lecture.price}" <c:if test="${lecture.isFree}">disabled</c:if>>
                             <div class="input-group-text">
-                                <input type="checkbox" id="freeCheck" name="isFree" value="true">
+                                <input type="checkbox" id="freeCheck" name="isFree">
                                 <label for="freeCheck" class="ms-1 mb-0">무료강의</label>
                             </div>
                         </div>
@@ -69,29 +79,31 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">예약 시작일</label>
-                        <input type="datetime-local" name="reservationStart" class="form-control">
+                        <input type="datetime-local" name="reservationStart" class="form-control" value="${lecture.reservationStart}">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">예약 종료일</label>
-                        <input type="datetime-local" name="reservationEnd" class="form-control">
+                        <input type="datetime-local" name="reservationEnd" class="form-control" value="${lecture.reservationEnd}">
                     </div>
                 </div>
 
+                <fmt:formatDate value="${lecture.lectureStart}" pattern="yyyy-MM-dd" var="formattedLectureStart" />
+                <fmt:formatDate value="${lecture.lectureEnd}" pattern="yyyy-MM-dd" var="formattedLectureEnd" />
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">강의 시작일</label>
-                        <input type="date" name="lectureStart" class="form-control">
+                        <input type="date" name="lectureStart" class="form-control" value="${formattedLectureStart}" >
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강의 종료일</label>
-                        <input type="date" name="lectureEnd" class="form-control">
+                        <input type="date" name="lectureEnd" class="form-control" value="${formattedLectureEnd}" >
                     </div>
                 </div>
 
                 <!-- 강의 내용 -->
                 <div class="mb-4">
                     <label class="form-label">강의 내용</label>
-                    <textarea id="summernote" name="content"></textarea>
+                    <textarea id="summernote" name="content">${lecture.content}</textarea>
                 </div>
 
                 <button class="btn btn-primary w-sm-100" style="max-width: 200px;">등록하기</button>
@@ -103,8 +115,9 @@
 </div>
 <!-- Summernote -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js<script src="/js/lecture.js"></script>
-<script src="/js/lectureForm.js"></script>"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+<script src="/js/lecture.js"></script>
+<script src="/js/lectureEdit.js"></script>
 
 </body>
 </html>
