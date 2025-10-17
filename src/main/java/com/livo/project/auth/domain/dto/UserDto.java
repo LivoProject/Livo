@@ -17,6 +17,7 @@ public class UserDto {
     private String username;
     private String email;
     private String nickname;
+    private String gender;
     private String role;
     private String createdAt;
 
@@ -28,6 +29,7 @@ public class UserDto {
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .role(String.valueOf(user.getRoleId()))
+                .gender(user.getGender() != null ? user.getGender().name() : null)
                 .createdAt(user.getCreatedAt() != null
                         ? user.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                         : null)

@@ -1,5 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %> <%@ include
-file="/WEB-INF/views/common/header.jsp" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <!-- 컨텐츠 -->
 <section id="mypage" class="container">
