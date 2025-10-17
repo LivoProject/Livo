@@ -58,6 +58,7 @@ public class FaqController {
         return "faq/faq_add";
     }
 
+
     @ModelAttribute("chatHistory")
     public List<ChatMessage> chatHistory(){
         return new ArrayList<>();
