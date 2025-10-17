@@ -1,0 +1,44 @@
+/* ==========================================
+   ⭐ 리뷰 별점 스타일 (Review Star Rating)
+   ========================================== */
+
+:root {
+    --color-light-gray: #ccc;
+    --color-point: #f1c40f;
+    --color-main: #0d6efd;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-white-dark: #f9f9f9;
+    --color-main-dark: #0b5ed7;
+    --border-black: 1px solid #000;
+}
+
+.star-wrap {
+    margin: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.bi-star-fill {
+    color: var(--color-light-gray, #ccc);
+    transition: 0.15s ease;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.bi-star-fill:hover {
+    color: var(--color-point, #f1c40f);
+    transform: scale(1.2);
+}
+
+.bi-star-fill.on {
+    color: var(--color-point, #f1c40f);
+}
+
+.bi-star-fill.active {
+    color: var(--color-point, #f1c40f);
+    transform: scale(1.1);
+}
