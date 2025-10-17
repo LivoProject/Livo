@@ -4,6 +4,8 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="_csrf" content="${_csrf.token}" />
+    <meta name="_csrf_header" content="${_csrf.headerName}" />
     <title>dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Bootstrap -->
@@ -48,11 +50,11 @@
                 <li class="nav-item">
                     <a href="dashboard" class="nav-link active"><i class="bi bi-house me-2"></i>대시보드</a>
                 </li>
-                <li><a href="chartPage" class="nav-link"><i class="bi bi-bar-chart me-2"></i>통계</a></li>
-                <li><a href="lecturePage" class="nav-link"><i class="bi bi-people me-2"></i>강의 관리</a></li>
-                <li><a href="reportPage" class="nav-link"><i class="bi bi-people me-2"></i>신고 처리</a></li>
-                <li><a href="noticePage" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
-                <li><a href="faqPage" class="nav-link"><i class="bi bi-gear me-2"></i>FAQ 관리</a></li>
+                <li><a href="chart" class="nav-link"><i class="bi bi-bar-chart me-2"></i>통계</a></li>
+                <li><a href="lecture" class="nav-link"><i class="bi bi-people me-2"></i>강의 관리</a></li>
+                <li><a href="report" class="nav-link"><i class="bi bi-people me-2"></i>신고 처리</a></li>
+                <li><a href="notice" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
+                <li><a href="faq" class="nav-link"><i class="bi bi-gear me-2"></i>FAQ 관리</a></li>
             </ul>
         </div>
         <div class="ps__rail-y" style="top: 0px; height: 972px; right: 0px;">
@@ -68,11 +70,11 @@
         <div class="offcanvas-body">
             <ul class="nav flex-column">
                 <li class="nav-item"><a href="dashboard" class="nav-link active"><i class="bi bi-house me-2"></i>대시보드</a></li>
-                <li><a href="chartPage" class="nav-link"><i class="bi bi-bar-chart me-2"></i>통계</a></li>
-                <li><a href="lecturePage" class="nav-link"><i class="bi bi-people me-2"></i>강의 관리</a></li>
-                <li><a href="reportPage" class="nav-link"><i class="bi bi-people me-2"></i>신고 처리</a></li>
-                <li><a href="noticePage" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
-                <li><a href="faqPage" class="nav-link"><i class="bi bi-gear me-2"></i>FAQ 관리</a></li>
+                <li><a href="chart" class="nav-link"><i class="bi bi-bar-chart me-2"></i>통계</a></li>
+                <li><a href="lecture" class="nav-link"><i class="bi bi-people me-2"></i>강의 관리</a></li>
+                <li><a href="report" class="nav-link"><i class="bi bi-people me-2"></i>신고 처리</a></li>
+                <li><a href="notice" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
+                <li><a href="faq" class="nav-link"><i class="bi bi-gear me-2"></i>FAQ 관리</a></li>
             </ul>
         </div>
     </div>

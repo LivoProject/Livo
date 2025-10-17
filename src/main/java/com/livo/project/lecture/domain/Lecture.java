@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -27,20 +28,24 @@ public class Lecture {
 
     @Lob
     private String tutorInfo;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date reservationStart;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date reservationEnd;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date lectureStart;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date lectureEnd;
 
     private int totalCount;
     private int reservationCount = 0;
     private int price;
 
+    private Boolean isFree = false;
+
     private int categoryId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId", insertable = false, updatable = false)
     private Category category;
-
 }

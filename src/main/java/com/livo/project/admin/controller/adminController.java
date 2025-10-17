@@ -1,46 +1,106 @@
 package com.livo.project.admin.controller;
 
+import com.livo.project.admin.service.FileService;
+import com.livo.project.lecture.domain.Category;
+import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.lecture.service.LectureService;
+import com.livo.project.lecture.CategoryRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
+@RequiredArgsConstructor
 @RequestMapping("admin")
 @Controller
 public class adminController {
+    private final LectureService lectureService;
+    private final CategoryRepository categoryRepository;
+    private final FileService fileService;
+
     @GetMapping("/dashboard")
     public String showAdminPage(){
         return "admin/dashboard";
     }
-    @GetMapping("/faqPage")
+    @GetMapping("/faq")
     public String showFaqPage(){
         return "admin/faqPage";
     }
-    @GetMapping("/noticePage")
+    @GetMapping("/notice")
     public String showNoticePage(){
         return "admin/noticePage";
     }
 
-    @GetMapping("/lecturePage")
-    public String showLecturePage(){
-        return "admin/lecturePage";
+    @GetMapping("/lecture")
+    public String adminLectureList(@RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "9") int size,
+                                   Model model) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Lecture> lecturePage = lectureService.getLecturePage(pageable);
+
+        model.addAttribute("lecturePage", lecturePage);
+        model.addAttribute("lectures", lecturePage.getContent());
+        return "admin/lecturePage"; // ✅ admin 전용 JSP
     }
 
-    @GetMapping("/lectureForm")
-    public String showLectureForm(){
+    @GetMapping("/lecture/insert")
+    public String showLectureForm(Model model){
+        List<Category> parents = categoryRepository.findByParentIsNull();
+        model.addAttribute("parents",parents);
         return "admin/lectureForm";
     }
 
-    @GetMapping("/faqForm")
+    @PostMapping("/lecture/save")
+    public String saveLecture(@RequestParam("categoryId")int categoryId, Lecture lecture){
+        lectureService.saveLecture(lecture, categoryId);
+        return "redirect:/admin/lecture";
+    }
+
+    @PostMapping("/lecture/uploadImage")
+    @ResponseBody
+    public String uploadImage(@RequestParam("file") MultipartFile file){
+        return fileService.saveFile(file);
+    }
+
+    @PostMapping("/lecture/delete")
+    public String deleteLecture(@RequestParam("lectureId") int id){
+        lectureService.deleteLecture(id);
+        return "redirect:/admin/lecture";
+    }
+
+    @GetMapping("/lecture/edit")
+    public String showEditForm(Model model, @RequestParam("lectureId") int lectureId){
+        Lecture lecture = lectureService.editLecture(lectureId);
+        List<Category> parents = categoryRepository.findByParentIsNull();
+        model.addAttribute("lecture", lecture);
+        model.addAttribute("parents", parents);
+        return "admin/lectureEdit";
+    }
+
+    @PostMapping("/lecture/edit")
+    public String editLecture(@RequestParam("categoryId") int categoryId, Lecture lecture){
+        lectureService.updateLecture(lecture, categoryId);
+        return "redirect:/admin/lecture";
+    }
+
+    @GetMapping("/faq/insert")
     public String showFaqForm(){
         return "admin/faqForm";
     }
 
-    @GetMapping("/reportPage")
+    @GetMapping("/report")
     public String showReportPage(){
         return "admin/reportPage";
     }
 
-    @GetMapping("/chartPage")
+    @GetMapping("/chart")
     public String showChartPage(){
         return "admin/chartPage";
     }

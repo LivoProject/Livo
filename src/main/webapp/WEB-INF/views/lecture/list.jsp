@@ -1,65 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<!DOCTYPE html>
-<html lang="ko">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>PROJECT</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
-  <!-- Swiper -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="/css/reset.css" />
-  <link rel="stylesheet" href="/css/common.css" />
-  <link rel="stylesheet" href="/css/main.css" />
-  <link rel="stylesheet" href="/css/sub.css" />
-  <!-- JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-
-<body>
-
-  <!-- 헤더 -->
-  <header>
-    <div class="container">
-      <nav class="navbar navbar-expand-lg">
-        <a class="logo navbar-brand" href="#">LOGO</a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="mainNavbar">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item"><a class="nav-link" href="#">홈</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">강좌</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">마이페이지</a></li>
-            <li><button id="searchToggle" class="nav-link"><i class="bi bi-search"></i></button></li>
-          </ul>
-
-          <div class="header-actions">
-            <button><i class="bi bi-box-arrow-in-right"></i>로그인</button>
-            <button><i class="bi bi-person-plus"></i>회원가입</button>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <!-- 헤더 검색창 -->
-  <div id="headerSearch">
-    <h4>배우고 싶은 강좌를 찾아보세요.</h4>
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="강좌명, 대학명, 키워드 입력" />
-      <button><i class="bi bi-search"></i></button>
-    </div>
-  </div>
+  <!-- main.css 스타일 적용용 wrapper -->
+  <main id="main">
 
   <!-- 민영페이지 시작 강좌 목록 -->
   <section id="sub" class="container mt-4">
@@ -95,33 +41,41 @@
     </div>
 
     <!--  강좌 리스트 -->
-    <div class="album py-5 bg-body-tertiary">
-      <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    <div id="recommend">
+    <div class="container">
+      <h3>전체 강좌</h3>
+      <div class="recommend-grid">
 
-          <c:forEach var="lecture" items="${lectures}">
-            <div class="col">
-              <div class="card shadow-sm">
-                <img src="/img/lecture/lecture_${lecture.lectureId}.jpg"
-                     onerror="this.src='/img/common/no-image.png';"
-                     class="card-img-top" height="225" alt="thumbnail" />
-                <div class="card-body">
-                  <p class="card-text">
-                    <strong>${lecture.title}</strong><br>
-                    강사: ${lecture.tutorName}<br>
-                    가격: ${lecture.price}원
-                  </p>
-                  <a href="/lecture/content/${lecture.lectureId}" class="btn btn-sm btn-outline-primary">상세보기</a>
-                </div>
-              </div>
+        <c:forEach var="lecture" items="${lectures}">
+          <a href="/lecture/content/${lecture.lectureId}" class="card popular-card">
+
+            <!-- 썸네일 -->
+            <div class="card-thumb" style="
+                  background-image: url('/img/lecture/lecture_${lecture.lectureId}.jpg');
+                  background-size: cover; background-position: center;
+                  height: 200px; border-radius: 12px 12px 0 0;">
             </div>
-          </c:forEach>
 
-          <c:if test="${empty lectures}">
-            <p class="text-center text-muted">등록된 강좌가 없습니다.</p>
-          </c:if>
-        </div>
+            <!-- 강좌정보 -->
+            <div class="card-body">
+            <h6>${lecture.title}</h6>
+            <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/></p>
+               <div class="card-review">
+                    <div>
+                        <span>⭐4.8</span>
+                        <span>(22)</span>
+                    </div>
+                    <div>
+                        <i class="bi bi-person-fill"></i>
+                        <span>${lecture.reservationCount}</span>
+                    </div>
+              </div>
+          </div>
+          </a>
+        </c:forEach>
+
       </div>
+    </div>
     </div>
 
     <!-- 페이지네이션 -->
@@ -143,6 +97,12 @@
       </ul>
     </nav>
   </section>
+
+
+
+
+
+
 
   <!-- JS : 주제별 세부분류 자동 변경 -->
   <script>
@@ -175,5 +135,6 @@
     });
   </script>
 
-</body>
-</html>
+
+  </main>
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>

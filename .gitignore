@@ -42,3 +42,7 @@ out/
 # 환경 설정 제외
 /src/main/resources/application.properties
 !/src/main/resources/application-example.properties
+
+#업로드파일폴더 제외
+src/main/resources/static/img/uploads/*
+!!src/main/resources/static/img/uploads/.gitkeep

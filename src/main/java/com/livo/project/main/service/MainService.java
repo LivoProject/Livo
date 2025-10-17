@@ -1,10 +1,10 @@
 package com.livo.project.main.service;
 
-import com.livo.project.main.domain.Category;
+import com.livo.project.lecture.domain.Category;
 import com.livo.project.main.domain.Lecture;
 import com.livo.project.main.domain.Notice;
 import com.livo.project.main.dto.MainDto;
-import com.livo.project.main.repository.CategoryRepository;
+import com.livo.project.lecture.CategoryRepository;
 import com.livo.project.main.repository.LectureRepository;
 import com.livo.project.main.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
