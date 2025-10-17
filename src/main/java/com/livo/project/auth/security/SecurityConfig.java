@@ -59,7 +59,6 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/lecture/like/**") // <-민영추가!!
                 )
 
-
                 /* -------------------------------
                  * [2] 요청 인가(Authorization) 규칙 설정
                  * -------------------------------
@@ -144,6 +143,7 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 );
+
 
         /* -------------------------------
          * [선택] Remember-Me 기능 (자동 로그인)

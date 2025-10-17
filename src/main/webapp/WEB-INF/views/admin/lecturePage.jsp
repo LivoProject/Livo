@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
@@ -100,31 +102,64 @@
                             <table class="table align-items-center mb-0">
                                 <thead class="table-light text-center">
                                 <tr>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">번호</th>
-                                    <th>제목</th>
-                                    <th>내용</th>
+                                    <th>번호</th>
+                                    <th>강의명</th>
+                                    <th>강사명</th>
+                                    <th>예약 기간</th>
+                                    <th>강의 기간</th>
+                                    <th>신청 인원</th>
+                                    <th>수강비</th>
                                     <th>관리</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <%-- <c:forEach var="notice" items="${noticeList}"> --%>
+                                 <c:forEach var="lectures" items="${lectures}" varStatus="status">
                                 <tr>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">추석 맞이 개편</td>
-                                    <td class="text-center">추석 맞이 개편을 합니다</td>
+                                    <td class="text-center">${lecturePage.number * lecturePage.size + status.index + 1}</td>
+                                    <td class="text-center">${lectures.title}</td>
+                                    <td class="text-center">${lectures.tutorName}</td>
                                     <td class="text-center">
-                                        <a href="#" class="btn btn-sm btn-primary">수정</a>
-                                        <form action="/notice/delete" method="post" style="display:inline;">
-                                            <input type="hidden" name="id" value="${notice.id}">
+                                        <fmt:formatDate value="${lectures.reservationStart}" pattern="yyyy-MM-dd" />
+                                        ~
+                                        <fmt:formatDate value="${lectures.reservationEnd}" pattern="yyyy-MM-dd" />
+                                    </td>
+                                    <td class="text-center">
+                                        <fmt:formatDate value="${lectures.lectureStart}" pattern="yyyy-MM-dd" />
+                                        ~
+                                        <fmt:formatDate value="${lectures.lectureEnd}" pattern="yyyy-MM-dd" />
+                                    </td>
+                                    <td class="text-center">${lectures.reservationCount}/${lectures.totalCount}</td>
+                                    <td class="text-center">
+                                        <c:choose>
+                                            <c:when test="${lectures.price == 0}">무료</c:when>
+                                            <c:otherwise>${lectures.price}</c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="/admin/lecture/edit?lectureId=${lectures.lectureId}" class="btn btn-sm btn-primary">수정</a>
+                                        <form action="/admin/lecture/delete" method="post" style="display:inline;">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                            <input type="hidden" name="lectureId" value="${lectures.lectureId}">
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
                                         </form>
                                     </td>
                                 </tr>
-                                <%-- </c:forEach> --%>
+                                 </c:forEach>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <nav>
+                        <ul class="pagination">
+                            <c:forEach begin="0" end="${lecturePage.totalPages - 1}" var="i">
+                                <li class="page-item ${i == lecturePage.number ? 'active' : ''}">
+                                    <a class="page-link" href="?page=${i}&size=9">${i + 1}</a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

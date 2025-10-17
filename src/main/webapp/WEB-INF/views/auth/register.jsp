@@ -18,11 +18,10 @@
     <c:url var="urlValEmail"   value="/auth/validate/email"/>
     <c:url var="urlValNick"    value="/auth/validate/nickname"/>
     <c:url var="urlValPw"      value="/auth/validate/password"/>
-    <!-- ✅ 링크방식 폐기 → 코드방식 엔드포인트 -->
     <c:url var="urlSendCode"   value="/auth/send-code"/>
     <c:url var="urlVerifyCode" value="/auth/verify-code"/>
+    <c:url var="urlLogin"      value="/auth/login"/>
 
-    <!-- 정적 리소스 -->
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/form.css">
@@ -33,8 +32,9 @@
 <div class="register-container">
     <h2>회원가입</h2>
 
-    <form:form id="signupForm" method="post" modelAttribute="signUpRequest">
-        <!-- 이메일 -->
+    <form:form id="signupForm" method="post" modelAttribute="signUpRequest" action="${urlRegister}">
+
+    <!-- 이메일 -->
         <div class="field">
             <label class="form-label">이메일</label>
             <form:input path="email" placeholder="name@example.com" cssClass="form-control" id="email"/>
@@ -48,7 +48,7 @@
             <span data-msg="email"></span>
         </div>
 
-        <!-- ✅ 코드 입력/확인 (초기 숨김, 인증 완료 시 자동 숨김) -->
+        <!-- 인증 코드 -->
         <div id="codeBlock" class="field" style="display:none;">
             <label class="form-label">인증 코드</label>
             <div class="d-flex align-items-center gap-2">
@@ -103,26 +103,26 @@
         </div>
 
         <div class="field">
-            <button type="submit" class="btn-submit">가입하기</button>
+            <!-- <button type="submit" class="btn-submit">가입하기</button> -->
+            <button type="submit" id="btnSubmit" class="btn-submit">가입하기</button>
         </div>
     </form:form>
 
     <p>이미 회원이신가요? <a href="<c:url value='/auth/login'/>">로그인</a></p>
 </div>
 
-<!-- ✅ 외부 JS 로드 (기존 인라인 스크립트 제거) -->
 <script>
-    // JSP 변수 → 전역 주입(외부 JS가 읽음)
     window.__REG_CFG__ = {
         urlRegister  : "${urlRegister}",
         urlValEmail  : "${urlValEmail}",
         urlValNick   : "${urlValNick}",
         urlValPw     : "${urlValPw}",
         urlSendCode  : "${urlSendCode}",
-        urlVerifyCode: "${urlVerifyCode}"
+        urlVerifyCode: "${urlVerifyCode}",
+        urlLogin     : "${urlLogin}"
+
     };
 </script>
-<script src="/js/register.js"></script>
-
+<script src="/js/register.js?v=5"></script>
 </body>
 </html>
