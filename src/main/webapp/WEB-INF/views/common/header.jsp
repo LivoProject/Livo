@@ -1,5 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %> />
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -53,7 +55,13 @@
     <script src="/js/main.js"></script>
   </head>
   <body>
-    <!-- 헤더 -->
+  <c:url var="loginUrl"  value="/auth/login"/>
+  <c:url var="joinUrl"   value="/auth/register"/>
+  <c:url var="logoutUrl" value="/auth/logout"/>
+
+
+
+  <!-- 헤더 -->
     <header>
       <div class="container">
         <nav class="navbar navbar-expand-lg">
@@ -89,21 +97,42 @@
               </li>
             </ul>
 
-            <!-- 버튼 영역 -->
-              <div class="header-actions">
-                  <!-- 로그인 버튼 -->
-                  <a class="btn btn-link" href="<c:url value='/auth/login'/>">
-                      <i class="bi bi-box-arrow-in-right"></i> 로그인
-                  </a>
-                  <!-- 회원가입 버튼 -->
-                  <a class="btn btn-link" href="<c:url value='/auth/register'/>">
-                      <i class="bi bi-person-plus"></i> 회원가입
-                  </a>
-              </div>
-          </div>
-        </nav>
+     <!-- 버튼 영역 -->
+       <div class="header-actions">
+  <!-- 비로그인 -->
+  <sec:authorize access="isAnonymous()">
+    <a class="btn btn-link" href="${loginUrl}">
+      <i class="bi bi-box-arrow-in-right"></i> 로그인
+    </a>
+    <a class="btn btn-link" href="${joinUrl}">
+      <i class="bi bi-person-plus"></i> 회원가입
+    </a>
+  </sec:authorize>
+
+  <!-- 로그인 -->
+  <sec:authorize access="isAuthenticated()">
+    <span class="me-2">
+      <!-- 이메일 대신 닉네임 (AppUserDetails#getNickname 필요) -->
+      <sec:authentication property="principal.nickname"/>
+    </span>
+
+    <!-- 숨김 로그아웃 폼 (헤더 안에 둔다) -->
+    <form id="logoutForm" action="${logoutUrl}" method="post" style="display:none">
+      <sec:csrfInput/><!-- CSRF 토큰 자동 -->
+    </form>
+
+    <!-- 폼 강제 제출 버튼 (어디에 있어도 동작) -->
+    <button type="button" class="btn btn-link"
+            onclick="document.getElementById('logoutForm').submit();">
+      <i class="bi bi-box-arrow-right"></i> 로그아웃
+    </button>
+  </sec:authorize>
+</div>
+
       </div>
-    </header>
+    </nav>
+  </div>
+</header>
 
     <!-- 헤더 검색창 -->
     <div id="headerSearch">

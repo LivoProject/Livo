@@ -54,7 +54,10 @@ public class SecurityConfig {
                  * - JS에서 CSRF 토큰을 읽어 Ajax 요청에 포함할 수 있도록
                  *   HttpOnly=false 설정 (쿠키에 저장되지만 JS 접근 가능)
                  */
-                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers("/lecture/like/**") // <-민영추가!!
+                )
 
                 /* -------------------------------
                  * [2] 요청 인가(Authorization) 규칙 설정
@@ -84,6 +87,7 @@ public class SecurityConfig {
                         ).permitAll()
                         // 나머지는 인증 필요
                         .anyRequest().authenticated()
+                        //.anyRequest().permitAll()
                 )
 
                 /* -------------------------------
@@ -139,6 +143,7 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 );
+
 
         /* -------------------------------
          * [선택] Remember-Me 기능 (자동 로그인)

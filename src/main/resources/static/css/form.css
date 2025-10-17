@@ -65,6 +65,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
 }
 #signupForm .signupForm-label {
     width: 100px;
