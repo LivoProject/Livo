@@ -2,7 +2,12 @@ package com.livo.project.mypage.service;
 
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.auth.repository.UserRepository;
-import com.livo.project.mypage.dto.MypageDto;
+import com.livo.project.maindashboard.domain.entity.MainDashBoardLecture;
+import com.livo.project.mypage.domain.dto.MypageDto;
+import com.livo.project.mypage.domain.entity.MypageLecture;
+import com.livo.project.mypage.domain.entity.MypageNotice;
+import com.livo.project.mypage.repository.MypageLectureRepository;
+import com.livo.project.mypage.repository.MypageNoticeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 마이페이지 서비스
@@ -22,11 +29,19 @@ public class MypageService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MypageNoticeRepository mypageNoticeRepository;
+    private final MypageLectureRepository mypageLectureRepository;
 
     // 마이페이지 기본 데이터 조회
     public MypageDto getUserData(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        // 공지사항
+        List<MypageNotice> notices = mypageNoticeRepository.findTop5ByOrderByIsPinnedDescCreatedAtDesc();
+
+        // 추천 강좌
+        List<MypageLecture> recommended = mypageLectureRepository.findRandomLectures();
 
         return MypageDto.builder()
                 .userId(user.getId())
@@ -37,6 +52,8 @@ public class MypageService {
                 .birth(user.getBirth())
                 .gender(user.getGender() != null ? user.getGender().toString() : null)
                 .joinDate(user.getCreatedAt() != null ? user.getCreatedAt().toLocalDate().toString() : "")
+                .notices(notices)
+                .recommendedLectures(recommended)
                 .build();
     }
 
@@ -58,12 +75,12 @@ public class MypageService {
                 Object genderEnum = Enum.valueOf((Class<Enum>) genderClass, dto.getGender().toUpperCase());
                 user.getClass().getMethod("setGender", genderClass).invoke(user, genderEnum);
             } catch (Exception e) {
-                log.warn("⚠️ 잘못된 gender 값: {}", dto.getGender(), e);
+                log.warn("잘못된 gender 값: {}", dto.getGender(), e);
             }
         }
 
         userRepository.save(user);
-        log.info("✅ 사용자 정보 수정 완료: {}", email);
+        log.info("사용자 정보 수정 완료: {}", email);
     }
 
     // 비밀번호 변경

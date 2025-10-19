@@ -1,5 +1,5 @@
 // com.livo.project.mypage.dto/PasswordChangeRequest.java
-package com.livo.project.mypage.dto;
+package com.livo.project.mypage.domain.dto;
 import jakarta.validation.constraints.*;
 
 public record PasswordChangeRequest(

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    // 루트로 오면 main.jsp 렌더
+    // 루트로 오면 dashboard.jsp 렌더
     @GetMapping({"/home"})
     public String main() {
-        return "main/main"; // /WEB-INF/views/main/main.jsp
+        return "main/main"; // /WEB-INF/views/main/dashboard.jsp
     }
 }
