@@ -1,17 +1,19 @@
-package com.livo.project.main.domain;
+package com.livo.project.mypage.domain.entity;
 
 import com.livo.project.lecture.domain.Category;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import jakarta.persistence.Id;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "lecture")
-@Getter @Setter
-public class Lecture {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class MypageLecture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int lectureId;

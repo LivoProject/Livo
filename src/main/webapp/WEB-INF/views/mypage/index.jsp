@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <!-- 컨텐츠 -->
@@ -60,8 +62,14 @@
         ></a>
       </div>
       <ul>
-        <li><a href="#">새로운 강좌 오픈 안내</a></li>
-        <li><a href="#">내 수강 강좌 마감 임박</a></li>
+        <c:forEach var="notice" items="${notices}">
+            <li>
+               <a href="#">
+                 <span>${notice.title}</span>
+                 <small><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd" /></small>
+               </a>
+            </li>
+        </c:forEach>
       </ul>
     </section>
 
@@ -92,15 +100,13 @@
         ></a>
       </div>
       <div class="row">
+
+       <c:forEach var="lecture" items="${recommendedLectures}">
         <div class="col-md-4">
-          <div class="lecture-card">추천 강의 배너</div>
+          <div class="lecture-card">${lecture.title}</div>
         </div>
-        <div class="col-md-4">
-          <div class="lecture-card">추천 강의 배너</div>
-        </div>
-        <div class="col-md-4">
-          <div class="lecture-card">추천 강의 배너</div>
-        </div>
+        </c:forEach>
+
       </div>
     </section>
   </main>
