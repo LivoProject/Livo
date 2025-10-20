@@ -1,9 +1,8 @@
 package com.livo.project.admin.controller;
 
-import com.livo.project.lecture.CategoryRepository;
+import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.domain.Category;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

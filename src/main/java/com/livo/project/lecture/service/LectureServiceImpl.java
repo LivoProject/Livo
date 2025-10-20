@@ -3,13 +3,12 @@ package com.livo.project.lecture.service;
 import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.LectureRepository;
-import com.livo.project.lecture.CategoryRepository;
+import com.livo.project.lecture.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +58,7 @@ public class LectureServiceImpl implements LectureService {
                 .orElseThrow(()-> new IllegalArgumentException("강의를 찾을 수 없습니다."));
         existingLecture.setTitle(updateLecture.getTitle());
         existingLecture.setTutorName(updateLecture.getTutorName());
-        existingLecture.setTutorName(updateLecture.getTutorInfo());
+        existingLecture.setTutorInfo(updateLecture.getTutorInfo());
         existingLecture.setContent(updateLecture.getContent());
         existingLecture.setTotalCount(updateLecture.getTotalCount());
         existingLecture.setLectureStart(updateLecture.getLectureStart());
@@ -92,17 +91,15 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public List<Lecture> findByTitleContaining(String keyword) {
-        return lectureRepository.findByTitleContaining(keyword);
+    public List<Lecture> findAllByMainCategory(int mainCategoryId) {
+        return lectureRepository.findAllByMainCategory(mainCategoryId);
     }
 
-    // ✅ 페이징용: 페이징은 나중에 다시 정리!!
     @Override
     public Page<Lecture> getLecturePage(Pageable pageable) {
         return lectureRepository.findAll(pageable);
     }
 
-    // ✅ 검색 + 페이징 조합: 이것도 나중에 다시 정리!!
     @Override
     public Page<Lecture> searchLecturePage(String keyword, Pageable pageable) {
         return lectureRepository.findByTitleContaining(keyword, pageable);
