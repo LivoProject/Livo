@@ -52,14 +52,15 @@ public class LectureContentController {
         //로그인 및 수강여부 확인 -> 리뷰 작성 위해!
         boolean isLoggedIn = (userDetails != null);
         boolean isEnrolled = false;
+        String loggedInUserEmail = null;
+
         if (isLoggedIn) {
-            String email = userDetails.getUsername();
-            isEnrolled = reservationService.isUserEnrolled(lectureId, email);
+            loggedInUserEmail = userDetails.getUsername();
+            isEnrolled = reservationService.isUserEnrolled(lectureId, loggedInUserEmail);
         }
 
         //첨부파일
         List<Attachment> attachments = attachmentService.getAttachmentsByLectureId(lectureId);
-
 
         model.addAttribute("lecture", lecture);
         model.addAttribute("chapters", chapters);
@@ -67,6 +68,7 @@ public class LectureContentController {
         model.addAttribute("avgStar", avgStar);
         model.addAttribute("isLoggedIn", isLoggedIn);
         model.addAttribute("isEnrolled", isEnrolled);
+        model.addAttribute("loggedInUserEmail", loggedInUserEmail);
         model.addAttribute("attachments", attachments);
 
         return "lecture/content";
