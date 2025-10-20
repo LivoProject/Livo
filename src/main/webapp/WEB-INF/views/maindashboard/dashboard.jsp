@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+ <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -26,29 +26,28 @@
       <i class="bi bi-megaphone-fill"></i>
       <div class="swiper-wrapper">
 
-        <c:forEach var="i" begin="1" end="5">
-
+        <c:forEach var="notice" items="${notices}">
             <div class="swiper-slide">
-              <span>2025년 산업맞춤 단기직무능력인증과정 선정 결과</span>
-              <small>2025.05.13</small>
+              <span>${notice.title}</span>
+              <small><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd" /></small>
             </div>
+        </c:forEach>
 
+      </div>
 
-    </c:forEach>
-  </div>
-  <!-- 커스텀 버튼 -->
-  <div class="custom_btn_wrap">
-    <button id="swiperPrev" class="btn-swiper">
-      <i class="bi bi-chevron-up"></i>
-    </button>
-    <button id="swiperNext" class="btn-swiper">
-      <i class="bi bi-chevron-down"></i>
-    </button>
-    <button id="swiperToggle" class="btn-swiper">
-      <i class="bi bi-pause-fill"></i>
-    </button>
-  </div>
-</div>
+      <!-- 커스텀 버튼 -->
+      <div class="custom_btn_wrap">
+        <button id="swiperPrev" class="btn-swiper">
+          <i class="bi bi-chevron-up"></i>
+        </button>
+        <button id="swiperNext" class="btn-swiper">
+          <i class="bi bi-chevron-down"></i>
+        </button>
+        <button id="swiperToggle" class="btn-swiper">
+          <i class="bi bi-pause-fill"></i>
+        </button>
+      </div>
+    </div>
   </section>
 
   <!-- 추천 강좌 -->
@@ -59,26 +58,26 @@
       <div class="recommend-grid">
 
         <c:forEach var="lecture" items="${recommendedLectures}">
-        <a href="#" class="card popular-card">
-         <div style="width: 100%; background-color: #ddd; height: 200px; border-radius: 12px 12px 0 0;"></div>
-          <button class="play-btn">
-            <i class="bi bi-play-fill"></i>
-          </button>
-          <div class="card-body">
-            <h6>${lecture.title}</h6>
-            <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/></p>
-               <div class="card-review">
-                    <div>
-                        <span>⭐4.8</span>
-                        <span>(22)</span>
-                    </div>
-                    <div>
-                        <i class="bi bi-person-fill"></i>
-                        <span>${lecture.reservationCount}</span>
-                    </div>
+            <a href="#" class="card popular-card">
+             <div style="width: 100%; background-color: #ddd; height: 200px; border-radius: 12px 12px 0 0;"></div>
+              <button class="play-btn">
+                <i class="bi bi-play-fill"></i>
+              </button>
+              <div class="card-body">
+                <h6>${lecture.title}</h6>
+                <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/></p>
+                   <div class="card-review">
+                        <div>
+                            <span>⭐4.8</span>
+                            <span>(22)</span>
+                        </div>
+                        <div>
+                            <i class="bi bi-person-fill"></i>
+                            <span>${lecture.reservationCount}</span>
+                        </div>
+                  </div>
               </div>
-          </div>
-        </a>
+            </a>
         </c:forEach>
 
       </div>
@@ -311,26 +310,14 @@
           <a href="#"><i class="bi bi-plus-lg"></i></a>
         </div>
         <ul class="list-unstyled">
-          <li>
-            <a href="#">
-              <span>2025년 2학기 수강신청 안내</span><small>2025.02.02</small>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>서버 점검 공지</span><small>2025.02.10</small>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>신규 강좌 오픈 예정</span><small>2025.02.15</small>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <span>이용약관 변경 안내</span><small>2025.03.01</small>
-            </a>
-          </li>
+            <c:forEach var="notice" items="${notices}">
+                <li>
+                   <a href="#">
+                     <span>${notice.title}</span>
+                     <small><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd" /></small>
+                   </a>
+                </li>
+            </c:forEach>
         </ul>
       </div>
     </div>

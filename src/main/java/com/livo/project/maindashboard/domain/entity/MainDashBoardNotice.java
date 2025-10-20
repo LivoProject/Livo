@@ -1,4 +1,4 @@
-package com.livo.project.main.domain;
+package com.livo.project.maindashboard.domain.entity;
 
 
 import jakarta.persistence.*;
@@ -11,7 +11,7 @@ import java.util.Date;
 @Table(name = "notice")
 @Getter
 @Setter
-public class Notice {
+public class MainDashBoardNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int noticeId;

@@ -1,6 +1,6 @@
 package com.livo.project.mypage.controller;
 
-import com.livo.project.mypage.dto.MypageDto;
+import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,9 +26,11 @@ public class MypageController {
         if (userDetails == null) return "redirect:/login";
 
         String email = userDetails.getUsername();
-        MypageDto mypage = mypageService.getUserData(email);
+        MypageDto mypateDto = mypageService.getUserData(email);
 
-        model.addAttribute("mypage", mypage);
+        model.addAttribute("mypage", mypateDto);
+        model.addAttribute("notices", mypateDto.getNotices());
+        model.addAttribute("recommendedLectures", mypateDto.getRecommendedLectures());
         return "mypage/index";
     }
 
