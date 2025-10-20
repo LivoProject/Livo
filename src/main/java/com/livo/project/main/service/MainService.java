@@ -2,8 +2,8 @@ package com.livo.project.main.service;
 
 import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.main.domain.dto.MainDto;
-import com.livo.project.lecture.CategoryRepository;
 import com.livo.project.main.repository.MainLectureRepository;
 import com.livo.project.main.repository.MainNoticeRepository;
 import com.livo.project.notice.domain.dto.NoticeDto;

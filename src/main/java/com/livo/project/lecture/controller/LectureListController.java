@@ -2,18 +2,19 @@ package com.livo.project.lecture.controller;
 
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.service.LectureService;
+import com.livo.project.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
@@ -21,19 +22,33 @@ import java.util.List;
 public class LectureListController {
 
     private final LectureService lectureService;
+    private final ReviewService reviewService;
 
     // 전체 강좌 리스트 (페이징 포함)
     @GetMapping("/list")
     public String list(
             @RequestParam(defaultValue = "0") int page,   // 페이지 번호 (0부터 시작)
-            @RequestParam(defaultValue = "10") int size,   // 한 페이지당 9개씩
+            @RequestParam(defaultValue = "12") int size,   // 한 페이지당 12개씩
             Model model) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Lecture> lecturePage = lectureService.getLecturePage(pageable);
 
+        // 각 강좌별 평균 별점 + 리뷰 수 계산
+        Map<Integer, Double> avgStarMap = new HashMap<>();
+        Map<Integer, Integer> reviewCountMap = new HashMap<>();
+
+        lecturePage.getContent().forEach(lecture -> {
+            Double avgStar = reviewService.getAverageStarByLecture(lecture.getLectureId());
+            int reviewCount = reviewService.getReviewsByLectureId(lecture.getLectureId()).size();
+            avgStarMap.put(lecture.getLectureId(), avgStar != null ? avgStar : 0.0);
+            reviewCountMap.put(lecture.getLectureId(), reviewCount);
+        });
+
         model.addAttribute("lecturePage", lecturePage);
         model.addAttribute("lectures", lecturePage.getContent());
+        model.addAttribute("avgStarMap", avgStarMap);
+        model.addAttribute("reviewCountMap", reviewCountMap);
         return "lecture/list";
     }
 
@@ -42,7 +57,7 @@ public class LectureListController {
     public String search(
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "12") int size,
             Model model) {
 
         Pageable pageable = PageRequest.of(page, size);
@@ -55,41 +70,45 @@ public class LectureListController {
             lecturePage = lectureService.getLecturePage(pageable);
         }
 
+        // 각 강좌별 평균 별점 + 리뷰 수 계산 (list()과 동일)
+        Map<Integer, Double> avgStarMap = new HashMap<>();
+        Map<Integer, Integer> reviewCountMap = new HashMap<>();
+
+        lecturePage.getContent().forEach(lecture -> {
+            Double avgStar = reviewService.getAverageStarByLecture(lecture.getLectureId());
+            int reviewCount = reviewService.getReviewsByLectureId(lecture.getLectureId()).size();
+            avgStarMap.put(lecture.getLectureId(), avgStar != null ? avgStar : 0.0);
+            reviewCountMap.put(lecture.getLectureId(), reviewCount);
+        });
+
         model.addAttribute("lecturePage", lecturePage);
         model.addAttribute("lectures", lecturePage.getContent());
         model.addAttribute("keyword", keyword);
+        model.addAttribute("avgStarMap", avgStarMap);
+        model.addAttribute("reviewCountMap", reviewCountMap);
+
         return "lecture/list";
     }
 
-    // 통합 검색 (주제 / 세부분류 / 키워드)
+    // 비동기 필터링 (주제/세부분류)
     @GetMapping("/filter")
-    public String filter(
+    @ResponseBody
+    public ResponseEntity<List<Lecture>> filter(
             @RequestParam(value = "mainCategory", required = false) Integer mainCategory,
-            @RequestParam(value = "subCategory", required = false) Integer subCategory,
-            @RequestParam(value = "keyword", required = false) String keyword,
-            Model model) {
+            @RequestParam(value = "subCategory", required = false) Integer subCategory) {
 
         List<Lecture> results;
 
         if (subCategory != null) {
+            // 세부 카테고리 클릭 시
             results = lectureService.findByCategoryId(subCategory);
         } else if (mainCategory != null) {
-            results = lectureService.findByCategoryId(mainCategory);
-        } else if (keyword != null && !keyword.trim().isEmpty()) {
-            results = lectureService.findByTitleContaining(keyword);
+            // 상위 카테고리 클릭 시, 하위 카테고리 포함 조회
+            results = lectureService.findAllByMainCategory(mainCategory);
         } else {
             results = lectureService.findAll();
         }
 
-        model.addAttribute("lectures", results);
-        return "lecture/list";
-    }
-
-    // 카테고리별 검색
-    @GetMapping("/category/{categoryId}")
-    public String listByCategory(@PathVariable("categoryId") int categoryId, Model model) {
-        List<Lecture> lectures = lectureService.findByCategoryId(categoryId);
-        model.addAttribute("lectures", lectures);
-        return "lecture/list";
+        return ResponseEntity.ok(results);
     }
 }
