@@ -11,7 +11,7 @@
     <!-- 컨텐츠 끝 -->
 
 
-<c:if test="${BGM_ALLOWED}">
+<c:if test="${BGM_ALLOWED}">git l
   <link rel="stylesheet" href="<c:url value='/css/bgm-toggle.css'/>?v=2"/>
   <link rel="preload" href="<c:url value='/audio/login_success.mp3'/>" as="audio" type="audio/mpeg"/>
 

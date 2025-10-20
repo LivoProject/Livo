@@ -2,8 +2,8 @@
 package com.livo.project.admin.service;
 
 import com.livo.project.admin.domain.dto.NoticeReq;
-import com.livo.project.admin.repository.NoticeRepository;
-import com.livo.project.mypage.domain.entity.MypageNotice;   // <- 교체
+import com.livo.project.notice.repository.NoticeRepository;   // ✅ 공용 레포 사용
+import com.livo.project.notice.domain.entity.Notice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -16,41 +16,48 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository repo;
 
+    /** 공지 목록: isPinned 우선 + 최신순, q가 있으면 제목/내용 검색 */
     @Override
     @Transactional(readOnly = true)
-    public Page<MypageNotice> list(String q, int page, int size) {
+    public Page<Notice> list(String q, int page, int size) {
         Pageable pageable = PageRequest.of(
                 Math.max(page, 0),
                 Math.max(size, 1),
-                // 엔티티의 실제 필드명 기준 정렬
-                Sort.by(Sort.Order.desc("pinned"), Sort.Order.desc("createdAt"))
+                Sort.by(Sort.Order.desc("isPinned"), Sort.Order.desc("createdAt"))
         );
-        if (q == null || q.isBlank()) return repo.findAll(pageable);
+
+        if (q == null || q.isBlank()) {
+            return repo.findAll(pageable);
+        }
         return repo.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(q, q, pageable);
     }
 
+    /** 공지 생성 */
     @Override
-    public MypageNotice create(NoticeReq req, String adminNameOrEmail) {
-        MypageNotice n = new MypageNotice();
-        n.setTitle(req.getTitle().trim());
-        n.setContent(req.getContent());
-        n.setPinned(req.isPinned());        // <- 필드명 pinned
-        n.setVisible(req.isVisible());      // <- 필드명 visible
-        n.setViewCount(0);
-        n.setWriter(adminNameOrEmail != null ? adminNameOrEmail : "관리자");
+    public Notice create(NoticeReq req, String adminNameOrEmail) {
+        Notice n = Notice.builder()
+                .title(req.getTitle().trim())
+                .content(req.getContent())
+                .writer(adminNameOrEmail != null ? adminNameOrEmail : "관리자")
+                .isPinned(req.isPinned())
+                .isVisible(req.isVisible())
+                .viewCount(0)
+                .build();
         return repo.save(n);
     }
 
+    /** 단건 조회 */
     @Override
     @Transactional(readOnly = true)
-    public MypageNotice get(int id) {
+    public Notice get(int id) {
         return repo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("공지 없음: " + id));
     }
 
+    /** 수정 */
     @Override
-    public MypageNotice update(int id, NoticeReq req) {
-        MypageNotice n = get(id);
+    public Notice update(int id, NoticeReq req) {
+        Notice n = get(id);
         n.setTitle(req.getTitle().trim());
         n.setContent(req.getContent());
         n.setPinned(req.isPinned());
@@ -58,14 +65,16 @@ public class NoticeServiceImpl implements NoticeService {
         return n; // dirty checking
     }
 
+    /** 삭제 */
     @Override
     public void delete(int id) {
         repo.deleteById(id);
     }
 
+    /** 조회수 +1 */
     @Override
     public void increaseView(int id) {
-        MypageNotice n = get(id);
+        Notice n = get(id);
         n.setViewCount(n.getViewCount() + 1);
     }
 }
