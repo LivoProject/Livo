@@ -25,6 +25,7 @@ public class MainController {
         model.addAttribute("categories", mainDto.getCategories());
         model.addAttribute("recommendedLectures", mainDto.getRecommendedLectures());
         model.addAttribute("notices", mainDto.getNotices());
+        model.addAttribute("BGM_ALLOWED", BGM_ENABLED);
 
         return "main/index";
     }
