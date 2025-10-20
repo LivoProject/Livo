@@ -16,7 +16,7 @@ public class MainController {
 
     private final MainService mainService;
 
-    @GetMapping({"/", "/dashboard"})
+    @GetMapping({"/", "/main"})
     public String mainPage(Model model) {
         // 서비스에서 카테고리 + 추천강좌 + 인기강좌 한 번에 조회
         MainDto mainDto = mainService.getMainPageData();

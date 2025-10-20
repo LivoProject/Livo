@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 public class MypageLecture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int lectureId;
+    @Column(name = "lectureId")
+    private int id;
 
     private String title;
     private String content;

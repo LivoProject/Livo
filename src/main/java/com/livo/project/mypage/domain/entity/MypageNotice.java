@@ -19,7 +19,7 @@ public class MypageNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "noticeId")
-    private Long id; // 공지 ID
+    private int id; // 공지 ID
 
     @Column(nullable = false, length = 200)
     private String title; // 제목

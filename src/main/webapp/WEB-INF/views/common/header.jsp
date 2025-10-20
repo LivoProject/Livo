@@ -53,7 +53,7 @@
     <!-- Custom js -->
     <script src="/js/common.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/search.js"></script>
+    <script src="/js/header.js"></script>
 </head>
 <body>
 <c:url var="loginUrl" value="/auth/login"/>
@@ -65,7 +65,7 @@
 <header>
     <div class="container">
         <nav class="navbar navbar-expand-lg">
-            <a class="logo navbar-brand logo" href="/">
+            <a class="logo navbar-brand logo" href="${pageContext.request.contextPath}/main">
                 <img src="/img/common/logo.svg" alt="로고"/>
             </a>
             <!-- 모바일 토글 버튼 -->
@@ -82,10 +82,13 @@
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">홈</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">강좌</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">강좌</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">공지사항</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">자주묻는질문</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/mypage">마이페이지</a>
@@ -121,8 +124,8 @@
 
                             <span class="me-2">
                                  <c:choose>
-                                    <c:when test="${not empty gName}">${gName}</c:when>
-                                    <c:otherwise>${gEmail}</c:otherwise>
+                                     <c:when test="${not empty gName}">${gName}</c:when>
+                                     <c:otherwise>${gEmail}</c:otherwise>
                                  </c:choose>
                             </span>
 
@@ -162,7 +165,7 @@
 <div id="headerSearch">
     <h4>배우고 싶은 강좌를 찾아보세요.</h4>
     <div class="input-group">
-        <input type="search" id="keyword" name="keyword" class="form-control w-25" placeholder="강좌명 검색" />
+        <input type="search" id="keyword" name="keyword" class="form-control w-25" placeholder="강좌명 검색"/>
         <button id="searchButton">
             <i class="bi bi-search"></i>
         </button>
