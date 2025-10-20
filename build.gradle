@@ -1,8 +1,8 @@
 plugins {
-	id 'java'
-	id 'war'
-	id 'org.springframework.boot' version '3.5.6'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.5.6'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.livo'
@@ -10,28 +10,28 @@ version = '0.0.1-SNAPSHOT'
 description = 'Reservation project for Spring Boot'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 ext {
-	set('springAiVersion', "1.1.0-M3")
+    set('springAiVersion', "1.1.0-M3")
 }
 
 dependencies {
     //spring security
-	//implementation 'org.springframework.boot:spring-boot-starter-security'
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
     //testImplementation 'org.springframework.security:spring-security-test'
 
     //spring web
@@ -57,7 +57,7 @@ dependencies {
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl'
     implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
-    implementation 'org.springframework.security:spring-security-taglibs'
+    implementation 'org.springframework.security:spring-security-taglibs:6.5.5'
 
 
     //ai
@@ -74,11 +74,11 @@ dependencies {
 }
 
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
-	}
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
