@@ -50,10 +50,10 @@ public class adminController {
         model.addAttribute("faq",faqPage.getContent());
         return "admin/faqPage";
     }
-    @GetMapping("/notice")
+   /** @GetMapping("/notice")
     public String showNoticePage(){
-        return "admin/noticePage";
-    }
+        return "redirect:/admin/notice/list";
+    }*/
 
     @GetMapping("/lecture")
     public String adminLectureList(@RequestParam(defaultValue = "0") int page,

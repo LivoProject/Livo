@@ -82,7 +82,7 @@
           <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
-                <a class="nav-link" href="index.html">홈</a>
+                  <a class="nav-link" href="<c:url value='/'/>">홈</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">강좌</a>

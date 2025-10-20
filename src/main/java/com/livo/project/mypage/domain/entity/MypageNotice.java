@@ -19,7 +19,7 @@ public class MypageNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "noticeId")
-    private Long id; // 공지 ID
+    private int id; // 공지 ID
 
     @Column(nullable = false, length = 200)
     private String title; // 제목
@@ -40,9 +40,9 @@ public class MypageNotice {
     @Column(nullable = false)
     private int viewCount; // 조회수
 
-    @Column(nullable = false)
-    private boolean isPinned; // 상단 고정 여부
+    @Column(name = "isPinned", nullable = false)
+    private boolean pinned;   //  DB의 isPinned와 매핑
 
-    @Column(nullable = false)
-    private boolean isVisible; // 노출 여부
+    @Column(name = "isVisible", nullable = false)
+    private boolean visible;  //  DB의 isVisible과 매핑
 }
