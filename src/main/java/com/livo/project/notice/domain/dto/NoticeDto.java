@@ -19,11 +19,7 @@ public class NoticeDto {
                 .id(notice.getId())
                 .title(notice.getTitle())
                 .content(notice.getContent())
-                .createdAt(
-                        notice.getCreatedAt() != null
-                                ? notice.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-                                : ""
-                )
+                .createdAt(notice.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
     }
 }

@@ -3,9 +3,33 @@
 
 
 <!-- Footer -->
-<button id="chat-fab" class="chat-fab" aria-label="챗봇 열기" title="챗봇">
-    <img src="/img/common/chat_icon01.svg" alt="챗봇">
-</button>
+
+<!-- 🔹 플로팅 버튼 컨테이너 -->
+<div class="floating-buttons">
+    <!-- 챗봇 -->
+    <button id="chat-fab" class="chat-fab" aria-label="챗봇 열기" title="챗봇">
+        <img src="/img/common/chat_icon01.svg" alt="챗봇">
+    </button>
+
+    <!-- 배경음악 -->
+    <button id="bgmBtn" class="fab" title="배경음악 켜기/끄기">
+        <div id="bgmToggle"
+             class="bgm-toggle bgm-off"
+             role="button"
+             aria-pressed="false"
+             aria-label="배경음악 끔"
+             title="배경음악 켜기/끄기">
+            <span class="bgm-dot" aria-hidden="true"></span>
+            <span class="bgm-label" aria-hidden="true">🔇</span>
+        </div>
+    </button>
+
+    <!--  맨 위로 -->
+    <button id="toTopBtn" class="fab fab-top" title="맨 위로">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+</div>
+
 
 <!-- 간단한 패널 -->
 <div id="chat-panel" class="chat-panel" hidden>
@@ -20,12 +44,7 @@
     </div>
     <!-- 컨텐츠 끝 -->
 
-
-<%-- <link rel="stylesheet" href="<c:url value='/css/bgm-toggle.css'/>?v=2"/> --%>
-<%-- <link rel="preload" href="<c:url value='/audio/login_success.mp3'/>" as="audio" type="audio/mpeg"/> --%>
-<%-- <script src="<c:url value='/js/bgm-inline.js'/>?v=1"></script> --%>
-
-
+<%--
     <c:if test="${BGM_ALLOWED}">
         <link rel="stylesheet" href="/css/bgm-toggle.css"/>
         <link rel="preload" href="/audio/login_success.mp3" as="audio" type="audio/mpeg"/>
@@ -40,8 +59,11 @@
             <span class="bgm-label" aria-hidden="true">🔇</span>
         </div>
     </c:if>
+--%>
 
 </footer>
+
+<link rel="preload" href="/audio/login_success.mp3" as="audio" type="audio/mpeg"/>
 
 <script src="/js/bgm-inline.js"></script>
 

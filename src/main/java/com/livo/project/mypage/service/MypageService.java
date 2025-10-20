@@ -55,7 +55,7 @@ public class MypageService {
                 .birth(user.getBirth())
                 .gender(user.getGender() != null ? user.getGender().toString() : null)
                 .joinDate(user.getCreatedAt() != null ? user.getCreatedAt().toLocalDate().toString() : "")
-                .notices(notices)
+                .notices(noticeDtos)
                 .recommendedLectures(recommended)
                 .build();
     }

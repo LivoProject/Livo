@@ -65,7 +65,7 @@
     <header>
       <div class="container">
         <nav class="navbar navbar-expand-lg">
-          <a class="logo navbar-brand logo" href="/">
+          <a class="logo navbar-brand logo" href="/main">
             <img src="/img/common/logo.svg" alt="로고" />
           </a>
           <!-- 모바일 토글 버튼 -->
@@ -87,6 +87,12 @@
               <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">강좌</a>
               </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/notice/list">공지사항</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/faq-page/list">자주묻는질문</a>
+                </li>
               <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/mypage">마이페이지</a>
               </li>

@@ -36,7 +36,7 @@ public class MainService {
                 .map(NoticeDto::fromEntity)
                 .toList();
 
-        return new MainDto(categories, recommended, notices);
+        return new MainDto(categories, recommended, noticeDtos);
     }
 
 
