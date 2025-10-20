@@ -39,6 +39,12 @@ public class UserServiceImpl implements UserService {
         return users.existsByNickname(nickname.trim());
     }
 
+    @Override @Transactional(readOnly = true)
+    public boolean existsPhone(String phoneRaw) {
+        String phone = normalizePhone(phoneRaw);
+        return phone != null && users.existsByPhone(phone);
+    }
+
     // ========== 회원가입 ==========
     @Override
     @Transactional
@@ -113,14 +119,33 @@ public class UserServiceImpl implements UserService {
         return users.findByEmail(email.trim().toLowerCase(Locale.ROOT));
     }
 
+    // ========== 소셜 계정 연동 ==========
+    @Override
+    @Transactional
+    public void linkSocialAccount(String email, String provider) {
+        User user = users.findByEmail(email)
+                .orElseThrow(() -> new BusinessException("user", "사용자를 찾을 수 없습니다."));
+
+        user.setProvider(provider); // 예: "google", "kakao", "naver"
+        user.setEmailVerified(true); // 소셜 계정이므로 이메일 인증 상태 true로 변경
+        user.setEmailVerifiedAt(LocalDateTime.now());
+
+        users.save(user);
+        log.info("[LINK] 계정 연동 완료 - email={}, provider={}", email, provider);
+    }
+
+
     // ========== 헬퍼 ==========
     private static String safe(String s) { return s == null ? "" : s.trim(); }
 
     private String normalizePhone(String raw) {
         if (raw == null || raw.isBlank()) return null;
-        String digits = raw.replaceAll("[^0-9+]", "");
-        return digits.isBlank() ? null : digits;
+        String s = raw.replaceAll("[^0-9+]", ""); // 숫자/+만
+        if (s.startsWith("+82")) s = "0" + s.substring(3); // 국제코드 -> 국내표기
+        s = s.replaceAll("\\D", ""); // 최종적으로 숫자만
+        return s.isBlank() ? null : s;
     }
+
 
     /** 레포지토리에 existsByPhone(String) 메소드가 존재하는지 확인 (없으면 호출 안 함) */
     private boolean hasExistsByPhone() {

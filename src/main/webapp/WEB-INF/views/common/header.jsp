@@ -109,24 +109,46 @@
     </a>
   </sec:authorize>
 
-  <!-- 로그인 -->
+   <!-- 로그인 -->
   <sec:authorize access="isAuthenticated()">
-    <span class="me-2">
-      <!-- 이메일 대신 닉네임 (AppUserDetails#getNickname 필요) -->
-      <sec:authentication property="principal.nickname"/>
-    </span>
 
-    <!-- 숨김 로그아웃 폼 (헤더 안에 둔다) -->
+    <!--  소셜(OAuth2) 로그인 -->
+    <sec:authorize access="principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User)">
+      <sec:authentication var="gName"  property="principal.attributes['name']"/>
+      <sec:authentication var="gEmail" property="principal.attributes['email']"/>
+      <sec:authentication var="gPic"   property="principal.attributes['picture']"/>
+
+      <span class="me-2">
+        <c:choose>
+          <c:when test="${not empty gName}">${gName}</c:when>
+          <c:otherwise>${gEmail}</c:otherwise>
+        </c:choose>
+      </span>
+
+      <c:if test="${not empty gPic}">
+        <img src="${gPic}" alt="profile"
+             style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:6px;">
+      </c:if>
+    </sec:authorize>
+
+    <!-- ★ 일반 로그인 -->
+    <sec:authorize access="!(principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User))">
+      <span class="me-2">
+        <sec:authentication property="principal.nickname"/>
+      </span>
+    </sec:authorize>
+
+    <!-- 로그아웃 -->
     <form id="logoutForm" action="${logoutUrl}" method="post" style="display:none">
-      <sec:csrfInput/><!-- CSRF 토큰 자동 -->
+      <sec:csrfInput/>
     </form>
 
-    <!-- 폼 강제 제출 버튼 (어디에 있어도 동작) -->
     <button type="button" class="btn btn-link"
             onclick="document.getElementById('logoutForm').submit();">
       <i class="bi bi-box-arrow-right"></i> 로그아웃
     </button>
   </sec:authorize>
+
 </div>
 
       </div>

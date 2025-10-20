@@ -199,3 +199,64 @@ body > hr + a + span + a {
     color: var(--primary-strong);
     text-decoration: underline;
 }
+
+/* ====== 소셜 영역 (폼 내부) ====== */
+.or-sep{
+    position: relative;
+    margin: 18px 0 14px;
+    height: 1px;
+    background: var(--border);
+}
+.or-sep span{
+    position: absolute; left: 50%; top: -10px; transform: translateX(-50%);
+    padding: 0 10px;
+    background: #fff;
+    color: #8a96a3; font-size: 13px; font-weight: 700;
+    letter-spacing: .2px;
+    border-radius: 999px; border: 1px solid #eef2f7;
+}
+
+.social-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 6px;
+}
+@media (max-width: 560px){
+    .social-grid{ grid-template-columns: 1fr; }
+}
+
+/* 공통 버튼 */
+.btn-social{
+    height: 46px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    text-decoration: none; font-weight: 800; letter-spacing: .1px;
+    border: 1px solid #e6edf5;
+    background: #fff; color: #1f2937;
+    transition: transform .12s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+/* === 아이콘 크기 강제 (핵심!) === */
+.btn-social .ico,
+.btn-social svg{
+    width: 18px !important;
+    height: 18px !important;
+    display: block;
+    flex: 0 0 18px;
+}
+
+.btn-social:hover{ transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.06); }
+
+/* Google */
+.btn-social.google:hover{ box-shadow: 0 6px 20px rgba(66,133,244,.18); }
+
+/* Kakao */
+.btn-social.kakao{
+    background: #FEE500; border-color: #FEE500; color: #3A1D1D;
+}
+.btn-social.kakao:hover{ filter: brightness(.97); }
+
+/* 카드 하단 여백 소폭 축소 */
+form{ padding-bottom: 22px; }
+
