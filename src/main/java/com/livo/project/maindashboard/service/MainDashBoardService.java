@@ -1,6 +1,8 @@
 package com.livo.project.maindashboard.service;
 
 import com.livo.project.lecture.domain.Category;
+import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.maindashboard.domain.dto.MainDashBoardLectureDto;
 import com.livo.project.maindashboard.domain.entity.MainDashBoardLecture;
 import com.livo.project.maindashboard.domain.entity.MainDashBoardNotice;
 import com.livo.project.maindashboard.domain.dto.MainDashBoardDto;
@@ -32,7 +34,14 @@ public class MainDashBoardService {
         // 공지사항
         List<MainDashBoardNotice> notices = mainDashBoardnoticeRepository.findTop5ByOrderByIsPinnedDescCreatedAtDesc();
 
-
         return new MainDashBoardDto(categories, recommended, notices);
+    }
+
+    // 검색용 강의 리스트 반환 (DTO로)
+    public List<MainDashBoardLectureDto> getAllLectureDtos() {
+        return mainDashBoardlectureRepository.findAll()
+                .stream()
+                .map(MainDashBoardLectureDto::fromEntity)
+                .toList();
     }
 }

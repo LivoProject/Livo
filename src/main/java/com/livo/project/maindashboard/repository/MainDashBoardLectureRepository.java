@@ -11,9 +11,6 @@ public interface MainDashBoardLectureRepository extends JpaRepository<MainDashBo
     @Query(value = "SELECT * FROM lecture ORDER BY RAND() LIMIT 4", nativeQuery = true)
     List<MainDashBoardLecture> findRandomLectures();
 
-
-
     // 인기 (평점 높은 순 5개)
     //<Lecture> findTop5ByOrderByRatingDesc();
-
 }

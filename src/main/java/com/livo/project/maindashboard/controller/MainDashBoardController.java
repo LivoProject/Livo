@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class MainDashBoardController {
 
+    // 오디오 true=켜짐 false=꺼짐
+    private static final boolean BGM_ENABLED = true;
+
     private final MainDashBoardService mainService;
 
     @GetMapping({"/", "/dashboard"})
@@ -23,7 +26,6 @@ public class MainDashBoardController {
         model.addAttribute("recommendedLectures", mainDashBoardDto.getRecommendedLectures());
         //model.addAttribute("popularLectures", mainDashBoardDto.getPopularLectures());
         model.addAttribute("notices", mainDashBoardDto.getNotices());
-
 
         return "maindashboard/dashboard";
     }
