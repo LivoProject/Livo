@@ -1,8 +1,8 @@
 package com.livo.project.auth.service;
 
 import com.livo.project.auth.domain.dto.SignUpRequest;
-import com.livo.project.auth.domain.entity.User;   // ✅ 엔티티 import
-import java.util.Optional;                         // ✅ Optional import
+import com.livo.project.auth.domain.entity.User;   //  엔티티 import
+import java.util.Optional;                         //  Optional import
 
 public interface UserService {
 
@@ -13,10 +13,16 @@ public interface UserService {
     void updateNickname(Long userId, String nickname);
     void changePassword(Long userId, String currentPassword, String newPassword);
 
+    // 소셜 계정 연결
+    void linkSocialAccount(String email, String provider);
+
     // 조회
-    Optional<User> findByEmail(String email);      // ✅ 세미콜론 추가
+    Optional<User> findByEmail(String email);      // 세미콜론 추가
 
     // ▼ 비동기 유효성용 중복 체크
     boolean existsEmail(String email);
     boolean existsNickname(String nickname);
+    boolean existsPhone(String phoneRaw);
+
 }
+

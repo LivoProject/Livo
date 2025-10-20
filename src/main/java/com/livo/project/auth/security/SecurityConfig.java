@@ -13,6 +13,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.NullRequestCache;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import jakarta.servlet.ServletException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler; //add social
+
 
 @Configuration
 @RequiredArgsConstructor
@@ -21,11 +31,23 @@ public class SecurityConfig {
     /**  사용자 인증 로직 구현체 (CustomUserDetailsService 사용) */
     private final UserDetailsService customUserDetailsService;
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    private final CustomOidcUserService   customOidcUserService;
+
+
     /**  비밀번호 암호화용 BCrypt 인코더 (DB의 해시와 동일한 알고리즘 사용) */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    /** Audio
+    @Bean
+    public AuthenticationSuccessHandler loginSuccessHandler() {
+        return new LoginSuccessHandler();
+    }*/
+
 
     /**  AuthenticationProvider 설정
      * - Spring Security가 사용자 정보를 로드할 때 사용할 Provider
@@ -40,6 +62,60 @@ public class SecurityConfig {
         provider.setPasswordEncoder(encoder);
         return provider;
     }
+    @Bean
+    public AuthenticationSuccessHandler roleBasedSuccessHandler() {
+        return new SavedRequestAwareAuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest req,
+                                                HttpServletResponse res,
+                                                Authentication auth)
+                    throws IOException, ServletException {
+
+                var set = AuthorityUtils.authorityListToSet(auth.getAuthorities());
+
+                //  역할별 세션 시간(초)
+                int adminSecs   = 15 * 60;  // 관리자 15분
+                int managerSecs = 30 * 60;  // 매니저 30분
+                int userSecs    = 60 * 60;  // 일반 60분
+
+                // 세션 확보 후 역할별로 만료 시간 설정
+                var session = req.getSession(true); // 없으면 생성
+                if (set.contains("ROLE_ADMIN")) {
+                    session.setMaxInactiveInterval(adminSecs);
+                } else if (set.contains("ROLE_MANAGER")) {
+                    session.setMaxInactiveInterval(managerSecs);
+                } else {
+                    session.setMaxInactiveInterval(userSecs);
+                }
+
+                // (저장된 요청 체크를 쓰지 않는 구성이라면 바로 역할별 리다이렉트)
+                if (set.contains("ROLE_ADMIN")) {
+                    getRedirectStrategy().sendRedirect(req, res, "/admin/dashboard");
+                } else if (set.contains("ROLE_MANAGER")) {
+                    getRedirectStrategy().sendRedirect(req, res, "/manager");
+                } else {
+                    //  일반 사용자: 메인으로 보낼 때 '한 번만' 브금 재생 플래그 세팅
+                    req.getSession(true).setAttribute("PLAY_BGM_ONCE", Boolean.TRUE);
+                    getRedirectStrategy().sendRedirect(req, res, "/");
+                }
+            }
+        };
+    }
+    /**------------ social login ------------ */
+    @Bean
+    public AuthenticationFailureHandler oauthFailureHandler() {
+        return (request, response, ex) -> {
+            // 이메일 충돌 시 사용자 선택 페이지로
+            if (ex instanceof org.springframework.security.oauth2.core.OAuth2AuthenticationException e
+                    && "account_conflict".equals(e.getError().getErrorCode())) {
+                response.sendRedirect("/auth/link-account");
+            } else {
+                response.sendRedirect("/auth/login?error");
+            }
+        };
+    }
+
+
 
     /**  보안 필터 체인 설정 */
     @Bean
@@ -56,7 +132,7 @@ public class SecurityConfig {
                  */
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers("/lecture/like/**") // <-민영추가!!
+                      //  .ignoringRequestMatchers("/lecture/like/**") // <-민영추가!!
                 )
 
                 /* -------------------------------
@@ -68,8 +144,13 @@ public class SecurityConfig {
                  */
                 .authorizeHttpRequests(auth -> auth
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+
                         .requestMatchers(
-                                "/", "/main", "/favicon.ico", "/error",
+                                "/", "/main", "/home", "/index",    // 홈, 메인
+                                "/lecture", "/lecture/**",          // 강좌 목록/상세 페이지
+                                "/course", "/course/**",            // (혹시 경로명이 course면 이것도)
+                                "/api/lectures/**", "/api/courses/**", // 강좌 조회 API(GET 요청용)
+                                "/favicon.ico", "/error",           // 에러, 파비콘
 
                                 //  로그인/회원가입 페이지 및 처리
                                 "/auth/login",
@@ -82,13 +163,26 @@ public class SecurityConfig {
                                 //  실시간 유효성 검사 (AJAX)
                                 "/auth/validate/**",
 
+                                // 소셜 로그인
+                                "/oauth2/**", "/login/oauth2/**",
+
+                                //계정 연동 페이지
+                                "/auth/link-account", "/auth/link-account/**",
+
+                                //오디오
+                                "/audio/**",
+
                                 //  정적 리소스 (CSS/JS/이미지 등)
                                 "/css/**", "/js/**", "/img/**", "/images/**", "/webjars/**"
                         ).permitAll()
+
+                                .requestMatchers("/admin/**").hasRole("ADMIN")          //  추가
+                                .requestMatchers("/manager/**").hasAnyRole("ADMIN","MANAGER") // 추가
+
+
                         // 나머지는 인증 필요
-//                        .anyRequest().authenticated()
-                        .anyRequest().permitAll()
-                        //.anyRequest().permitAll()
+                        .anyRequest().authenticated()
+                       // .anyRequest().permitAll()
                 )
 
                 /* -------------------------------
@@ -115,6 +209,25 @@ public class SecurityConfig {
                 )
 
                 /* -------------------------------
+                 * [6] OAuth2 소셜 로그인 설정
+                 * -------------------------------
+                 * - Google, Kakao, Naver 등의 소셜 로그인 활성화
+                 * - 성공 시 기존 roleBasedSuccessHandler 사용
+                 * - 실패 시 oauthFailureHandler (계정 연결 플로우)
+                 */
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/auth/login")
+                        .userInfoEndpoint(u -> u
+                                .oidcUserService(customOidcUserService) // ★ OIDC(Google openid) 경로
+                                .userService(customOAuth2UserService)   // ★ OAuth2(pure) 경로
+                        )
+                        .successHandler(roleBasedSuccessHandler())
+                        .failureHandler(oauthFailureHandler())
+                )
+
+
+
+                /* -------------------------------
                  * [6] 폼 로그인 설정
                  * -------------------------------
                  * - 사용자 지정 로그인 페이지(/auth/login)
@@ -127,7 +240,8 @@ public class SecurityConfig {
                         .loginProcessingUrl("/auth/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/", true)
+                        //.defaultSuccessUrl("/", true)
+                        .successHandler(roleBasedSuccessHandler())
                         .failureUrl("/auth/login?error")
                         .permitAll()
                 )

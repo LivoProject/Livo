@@ -18,9 +18,11 @@
     <c:url var="urlValEmail"   value="/auth/validate/email"/>
     <c:url var="urlValNick"    value="/auth/validate/nickname"/>
     <c:url var="urlValPw"      value="/auth/validate/password"/>
+    <c:url var="urlValPhone"   value="/auth/validate/phone"/>
     <c:url var="urlSendCode"   value="/auth/send-code"/>
     <c:url var="urlVerifyCode" value="/auth/verify-code"/>
     <c:url var="urlLogin"      value="/auth/login"/>
+
 
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/reset.css">
@@ -85,12 +87,13 @@
         <div class="field">
             <label class="form-label">전화</label><br/>
             <form:input path="phone" cssClass="form-control" placeholder="010-1234-5678" id="phone"/>
+            <span data-msg="phone"></span>
         </div>
 
         <!-- 생년월일 -->
         <div class="field">
             <label class="form-label">생년월일</label><br/>
-            <form:input path="birth" placeholder="yyyy-mm-dd" cssClass="form-control" id="birth"/>
+            <form:input path="birth"  placeholder="yyyymmdd"  type="date" cssClass="form-control" id="birth" />
         </div>
 
         <!-- 성별 -->
@@ -117,12 +120,13 @@
         urlValEmail  : "${urlValEmail}",
         urlValNick   : "${urlValNick}",
         urlValPw     : "${urlValPw}",
+        urlValPhone  : "${urlValPhone}",
         urlSendCode  : "${urlSendCode}",
         urlVerifyCode: "${urlVerifyCode}",
         urlLogin     : "${urlLogin}"
 
     };
 </script>
-<script src="/js/register.js?v=5"></script>
+<script src="/js/register.js?v=6"></script>
 </body>
 </html>

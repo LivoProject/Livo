@@ -48,15 +48,15 @@
             <div class="field">
                 <label for="email" class="form-label"><span class="required-mark">*</span> 이메일</label>
                 <input
-                        type="email"
-                        class="form-control"
-                        id="email"
-                        name="email"
-                        placeholder="name@example.com"
-                        readonly
-                        required
-                        disabled
-                        value="${mypage.email}"
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="name@example.com"
+                    readonly
+                    required
+                    disabled
+                    value="${mypage.email}"
                 />
             </div>
 
@@ -94,12 +94,12 @@
             <div class="field">
                 <label for="phone" class="form-label">전화번호</label>
                 <input
-                        type="tel"
-                        class="form-control"
-                        id="phone"
-                        name="phone"
-                        required
-                        value="${mypage.phone}"
+                    type="tel"
+                    class="form-control"
+                    id="phone"
+                    name="phone"
+                    required
+                    value="${mypage.phone}"
                 />
                 <span data-msg="phone"></span>
             </div>
