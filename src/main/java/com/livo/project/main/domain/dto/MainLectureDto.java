@@ -1,6 +1,6 @@
-package com.livo.project.maindashboard.domain.dto;
+package com.livo.project.main.domain.dto;
 
-import com.livo.project.maindashboard.domain.entity.MainDashBoardLecture;
+import com.livo.project.main.domain.entity.MainLecture;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MainDashBoardLectureDto {
+public class MainLectureDto {
 
     private int lectureId;
     private String title;
@@ -19,8 +19,8 @@ public class MainDashBoardLectureDto {
     private String thumbnail;
     private int price;
 
-    public static MainDashBoardLectureDto fromEntity(MainDashBoardLecture lecture) {
-        return MainDashBoardLectureDto.builder()
+    public static MainLectureDto fromEntity(MainLecture lecture) {
+        return MainLectureDto.builder()
                 .lectureId(lecture.getLectureId())
                 .title(lecture.getTitle())
                 .tutorName(lecture.getTutorName())

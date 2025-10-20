@@ -2,7 +2,6 @@ package com.livo.project.mypage.service;
 
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.auth.repository.UserRepository;
-import com.livo.project.maindashboard.domain.entity.MainDashBoardLecture;
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.domain.entity.MypageLecture;
 import com.livo.project.mypage.domain.entity.MypageNotice;

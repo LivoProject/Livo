@@ -1,4 +1,4 @@
-package com.livo.project.maindashboard.domain.entity;
+package com.livo.project.main.domain.entity;
 
 import com.livo.project.lecture.domain.Category;
 import jakarta.persistence.*;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "lecture")
 @Getter @Setter
-public class MainDashBoardLecture {
+public class MainLecture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int lectureId;
