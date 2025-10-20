@@ -1,4 +1,4 @@
-package com.livo.project.lecture;
+package com.livo.project.lecture.repository;
 
 import com.livo.project.lecture.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;

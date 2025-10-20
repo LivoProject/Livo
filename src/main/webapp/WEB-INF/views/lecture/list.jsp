@@ -18,7 +18,7 @@
 
         <!-- 주제 선택 -->
         <select id="mainCategory" name="mainCategory" class="form-select w-auto">
-          <option value="">주제 선택</option>
+          <option value="">주제</option>
           <option value="1">IT</option>
           <option value="2">자기계발</option>
           <option value="3">문화여가</option>
@@ -31,7 +31,7 @@
 
         <!-- 세부분류 -->
         <select id="subCategory" name="subCategory" class="form-select w-auto">
-          <option value="">세부분류 선택</option>
+          <option value="">세부분류</option>
         </select>
 
         <!-- 검색창 -->
@@ -50,10 +50,11 @@
           <a href="/lecture/content/${lecture.lectureId}" class="card popular-card">
 
             <!-- 썸네일 -->
-            <div class="card-thumb" style="
-                  background-image: url('/img/lecture/lecture_${lecture.lectureId}.jpg');
-                  background-size: cover; background-position: center;
-                  height: 200px; border-radius: 12px 12px 0 0;">
+            <div class="card-thumb" style="height: 200px; border-radius: 12px 12px 0 0; overflow: hidden;">
+                <img src="/img/lecture/lecture_${lecture.lectureId}.jpg"
+                     onerror="this.onerror=null; this.src='/img/common/no-image.png';"
+                     alt="lecture thumbnail"
+                     style="width:100%; height:100%; object-fit:cover; border-radius:12px 12px 0 0;">
             </div>
 
             <!-- 강좌정보 -->
@@ -62,8 +63,8 @@
             <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/></p>
                <div class="card-review">
                     <div>
-                        <span>⭐4.8</span>
-                        <span>(22)</span>
+                        <span>⭐ <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" /></span>
+                        <span>(${reviewCountMap[lecture.lectureId]})</span>
                     </div>
                     <div>
                         <i class="bi bi-person-fill"></i>
@@ -100,41 +101,7 @@
 
 
 
-
-
-
-
-  <!-- JS : 주제별 세부분류 자동 변경 -->
-  <script>
-    const subCategories = {
-      1: ["프론트엔드", "백엔드", "데이터베이스", "인공지능(AI)", "클라우드/DevOps", "모바일 앱개발"],
-      2: ["시간관리", "리더십", "생산성 향상", "자기소개서/면접"],
-      3: ["사진/영상편집", "음악/작곡", "그림/디자인"],
-      4: ["요리/베이킹", "피트니스", "요가/명상"],
-      5: ["영어회화", "일본어", "중국어", "한국어"],
-      6: ["심리학", "철학/역사", "정치/사회"],
-      7: ["정보처리기사", "SQLD/ADsP", "토익/토플", "컴퓨터활용능력"],
-      8: ["주식/투자", "부동산", "회계/재무관리"]
-    };
-
-    const mainSelect = document.getElementById("mainCategory");
-    const subSelect = document.getElementById("subCategory");
-
-    mainSelect.addEventListener("change", function () {
-      const selected = this.value;
-      subSelect.innerHTML = '<option value="">세부분류 선택</option>';
-
-      if (subCategories[selected]) {
-        subCategories[selected].forEach(sub => {
-          const opt = document.createElement("option");
-          opt.value = sub;
-          opt.textContent = sub;
-          subSelect.appendChild(opt);
-        });
-      }
-    });
-  </script>
-
-
+      <script src="/js/lectureList.js"></script>
   </main>
+
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

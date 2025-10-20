@@ -4,7 +4,7 @@ import com.livo.project.lecture.domain.Category;
 import com.livo.project.maindashboard.domain.entity.MainDashBoardLecture;
 import com.livo.project.maindashboard.domain.entity.MainDashBoardNotice;
 import com.livo.project.maindashboard.domain.dto.MainDashBoardDto;
-import com.livo.project.lecture.CategoryRepository;
+import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.maindashboard.repository.MainDashBoardLectureRepository;
 import com.livo.project.maindashboard.repository.MainDashBoardNoticeRepository;
 import lombok.RequiredArgsConstructor;
