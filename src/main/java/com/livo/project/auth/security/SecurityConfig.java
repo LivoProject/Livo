@@ -132,7 +132,7 @@ public class SecurityConfig {
                  */
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                      //  .ignoringRequestMatchers("/lecture/like/**") // <-민영추가!!
+                        .ignoringRequestMatchers("/lecture/like/**") // <-민영추가!!
                 )
 
                 /* -------------------------------
@@ -148,7 +148,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/", "/main", "/home", "/index",    // 홈, 메인
                                 "/lecture", "/lecture/**",          // 강좌 목록/상세 페이지
-                                "/course", "/course/**",            // (혹시 경로명이 course면 이것도)
+                                "/faq-page", "/faq-page/**",            // 공지 목록/상세 페이지
+                                "/notice", "/notice/**",            // faq 목록/상세 페이지
                                 "/api/lectures/**", "/api/courses/**", // 강좌 조회 API(GET 요청용)
                                 "/favicon.ico", "/error",           // 에러, 파비콘
 

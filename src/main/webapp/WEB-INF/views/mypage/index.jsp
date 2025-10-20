@@ -66,7 +66,7 @@
             <li>
                <a href="#">
                  <span>${notice.title}</span>
-                 <small><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd" /></small>
+                 <small>${notice.createdAt}</small>
                </a>
             </li>
         </c:forEach>

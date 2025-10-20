@@ -87,7 +87,10 @@
                         <input type="date" name="lectureEnd" class="form-control">
                     </div>
                 </div>
-
+                <div class="mb-4">
+                    <label class="form-label">강의 url</label>
+                    <input type="url" name="youtubeUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
                 <!-- 강의 내용 -->
                 <div class="mb-4">
                     <label class="form-label">강의 내용</label>

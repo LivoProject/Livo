@@ -35,4 +35,11 @@ public class ReservationServiceImpl implements ReservationService {
     public boolean isUserEnrolled(int lectureId, String email) {
         return reservationRepository.existsByLectureIdAndEmail(lectureId, email);
     }
+
+    // 리뷰 등록 시 reservationId 반환 (ReviewController용)
+    @Override
+    public Integer findReservationIdByEmailAndLectureId(String email, int lectureId) {
+        return reservationRepository.findReservationIdByUserAndLecture(email, lectureId)
+                .orElse(null);
+    }
 }
