@@ -69,7 +69,12 @@
                     </c:if>
                     <c:out value="${n.title}" />
                     <div class="text-muted small mt-1">
-                      <fmt:formatDate value="${n.createdAt}" pattern="yyyy-MM-dd HH:mm" />
+                      <c:choose>
+                        <c:when test="${not empty n.createdAtAsDate}">
+                          <fmt:formatDate value="${n.createdAtAsDate}" pattern="yyyy-MM-dd HH:mm"/>
+                        </c:when>
+                        <c:otherwise>-</c:otherwise>
+                      </c:choose>
                       · 조회 <c:out value="${n.viewCount}" />
                       <c:if test="${!n.visible}">
                         · <span class="text-danger">비노출</span>
@@ -85,10 +90,11 @@
                   </td>
 
                   <td class="text-center">
-                    <a href="<c:url value='/admin/notice/${n.noticeId}/edit'/>"
+                    <!-- noticeId -> id 로 변경 -->
+                    <a href="<c:url value='/admin/notice/${n.id}/edit'/>"
                        class="btn btn-sm btn-primary me-1">수정</a>
 
-                    <form action="<c:url value='/admin/notice/${n.noticeId}'/>"
+                    <form action="<c:url value='/admin/notice/${n.id}'/>"
                           method="post"
                           style="display:inline-block;"
                           onsubmit="return confirm('정말 삭제하시겠습니까?');">
