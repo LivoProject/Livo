@@ -6,6 +6,7 @@
         width: 100%;
         height: 100%;
     }
+
     .chat-fab {
         position: fixed;
         right: 24px; /* 화면 우측 여백 */
@@ -87,20 +88,29 @@
     <div>
         <p>LiVO ⓒ 2025 All Rights Reserved.</p>
     </div>
+    <!-- 컨텐츠 끝 -->
+
+
+    <c:if test="${BGM_ALLOWED}">
+        <link rel="stylesheet" href="<c:url value='/css/bgm-toggle.css'/>?v=2"/>
+        <link rel="preload" href="<c:url value='/audio/login_success.mp3'/>" as="audio" type="audio/mpeg"/>
+
+        <div id="bgmToggle"
+             class="bgm-toggle bgm-off"
+             role="button"
+             aria-pressed="false"
+             aria-label="배경음악 끔"
+             title="배경음악 켜기/끄기">
+            <span class="bgm-dot" aria-hidden="true"></span>
+            <span class="bgm-label" aria-hidden="true">🔇</span>
+        </div>
+
+
+    </c:if>
+
 </footer>
-</div>
-<!-- 컨텐츠 끝 -->
 
-
-<c:if test="${BGM_ALLOWED}">
-    <script>
-        window.__BGM_ALLOWED__ = true;
-        // 컨텍스트패스가 있다면 같이 내려주세요 (없으면 지워도 됨)
-        // window.__CTX__ = '${pageContext.request.contextPath}';
-    </script>
-    <script src="<c:url value='/js/bgm.js'/>?v=12"></script>
-</c:if>
-
+<script src="<c:url value='/js/bgm-inline.js'/>?v=1"></script>
 <script>
     const fab = document.getElementById('chat-fab');
     const panel = document.getElementById('chat-panel');
@@ -111,5 +121,7 @@
         });
     }
 </script>
+</body>
+
 </body>
 </html>
