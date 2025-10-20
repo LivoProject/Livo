@@ -85,10 +85,10 @@
                         <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">강좌</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">공지사항</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/notice/list">공지사항</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">자주묻는질문</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/faq-page/list">자주묻는질문</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/mypage">마이페이지</a>

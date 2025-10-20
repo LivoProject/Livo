@@ -1,6 +1,6 @@
 package com.livo.project.main.domain.dto;
 
-import com.livo.project.main.domain.entity.MainLecture;
+import com.livo.project.lecture.domain.Lecture;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class MainLectureDto {
     private String thumbnail;
     private int price;
 
-    public static MainLectureDto fromEntity(MainLecture lecture) {
+    public static MainLectureDto fromEntity(Lecture lecture) {
         return MainLectureDto.builder()
                 .lectureId(lecture.getLectureId())
                 .title(lecture.getTitle())

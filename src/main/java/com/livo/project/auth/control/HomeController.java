@@ -33,6 +33,6 @@ public class HomeController {
 
 
         // 일반 사용자 또는 비로그인 상태라면 기본 메인 페이지 렌더링
-        return "main/main"; //  일반 사용자/비로그인 → 메인
+        return "main/index"; //  일반 사용자/비로그인 → 메인
     }
 }

@@ -2,11 +2,12 @@ package com.livo.project.mypage.service;
 
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.auth.repository.UserRepository;
+import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.mypage.domain.dto.MypageDto;
-import com.livo.project.mypage.domain.entity.MypageLecture;
-import com.livo.project.mypage.domain.entity.MypageNotice;
 import com.livo.project.mypage.repository.MypageLectureRepository;
 import com.livo.project.mypage.repository.MypageNoticeRepository;
+import com.livo.project.notice.domain.dto.NoticeDto;
+import com.livo.project.notice.domain.entity.Notice;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,10 +38,13 @@ public class MypageService {
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         // 공지사항
-        List<MypageNotice> notices = mypageNoticeRepository.findTop5ByOrderByIsPinnedDescCreatedAtDesc();
+        List<Notice> notices = mypageNoticeRepository.findTop5ByOrderByCreatedAtDesc();
+        List<NoticeDto> noticeDtos = notices.stream()
+                .map(NoticeDto::fromEntity)
+                .toList();
 
         // 추천 강좌
-        List<MypageLecture> recommended = mypageLectureRepository.findRandomLectures();
+        List<Lecture> recommended = mypageLectureRepository.findRandomLectures();
 
         return MypageDto.builder()
                 .userId(user.getId())
@@ -97,6 +101,6 @@ public class MypageService {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        log.info("✅ 비밀번호 변경 완료: {}", email);
+        log.info("비밀번호 변경 완료: {}", email);
     }
 }
