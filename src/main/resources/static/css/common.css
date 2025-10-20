@@ -159,7 +159,7 @@ footer p {
 }
 
 /* 챗봇 */
-.chat-fab {
+.chat-fab.fab {
     background: var(--color-main);
     color: #fff;
     box-shadow: 0 10px 20px rgba(13, 110, 253, .35);
@@ -213,6 +213,7 @@ footer p {
     height: 60px;
     border-radius: 50%;
     border: none;
+    background-color: var(--color-white);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
