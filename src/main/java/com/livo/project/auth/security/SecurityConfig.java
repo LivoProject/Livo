@@ -148,7 +148,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/", "/main", "/home", "/index",    // 홈, 메인
                                 "/lecture", "/lecture/**",          // 강좌 목록/상세 페이지
-                                "/course", "/course/**",            // (혹시 경로명이 course면 이것도)
+                                "/faq-page", "/faq-page/**",            // 공지 목록/상세 페이지
+                                "/notice", "/notice/**",            // faq 목록/상세 페이지
                                 "/api/lectures/**", "/api/courses/**", // 강좌 조회 API(GET 요청용)
                                 "/favicon.ico", "/error",           // 에러, 파비콘
 
@@ -171,6 +172,10 @@ public class SecurityConfig {
 
                                 //오디오
                                 "/audio/**",
+
+                                "/bgm-player",
+
+                                "/bgm-embed",
 
                                 //  정적 리소스 (CSS/JS/이미지 등)
                                 "/css/**", "/js/**", "/img/**", "/images/**", "/webjars/**"
@@ -228,7 +233,7 @@ public class SecurityConfig {
 
 
                 /* -------------------------------
-                 * [6] 폼 로그인 설정
+                 * [7] 폼 로그인 설정
                  * -------------------------------
                  * - 사용자 지정 로그인 페이지(/auth/login)
                  * - 로그인 처리 URL 동일 (/auth/login)
@@ -247,7 +252,7 @@ public class SecurityConfig {
                 )
 
                 /* -------------------------------
-                 * [7] 로그아웃 설정
+                 * [8] 로그아웃 설정
                  * -------------------------------
                  * - 세션 무효화 및 쿠키 삭제
                  * - 로그아웃 성공 후 로그인 페이지로 이동

@@ -3,6 +3,7 @@ plugins {
     id 'war'
     id 'org.springframework.boot' version '3.5.6'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 group = 'com.livo'
@@ -70,6 +71,7 @@ dependencies {
 
     //social
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
 }
 
