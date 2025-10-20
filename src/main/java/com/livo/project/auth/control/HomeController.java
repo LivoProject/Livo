@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
+    /** /home 접근 시 역할별 분기
+     * - 관리자/매니저는 각 대시보드로
+     * - 일반 사용자/비로그인은 메인으로
+     */
     // 루트나 /home 접근 시 역할에 따라 분기
     @GetMapping({ "/home"})
     public String main(Authentication auth) {
@@ -26,7 +30,9 @@ public class HomeController {
                 return "redirect:/manager"; // 매니저라면 매니저 페이지
             }
         }
+
+
         // 일반 사용자 또는 비로그인 상태라면 기본 메인 페이지 렌더링
-        return "main/main"; // /WEB-INF/views/main/main.jsp
+        return "main/main"; //  일반 사용자/비로그인 → 메인
     }
 }

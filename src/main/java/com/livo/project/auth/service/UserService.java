@@ -13,6 +13,9 @@ public interface UserService {
     void updateNickname(Long userId, String nickname);
     void changePassword(Long userId, String currentPassword, String newPassword);
 
+    // 소셜 계정 연결
+    void linkSocialAccount(String email, String provider);
+
     // 조회
     Optional<User> findByEmail(String email);      // 세미콜론 추가
 
@@ -20,5 +23,6 @@ public interface UserService {
     boolean existsEmail(String email);
     boolean existsNickname(String nickname);
     boolean existsPhone(String phoneRaw);
+
 }
 

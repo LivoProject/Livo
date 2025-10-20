@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler; //add social
 
 
 @Configuration
@@ -30,11 +31,23 @@ public class SecurityConfig {
     /**  사용자 인증 로직 구현체 (CustomUserDetailsService 사용) */
     private final UserDetailsService customUserDetailsService;
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    private final CustomOidcUserService   customOidcUserService;
+
+
     /**  비밀번호 암호화용 BCrypt 인코더 (DB의 해시와 동일한 알고리즘 사용) */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    /** Audio
+    @Bean
+    public AuthenticationSuccessHandler loginSuccessHandler() {
+        return new LoginSuccessHandler();
+    }*/
+
 
     /**  AuthenticationProvider 설정
      * - Spring Security가 사용자 정보를 로드할 때 사용할 Provider
@@ -81,8 +94,23 @@ public class SecurityConfig {
                 } else if (set.contains("ROLE_MANAGER")) {
                     getRedirectStrategy().sendRedirect(req, res, "/manager");
                 } else {
+                    //  일반 사용자: 메인으로 보낼 때 '한 번만' 브금 재생 플래그 세팅
+                    req.getSession(true).setAttribute("PLAY_BGM_ONCE", Boolean.TRUE);
                     getRedirectStrategy().sendRedirect(req, res, "/");
                 }
+            }
+        };
+    }
+    /**------------ social login ------------ */
+    @Bean
+    public AuthenticationFailureHandler oauthFailureHandler() {
+        return (request, response, ex) -> {
+            // 이메일 충돌 시 사용자 선택 페이지로
+            if (ex instanceof org.springframework.security.oauth2.core.OAuth2AuthenticationException e
+                    && "account_conflict".equals(e.getError().getErrorCode())) {
+                response.sendRedirect("/auth/link-account");
+            } else {
+                response.sendRedirect("/auth/login?error");
             }
         };
     }
@@ -135,12 +163,21 @@ public class SecurityConfig {
                                 //  실시간 유효성 검사 (AJAX)
                                 "/auth/validate/**",
 
+                                // 소셜 로그인
+                                "/oauth2/**", "/login/oauth2/**",
+
+                                //계정 연동 페이지
+                                "/auth/link-account", "/auth/link-account/**",
+
+                                //오디오
+                                "/audio/**",
+
                                 //  정적 리소스 (CSS/JS/이미지 등)
                                 "/css/**", "/js/**", "/img/**", "/images/**", "/webjars/**"
                         ).permitAll()
 
                                 .requestMatchers("/admin/**").hasRole("ADMIN")          //  추가
-                                .requestMatchers("/manager/**").hasAnyRole("ADMIN","MANAGER") // ★추가
+                                .requestMatchers("/manager/**").hasAnyRole("ADMIN","MANAGER") // 추가
 
 
                         // 나머지는 인증 필요
@@ -170,6 +207,25 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
+
+                /* -------------------------------
+                 * [6] OAuth2 소셜 로그인 설정
+                 * -------------------------------
+                 * - Google, Kakao, Naver 등의 소셜 로그인 활성화
+                 * - 성공 시 기존 roleBasedSuccessHandler 사용
+                 * - 실패 시 oauthFailureHandler (계정 연결 플로우)
+                 */
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/auth/login")
+                        .userInfoEndpoint(u -> u
+                                .oidcUserService(customOidcUserService) // ★ OIDC(Google openid) 경로
+                                .userService(customOAuth2UserService)   // ★ OAuth2(pure) 경로
+                        )
+                        .successHandler(roleBasedSuccessHandler())
+                        .failureHandler(oauthFailureHandler())
+                )
+
+
 
                 /* -------------------------------
                  * [6] 폼 로그인 설정

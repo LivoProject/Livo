@@ -159,6 +159,36 @@ public class AuthController {
             return ResponseEntity.internalServerError().body(Map.of("error", "서버 오류가 발생했습니다."));
         }
     }
+    @GetMapping("/link-account")
+    public String linkAccountPage(HttpSession session, Model model) {
+        Object email = session.getAttribute("conflictEmail");
+        Object provider = session.getAttribute("conflictProvider");
+        if (email == null || provider == null) {
+            return "redirect:/auth/login";
+        }
+        model.addAttribute("email", email);
+        model.addAttribute("provider", provider);
+        return "auth/link-account";
+    }
+
+    @PostMapping(value = "/link-account/confirm",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String linkConfirm(@RequestParam String email, @RequestParam String provider,
+                              HttpSession session) {
+        userService.linkSocialAccount(email, provider.toLowerCase());
+        session.removeAttribute("conflictEmail");
+        session.removeAttribute("conflictProvider");
+        return "redirect:/auth/login?linked";
+    }
+
+    @PostMapping(value = "/link-account/cancel",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String linkCancel(HttpSession session) {
+        session.removeAttribute("conflictEmail");
+        session.removeAttribute("conflictProvider");
+        return "redirect:/auth/login?cancel";
+    }
+
 
     /** 로그인 폼 (GET) */
     @GetMapping("/login")
