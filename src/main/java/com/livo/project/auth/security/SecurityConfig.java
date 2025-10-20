@@ -86,7 +86,8 @@ public class SecurityConfig {
                                 "/css/**", "/js/**", "/img/**", "/images/**", "/webjars/**"
                         ).permitAll()
                         // 나머지는 인증 필요
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                         //.anyRequest().permitAll()
                 )
 
