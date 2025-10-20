@@ -25,21 +25,17 @@ header {
     border-bottom: var(--border-black);
     z-index: 10;
 }
-
 header .logo {
     width: 5rem;
     margin-right: 2rem;
 }
-
 header .logo img {
     width: 100%;
 }
-
 header .nav-link {
     color: var(--color-black);
     transition: color 0.3s ease;
 }
-
 header .nav-link:hover,
 header .nav-link.active,
 header .header-actions button:hover {
@@ -156,76 +152,59 @@ footer p {
     transform: translateY(30px);
     transition: opacity 0.8s ease, transform 0.8s ease;
 }
+
 .fade-in-up.show {
     opacity: 1;
     transform: translateY(0);
 }
+
 /* 챗봇 */
 .chat-fab {
-    position: fixed;
-    right: 24px;
-    bottom: 24px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    z-index: 2147483647;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #0d6efd;
+    background: var(--color-main);
     color: #fff;
     box-shadow: 0 10px 20px rgba(13, 110, 253, .35);
-    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
-}
-.chat-fab:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 14px 28px rgba(13, 110, 253, .45);
-}
-
-.chat-fab:active {
-    transform: translateY(1px) scale(.98);
 }
 
 .chat-fab img {
-    width: 100%;
+    width: 80%;
 }
 
 .chat-panel {
     position: fixed;
-    right: 24px;
+    right: 100px;
     bottom: 96px;
     width: min(360px, 92vw);
     height: 480px;
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 18px 50px rgba(0, 0, 0, .2);
-    z-index: 2147483646;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    z-index: 10;
 }
+
 .chat-panel-header {
     padding: 12px 16px;
-    background: #0d6efd;
+    background: var(--color-main);
     color: #fff;
     font-weight: 600;
 }
+
 .chat-panel-body {
     padding: 16px;
     overflow: auto;
     flex: 1;
 }
+
 .floating-buttons {
     position: fixed;
     right: 24px;
-    bottom: 24px;
+    bottom: 12rem;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    z-index: 2147483647;
+    z-index: 10;
 }
 
 /* 각 버튼 스타일 */
@@ -234,7 +213,6 @@ footer p {
     height: 60px;
     border-radius: 50%;
     border: none;
-    background: #fff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
@@ -248,53 +226,29 @@ footer p {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* 아이콘 크기 */
-.fab img {
-    width: 26px;
-    height: 26px;
-}
-
 /* 맨 위로 버튼 스타일 */
 .fab-top {
     background: #6c757d;
     color: #fff;
 }
+
 .fab-top:hover {
     background: #495057;
 }
+
 .fab-top i {
     font-size: 22px;
 }
 
 
-
-/* 버튼 공통 영역 */
 #bgmToggle {
-    right: 22px;
-    bottom: 22px;
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.8);
-    color: #222;
-    font-family: "Noto Sans KR", sans-serif;
-    font-size: 14px;
-    font-weight: 600;
     border-radius: 40px;
     padding: 10px 16px;
-    cursor: pointer;
-    z-index: 2000;
-    user-select: none;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
-}
-
-#bgmToggle:hover {
-    background: rgba(240, 240, 240, 0.9);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
 }
 
 /* 점 아이콘 */
@@ -338,17 +292,11 @@ footer p {
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 6px rgba(255, 200, 0, 0.3); }
-    100% { box-shadow: 0 0 12px rgba(255, 220, 0, 0.8); }
-}
-
-/* 모바일 대응 */
-@media (max-width: 768px) {
-    #bgmToggle {
-        right: 14px;
-        bottom: 14px;
-        font-size: 13px;
-        padding: 8px 14px;
+    0% {
+        box-shadow: 0 0 6px rgba(255, 200, 0, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 12px rgba(255, 220, 0, 0.8);
     }
 }
 

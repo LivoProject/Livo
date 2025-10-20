@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         observer.observe(el);
     });
 
-    // === 푸터 챗봇 아이콘 === //
+    // === 푸터 챗봇 버튼 === //
     const fab = document.getElementById('chat-fab');
     const panel = document.getElementById('chat-panel');
     if (fab && panel) {
@@ -37,4 +37,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // === 푸터 스크롤 탑 버튼 === //
+    const toTopBtn = document.getElementById("toTopBtn");
+    toTopBtn.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
 });

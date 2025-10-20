@@ -151,3 +151,6 @@ h4 {
   font-weight: 700;
   margin: 1rem 0;
 }
+section {
+    min-height: 100vh;
+}

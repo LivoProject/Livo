@@ -1,4 +1,5 @@
 #main section {
+  min-height: 0!important;
   padding: 3rem 0;
   background-color: var(--color-white);
 }
@@ -11,6 +12,7 @@
   font-family: "Roboto";
 }
 
+/* Hero */
 /* Hero */
 #hero-tagline {
   padding: 6rem 0;
