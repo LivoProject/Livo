@@ -1,12 +1,12 @@
 /* 공통 색상 */
 :root {
-  --color-white: #fff;
-  --color-black: #121212;
-  --color-gray: #999;
-  --color-light-gray: #ddd;
-  --color-main: #17b4c7;
-  --color-point: #ffcc02;
-  --border-black: 1px solid #ddd;
+    --color-white: #fff;
+    --color-black: #121212;
+    --color-gray: #999;
+    --color-light-gray: #ddd;
+    --color-main: #17b4c7;
+    --color-point: #ffcc02;
+    --border-black: 1px solid #ddd;
 }
 
 /* 폰트 */
@@ -15,130 +15,210 @@
 
 /* 헤더 */
 header {
-  width: 100%;
-  height: 5rem;
-  display: flex;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  background-color: var(--color-white);
-  border-bottom: var(--border-black);
-  z-index: 10;
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    background-color: var(--color-white);
+    border-bottom: var(--border-black);
+    z-index: 10;
 }
+
 header .logo {
-  width: 5rem;
-  margin-right: 2rem;
+    width: 5rem;
+    margin-right: 2rem;
 }
+
 header .logo img {
-  width: 100%;
+    width: 100%;
 }
+
 header .nav-link {
-  color: var(--color-black);
-  transition: color 0.3s ease;
+    color: var(--color-black);
+    transition: color 0.3s ease;
 }
+
 header .nav-link:hover,
 header .nav-link.active,
 header .header-actions button:hover {
-  color: var(--color-main);
+    color: var(--color-main);
 }
+
 header nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
 header .navbar-nav {
-  gap: 2rem;
+    gap: 2rem;
 }
+
 header #searchToggle {
-  margin-top: -3px;
+    margin-top: -3px;
 }
+
 header .header-actions {
-  display: flex;
-  gap: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
 }
+
 header .header-actions button {
-  height: 2rem;
-  transition: color 0.3s ease;
+    height: 2rem;
+    transition: color 0.3s ease;
 }
+
 header .header-actions button:nth-of-type(1) {
-  position: relative;
+    position: relative;
 }
+
 header .header-actions button:nth-of-type(1)::after {
-  content: "";
-  right: -12px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: var(--color-black);
-  width: 1px;
-  height: 15px;
-  display: block;
+    content: "";
+    right: -12px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--color-black);
+    width: 1px;
+    height: 15px;
+    display: block;
 }
+
 header .header-actions button i {
-  margin-right: 0.5rem;
+    margin-right: 0.5rem;
 }
+
 #headerSearch {
-  height: 0;
-  overflow: hidden;
-  transition: 0.3s all;
-  opacity: 0;
-  visibility: hidden;
-  position: fixed;
-  flex-direction: column;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 5rem;
-  width: 100%;
-  background-color: var(--color-white);
-  border-bottom: var(--border-black);
-  z-index: 9;
-  left: 0;
+    height: 0;
+    overflow: hidden;
+    transition: 0.3s all;
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 5rem;
+    width: 100%;
+    background-color: var(--color-white);
+    border-bottom: var(--border-black);
+    z-index: 9;
+    left: 0;
 }
+
 #headerSearch.show {
-  height: 150px;
-  opacity: 1;
-  visibility: visible;
+    height: 150px;
+    opacity: 1;
+    visibility: visible;
 }
+
 #headerSearch h4 {
-  margin-top: 0;
+    margin-top: 0;
 }
+
 #headerSearch .input-group {
-  width: 60%;
-  height: 40px;
+    width: 60%;
+    height: 40px;
 }
+
 #headerSearch .input-group input {
-  border-radius: 0.2rem;
+    border-radius: 0.2rem;
 }
+
 #headerSearch .input-group button {
-  border-radius: 0.2rem;
-  padding: 0.375rem 0.75rem;
-  background-color: var(--color-main);
-  color: var(--color-white);
-  margin-left: 0.3rem;
+    border-radius: 0.2rem;
+    padding: 0.375rem 0.75rem;
+    background-color: var(--color-main);
+    color: var(--color-white);
+    margin-left: 0.3rem;
 }
+
 /* 푸터 */
 footer {
-  height: 10rem;
-  background-color: var(--color-black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    height: 10rem;
+    background-color: var(--color-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 footer p {
-  font-family: "Roboto";
-  color: var(--color-gray);
+    font-family: "Roboto";
+    color: var(--color-gray);
 }
+
 /* 페이드 효과 */
 .fade-in-up {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
 }
 .fade-in-up.show {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
+/* 챗봇 */
+.chat-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d6efd;
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(13, 110, 253, .35);
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.chat-fab:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(13, 110, 253, .45);
+}
+
+.chat-fab:active {
+    transform: translateY(1px) scale(.98);
+}
+
+.chat-fab i {
+    font-size: 26px;
+    line-height: 1;
+}
+.chat-panel {
+    position: fixed;
+    right: 24px;
+    bottom: 96px;
+    width: min(360px, 92vw);
+    height: 480px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .2);
+    z-index: 2147483646;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.chat-panel-header {
+    padding: 12px 16px;
+    background: #0d6efd;
+    color: #fff;
+    font-weight: 600;
+}
+.chat-panel-body {
+    padding: 16px;
+    overflow: auto;
+    flex: 1;
+}
+
 
 /* 컨테이너 */
 /*
@@ -148,65 +228,77 @@ footer p {
 } */
 
 @media screen and (min-width: 1140px) {
-  .container {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
+    .container {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 }
+
 @media (max-width: 991.98px) {
-  header .container {
-    max-width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  header .logo {
-    width: 8rem;
-  }
-  header .navbar-collapse {
-    width: 100vw;
-    position: absolute;
-    border-top: var(--border-black);
-    border-bottom: var(--border-black);
-    top: 59px;
-    background-color: var(--color-white);
-    padding: 0 1rem;
-  }
-  header .header-actions button:nth-of-type(1)::after {
-    display: none;
-  }
-  header .logo {
-    padding: 0 1rem;
-  }
-  header .navbar-toggler {
-    margin-right: 1rem;
-  }
-  header .header-actions {
-    flex-direction: initial;
-    margin: 1rem 0;
-  }
-  header #searchToggle {
-    display: none;
-  }
-  header .navbar-nav {
-    margin-top: 1rem;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  header .header-actions button {
-    width: 100%;
-    border: 1px solid var(--color-black);
-    background: var(--color-white);
-    text-align: center;
-    border-radius: 0.25rem;
-    font-size: 1rem;
-  }
-  header .header-actions button i {
-    margin-right: 0.5rem;
-  }
+    header .container {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    header .logo {
+        width: 8rem;
+    }
+
+    header .navbar-collapse {
+        width: 100vw;
+        position: absolute;
+        border-top: var(--border-black);
+        border-bottom: var(--border-black);
+        top: 59px;
+        background-color: var(--color-white);
+        padding: 0 1rem;
+    }
+
+    header .header-actions button:nth-of-type(1)::after {
+        display: none;
+    }
+
+    header .logo {
+        padding: 0 1rem;
+    }
+
+    header .navbar-toggler {
+        margin-right: 1rem;
+    }
+
+    header .header-actions {
+        flex-direction: initial;
+        margin: 1rem 0;
+    }
+
+    header #searchToggle {
+        display: none;
+    }
+
+    header .navbar-nav {
+        margin-top: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    header .header-actions button {
+        width: 100%;
+        border: 1px solid var(--color-black);
+        background: var(--color-white);
+        text-align: center;
+        border-radius: 0.25rem;
+        font-size: 1rem;
+    }
+
+    header .header-actions button i {
+        margin-right: 0.5rem;
+    }
 }
+
 @media screen and (max-width: 768px) {
-  html,
-  body {
-    font-size: 14px;
-  }
+    html,
+    body {
+        font-size: 14px;
+    }
 }
