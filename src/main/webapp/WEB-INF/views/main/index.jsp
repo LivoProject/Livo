@@ -29,7 +29,7 @@
         <c:forEach var="notice" items="${notices}">
             <div class="swiper-slide">
               <span>${notice.title}</span>
-              <small><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd" /></small>
+              <small>${notice.createdAt}</small>
             </div>
         </c:forEach>
 
@@ -314,7 +314,7 @@
                 <li>
                    <a href="#">
                      <span>${notice.title}</span>
-                     <small><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd" /></small>
+                     <small>${notice.createdAt}</small>
                    </a>
                 </li>
             </c:forEach>
