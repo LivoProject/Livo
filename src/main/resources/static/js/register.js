@@ -10,6 +10,8 @@
     const URL_SEND_CODE   = cfg.urlSendCode;
     const URL_VERIFY_CODE = cfg.urlVerifyCode;
     const URL_LOGIN       = cfg.urlLogin;
+    const URL_VAL_PHONE   = cfg.urlValPhone;
+
 
     const csrf  = document.querySelector('meta[name="_csrf"]')?.content || '';
     const csrfH = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
@@ -29,6 +31,11 @@
     const form        = $('#signupForm');
 
     // helpers
+    function normalizePhone(v = '') {
+        let s = String(v).replace(/[^\d+]/g, ''); // 숫자/+만 남김
+        if (s.startsWith('+82')) s = '0' + s.slice(3); // +82 → 0
+        return s;
+    }
     function setMsg(name, ok, text = '') {
         const el = document.querySelector(`[data-msg="${name}"]`);
         if (!el) return;
@@ -82,6 +89,7 @@
         {name: 'email',    base: URL_VAL_EMAIL},
         {name: 'password', base: URL_VAL_PW},
         {name: 'nickname', base: URL_VAL_NICK},
+        {name: 'phone',    base: URL_VAL_PHONE},
     ].forEach(({name, base}) => {
         const input = document.querySelector(`[name="${name}"]`);
         if (!input || !base) return;
@@ -212,6 +220,9 @@
             const fd = new FormData(form);
             const payload = Object.fromEntries(fd.entries());
 
+            payload.phone = normalizePhone(payload.phone);
+
+            //서버 전송
             const res = await fetch(URL_REGISTER, {
                 method: 'POST',
                 credentials: 'same-origin',
@@ -230,7 +241,7 @@
 
             // 리다이렉트/HTML 응답 방어 로직
             // ... fetch 후
-            const ct = (res.headers.get('content-type') || '').toLowerC
+            const ct = (res.headers.get('content-type') || '').toLowerCase();
             if (ct.includes('application/json')) {
                 const data = await res.json();
 

@@ -28,8 +28,9 @@ public class AppUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Integer roleId = user.getRoleId();
         String role = switch (roleId == null ? 1 : roleId) {
-            case 9 -> "ADMIN";
-            case 5 -> "MANAGER";
+            case 3 -> "ADMIN";
+            case 2 -> "MANAGER";
+            case 1 -> "USER";
             default -> "USER";
         };
         return List.of(new SimpleGrantedAuthority("ROLE_" + role));

@@ -1,9 +1,7 @@
 package com.livo.project.auth.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -19,7 +17,8 @@ import java.time.LocalDateTime;
                 @UniqueConstraint(name = "uq_user_phone", columnNames = "phone")
         }
 )
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -78,4 +77,10 @@ public class User {
 
     @Column(name = "role_id", nullable = false)
     private Integer roleId;
+
+    @Column(length = 30)
+    private String provider;
+
+    @Column(length = 100)
+    private String providerId;
 }
