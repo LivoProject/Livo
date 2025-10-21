@@ -40,6 +40,7 @@ public class ChapterAdminService {
 
         String firstUrl = savedChapters.get(0).getYoutubeUrl();
         String videoId = extractVideoId(firstUrl);
+        System.out.println("videoId: " + videoId);
         if (videoId == null) return;
 
         String thumbnailUrl = "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
@@ -52,11 +53,27 @@ public class ChapterAdminService {
     }
 
     private String extractVideoId(String url) {
-        if (url == null) return null;
-        if (url.contains("v=")) return url.split("v=")[1].split("&")[0];
-        if (url.contains("youtu.be/")) return url.split("youtu.be/")[1];
-        return null;
+        if (url == null || url.isEmpty()) return null;
+        try {
+            if (url.contains("watch?v=")) {
+                String idPart = url.substring(url.indexOf("watch?v=") + 8);
+                return idPart.split("[&?]")[0]; // ?si= 등 제거
+            }
+            if (url.contains("youtu.be/")) {
+                String idPart = url.substring(url.indexOf("youtu.be/") + 9);
+                return idPart.split("[&?]")[0];
+            }
+            if (url.contains("embed/")) {
+                String idPart = url.substring(url.indexOf("embed/") + 6);
+                return idPart.split("[&?]")[0];
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
 
 

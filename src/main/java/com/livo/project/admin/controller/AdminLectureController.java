@@ -46,8 +46,33 @@ public class AdminLectureController {
     @PostMapping("/uploadImage")
     @ResponseBody
     public String uploadImage(@RequestParam("file") MultipartFile file){
-        return fileService.saveFile(file);
+        return fileService.saveFile(file,"upload");
     }
+
+    @PostMapping("/thumbnail/upload")
+    @ResponseBody
+    public ResponseEntity<?> uploadLectureThumbnail(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("lectureId")int lectureId){
+        try{
+            String imageUrl = fileService.saveFile(file,"lecture");
+            Lecture lecture = lectureAdminService.findById(lectureId);
+            lecture.setThumbnailUrl(imageUrl);
+            lecture.setCustomThumbnail(true);
+            lectureAdminService.saveLecture(lecture,lecture.getCategoryId());
+
+            return ResponseEntity.ok(Map.of(
+                    "success",true,
+                    "thumbnailUrl",imageUrl
+            ));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message",e.getMessage()
+            ));
+        }
+    }
+
 
     @PostMapping("/delete")
     public String deleteLecture(@RequestParam("lectureId") int id){
