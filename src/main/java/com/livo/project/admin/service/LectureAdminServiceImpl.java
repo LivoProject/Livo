@@ -1,17 +1,21 @@
 package com.livo.project.admin.service;
 
+import com.livo.project.admin.domain.dto.LectureSearch;
+import com.livo.project.admin.repository.LectureAdminCustomRepositoryImpl;
+import com.livo.project.admin.repository.LectureAdminRepository;
 import com.livo.project.lecture.domain.Category;
-import com.livo.project.lecture.domain.ChapterList;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.repository.ChapterListRepository;
 import com.livo.project.lecture.repository.LectureRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @RequiredArgsConstructor
@@ -21,7 +25,8 @@ public class LectureAdminServiceImpl implements LectureAdminService {
     private final CategoryRepository categoryRepository;
     private final LectureRepository lectureRepository;
     private final ChapterListRepository chapterListRepository;
-
+    private final LectureAdminCustomRepositoryImpl lectureCustomRepository;
+    private final LectureAdminRepository lectureAdminRepository;
     @Override
     public Lecture saveLecture(Lecture lecture, int categoryId) {
         Category category = categoryRepository.findById(categoryId)
@@ -79,6 +84,17 @@ public class LectureAdminServiceImpl implements LectureAdminService {
     @Override
     public Lecture findById(int lectureId) {
         return lectureRepository.findById(lectureId).orElseThrow(() -> new RuntimeException("강의를 찾을 수 없습니다."));
+    }
+
+    @Override
+    public Page<Lecture> searchLecture(LectureSearch search, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return lectureCustomRepository.search(search, pageable);
+    }
+
+    @Override
+    public List<Lecture> getRecentLectures() {
+        return lectureAdminRepository.findTop5ByOrderByLectureIdDesc();
     }
 
 }

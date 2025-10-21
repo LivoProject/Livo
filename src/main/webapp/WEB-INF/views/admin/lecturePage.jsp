@@ -16,25 +16,25 @@
                     <div class="card-body">
                         <!-- 카테고리 버튼 -->
                         <div class="mb-3">
-                            <div class="btn-group" role="group" aria-label="카테고리">
-                                <button type="button" class="btn btn-outline-secondary active">전체</button>
-                                <button type="button" class="btn btn-outline-secondary">IT</button>
-                                <button type="button" class="btn btn-outline-secondary">자기개발</button>
-                                <button type="button" class="btn btn-outline-secondary">문화여가</button>
-                                <button type="button" class="btn btn-outline-secondary">건강</button>
-                                <button type="button" class="btn btn-outline-secondary">언어</button>
-                                <button type="button" class="btn btn-outline-secondary">인문사회</button>
-                                <button type="button" class="btn btn-outline-secondary">자격증</button>
-                                <button type="button" class="btn btn-outline-secondary">경제</button>
+                            <div id="categoryGroup" class="btn-group" role="group" aria-label="카테고리">
+                                <button type="button" class="btn btn-outline-secondary active" data-category-id="">전체</button>
+                                <button type="button" class="btn btn-outline-secondary" data-category-id="1">IT</button>
+                                <button type="button" class="btn btn-outline-secondary" data-category-id="2">자기개발</button>
+                                <button type="button" class="btn btn-outline-secondary" data-category-id="3">문화여가</button>
+                                <button type="button" class="btn btn-outline-secondary" data-category-id="4">건강</button>
+                                <button type="button" class="btn btn-outline-secondary" data-category-id="5">언어</button>
+                                <button type="button" class="btn btn-outline-secondary" data-category-id="6">인문사회</button>
+                                <button type="button" class="btn btn-outline-secondary" data-category-id="7">자격증</button>
+                                <button type="button" class="btn btn-outline-secondary" data-category-id="8">경제</button>
                             </div>
                         </div>
                         <div class="row g-2 align-items-center flex-wrap">
                             <div class="col d-flex align-items-center">
-                                <input type="text" class="form-control" placeholder="강의명, 강사명 검색...">
+                                <input id="keyword" type="text" class="form-control" placeholder="강의명, 강사명 검색...">
                             </div>
 
                             <div class="col-auto">
-                                <button class="btn btn-primary">검색</button>
+                                <button id="searchBtn" class="btn btn-primary">검색</button>
                             </div>
                         </div>
                         <!-- 필터 영역 -->
@@ -42,33 +42,38 @@
                             <div class="col-6">
                                 <div class="col-auto d-flex align-items-center">
                                     <label class="me-4 col-form-label fw-semibold">예약 상태</label>
-                                    <select class="form-select">
-                                        <option>전체</option>
+                                    <select id="statusSelect" class="form-select">
+                                        <option value="">전체</option>
+                                        <option value="OPEN">예약 중</option>
+                                        <option value="CLOSED">예약 마감</option>
+                                        <option value="ENDED">종료</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="col-auto d-flex align-items-center">
                                     <label class="me-4 mb-0 fw-semibold">가격</label>
-                                    <select class="form-select">
+                                    <select id="priceSelect" class="form-select">
                                         <option>전체</option>
+                                        <option value="paid">유료</option>
+                                        <option value="free">무료</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <!-- 날짜 필터 -->
+                        <!--강의 기간-->
                         <div class="row g-3 mt-2 align-items-center">
-                            <!--강의 기간-->
                             <div class="col-12">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                                        <label class="col-form-label fw-semibold">강의 기간</label>
+                                        <label class="col-form-label fw-semibold">예약 기간</label>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
-                                            <input type="date" class="form-control me-2">
+                                            <input id="reservationStart" type="date" class="form-control me-2">
                                             <span>~</span>
-                                            <input type="date" class="form-control ms-2">
+                                            <input id="reservationEnd" type="date" class="form-control ms-2">
                                         </div>
                                     </div>
                                 </div>
@@ -79,13 +84,13 @@
                             <div class="col-12">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                                        <label class="col-form-label fw-semibold">예약 기간</label>
+                                        <label class="col-form-label fw-semibold">강의 기간</label>
                                     </div>
                                     <div class="col">
                                         <div class="d-flex align-items-center">
-                                            <input type="date" class="form-control me-2">
+                                            <input id="lectureStart" type="date" class="form-control me-2">
                                             <span>~</span>
-                                            <input type="date" class="form-control ms-2">
+                                            <input id="lectureEnd" type="date" class="form-control ms-2">
                                         </div>
                                     </div>
                                 </div>
@@ -113,38 +118,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                 <c:forEach var="lectures" items="${lectures}" varStatus="status">
-                                <tr>
-                                    <td class="text-center">${lecturePage.number * lecturePage.size + status.index + 1}</td>
-                                    <td class="text-center">${lectures.title}</td>
-                                    <td class="text-center">${lectures.tutorName}</td>
-                                    <td class="text-center">
-                                        <fmt:formatDate value="${lectures.reservationStart}" pattern="yyyy-MM-dd" />
-                                        ~
-                                        <fmt:formatDate value="${lectures.reservationEnd}" pattern="yyyy-MM-dd" />
-                                    </td>
-                                    <td class="text-center">
-                                        <fmt:formatDate value="${lectures.lectureStart}" pattern="yyyy-MM-dd" />
-                                        ~
-                                        <fmt:formatDate value="${lectures.lectureEnd}" pattern="yyyy-MM-dd" />
-                                    </td>
-                                    <td class="text-center">${lectures.reservationCount}/${lectures.totalCount}</td>
-                                    <td class="text-center">
-                                        <c:choose>
-                                            <c:when test="${lectures.price == 0}">무료</c:when>
-                                            <c:otherwise>${lectures.price}</c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="/admin/lecture/edit?lectureId=${lectures.lectureId}" class="btn btn-sm btn-primary">수정</a>
-                                        <form action="/admin/lecture/delete" method="post" style="display:inline;">
-                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                                            <input type="hidden" name="lectureId" value="${lectures.lectureId}">
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                 </c:forEach>
+
                                 </tbody>
                             </table>
                         </div>
@@ -152,13 +126,7 @@
                 </div>
                 <div class="d-flex justify-content-center mt-4">
                     <nav>
-                        <ul class="pagination">
-                            <c:forEach begin="0" end="${lecturePage.totalPages - 1}" var="i">
-                                <li class="page-item ${i == lecturePage.number ? 'active' : ''}">
-                                    <a class="page-link" href="?page=${i}&size=9">${i + 1}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
+                        <ul id="pagination" class="pagination justify-content-center"></ul>
                     </nav>
                 </div>
             </div>
@@ -167,7 +135,12 @@
 </main>
 </div>
 </div>
-
+<script src="/js/admin/lectureSearch.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        searchLectures(0);
+    });
+</script>
 </body>
 
 </html>
