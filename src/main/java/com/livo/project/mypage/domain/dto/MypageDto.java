@@ -1,6 +1,7 @@
 package com.livo.project.mypage.domain.dto;
 
 import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
 import lombok.*;
 
@@ -27,7 +28,7 @@ public class MypageDto {
     private Long joinDays;
 
     // 공지사항
-    private List<Notice> notices;
+    private List<NoticeDto> notices;
 
     // 추천 강좌
     private List<Lecture> recommendedLectures;

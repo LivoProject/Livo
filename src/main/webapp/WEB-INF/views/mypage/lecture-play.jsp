@@ -3,6 +3,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+
+<link rel="stylesheet" href="/css/lecture-play.css"/>
+
 <section id="lecture" class="d-flex">
   <!-- 왼쪽: 비디오 영역 -->
   <div class="video-area flex-grow-1 p-3">
