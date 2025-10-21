@@ -2,12 +2,19 @@ package com.livo.project.review.controller;
 
 import com.livo.project.lecture.service.ReservationService;
 import com.livo.project.review.domain.Review;
+import com.livo.project.review.domain.dto.ReviewDto;
 import com.livo.project.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.SimpleDateFormat;
 
 @Controller
 @RequiredArgsConstructor
@@ -43,6 +50,30 @@ public class ReviewController {
         reviewService.saveReview(review);
 
         return "redirect:/lecture/content/" + lectureId;
+    }
+
+    // 리뷰 페이징_ 더보기 방식! (JSON 응답)
+    @GetMapping("/content/{lectureId}/reviews")
+    @ResponseBody
+    public Page<ReviewDto> getReviews(
+            @PathVariable int lectureId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Review> reviewPage = reviewService.getReviewsByLectureIdPaged(lectureId, pageable);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+
+        // Page<Review> → Page<ReviewDto> 변환 (순환참조 방지)
+        return reviewPage.map(r -> new ReviewDto(
+                r.getReviewUId(),
+                r.getReservation().getUser().getName(),
+                r.getReservation().getUser().getEmail(),
+                r.getReviewStar(),
+                r.getReviewContent(),
+                sdf.format(r.getCreatedAt())
+        ));
     }
 
 
