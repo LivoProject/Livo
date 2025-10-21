@@ -2,29 +2,33 @@ package com.livo.project.admin.controller;
 
 import com.livo.project.admin.service.FaqAdminService;
 import com.livo.project.admin.service.FileService;
+import com.livo.project.admin.service.LectureAdminService;
 import com.livo.project.faq.domain.Faq;
 import com.livo.project.faq.repository.FaqRepository;
 import com.livo.project.faq.service.FaqService;
 import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
-import com.livo.project.lecture.service.LectureService;
 import com.livo.project.lecture.repository.CategoryRepository;
+import com.livo.project.lecture.service.LectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("admin")
 @Controller
-public class adminController {
-    private final LectureService lectureService;
+public class AdminController {
+    public final LectureService lectureService;
+    private final LectureAdminService lectureAdminService;
     private final CategoryRepository categoryRepository;
     private final FileService fileService;
     private final FaqAdminService faqAdminService;
@@ -50,10 +54,10 @@ public class adminController {
         model.addAttribute("faq",faqPage.getContent());
         return "admin/faqPage";
     }
-   /** @GetMapping("/notice")
+    @GetMapping("/notice")
     public String showNoticePage(){
-        return "redirect:/admin/notice/list";
-    }*/
+        return "admin/noticePage";
+    }
 
     @GetMapping("/lecture")
     public String adminLectureList(@RequestParam(defaultValue = "0") int page,
@@ -76,9 +80,10 @@ public class adminController {
     }
 
     @PostMapping("/lecture/save")
-    public String saveLecture(@RequestParam("categoryId")int categoryId, Lecture lecture){
-        lectureService.saveLecture(lecture, categoryId);
-        return "redirect:/admin/lecture";
+    @ResponseBody
+    public ResponseEntity<?> saveLecture(@RequestParam("categoryId")int categoryId, @ModelAttribute Lecture lecture){
+        Lecture saved = lectureAdminService.saveLecture(lecture, categoryId);
+        return ResponseEntity.ok(Map.of("lectureId", saved.getLectureId()));
     }
 
     @PostMapping("/lecture/uploadImage")
@@ -89,13 +94,13 @@ public class adminController {
 
     @PostMapping("/lecture/delete")
     public String deleteLecture(@RequestParam("lectureId") int id){
-        lectureService.deleteLecture(id);
+        lectureAdminService.deleteLecture(id);
         return "redirect:/admin/lecture";
     }
 
     @GetMapping("/lecture/edit")
     public String showEditForm(Model model, @RequestParam("lectureId") int lectureId){
-        Lecture lecture = lectureService.editLecture(lectureId);
+        Lecture lecture = lectureAdminService.editLecture(lectureId);
         List<Category> parents = categoryRepository.findByParentIsNull();
         model.addAttribute("lecture", lecture);
         model.addAttribute("parents", parents);
@@ -104,7 +109,7 @@ public class adminController {
 
     @PostMapping("/lecture/edit")
     public String editLecture(@RequestParam("categoryId") int categoryId, Lecture lecture){
-        lectureService.updateLecture(lecture, categoryId);
+        lectureAdminService.updateLecture(lecture, categoryId);
         return "redirect:/admin/lecture";
     }
 
@@ -135,5 +140,10 @@ public class adminController {
     @GetMapping("/chart")
     public String showChartPage(){
         return "admin/chartPage";
+    }
+
+    @GetMapping("/play")
+    public String showViewPage(){
+        return "mypage/lecture-play";
     }
 }

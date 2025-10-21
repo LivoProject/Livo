@@ -9,17 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LectureService {
-
-    // 강좌 입력(관리자페이지)
-    Lecture saveLecture(Lecture lecture, int categoryId);
-
-    // 강좌 삭제
-    boolean deleteLecture(int lectureId);
-
-    //강좌 수정
-    Lecture editLecture(int lectureId);
-    Lecture updateLecture(Lecture lecture, int categoryId);
-
     // 강좌 전체 조회
     List<Lecture> findAll();
 
@@ -33,6 +22,7 @@ public interface LectureService {
     // 페이지 + 키워드검색
     Page<Lecture> getLecturePage(Pageable pageable);
     Page<Lecture> searchLecturePage(String keyword, Pageable pageable);
+
 
 }
 
