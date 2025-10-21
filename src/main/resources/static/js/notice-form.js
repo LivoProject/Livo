@@ -1,32 +1,78 @@
 (function () {
-    // 요소 선택
-    const titleEl = document.getElementById("title");
-    const titleCountEl = document.getElementById("titleCount");
-    const contentEl = document.getElementById("content");
-    const pinnedEl = document.getElementById("pinned");
+    // 요소 선택 (안전 가드)
+    const form           = document.getElementById("noticeForm");
+    const titleEl        = document.getElementById("title");
+    const titleCountEl   = document.getElementById("titleCount");
+    const contentEl      = document.getElementById("content");
+    const pinnedEl       = document.getElementById("pinned");
+    const visibleEl      = document.getElementById("visible"); // 있을 수도, 없을 수도
 
-    const btnPreview = document.getElementById("btnPreview");
-    const previewLayer = document.getElementById("previewLayer");
-    const btnClosePreview = document.getElementById("btnClosePreview");
+    const btnPreview     = document.getElementById("btnPreview");
+    const previewLayer   = document.getElementById("previewLayer");
+    const btnClosePreview= document.getElementById("btnClosePreview");
 
-    const pvTitle = document.getElementById("pvTitle");
-    const pvPinned = document.getElementById("pvPinned");
-    const pvContent = document.getElementById("pvContent");
+    const pvTitle        = document.getElementById("pvTitle");
+    const pvPinned       = document.getElementById("pvPinned");
+    const pvContent      = document.getElementById("pvContent");
+
+    if (!form || !titleEl || !contentEl) return;
+
+    /** 유틸: HTML escape */
+    function escapeHTML(str) {
+        return (str || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+    /** 유틸: 줄바꿈 유지 */
+    function nl2br(str) {
+        return escapeHTML(str).replace(/\r?\n/g, "<br>");
+    }
 
     /** ============================
-     * 제목 글자수 실시간 카운트
+     * 제목 글자수 카운트 (붙여넣기/IME 포함)
      * ============================ */
-    function updateTitleCount() {
-        const length = (titleEl.value || "").length;
-        titleCountEl.textContent = length;
-    }
+    const updateTitleCount = () => {
+        if (!titleCountEl) return;
+        titleCountEl.textContent = (titleEl.value || "").length;
+    };
     titleEl.addEventListener("input", updateTitleCount);
+    titleEl.addEventListener("compositionend", updateTitleCount);
+    document.addEventListener("paste", (e) => {
+        if (e.target === titleEl) {
+            // paste 후 렌더 타이밍 고려
+            setTimeout(updateTitleCount, 0);
+        }
+    });
     updateTitleCount();
 
     /** ============================
-     * 폼 유효성 검사
+     * 체크박스 미체크 시 값 누락 방지
+     *   (unchecked면 name 자체가 안 가므로 hidden을 추가)
      * ============================ */
-    document.getElementById("noticeForm").addEventListener("submit", function (e) {
+    function ensureBoolean(name, checked) {
+        // 이미 같은 name의 hidden이 있으면 제거 후 재추가(중복 방지)
+        const existing = form.querySelector(`input[type="hidden"][name="${name}"]`);
+        if (existing) existing.remove();
+
+        if (!checked) {
+            const h = document.createElement("input");
+            h.type = "hidden";
+            h.name = name;
+            h.value = "false";
+            form.appendChild(h);
+        } else {
+            // checked면 기본 체크박스가 "on"으로 가고, 스프링에서 true로 바인딩됨
+        }
+    }
+
+    /** ============================
+     * 폼 유효성 + 이중 제출 방지
+     * ============================ */
+    let submitting = false;
+    form.addEventListener("submit", function (e) {
         const title = (titleEl.value || "").trim();
         const content = (contentEl.value || "").trim();
 
@@ -34,41 +80,68 @@
             e.preventDefault();
             alert("제목을 입력하세요.");
             titleEl.focus();
-            return false;
+            return;
         }
         if (!content) {
             e.preventDefault();
             alert("내용을 입력하세요.");
             contentEl.focus();
-            return false;
+            return;
         }
-        return true;
+
+        // 체크박스 바인딩 보강
+        if (pinnedEl)  ensureBoolean("pinned",  pinnedEl.checked);
+        if (visibleEl) ensureBoolean("visible", visibleEl.checked);
+
+        // 이중 제출 방지
+        if (submitting) {
+            e.preventDefault();
+            return;
+        }
+        submitting = true;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = submitBtn.textContent.replace(/등록|수정 저장/g, "$& 중...");
+        }
     });
 
     /** ============================
-     * 미리보기 기능
+     * 미리보기
      * ============================ */
-    btnPreview.addEventListener("click", function () {
-        const title = (titleEl.value || "").trim();
-        const content = (contentEl.value || "").trim();
-        const pinned = pinnedEl.checked;
+    if (btnPreview && previewLayer && pvTitle && pvContent && pvPinned) {
+        let prevFocused = null;
 
-        pvTitle.textContent = title || "(제목 없음)";
-        pvContent.textContent = content || "(내용 없음)";
-        pvPinned.style.display = pinned ? "block" : "none";
+        function openPreview() {
+            const title = (titleEl.value || "").trim();
+            const content = (contentEl.value || "").trim();
+            const pinned = pinnedEl ? pinnedEl.checked : false;
 
-        previewLayer.classList.remove("hidden");
-    });
+            pvTitle.textContent = title || "(제목 없음)";
+            pvContent.innerHTML = content ? nl2br(content) : "<em>(내용 없음)</em>";
+            pvPinned.style.display = pinned ? "block" : "none";
 
-    /** 닫기 버튼 */
-    btnClosePreview.addEventListener("click", function () {
-        previewLayer.classList.add("hidden");
-    });
-
-    /** 모달 배경 클릭 닫기 */
-    previewLayer.addEventListener("click", function (e) {
-        if (e.target === previewLayer) {
-            previewLayer.classList.add("hidden");
+            prevFocused = document.activeElement;
+            previewLayer.classList.remove("hidden");
+            if (btnClosePreview) btnClosePreview.focus();
         }
-    });
+
+        function closePreview() {
+            previewLayer.classList.add("hidden");
+            if (prevFocused && typeof prevFocused.focus === "function") {
+                prevFocused.focus();
+            }
+        }
+
+        btnPreview.addEventListener("click", openPreview);
+        if (btnClosePreview) btnClosePreview.addEventListener("click", closePreview);
+        previewLayer.addEventListener("click", function (e) {
+            if (e.target === previewLayer) closePreview();
+        });
+        document.addEventListener("keydown", function (e) {
+            if (!previewLayer.classList.contains("hidden") && e.key === "Escape") {
+                closePreview();
+            }
+        });
+    }
 })();
