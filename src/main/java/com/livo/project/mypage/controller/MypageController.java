@@ -1,5 +1,6 @@
 package com.livo.project.mypage.controller;
 
+import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 마이페이지 컨트롤러
@@ -31,6 +36,8 @@ public class MypageController {
         model.addAttribute("mypage", mypateDto);
         model.addAttribute("notices", mypateDto.getNotices());
         model.addAttribute("recommendedLectures", mypateDto.getRecommendedLectures());
+        List<Lecture> top2LikedLectures = mypageService.getTop2LikedLectures(email);
+        model.addAttribute("top2LikedLectures", top2LikedLectures);
         return "mypage/index";
     }
 
@@ -59,9 +66,39 @@ public class MypageController {
     }
 
     // 즐겨찾기 페이지 이동
-    @GetMapping("/bookmark")
-    public String bookmark() {
-        return "mypage/bookmark";
+    @GetMapping("/like")
+    public String like(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        String email = userDetails.getUsername();
+        List<Lecture> likedLectures = mypageService.getLikedLectures(email);
+        model.addAttribute("likedLectures", likedLectures);
+        return "mypage/like";
+    }
+
+    // 즐겨찾기 해제
+    @PostMapping("/like/delete")
+    @ResponseBody
+    public Map<String, Object> deleteLike(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam Integer lectureId) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (userDetails == null) {
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return response;
+        }
+
+        try {
+            String email = userDetails.getUsername();
+            mypageService.removeLikedLecture(lectureId, email);
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+
+        return response;
     }
 
     // 리뷰 페이지 이동
