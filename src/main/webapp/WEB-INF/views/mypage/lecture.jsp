@@ -2,6 +2,9 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+<link rel="stylesheet" href="/css/mypage.css">
+
+
 <!-- 컨텐츠-->
 <section id="mypage" class="container">
 
