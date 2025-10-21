@@ -24,6 +24,7 @@ public class MainController {
 
         model.addAttribute("categories", mainDto.getCategories());
         model.addAttribute("recommendedLectures", mainDto.getRecommendedLectures());
+        model.addAttribute("popularLectures", mainDto.getPopularLectures());
         model.addAttribute("notices", mainDto.getNotices());
 
         // 로그인 여부 판별
