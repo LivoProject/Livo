@@ -2,6 +2,7 @@ package com.livo.project.mypage.service;
 
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.auth.repository.UserRepository;
+import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.repository.MypageLectureRepository;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -33,10 +35,12 @@ public class MypageService {
     private final MypageLectureRepository mypageLectureRepository;
 
     // 마이페이지 기본 데이터 조회
-    public MypageDto getUserData(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+    public MypageDto getUserData() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((AppUserDetails) auth.getPrincipal()).getId();
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
         // 공지사항
         List<Notice> notices = mypageNoticeRepository.findTop5ByOrderByCreatedAtDesc();
         List<NoticeDto> noticeDtos = notices.stream()
@@ -60,39 +64,48 @@ public class MypageService {
                 .build();
     }
 
-    // 일반 정보 수정 (이메일 기반)
+    /** 프로필 수정 (ID 기반) */
     @Transactional
-    public void updateUserProfile(String email, MypageDto dto) {
-        User user = userRepository.findByEmail(email)
+    public void updateUserProfile(MypageDto dto) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((AppUserDetails) auth.getPrincipal()).getId();
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        user.setNickname(dto.getNickname());
-        user.setPhone(dto.getPhone());
-        user.setBirth(dto.getBirth());
-        user.setName(dto.getUsername());
+        if (dto.getNickname() != null && !dto.getNickname().isBlank()) user.setNickname(dto.getNickname());
+        if (dto.getPhone() != null && !dto.getPhone().isBlank())       user.setPhone(dto.getPhone());
 
-        //  gender만 리플렉션으로 변환해서 세팅 (Entity / Enum import X)
+        // birth: DTO가 LocalDate면 그대로, String만 있다면 주석처럼 파싱
+        if (dto.getBirth() != null) {
+            user.setBirth(dto.getBirth());
+        }
+        // if (dto.getBirthStr() != null && !dto.getBirthStr().isBlank()) {
+        //     user.setBirth(LocalDate.parse(dto.getBirthStr()));
+        // }
+
+        if (dto.getUsername() != null && !dto.getUsername().isBlank()) user.setName(dto.getUsername());
+
+        // 성별: 리플렉션 제거, enum 직접 매핑
         if (dto.getGender() != null && !dto.getGender().isBlank()) {
             try {
-                Class<?> genderClass = Class.forName("com.livo.project.auth.domain.entity.Gender");
-                Object genderEnum = Enum.valueOf((Class<Enum>) genderClass, dto.getGender().toUpperCase());
-                user.getClass().getMethod("setGender", genderClass).invoke(user, genderEnum);
-            } catch (Exception e) {
-                log.warn("잘못된 gender 값: {}", dto.getGender(), e);
+                user.setGender(User.Gender.valueOf(dto.getGender().trim().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                log.warn("잘못된 gender 값: {}", dto.getGender());
             }
         }
 
         userRepository.save(user);
-        log.info("사용자 정보 수정 완료: {}", email);
+        log.info("사용자 정보 수정 완료: id={}", userId);
     }
 
-    // 비밀번호 변경
+    //  비밀번호 변경 (ID 기반)
     @Transactional
     public void updateUserPassword(String currentPassword, String newPassword) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email = auth.getName();
+        Long userId = ((AppUserDetails) auth.getPrincipal()).getId();
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
@@ -101,6 +114,6 @@ public class MypageService {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        log.info("비밀번호 변경 완료: {}", email);
+        log.info("비밀번호 변경 완료: id={}", userId);
     }
 }

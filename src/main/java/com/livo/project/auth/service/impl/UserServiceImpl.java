@@ -29,8 +29,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public boolean existsEmail(String email) {
         if (email == null) return false;
-        return users.existsByEmail(email.trim().toLowerCase(Locale.ROOT));
+        return users.existsByEmailIgnoreCaseAndProvider(
+                email.trim().toLowerCase(Locale.ROOT),
+                "LOCAL"
+        );
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -55,8 +59,10 @@ public class UserServiceImpl implements UserService {
         final String phone    = normalizePhone(req.getPhone());
 
         // 사전 중복 체크 (최종 방어는 DB UNIQUE)
-        if (users.existsByEmail(email))      throw new BusinessException("email", "이미 사용 중인 이메일입니다.");
-        if (users.existsByNickname(nickname))throw new BusinessException("nickname", "이미 사용 중인 닉네임입니다.");
+        if (users.existsByEmailIgnoreCaseAndProvider(email, "LOCAL"))
+            throw new BusinessException("email", "이미 사용 중인 이메일입니다.");
+        if (users.existsByNickname(nickname))
+            throw new BusinessException("nickname", "이미 사용 중인 닉네임입니다.");
         if (phone != null && hasExistsByPhone() && users.existsByPhone(phone))
             throw new BusinessException("phone", "이미 사용 중인 전화번호입니다.");
 
@@ -68,6 +74,9 @@ public class UserServiceImpl implements UserService {
         u.setPhone(phone);
         u.setStatus(true);
         u.setRoleId(1);
+
+        u.setProvider("LOCAL");
+        u.setProviderId(email);
 
         u.setEmailVerified(true);
         u.setEmailVerifiedAt(java.time.LocalDateTime.now());

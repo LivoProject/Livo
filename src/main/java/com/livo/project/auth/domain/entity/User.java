@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
         uniqueConstraints = {
                 @UniqueConstraint(name = "uk_user_email", columnNames = "email"),
                 @UniqueConstraint(name = "uq_user_nickname", columnNames = "nickname"),
-                @UniqueConstraint(name = "uq_user_phone", columnNames = "phone")
+                @UniqueConstraint(name = "uq_user_phone", columnNames = "phone"),
+                @UniqueConstraint(name = "uq_user_provider_pid", columnNames = {"provider", "providerId"})
         }
 )
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
@@ -25,7 +26,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 254)
+    @Column(length = 254, unique = true)
     private String email;
 
     @Column(nullable = false, length = 255)
@@ -48,7 +49,7 @@ public class User {
     private Gender gender;
 
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
-    private Boolean status;
+    private Boolean status = true;
 
     // 이메일 인증 컬럼
     @Column(name = "email_verified", nullable = false, columnDefinition = "TINYINT(1)")
@@ -78,9 +79,9 @@ public class User {
     @Column(name = "role_id", nullable = false)
     private Integer roleId;
 
-    @Column(length = 30)
+    @Column(length = 30, nullable = false)
     private String provider;
 
-    @Column(length = 100)
+    @Column(name = "providerId", length = 128, nullable = false)
     private String providerId;
 }

@@ -27,6 +27,10 @@ public class MypageDto {
     private String joinDate;
     private Long joinDays;
 
+    //소셜용
+    private String provider;
+    private String providerId;
+
     // 공지사항
     private List<NoticeDto> notices;
 

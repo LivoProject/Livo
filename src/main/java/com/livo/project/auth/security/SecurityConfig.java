@@ -20,6 +20,8 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
+
 import jakarta.servlet.ServletException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler; //add social
 
@@ -37,10 +39,10 @@ public class SecurityConfig {
 
 
     /**  비밀번호 암호화용 BCrypt 인코더 (DB의 해시와 동일한 알고리즘 사용) */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
+   /* @Bean
+    public PasswordEncoder passwordEncoder() { // 여기서 사용 안함
         return new BCryptPasswordEncoder();
-    }
+    }*/
 
     /** Audio
     @Bean
@@ -71,36 +73,50 @@ public class SecurityConfig {
                                                 Authentication auth)
                     throws IOException, ServletException {
 
-                var set = AuthorityUtils.authorityListToSet(auth.getAuthorities());
+                var session = req.getSession(true);
+                session.setAttribute("PLAY_BGM_ONCE", Boolean.TRUE);
 
-                //  역할별 세션 시간(초)
-                int adminSecs   = 15 * 60;  // 관리자 15분
-                int managerSecs = 30 * 60;  // 매니저 30분
-                int userSecs    = 60 * 60;  // 일반 60분
+                var set = org.springframework.security.core.authority.AuthorityUtils
+                        .authorityListToSet(auth.getAuthorities());
+                int adminSecs = 15 * 60, managerSecs = 30 * 60, userSecs = 60 * 60;
+                if (set.contains("ROLE_ADMIN"))       session.setMaxInactiveInterval(adminSecs);
+                else if (set.contains("ROLE_MANAGER")) session.setMaxInactiveInterval(managerSecs);
+                else                                   session.setMaxInactiveInterval(userSecs);
 
-                // 세션 확보 후 역할별로 만료 시간 설정
-                var session = req.getSession(true); // 없으면 생성
-                if (set.contains("ROLE_ADMIN")) {
-                    session.setMaxInactiveInterval(adminSecs);
-                } else if (set.contains("ROLE_MANAGER")) {
-                    session.setMaxInactiveInterval(managerSecs);
-                } else {
-                    session.setMaxInactiveInterval(userSecs);
+                Object principal = auth.getPrincipal();
+                String redirect = "/";
+
+                try {
+                    // 1) OIDC (Google OpenID 등)
+                    if (principal instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser oidcUser) {
+                        Map<String, Object> attrs = oidcUser.getAttributes(); // claims 포함
+                        Boolean isNewUser = (Boolean) attrs.get("isNewUser");
+                        redirect = Boolean.TRUE.equals(isNewUser) ? "/onboarding/email" : "/mypage";
+                    }
+                    // 2) OAuth2 (Kakao/Naver 등)
+                    else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
+                        Map<String, Object> attrs = oAuthUser.getAttributes();
+                        Boolean isNewUser = (Boolean) attrs.get("isNewUser");
+                        redirect = Boolean.TRUE.equals(isNewUser) ? "/onboarding/email" : "/mypage";
+                    }
+                    // 3) 로컬
+                    else if (principal instanceof org.springframework.security.core.userdetails.UserDetails) {
+                        if (set.contains("ROLE_ADMIN"))      redirect = "/admin/dashboard";
+                        else if (set.contains("ROLE_MANAGER")) redirect = "/manager";
+                        else                                   redirect = "/";
+                    } else {
+                        redirect = "/";
+                    }
+                } catch (Exception e) {
+                    redirect = "/";
                 }
 
-                // (저장된 요청 체크를 쓰지 않는 구성이라면 바로 역할별 리다이렉트)
-                if (set.contains("ROLE_ADMIN")) {
-                    getRedirectStrategy().sendRedirect(req, res, "/admin/dashboard");
-                } else if (set.contains("ROLE_MANAGER")) {
-                    getRedirectStrategy().sendRedirect(req, res, "/manager");
-                } else {
-                    //  일반 사용자: 메인으로 보낼 때 '한 번만' 브금 재생 플래그 세팅
-                    req.getSession(true).setAttribute("PLAY_BGM_ONCE", Boolean.TRUE);
-                    getRedirectStrategy().sendRedirect(req, res, "/");
-                }
+                getRedirectStrategy().sendRedirect(req, res, redirect);
+
             }
         };
     }
+
     /**------------ social login ------------ */
     @Bean
     public AuthenticationFailureHandler oauthFailureHandler() {
@@ -181,7 +197,7 @@ public class SecurityConfig {
                                 //  정적 리소스 (CSS/JS/이미지 등)
                                 "/css/**", "/js/**", "/img/**", "/images/**", "/webjars/**"
                         ).permitAll()
-
+                                .requestMatchers("/mypage/**", "/settings/**").authenticated()  // 보호
                                 .requestMatchers("/admin/**").hasRole("ADMIN")          //  추가
                                 .requestMatchers("/manager/**").hasAnyRole("ADMIN","MANAGER") // 추가
 

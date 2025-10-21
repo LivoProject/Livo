@@ -5,17 +5,19 @@ import com.livo.project.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+//import org.springframework.security.oauth2.core.oidc.user.OidcUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -23,75 +25,103 @@ import java.util.UUID;
 public class CustomOidcUserService extends OidcUserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; // ★ BCrypt 주입
 
     @Transactional
     @Override
-    public OidcUser loadUser(OidcUserRequest userRequest) {
-        // 원본 OIDC 사용자 정보 조회
-        OidcUser oidcUser = super.loadUser(userRequest);
+    public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
+        OidcUser oidc = super.loadUser(userRequest);
 
-        String provider   = userRequest.getClientRegistration().getRegistrationId(); // google
-        Map<String, Object> attributes = oidcUser.getAttributes();
+        // 1) 공급자/클레임
+        String provider = Optional.ofNullable(userRequest.getClientRegistration().getRegistrationId())
+                .orElse("UNKNOWN").toUpperCase(Locale.ROOT); // GOOGLE/KAKAO/NAVER
+        Map<String, Object> claims = new HashMap<>(oidc.getClaims());
+        String providerId  = asString(claims.get("sub"));              // 필수
+        String email       = Optional.ofNullable((String) claims.get("email"))
+                .map(s -> s.toLowerCase(Locale.ROOT)).orElse(null);
+        String displayName = (claims.get("name") instanceof String s && !s.isBlank()) ? s : "user";
 
-        // 표준 OIDC 클레임
-        String email       = (String) attributes.get("email");
-        String providerId  = (String) attributes.get("sub");
-        String displayName = (String) attributes.getOrDefault("name", "user");
-
-        if (email == null) {
-            throw new IllegalStateException("OIDC email not found");
+        if (providerId == null || providerId.isBlank()) {
+            throw new OAuth2AuthenticationException("invalid_provider_id");
         }
 
-        // 신규/기존 사용자 처리 (네 OAuth2UserService와 동일 로직)
-        User existing = userRepository.findByEmail(email).orElse(null);
+        // 2) 1순위: provider + providerId
+        User user = userRepository.findByProviderAndProviderId(provider, providerId).orElse(null);
+        boolean isNew = false;
 
-        if (existing == null) {
-            String randomPwd = UUID.randomUUID().toString();
-            User newUser = User.builder()
-                    .email(email)
-                    .password("{noop}" + randomPwd)
+        if (user == null && email != null) {
+            // 3) 2순위: email (이메일 전역 유니크 유지)
+            user = userRepository.findByEmail(email).orElse(null);
+
+            if (user != null) {
+                // 이미 이메일로 존재 → 자동 연결 정책
+                // - provider가 비어있거나 같은 provider면 providerId 세팅
+                // - 다른 provider로 이미 연결돼 있으면 자동 병합 금지 (보안)
+                if (user.getProvider() == null || user.getProvider().equalsIgnoreCase(provider)) {
+                    user.setProvider(provider);
+                    user.setProviderId(providerId);
+                    user.setEmailVerified(true);
+                    if (user.getEmailVerifiedAt() == null) user.setEmailVerifiedAt(LocalDateTime.now());
+                    userRepository.save(user);
+                    log.info(" [OIDC] 기존 이메일 계정에 공급자 연결: email={}, provider={}", email, provider);
+                } else {
+                    throw new OAuth2AuthenticationException(
+                            new org.springframework.security.oauth2.core.OAuth2Error("account_link_required"),
+                            "해당 이메일은 다른 로그인 방식과 이미 연결되어 있습니다. 로그인 후 '계정 연결'에서 연동하세요."
+                    );
+                }
+            }
+        }
+
+        if (user == null) {
+            // 4) 정말로 신규
+            isNew = true;
+            user = User.builder()
+                    .provider(provider)
+                    .providerId(providerId)
+                    .email(email) // null 허용
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
                     .name(displayName)
                     .nickname(displayName)
                     .status(true)
-                    .emailVerified(true)
-                    .emailVerifiedAt(LocalDateTime.now())
-                    .provider(provider)
-                    .providerId(providerId)
+                    .emailVerified(email != null)
+                    .emailVerifiedAt(email != null ? LocalDateTime.now() : null)
                     .roleId(1)
                     .build();
-            userRepository.saveAndFlush(newUser);
-            log.info(" [OIDC] 신규 소셜 유저 등록: {} ({})", email, provider);
+            userRepository.save(user);
+            log.info(" [OIDC] 신규 소셜 유저 생성: provider={} providerId={} email={}", provider, providerId, email);
         } else {
-            boolean needsLink =
-                    existing.getProvider() == null ||
-                            "local".equalsIgnoreCase(existing.getProvider());
-
-            if (needsLink) {
-                existing.setProvider(provider);
-                existing.setProviderId(providerId);
-                log.info(" [OIDC] 기존 로컬 계정에 소셜 연동: {} ({})", email, provider);
-            } else if (!provider.equalsIgnoreCase(existing.getProvider())) {
-                // 다른 소셜과 충돌 시 정책에 따라 처리(여기선 막음)
-                log.warn(" [OIDC] 이메일 충돌: {} (기존={}, 현재={})",
-                        email, existing.getProvider(), provider);
-                throw new IllegalStateException("account_conflict");
+            // 5) 선택 동기화 (필요 시)
+            boolean changed = false;
+            if (!Objects.equals(user.getName(), displayName)) { user.setName(displayName); changed = true; }
+            if (!Objects.equals(user.getNickname(), displayName)) { user.setNickname(displayName); changed = true; }
+            if (email != null && !Objects.equals(user.getEmail(), email)) { user.setEmail(email); changed = true; }
+            if (!Boolean.TRUE.equals(user.getEmailVerified()) && email != null) {
+                user.setEmailVerified(true);
+                if (user.getEmailVerifiedAt() == null) user.setEmailVerifiedAt(LocalDateTime.now());
+                changed = true;
             }
-
-            // 이름/닉네임 업데이트(옵션)
-            existing.setName(displayName);
-            existing.setNickname(displayName);
-            existing.setEmailVerified(true);
-            if (existing.getEmailVerifiedAt() == null) {
-                existing.setEmailVerifiedAt(LocalDateTime.now());
-            }
-
-            userRepository.saveAndFlush(existing);
-            log.info(" [OIDC] 기존 유저 업데이트 완료: {}", email);
+            if (changed) userRepository.save(user);
+            log.info(" [OIDC] 기존 소셜 유저 동기화: id={} email={}", user.getId(), user.getEmail());
         }
 
-        // 권한 매핑(간단히 ROLE_USER)
-        var authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        // nameAttributeKey는 OIDC에선 "sub" 사용
-        return new DefaultOidcUser(authorities, oidcUser.getIdToken(), oidcUser.getUserInfo(), "sub");
+        // 6) 권한/리턴
+        var authorities = List.of(new SimpleGrantedAuthority(mapRole(user.getRoleId())));
+        claims.put("provider", provider);
+        claims.put("providerId", providerId);
+        claims.put("isNewUser", isNew);
+
+        OidcIdToken idToken = oidc.getIdToken();
+        var userInfo = oidc.getUserInfo();
+        return new DefaultOidcUser(authorities, idToken, userInfo, "sub");
+    }
+    private String asString(Object o) { return o == null ? null : String.valueOf(o); }
+
+    private String mapRole(Integer roleId) {
+        if (roleId != null) {
+            if (roleId == 3) return "ROLE_ADMIN";
+            if (roleId == 2) return "ROLE_MANAGER";
+        }
+        return "ROLE_USER";
     }
 }

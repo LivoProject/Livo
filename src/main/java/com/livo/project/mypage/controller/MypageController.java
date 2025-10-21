@@ -1,5 +1,6 @@
 package com.livo.project.mypage.controller;
 
+import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
@@ -20,35 +21,34 @@ public class MypageController {
 
     private final MypageService mypageService;
 
-    // 마이페이지 메인
+
+    /** 마이페이지 메인 */
     @GetMapping
     public String home(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        if (userDetails == null) return "redirect:/login";
+        // 로그인 체크 (앱 로그인 페이지 경로에 맞춰서)
+        if (userDetails == null) return "redirect:/auth/login";
 
-        String email = userDetails.getUsername();
-        MypageDto mypateDto = mypageService.getUserData(email);
-
-        model.addAttribute("mypage", mypateDto);
-        model.addAttribute("notices", mypateDto.getNotices());
-        model.addAttribute("recommendedLectures", mypateDto.getRecommendedLectures());
+        MypageDto mypageDto = mypageService.getUserData();   // ✅ email 안 넘김
+        model.addAttribute("mypage", mypageDto);
+        model.addAttribute("notices", mypageDto.getNotices());
+        model.addAttribute("recommendedLectures", mypageDto.getRecommendedLectures());
         return "mypage/index";
     }
 
-    // 내 정보 조회
+    /** 내 정보 화면 */
     @GetMapping("/info")
     public String info(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        String email = userDetails.getUsername();
-        MypageDto mypage = mypageService.getUserData(email);
+        if (userDetails == null) return "redirect:/auth/login";
+
+        MypageDto mypage = mypageService.getUserData();      // ✅ email 안 넘김
         model.addAttribute("mypage", mypage);
         return "mypage/info";
     }
 
-    // 내 정보 수정
+    /** 내 정보 수정 */
     @PostMapping("/update")
-    public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
-                                @ModelAttribute MypageDto mypageDto) {
-        String email = userDetails.getUsername();
-        mypageService.updateUserProfile(email, mypageDto);
+    public String updateProfile(@ModelAttribute MypageDto mypageDto) {
+        mypageService.updateUserProfile(mypageDto);          // ✅ email 안 넘김
         return "redirect:/mypage/info";
     }
 
