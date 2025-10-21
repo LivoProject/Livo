@@ -8,7 +8,7 @@ import com.livo.project.faq.repository.FaqRepository;
 import com.livo.project.faq.service.FaqService;
 import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
-import com.livo.project.lecture.CategoryRepository;
+import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.service.LectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

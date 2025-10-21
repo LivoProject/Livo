@@ -1,9 +1,9 @@
 package com.livo.project.admin.service;
 
-import com.livo.project.lecture.CategoryRepository;
 import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.ChapterList;
 import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.repository.ChapterListRepository;
 import com.livo.project.lecture.repository.LectureRepository;
 import jakarta.transaction.Transactional;

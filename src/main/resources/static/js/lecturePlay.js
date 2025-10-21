@@ -1,9 +1,3 @@
-// const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-// const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-// $(document).ajaxSend(function(e, xhr, options) {
-//     xhr.setRequestHeader(csrfHeader, csrfToken);
-// });
 $(document).ready(function() {
     const lectureId = window.location.pathname.split("/").pop();
 

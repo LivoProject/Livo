@@ -29,8 +29,6 @@ public class ChapterController {
     @PostMapping("/save")
     @ResponseBody
     public ResponseEntity<?> saveAllChapter(@RequestBody List<ChapterList> chapters){
-        System.out.println("✅ [Controller] chapter 저장 요청 들어옴, 개수: " + chapters.size());
-        chapters.forEach(c -> System.out.println("chapterName: " + c.getChapterName() + ", lectureId: " + c.getLectureId()));
         chapterAdminService.save(chapters);
         return ResponseEntity.ok(Map.of("success", true));
     }
