@@ -91,8 +91,6 @@
 
                         <div class="card-body">
                             <h5 class="card-title">${lecture.title}</h5>
-                            <p class="card-text">${lecture.tutorName}</p>
-                            <p class="card-text">${lecture.content}</p>
                             <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/> 원</p>
                             <div class="progress mt-2">
                                 <div class="progress-bar" style="width: 60%"></div>

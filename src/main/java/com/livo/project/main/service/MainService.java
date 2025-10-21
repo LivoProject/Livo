@@ -28,7 +28,7 @@ public class MainService {
         List<Lecture> recommended = mainLectureRepository.findRandomLectures();
 
         // 인기 강좌 (평점 높은 순)
-        //List<Lecture> popular = lectureRepository.findTop5ByOrderByRatingDesc();
+        List<Lecture> popular = mainLectureRepository.findTop10LecturesByLikes();
 
         // 공지사항
         List<Notice> notices = mainNoticeRepository.findTop5ByOrderByCreatedAtDesc();
@@ -36,7 +36,7 @@ public class MainService {
                 .map(NoticeDto::fromEntity)
                 .toList();
 
-        return new MainDto(categories, recommended, noticeDtos);
+        return new MainDto(categories, recommended, popular, noticeDtos);
     }
 
 
