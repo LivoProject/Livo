@@ -37,4 +37,4 @@
 </main>
 </div>
 </body>
-<script src="/js/chapterForm.js"></script>
+<script src="/js/admin/chapterForm.js"></script>

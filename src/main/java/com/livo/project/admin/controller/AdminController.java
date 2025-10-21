@@ -10,6 +10,7 @@ import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.service.LectureService;
+import com.livo.project.report.domain.Report;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,15 +29,18 @@ import java.util.Map;
 @Controller
 public class AdminController {
     public final LectureService lectureService;
-    private final LectureAdminService lectureAdminService;
-    private final CategoryRepository categoryRepository;
-    private final FileService fileService;
     private final FaqAdminService faqAdminService;
     private final FaqRepository faqRepository;
     private final FaqService faqService;
+    private final LectureAdminService lectureAdminService;
 
     @GetMapping("/dashboard")
-    public String showAdminPage(){
+    public String showAdminPage(Model model){
+        List<Lecture> recentLectures = lectureAdminService.getRecentLectures();
+        model.addAttribute("recentLectures",recentLectures);
+        List<Faq> recentFaqs = faqAdminService.getFaqTop5();
+        model.addAttribute("recentFaqs",recentFaqs);
+        List<Report> reports;
         return "admin/dashboard";
     }
     @GetMapping("")
@@ -70,47 +74,6 @@ public class AdminController {
         model.addAttribute("lecturePage", lecturePage);
         model.addAttribute("lectures", lecturePage.getContent());
         return "admin/lecturePage";
-    }
-
-    @GetMapping("/lecture/insert")
-    public String showLectureForm(Model model){
-        List<Category> parents = categoryRepository.findByParentIsNull();
-        model.addAttribute("parents",parents);
-        return "admin/lectureForm";
-    }
-
-    @PostMapping("/lecture/save")
-    @ResponseBody
-    public ResponseEntity<?> saveLecture(@RequestParam("categoryId")int categoryId, @ModelAttribute Lecture lecture){
-        Lecture saved = lectureAdminService.saveLecture(lecture, categoryId);
-        return ResponseEntity.ok(Map.of("lectureId", saved.getLectureId()));
-    }
-
-    @PostMapping("/lecture/uploadImage")
-    @ResponseBody
-    public String uploadImage(@RequestParam("file") MultipartFile file){
-        return fileService.saveFile(file);
-    }
-
-    @PostMapping("/lecture/delete")
-    public String deleteLecture(@RequestParam("lectureId") int id){
-        lectureAdminService.deleteLecture(id);
-        return "redirect:/admin/lecture";
-    }
-
-    @GetMapping("/lecture/edit")
-    public String showEditForm(Model model, @RequestParam("lectureId") int lectureId){
-        Lecture lecture = lectureAdminService.editLecture(lectureId);
-        List<Category> parents = categoryRepository.findByParentIsNull();
-        model.addAttribute("lecture", lecture);
-        model.addAttribute("parents", parents);
-        return "admin/lectureEdit";
-    }
-
-    @PostMapping("/lecture/edit")
-    public String editLecture(@RequestParam("categoryId") int categoryId, Lecture lecture){
-        lectureAdminService.updateLecture(lecture, categoryId);
-        return "redirect:/admin/lecture";
     }
 
     @GetMapping("/faq/insert")
