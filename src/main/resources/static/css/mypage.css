@@ -129,10 +129,21 @@
   background-color: var(--color-point);
   border-color: var(--color-point);
 }
+
+#mypage .field button {
+    margin: 0 auto;
+}
 #mypage .lecture-grid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr;
+    display: flex;
+    gap: 20px;
+}
+#mypage .lecture-grid.large {
+    display: grid;
+    gap: 1.5rem;
+}
+#mypage .card {
+    flex: 1 1 calc(50% - 20px);
+    transition: all 0.3s ease;
 }
 @media (min-width: 768px) {
   #mypage .lecture-grid {

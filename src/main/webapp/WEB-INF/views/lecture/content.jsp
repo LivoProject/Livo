@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<link rel="stylesheet" href="/css/main.css" />
 
 <!-- 강좌 상세 페이지 시작 -->
 <section id="sub" class="container" style="margin-top: 100px;">
@@ -99,7 +100,7 @@
                 </li>
                 <li class="list-group-item">학습단계: 입문</li>
                 <li class="list-group-item">수준: 초급</li>
-                <li class="list-group-item">별점: ⭐⭐⭐⭐☆ (추후 적용)</li>
+                <li class="list-group-item">별점⭐: <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" /></li>
             </ul>
             <h4 class="mt-3">${lecture.content}</h4>
         </div>
@@ -152,14 +153,43 @@
                 <div class="p-5 mb-4 bg-body-tertiary rounded-3">
                     <div class="container-fluid py-5 text-center">
                         <h1 class="display-5 fw-bold">
-                            평균 <fmt:formatNumber value="${avgStar}" type="number" maxFractionDigits="1" /> ⭐
+                            평균 <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" /> ⭐
                         </h1>
-                        <p class="col-md-8 fs-4 mx-auto">${reviews.size()}개의 수강평</p>
+                        <p class="col-md-8 fs-4 mx-auto">${reviewCountMap[lecture.lectureId]}개의 수강평</p>
                     </div>
                 </div>
             </div>
 
+            <!-- 후기 등록 (로그인 + 수강중 사용자만 보이게) -->
+            <c:if test="${isLoggedIn and isEnrolled}">
+                <div class="col-md-12 mt-4">
+                    <form id="reviewForm" action="/lecture/content/${lecture.lectureId}/review" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
+                        <div class="h-100 p-5 bg-body-secondary border rounded-3">
+                            <!-- 별점 버튼 -->
+                            <div class="star-wrap mb-3">
+                                <button type="button" class="bi bi-star-fill" data-value="1"></button>
+                                <button type="button" class="bi bi-star-fill" data-value="2"></button>
+                                <button type="button" class="bi bi-star-fill" data-value="3"></button>
+                                <button type="button" class="bi bi-star-fill" data-value="4"></button>
+                                <button type="button" class="bi bi-star-fill" data-value="5"></button>
+                            </div>
+                            <input type="hidden" name="reviewStar" id="selectedStar" value="0">
+
+                            <h4>내용입력</h4>
+                            <div class="mb-3">
+                                <textarea class="form-control" id="reviewContent" name="reviewContent" rows="5" placeholder="수강 후기를 입력하세요"></textarea>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg" type="submit">등록</button>
+                        </div>
+                    </form>
+                </div>
+            </c:if>
+
             <!-- 후기 목록 -->
+            <div id="reviewList">
             <c:forEach var="review" items="${reviews}">
                 <div class="col-md-12 mb-3">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3">
@@ -209,33 +239,17 @@
                     </div>
                 </div>
             </c:forEach>
+            </div>
 
-
-            <!-- 후기 등록 (로그인 + 수강중 사용자만 보이게) -->
-            <c:if test="${isLoggedIn and isEnrolled}">
-                <div class="col-md-12 mt-4">
-                    <form action="/lecture/content/${lecture.lectureId}/review" method="post">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-
-                        <div class="h-100 p-5 bg-body-secondary border rounded-3">
-                            <!-- 별점 버튼 -->
-                            <div class="star-wrap mb-3">
-                                <button type="button" class="bi bi-star-fill" data-value="1"></button>
-                                <button type="button" class="bi bi-star-fill" data-value="2"></button>
-                                <button type="button" class="bi bi-star-fill" data-value="3"></button>
-                                <button type="button" class="bi bi-star-fill" data-value="4"></button>
-                                <button type="button" class="bi bi-star-fill" data-value="5"></button>
-                            </div>
-                            <input type="hidden" name="reviewStar" id="selectedStar" value="0">
-
-                            <h4>내용입력</h4>
-                            <div class="mb-3">
-                                <textarea class="form-control" name="reviewContent" rows="5" placeholder="수강 후기를 입력하세요"></textarea>
-                            </div>
-
-                            <button class="btn btn-primary btn-lg" type="submit">등록</button>
-                        </div>
-                    </form>
+            <!-- 더보기 버튼 -->
+            <c:if test="${reviewCount > 5}">
+                <div class="text-center mt-4">
+                    <button id="loadMoreBtn"
+                            class="btn btn-outline-primary"
+                            data-page="1"
+                            data-lecture-id="${lecture.lectureId}">
+                        더보기 ▼
+                    </button>
                 </div>
             </c:if>
         </div>

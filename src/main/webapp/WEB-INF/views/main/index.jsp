@@ -24,34 +24,29 @@
   </section>
 
   <!-- 공지사항 롤링 -->
-  <section id="noticeRolling">
-    <div class="swiper mySwiper container">
+ <section id="noticeRolling">
+  <div class="notice-container swiper mySwiper">
+    <div class="notice-icon">
       <i class="bi bi-megaphone-fill"></i>
-      <div class="swiper-wrapper">
-
-        <c:forEach var="notice" items="${notices}">
-            <div class="swiper-slide">
-              <span>${notice.title}</span>
-              <small>${notice.createdAt}</small>
-            </div>
-        </c:forEach>
-
-      </div>
-
-      <!-- 커스텀 버튼 -->
-      <div class="custom_btn_wrap">
-        <button id="swiperPrev" class="btn-swiper">
-          <i class="bi bi-chevron-up"></i>
-        </button>
-        <button id="swiperNext" class="btn-swiper">
-          <i class="bi bi-chevron-down"></i>
-        </button>
-        <button id="swiperToggle" class="btn-swiper">
-          <i class="bi bi-pause-fill"></i>
-        </button>
-      </div>
+      <span class="notice-title">공지사항</span>
     </div>
-  </section>
+
+    <div class="swiper-wrapper">
+      <c:forEach var="notice" items="${notices}">
+        <div class="swiper-slide">
+          <span class="notice-text">${notice.title}</span>
+          <small class="notice-date">${notice.createdAt}</small>
+        </div>
+      </c:forEach>
+    </div>
+
+    <div class="custom_btn_wrap">
+      <button id="swiperPrev" class="btn-swiper"><i class="bi bi-chevron-up"></i></button>
+      <button id="swiperNext" class="btn-swiper"><i class="bi bi-chevron-down"></i></button>
+      <button id="swiperToggle" class="btn-swiper"><i class="bi bi-pause-fill"></i></button>
+    </div>
+  </div>
+</section>
 
   <!-- 추천 강좌 -->
 
