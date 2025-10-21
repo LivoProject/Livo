@@ -1,13 +1,14 @@
 package com.livo.project.mypage.repository;
 
-import com.livo.project.auth.repository.UserRepository;
+import com.livo.project.auth.domain.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public class MypageUserRepository {
-    private UserRepository userRepository;
+import java.util.Optional;
 
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
-
+public interface MypageUserRepository extends JpaRepository<User, Long> {
+        boolean existsByEmail(String email);
+        boolean existsByNickname(String nickname);
+        boolean existsByPhone(String phone);
+        Optional<User> findByEmail(String email);
 
 }

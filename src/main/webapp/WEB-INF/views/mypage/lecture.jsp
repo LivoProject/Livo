@@ -92,22 +92,13 @@
                     </div>
                 </div>
                 <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                    <div>
-                        <a href="mypage-lecture-view.html" class="btn btn-sm">이어보기</a>
-                        <button class="btn btn-sm btn-primary"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                          수강평 작성
-                        </button>
-                    </div>
+
                     <small class="text-muted">27 mins</small>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modal -->
-    <%@ include file="/WEB-INF/views/common/modal.jsp" %>
 
 
 </section>

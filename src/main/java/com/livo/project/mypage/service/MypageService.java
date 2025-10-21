@@ -1,11 +1,13 @@
 package com.livo.project.mypage.service;
 
 import com.livo.project.auth.domain.entity.User;
-import com.livo.project.auth.repository.UserRepository;
 import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.lecture.domain.LectureLike;
 import com.livo.project.mypage.domain.dto.MypageDto;
+import com.livo.project.mypage.repository.MypageLectureLikeRepository;
 import com.livo.project.mypage.repository.MypageLectureRepository;
 import com.livo.project.mypage.repository.MypageNoticeRepository;
+import com.livo.project.mypage.repository.MypageUserRepository;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
 import jakarta.transaction.Transactional;
@@ -16,7 +18,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 마이페이지 서비스
@@ -27,14 +33,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MypageService {
 
-    private final UserRepository userRepository;
+    private final MypageUserRepository mypageUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final MypageNoticeRepository mypageNoticeRepository;
     private final MypageLectureRepository mypageLectureRepository;
+    private final MypageLectureLikeRepository mypageLikeRepository;
+    //private final MypageLectureRepository mypageLectureRepository;
 
     // 마이페이지 기본 데이터 조회
     public MypageDto getUserData(String email) {
-        User user = userRepository.findByEmail(email)
+        User user = mypageUserRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         // 공지사항
@@ -46,6 +54,15 @@ public class MypageService {
         // 추천 강좌
         List<Lecture> recommended = mypageLectureRepository.findRandomLectures();
 
+        long joinDays = 1;
+        if (user.getCreatedAt() != null) {
+            long days = ChronoUnit.DAYS.between(
+                    user.getCreatedAt().toLocalDate(),
+                    LocalDate.now()
+            );
+            joinDays = Math.max(days + 1, 1); // 0일 → 1일로 보정
+        }
+
         return MypageDto.builder()
                 .userId(user.getId())
                 .username(user.getName())
@@ -54,7 +71,7 @@ public class MypageService {
                 .phone(user.getPhone())
                 .birth(user.getBirth())
                 .gender(user.getGender() != null ? user.getGender().toString() : null)
-                .joinDate(user.getCreatedAt() != null ? user.getCreatedAt().toLocalDate().toString() : "")
+                .joinDays(joinDays)
                 .notices(noticeDtos)
                 .recommendedLectures(recommended)
                 .build();
@@ -63,7 +80,7 @@ public class MypageService {
     // 일반 정보 수정 (이메일 기반)
     @Transactional
     public void updateUserProfile(String email, MypageDto dto) {
-        User user = userRepository.findByEmail(email)
+        User user = mypageUserRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         user.setNickname(dto.getNickname());
@@ -82,7 +99,6 @@ public class MypageService {
             }
         }
 
-        userRepository.save(user);
         log.info("사용자 정보 수정 완료: {}", email);
     }
 
@@ -92,7 +108,7 @@ public class MypageService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
 
-        User user = userRepository.findByEmail(email)
+        User user = mypageUserRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
@@ -100,7 +116,24 @@ public class MypageService {
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        mypageUserRepository.save(user);
         log.info("비밀번호 변경 완료: {}", email);
     }
+
+
+    public List<Lecture> getLikedLectures(String email) {
+        return mypageLectureRepository.findLikedLecturesByEmail(email);
+    }
+
+    public List<Lecture> getTop2LikedLectures(String email) {
+        return mypageLectureRepository.findTop2LikedLecturesByEmail(email);
+    }
+
+
+
+    @Transactional
+    public void removeLikedLecture(Integer lectureId, String email) {
+        mypageLectureRepository.deleteLikeByLectureIdAndEmail(lectureId, email);
+    }
 }
+

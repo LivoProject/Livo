@@ -9,6 +9,11 @@
     <meta charset="UTF-8"/>
     <title>LiVO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- CSRF -->
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+
     <!-- 파비콘 (브라우저 탭 아이콘) -->
     <link
             rel="shortcut icon"
@@ -46,6 +51,8 @@
 <c:url var="loginUrl" value="/auth/login"/>
 <c:url var="joinUrl" value="/auth/register"/>
 <c:url var="logoutUrl" value="/auth/logout"/>
+
+
 
 <!-- 헤더 -->
 <header>
