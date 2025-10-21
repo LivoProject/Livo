@@ -53,13 +53,14 @@
               <c:forEach var="lecture" items="${lectures}">
                 <a href="/lecture/content/${lecture.lectureId}" class="card popular-card">
 
-                  <%-- 썸네일 --%>
-                  <div class="card-thumb" style="height: 200px; border-radius: 12px 12px 0 0; overflow: hidden;">
-                    <img src="/img/lecture/lecture_${lecture.lectureId}.jpg"
-                         onerror="this.onerror=null; this.src='/img/common/no-image.png';"
-                         alt="lecture thumbnail"
-                         style="width:100%; height:100%; object-fit:cover; border-radius:12px 12px 0 0;">
-                  </div>
+            <!-- 썸네일 -->
+            <div class="card-thumb" style="height: 200px; border-radius: 12px 12px 0 0; overflow: hidden;">
+                <img src="${lecture.thumbnailUrl}"
+                     onerror="this.src='/img/common/no-image.png';"
+                     alt="lecture thumbnail"
+                     class="img-fluid rounded shadow-sm border"
+                     style="max-height: 280px; object-fit: cover;">
+            </div>
 
                   <%-- 강좌정보 --%>
                   <div class="card-body">
