@@ -3,6 +3,8 @@ package com.livo.project.main.controller;
 import com.livo.project.main.domain.dto.MainDto;
 import com.livo.project.main.service.MainService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,14 +20,20 @@ public class MainController {
 
     @GetMapping({"/", "/index", "/main"})
     public String mainPage(Model model) {
-        // 서비스에서 카테고리 + 추천강좌 + 인기강좌 한 번에 조회
         MainDto mainDto = mainService.getMainPageData();
 
-        // 모델에 담아서 JSP로 전달
         model.addAttribute("categories", mainDto.getCategories());
         model.addAttribute("recommendedLectures", mainDto.getRecommendedLectures());
         model.addAttribute("notices", mainDto.getNotices());
-        model.addAttribute("BGM_ALLOWED", BGM_ENABLED);
+
+        // 로그인 여부 판별
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isLoggedIn = auth != null
+                && auth.isAuthenticated()
+                && !"anonymousUser".equals(auth.getName());
+
+        // 로그인 사용자만 배경음악 허용
+        model.addAttribute("BGM_ALLOWED", isLoggedIn);
 
         return "main/index";
     }

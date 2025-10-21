@@ -2,6 +2,8 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+<link rel="stylesheet" href="/css/mypage.css">
+<link rel="stylesheet" href="/css/form.css">
 
 <!-- CSRF -->
 <meta name="_csrf" content="${_csrf.token}"/>
@@ -63,7 +65,7 @@
             <!-- 비밀번호 -->
             <div class="field">
                 <label for="password" class="form-label"><span class="required-mark">*</span> 비밀번호</label>
-                    <a href="/mypage/password" class="btn btn-outline-primary btn-sm">비밀번호 바꾸기</a>
+                    <a href="/mypage/password" class="btn-outline-main">비밀번호 바꾸기</a>
             </div>
 
             <!-- 닉네임 -->
@@ -128,7 +130,7 @@
 
             <!-- 버튼 -->
             <div class="field">
-                <button type="submit" class="btn-submit">정보 수정</button>
+                <button type="submit" class="btn-main">정보 수정</button>
             </div>
         </form>
     </main>

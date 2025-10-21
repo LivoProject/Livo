@@ -2,8 +2,9 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+<link rel="stylesheet" href="/css/notice.css">
 
-<section id="notice" class="container">
+<section id="notice" class="container sub">
     <h3>공지사항</h3>
 
     <table class="table table-hover bg-white shadow-sm">
