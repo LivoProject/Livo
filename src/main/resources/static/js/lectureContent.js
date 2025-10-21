@@ -49,8 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     window.location.href = "/auth/login";
                 } else if (status === "liked") {
                     likeBtn.innerText = "❤️좋아요";
+                    likeBtn.classList.add("active");   // ✅ 추가
                 } else if (status === "unliked") {
                     likeBtn.innerText = "🤍좋아요";
+                    likeBtn.classList.remove("active"); // ✅ 추가
                 } else {
                     console.warn("예상치 못한 응답:", status);
                 }
@@ -86,6 +88,83 @@ document.addEventListener("DOMContentLoaded", function () {
             star.addEventListener("mouseleave", () => {
                 stars.forEach((s) => s.classList.remove("on"));
             });
+        });
+    }
+
+    const reviewForm = document.getElementById("reviewForm");
+    if (reviewForm) {
+        reviewForm.addEventListener("submit", function (e) {
+            const content = document.getElementById("reviewContent").value.trim();
+            const star = document.getElementById("selectedStar").value;
+
+            if (content === "") {
+                e.preventDefault();
+                alert("후기 내용을 입력해주세요!");
+                return;
+            }
+
+            if (parseInt(star) === 0) {
+                e.preventDefault();
+                alert("별점을 선택해주세요!");
+                return;
+            }
+        });
+    }
+
+
+    // =====================================================
+    // 📖 후기 더보기 기능 (Load More Reviews)
+    // =====================================================
+    const loadMoreBtn = document.getElementById("loadMoreBtn");
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener("click", function () {
+            const lectureId = this.dataset.lectureId;
+            let page = parseInt(this.dataset.page);
+
+            fetch(`/lecture/content/${lectureId}/reviews?page=${page}`)
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById("reviewList");
+
+                    data.content.forEach(r => {
+                        const stars = "⭐".repeat(r.reviewStar) + "☆".repeat(5 - r.reviewStar);
+                        const item = `
+                            <div class="col-md-12 mb-3 fade-in-up">
+                                <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm">
+                                    <h4>${r.userName}</h4>
+                                    <h5>${r.createdAt}</h5>
+                                    <h4>${stars}</h4>
+                                    <h4><strong>${r.reviewContent}</strong></h4>
+                                </div>
+                            </div>
+                        `;
+                        container.insertAdjacentHTML("beforeend", item);
+                    });
+
+                    // 부드러운 등장
+                    document.querySelectorAll(".fade-in-up").forEach(el => {
+                        el.style.opacity = 0;
+                        el.style.transform = "translateY(20px)";
+                        setTimeout(() => {
+                            el.style.transition = "all 0.4s ease";
+                            el.style.opacity = 1;
+                            el.style.transform = "translateY(0)";
+                        }, 50);
+                    });
+
+                    // 페이지 증가
+                    page++;
+                    loadMoreBtn.dataset.page = page;
+
+                    // 마지막 페이지면 버튼 숨기기
+                    if (data.last) {
+                        loadMoreBtn.style.display = "none";
+                    }
+
+                    // 스크롤 자동 이동
+                    loadMoreBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+                })
+                .catch(err => console.error("리뷰 불러오기 오류:", err));
         });
     }
 
