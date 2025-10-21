@@ -44,7 +44,7 @@ public class Lecture {
     private Boolean isFree = false;
 
     private int categoryId;
-
+    private String thumbnailUrl;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId", insertable = false, updatable = false)
     private Category category;

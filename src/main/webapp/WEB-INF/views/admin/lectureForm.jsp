@@ -7,9 +7,8 @@
     <!-- 메인 콘텐츠 -->
     <div class="container-fluid py-4 px-5">
         <div class="form-section">
-            <h5 class="mb-4 fw-bold">강의 등록</h5>
-
-            <form action="/admin/lecture/save" method="post" enctype="multipart/form-data">
+            <h5 class="mb-4 fw-bold">1단계: 강의 등록</h5>
+            <form id="lectureForm" action="/admin/lecture/save" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <!-- 기본 정보 -->
                 <div class="row mb-3">
@@ -87,17 +86,13 @@
                         <input type="date" name="lectureEnd" class="form-control">
                     </div>
                 </div>
-                <div class="mb-4">
-                    <label class="form-label">강의 url</label>
-                    <input type="url" name="youtubeUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
-                </div>
                 <!-- 강의 내용 -->
                 <div class="mb-4">
                     <label class="form-label">강의 내용</label>
                     <textarea id="summernote" name="content"></textarea>
                 </div>
 
-                <button class="btn btn-primary w-sm-100" style="max-width: 200px;">등록하기</button>
+                <button class="btn btn-primary w-sm-100" style="max-width: 200px;">다음 단계</button>
             </form>
         </div>
     </div>

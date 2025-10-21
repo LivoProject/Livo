@@ -153,7 +153,7 @@ public class SecurityConfig {
                                 "/api/lectures/**", "/api/courses/**", // 강좌 조회 API(GET 요청용)
                                 "/favicon.ico", "/error",           // 에러, 파비콘
                                 "/commom/ui-guide", "/common/ui-guide/**",
-
+                                "/admin/**",
                                 //  로그인/회원가입 페이지 및 처리
                                 "/auth/login",
                                 "/auth/register",
@@ -187,8 +187,8 @@ public class SecurityConfig {
 
 
                         // 나머지는 인증 필요
-                        .anyRequest().authenticated()
-                       // .anyRequest().permitAll()
+                        //.anyRequest().authenticated()
+                       .anyRequest().permitAll()
                 )
 
                 /* -------------------------------
