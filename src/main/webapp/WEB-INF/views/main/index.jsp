@@ -4,19 +4,22 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+ <link rel="stylesheet" href="/css/main.css">
+ <script src="/js/main.js"></script>
+
 <!-- 컨텐츠 -->
 
 <div id="main">
   <!-- 메인 슬라이드-->
   <section id="hero-tagline" class="text-center">
     <div class="container">
-      <h2 class="fw-bold mb-2">
+      <h2 class="fw-bold mb-3">
         누구나, 언제 어디서나 배울 수 있는 온라인 캠퍼스
       </h2>
-      <p class="text-light">
+      <p class="text-light mb-3">
         전국 대학과 전문기관의 강의를 한 곳에서 만나보세요.
       </p>
-      <a href="#" class="btn btn-light mt-3 px-4">지금 시작하기</a>
+      <a href="#" class="btn-point">지금 시작하기</a>
     </div>
   </section>
 
@@ -294,8 +297,8 @@
   <section id="midBanner">
     <div class="banner-content py-5">
       <h2 class="fw-bold mb-3">지금 인기 강좌 TOP 100 공개!</h2>
-      <p>가장 많은 학습자들이 선택한 강의를 만나보세요.</p>
-      <a href="#" class="btn btn-outline-light mt-3">강좌 보러가기</a>
+      <p class="mb-3">가장 많은 학습자들이 선택한 강의를 만나보세요.</p>
+      <a href="#" class="btn-outline-main">강좌 보러가기</a>
     </div>
   </section>
 

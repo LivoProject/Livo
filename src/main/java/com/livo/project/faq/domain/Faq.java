@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "faq")
 @AllArgsConstructor
@@ -19,5 +21,5 @@ public class Faq {
 
     private String question;
     private String answer;
-
+    private LocalDateTime createdAt;
 }

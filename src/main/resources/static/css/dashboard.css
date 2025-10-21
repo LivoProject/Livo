@@ -141,3 +141,34 @@ label {
     color: #fff;
     border-radius: 50px;
 }
+
+/* 드래그 중 챕터 배경을 유지 */
+.chapter {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+/* 드래그되는 아이템 스타일 (투명도 제거) */
+.chapter.ui-sortable-helper {
+    opacity: 1 !important;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: rotate(0deg);
+}
+
+/* 드래그 중 placeholder 영역 스타일 */
+.chapter-placeholder {
+    background-color: #e9ecef;
+    border: 2px dashed #bbb;
+    border-radius: 8px;
+    height: 120px; /* 챕터 높이와 비슷하게 */
+    margin-bottom: 10px;
+}
+/*
+#chapterContainer {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    min-height: 150px;
+}*/

@@ -22,4 +22,9 @@ public class FaqAdminServiceImpl implements FaqAdminService {
     public Page<Faq> getFaqPage(Pageable pageable) {
         return faqRepository.findAll(pageable);
     }
+
+    @Override
+    public List<Faq> getFaqTop5() {
+        return faqRepository.findTop5ByOrderByCreatedAtDesc();
+    }
 }

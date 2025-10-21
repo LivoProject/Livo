@@ -12,5 +12,11 @@ public class WebConfig implements WebMvcConfigurer {
         // /img/uploads/** 요청이 오면 실제 파일 경로로 연결
         registry.addResourceHandler("/img/uploads/**")
                 .addResourceLocations("file:src/main/resources/static/img/uploads/");
+        registry
+                .addResourceHandler("/js/**")
+                .addResourceLocations("classpath:/static/js/");
+        registry
+                .addResourceHandler("/css/**")
+                .addResourceLocations("classpath:/static/css/");
     }
 }

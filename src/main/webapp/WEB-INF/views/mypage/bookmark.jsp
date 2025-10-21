@@ -2,6 +2,8 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+<link rel="stylesheet" href="/css/mypage.css">
+
 <!-- 컨텐츠 -->
 <section id="mypage" class="container">
 
@@ -30,7 +32,7 @@
         </div>
         <div class="card-footer bg-white d-flex justify-content-between align-items-center">
             <div>
-            <button class="btn btn-sm btn-outline-secondary">해제</button>
+            <button class="btn-main">해제</button>
             </div>
             <small class="text-muted">9 mins</small>
         </div>

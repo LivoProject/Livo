@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
     // 무료강의 체크박스
     const priceInput = document.getElementById("price");
     const freeCheck = document.getElementById("isFree");
@@ -47,9 +48,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             },
             error: function(xhr) {
-                console.error("하위 카테고리 로드 실패:", xhr);
-                alert('하위 카테고리를 불러오지 못했습니다.');
             }
         });
     });
+
+    // 강의 등록 AJAX 처리
+    const lectureForm = document.getElementById("lectureForm");
+    if (lectureForm) {
+
+        lectureForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(lectureForm);
+
+            $.ajax({
+                url: '/admin/lecture/save',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    alert("강의가 등록되었습니다. 다음으로 챕터를 등록하세요!");
+                    window.location.href = `/admin/chapter/form?lectureId=${res.lectureId}`;
+                },
+                error: function(xhr, status, error) {
+                }
+            });
+        });
+    }
 });

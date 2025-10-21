@@ -2,12 +2,13 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+<link rel="stylesheet" href="/css/notice.css">
 
-<section id="notice" class="container">
+<section id="notice" class="container sub">
     <h3>공지사항</h3>
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">${notice.title}</h4>
+        <div class="card-header">
+            <h4>${notice.title}</h4>
         </div>
         <div class="card-body">
             <p class="text-muted small mb-1">
@@ -21,7 +22,7 @@
     </div>
 
     <div class="mt-4 text-end">
-        <a href="/notice/list" class="btn btn-outline-primary">목록으로</a>
+        <a href="/notice/list" class="btb-main">목록으로</a>
     </div>
 </section>
 

@@ -1,83 +1,111 @@
-  <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-  <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-  <section id="lecture">
-    <!-- 왼쪽: 비디오 영역 -->
-    <div class="video-area">
-      <iframe src="https://www.youtube.com/embed/B-14Ksjonvk?si=JR4rw8rxElFyr3Vr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<link rel="stylesheet" href="/css/lecture-play.css"/>
+
+<section id="lecture" class="d-flex">
+  <!-- 왼쪽: 비디오 영역 -->
+  <div class="video-area flex-grow-1 p-3">
+    <c:if test="${not empty youtubeUrl}">
+      <c:set var="url" value="${youtubeUrl}" />
+      <c:choose>
+        <c:when test="${fn:contains(url, 'watch?v=')}">
+          <c:set var="embedUrl" value="${fn:replace(url, 'watch?v=', 'embed/')}" />
+        </c:when>
+        <c:when test="${fn:contains(url, 'youtu.be/')}">
+          <c:set var="embedUrl" value="${fn:replace(url, 'youtu.be/', 'www.youtube.com/embed/')}" />
+        </c:when>
+        <c:when test="${fn:contains(url, 'shorts/')}">
+          <c:set var="embedUrl" value="${fn:replace(url, 'shorts/', 'embed/')}" />
+        </c:when>
+        <c:otherwise>
+          <c:set var="embedUrl" value="${url}" />
+        </c:otherwise>
+      </c:choose>
+
+      <iframe id="lectureVideo"
+              src="${embedUrl}"
+              width="100%"
+              height="500"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+      </iframe>
+    </c:if>
+
+    <c:if test="${empty youtubeUrl}">
+      <p class="text-center text-muted mt-5">등록된 영상이 없습니다.</p>
+    </c:if>
+  </div>
+
+  <!-- 오른쪽: 커리큘럼 -->
+  <aside class="curriculum border-start p-4" style="width: 400px;">
+    <h3 class="fw-bold mb-1">${lecture.title}</h3>
+    <h6 class="text-secondary mb-4">${lecture.tutorName}</h6>
+
+    <div class="progress-wrap mb-4">
+      <div class="progress" style="height: 8px;">
+        <div class="bar bg-success" style="width: 83%; height: 8px;"></div>
+      </div>
+      <p class="progress-text mt-2 mb-0 text-secondary">
+        진도율 <span>81</span> / 98 <span>(83%)</span>
+      </p>
     </div>
 
-    <!-- 오른쪽: 커리큘럼 -->
-    <aside class="curriculum">
-      <h3>강의 이름</h3>
-      <h6>강사 이름</h6>
-      <div class="progress-wrap">
-        <div class="progress"><div class="bar" style="width: 83%;"></div></div>
-        <p class="progress-text">
-            진도율 <span>81</span> / 98 <span>(83%)</span>
-        </p>
-      </div>
-
-      <!-- 아코디언 -->
-      <div class="accordion" id="curriculumAccordion">
-        <!-- 섹션1 -->
+    <!-- 아코디언 -->
+    <div class="accordion" id="curriculumAccordion">
+      <c:forEach var="chapter" items="${chapters}" varStatus="status">
         <div class="accordion-item">
-          <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              섹션 1. 들어가며
+          <h2 class="accordion-header" id="heading${status.index}">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse${status.index}"
+                    aria-expanded="false"
+                    aria-controls="collapse${status.index}">
+              챕터 ${chapter.chapterOrder}. ${chapter.chapterName}
             </button>
           </h2>
-          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#curriculumAccordion">
+          <div id="collapse${status.index}" class="accordion-collapse collapse"
+               aria-labelledby="heading${status.index}"
+               data-bs-parent="#curriculumAccordion">
             <div class="accordion-body">
-              <ul class="list-unstyled mb-0">
-                <li><a href="#">1. 강의 및 강사 소개 <span class="text-muted small">01:00</span></a></li>
-                <li><a href="#">2. 수강생 커뮤니티 참가 안내 <span class="text-muted small">01:00</span></a></li>
-                <li><a href="#">3. 예제 코드 및 강의 자료 안내 <span class="text-muted small">01:00</span></a></li>
-              </ul>
+              <p class="mb-2">${chapter.content}</p>
+              <button class="btn btn-sm btn-outline-primary play-chapter"
+                      data-url="${chapter.youtubeUrl}">
+                ▶ 재생
+              </button>
             </div>
           </div>
         </div>
+      </c:forEach>
+    </div>
+  </aside>
+</section>
 
-        <!-- 섹션2 -->
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingTwo">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              섹션 2. JavaScript 기본
-            </button>
-          </h2>
-          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#curriculumAccordion">
-            <div class="accordion-body">
-              <ul class="list-unstyled mb-0">
-                <li><a href="#">1. 변수와 상수<span class="text-muted small">01:00</span></a></li>
-                <li><a href="#">2. 조건문 & 반복문<span class="text-muted small">01:00</span></a></li>
-                <li><a href="#">3. 함수와 스코프<span class="text-muted small">01:00</span></a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // 🎬 챕터 버튼 클릭 시 해당 영상으로 변경
+  $(document).on("click", ".play-chapter", function() {
+    const rawUrl = $(this).data("url");
+    let embedUrl = "";
 
-        <!-- 섹션3 -->
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingThree">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              섹션 3. JavaScript 심화
-            </button>
-          </h2>
-          <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#curriculumAccordion">
-            <div class="accordion-body">
-              <ul class="list-unstyled mb-0">
-                <li><a href="#">1. 클로저<span class="text-muted small">01:00</span></a></li>
-                <li><a href="#">2. 프로토타입과 this<span class="text-muted small">01:00</span></a></li>
-                <li><a href="#">3. ES6 클래스<span class="text-muted small">01:00</span></a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+    if (rawUrl.includes("watch?v=")) {
+      embedUrl = rawUrl.replace("watch?v=", "embed/");
+    } else if (rawUrl.includes("youtu.be/")) {
+      embedUrl = rawUrl.replace("youtu.be/", "www.youtube.com/embed/");
+    } else if (rawUrl.includes("shorts/")) {
+      embedUrl = rawUrl.replace("shorts/", "embed/");
+    } else {
+      embedUrl = rawUrl;
+    }
 
-      </div>
-    </aside>
-  </section>
+    $("#lectureVideo").attr("src", embedUrl);
+  });
+</script>
+</body>
+</html>

@@ -42,9 +42,9 @@ public class Lecture {
     private int price;
 
     private Boolean isFree = false;
-
+    private String status;
     private int categoryId;
-
+    private String thumbnailUrl;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId", insertable = false, updatable = false)
     private Category category;

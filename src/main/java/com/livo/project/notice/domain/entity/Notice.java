@@ -9,13 +9,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "notice")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Notice {
 
     @Id

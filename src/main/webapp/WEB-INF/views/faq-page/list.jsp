@@ -2,14 +2,15 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+<link rel="stylesheet" href="/css/faq.css"/>
 
-<section id="notice" class="container">
-    <h3>자주 묻는 질문 (FAQ)</h3>
 
+<section id="faq" class="container sub">
+    <h3>자주묻는질문</h3>
 
     <div class="accordion" id="faqAccordion">
         <c:forEach var="faq" items="${faqs}" varStatus="i">
-          <div class="accordion-item mb-3">
+          <div class="accordion-item">
             <h2 class="accordion-header" id="heading${i.index}">
               <button class="accordion-button ${i.first ? "" : "collapsed"}"
                       type="button"
