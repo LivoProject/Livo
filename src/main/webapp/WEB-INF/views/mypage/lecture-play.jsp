@@ -3,6 +3,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+
+<link rel="stylesheet" href="/css/lecture-play.css"/>
+
 <section id="lecture" class="d-flex">
   <!-- 왼쪽: 비디오 영역 -->
   <div class="video-area flex-grow-1 p-3">
@@ -23,13 +26,6 @@
         </c:otherwise>
       </c:choose>
 
-  <link rel="stylesheet" href="/css/lecture-play.css">
-  <link rel="stylesheet" href="/css/mypage.css">
-
-  <section id="lecture">
-    <!-- 왼쪽: 비디오 영역 -->
-    <div class="video-area">
-      <iframe src="https://www.youtube.com/embed/B-14Ksjonvk?si=JR4rw8rxElFyr3Vr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       <iframe id="lectureVideo"
               src="${embedUrl}"
               width="100%"
