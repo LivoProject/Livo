@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<link rel="stylesheet" href="/css/main.css" />
 
   <!-- main.css 스타일 적용용 wrapper -->
   <main id="main">

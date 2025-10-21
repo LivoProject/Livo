@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<link rel="stylesheet" href="/css/main.css" />
 
 <!-- 강좌 상세 페이지 시작 -->
 <section id="sub" class="container" style="margin-top: 100px;">

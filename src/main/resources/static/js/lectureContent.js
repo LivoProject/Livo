@@ -49,8 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     window.location.href = "/auth/login";
                 } else if (status === "liked") {
                     likeBtn.innerText = "❤️좋아요";
+                    likeBtn.classList.add("active");   // ✅ 추가
                 } else if (status === "unliked") {
                     likeBtn.innerText = "🤍좋아요";
+                    likeBtn.classList.remove("active"); // ✅ 추가
                 } else {
                     console.warn("예상치 못한 응답:", status);
                 }
