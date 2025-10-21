@@ -135,7 +135,18 @@
 }
 #mypage .lecture-grid {
     display: flex;
+    justify-content: space-between;
     gap: 20px;
+}
+/* 기본적으로 반반(2개 이상일 때) */
+.lecture-grid .card {
+    flex: 1 1 calc(50% - 10px);
+    box-sizing: border-box;
+}
+
+/* 카드가 1개일 때만 고정 크기 */
+.lecture-grid:has(.card:only-child) .card {
+    flex: 0 0 400px!important;
 }
 #mypage .lecture-grid.large {
     display: grid;
@@ -144,6 +155,11 @@
 #mypage .card {
     flex: 1 1 calc(50% - 20px);
     transition: all 0.3s ease;
+}
+#mypage .card-img-top {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
 }
 @media (min-width: 768px) {
   #mypage .lecture-grid {
