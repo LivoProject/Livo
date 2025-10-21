@@ -84,7 +84,7 @@
           <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
-                <a class="nav-link" href="index.html">홈</a>
+                  <a class="nav-link" href="<c:url value='/'/>">홈</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/lecture/list">강좌</a>
@@ -158,17 +158,18 @@
   </div>
 </header>
 
-    <!-- 헤더 검색창 -->
-    <div id="headerSearch">
+  <!-- 헤더 검색창: 민영 수정 -->
+  <div id="headerSearch">
       <h4>배우고 싶은 강좌를 찾아보세요.</h4>
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="강좌명, 대학명, 키워드 입력"
-        />
-        <button>
-          <i class="bi bi-search"></i>
-        </button>
-      </div>
-    </div>
+      <form action="${pageContext.request.contextPath}/lecture/search" method="get" class="input-group">
+          <input
+                  type="text"
+                  name="keyword"
+                  class="form-control"
+                  placeholder="강좌명, 키워드 입력"
+                  value="${param.keyword}" />
+          <button type="submit">
+              <i class="bi bi-search"></i>
+          </button>
+      </form>
+  </div>

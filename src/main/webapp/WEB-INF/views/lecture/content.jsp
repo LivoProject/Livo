@@ -177,13 +177,35 @@
 
                         <h4><strong>${review.reviewContent}</strong></h4>
 
-                        <button class="btn btn-outline-danger btn-sm"
-                                type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#reportModal"
-                                data-review-id="${review.reviewUId}">
-                            🚨 신고
-                        </button>
+                        <!-- 🚨 신고 버튼 -->
+                        <c:choose>
+                        <c:when test="${isLoggedIn}">
+                            <!-- 로그인 O → 본인 리뷰인지 검사 -->
+                            <c:choose>
+                                <c:when test="${review.reservation.user.email ne loggedInUserEmail}">
+                                    <button class="btn btn-outline-danger btn-sm"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#reportModal"
+                                            data-review-id="${review.reviewUId}">
+                                        🚨 신고
+                                    </button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button class="btn btn-outline-secondary btn-sm" disabled>
+                                        나의 리뷰
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:when>
+
+                            <c:otherwise>
+                                <!-- 로그인 X → 로그인 페이지로 이동 -->
+                                <a href="/login" class="btn btn-outline-danger btn-sm">
+                                    🚨 신고
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
             </c:forEach>
@@ -257,6 +279,7 @@
                 <div class="modal-content">
 
                     <form action="/lecture/content/${lecture.lectureId}/report" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <input type="hidden" name="reviewUId" id="reportReviewId">
 
                         <div class="modal-header">

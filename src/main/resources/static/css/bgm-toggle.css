@@ -1,0 +1,106 @@
+
+
+/* 버튼 공통 영역 */
+#bgmToggle {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.8);
+    color: #222;
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 40px;
+    padding: 10px 16px;
+    cursor: pointer;
+    z-index: 2000;
+    user-select: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+#bgmToggle:hover {
+    background: rgba(240, 240, 240, 0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* 점 아이콘 */
+.bgm-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #888;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 라벨 */
+.bgm-label {
+    font-size: 14px;
+    letter-spacing: -0.2px;
+}
+
+/* 상태별 색상 */
+.bgm-on .bgm-dot {
+    background: #2ecc71;
+    box-shadow: 0 0 6px rgba(46, 204, 113, 0.7);
+}
+
+.bgm-off .bgm-dot {
+    background: #888;
+}
+
+.bgm-on .bgm-label {
+    color: #2d8659;
+}
+
+.bgm-off .bgm-label {
+    color: #333;
+}
+
+/* 자동재생 차단 시 클릭 유도(깜빡임 애니메이션) */
+.bgm-needs-gesture {
+    animation: pulse 1.2s infinite alternate;
+    border: 1px solid #ffcc00 !important;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 6px rgba(255, 200, 0, 0.3); }
+    100% { box-shadow: 0 0 12px rgba(255, 220, 0, 0.8); }
+}
+
+/* 다크 모드 대응 */
+@media (prefers-color-scheme: dark) {
+    #bgmToggle {
+        background: rgba(30, 30, 30, 0.8);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    #bgmToggle:hover {
+        background: rgba(50, 50, 50, 0.9);
+    }
+    .bgm-off .bgm-label {
+        color: #ddd;
+    }
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    #bgmToggle {
+        right: 14px;
+        bottom: 14px;
+        font-size: 13px;
+        padding: 8px 14px;
+    }
+}
+
+/* 버튼 눌림 효과 */
+#bgmToggle:active {
+    transform: scale(0.96);
+}

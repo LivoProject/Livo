@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LectureLikeServiceImpl implements LectureLikeService {
 
-    private LectureLikeRepository lectureLikeRepository;
+    private final LectureLikeRepository lectureLikeRepository;
 
     @Override
     public boolean toggleLike(int lectureId, String email) {

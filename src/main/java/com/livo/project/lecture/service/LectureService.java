@@ -12,16 +12,14 @@ public interface LectureService {
     // 강좌 전체 조회
     List<Lecture> findAll();
 
-    // 강좌 상세 조회 (PK 기준)
+    // 강좌 상세 조회
     Optional<Lecture> findById(int lectureId);
 
-    // 카테고리별 강좌 조회
+    // 카테고리별 검색
     List<Lecture> findByCategoryId(int categoryId);
+    List<Lecture> findAllByMainCategory(int mainCategoryId);
 
-    // 제목 검색
-    List<Lecture> findByTitleContaining(String keyword);
-
-    // 페이지
+    // 페이지 + 키워드검색
     Page<Lecture> getLecturePage(Pageable pageable);
     Page<Lecture> searchLecturePage(String keyword, Pageable pageable);
 
