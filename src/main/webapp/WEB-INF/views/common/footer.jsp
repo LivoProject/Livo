@@ -7,7 +7,7 @@
 <!-- 🔹 플로팅 버튼 컨테이너 -->
 <div class="floating-buttons">
     <!-- 챗봇 -->
-    <button id="chat-fab" class="chat-fab fab" aria-label="챗봇 열기" title="챗봇">
+    <button id="chat-fab" class="chat-fab" aria-label="챗봇 열기" title="챗봇">
         <img src="/img/common/chat_icon01.svg" alt="챗봇">
     </button>
 
@@ -27,7 +27,7 @@
     </c:if>
 
     <!--  맨 위로 -->
-    <button id="toTopBtn" class="fab fab-top" title="맨 위로">
+    <button id="toTopBtn" title="맨 위로">
         <i class="bi bi-arrow-up"></i>
     </button>
 </div>

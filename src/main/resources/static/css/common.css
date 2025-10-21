@@ -13,6 +13,28 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
+/* 공통 */
+h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 2rem 0;
+    position: relative;
+    padding-left: 12px;
+}
+h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 1rem 0;
+}
+section {
+    min-height: 100vh;
+}
+section.sub {
+    margin-top: 120px!important;
+}
+section.sub h3 {margin-top:0!important;}
+
+
 /* 헤더 */
 header {
     width: 100%;
@@ -59,18 +81,21 @@ header #searchToggle {
 header .header-actions {
     display: flex;
     gap: 1.5rem;
+    align-items: center;
 }
 
+header .header-actions a,
 header .header-actions button {
-    height: 2rem;
     transition: color 0.3s ease;
 }
 
-header .header-actions button:nth-of-type(1) {
+header .header-actions a:nth-of-type(1),
+header .header-actions span {
     position: relative;
 }
 
-header .header-actions button:nth-of-type(1)::after {
+header .header-actions a:nth-of-type(1)::after,
+header .header-actions span::after {
     content: "";
     right: -12px;
     position: absolute;
@@ -82,8 +107,9 @@ header .header-actions button:nth-of-type(1)::after {
     display: block;
 }
 
+header .header-actions a i,
 header .header-actions button i {
-    margin-right: 0.5rem;
+    margin-right: 0.25rem;
 }
 
 #headerSearch {
@@ -159,8 +185,8 @@ footer p {
 }
 
 /* 챗봇 */
-.chat-fab.fab {
-    background: var(--color-main);
+.chat-fab {
+    background-color: var(--color-main)!important;
     color: #fff;
     box-shadow: 0 10px 20px rgba(13, 110, 253, .35);
 }
@@ -168,7 +194,6 @@ footer p {
 .chat-fab img {
     width: 80%;
 }
-
 .chat-panel {
     position: fixed;
     right: 100px;
@@ -207,8 +232,7 @@ footer p {
     z-index: 10;
 }
 
-/* 각 버튼 스타일 */
-.fab {
+.floating-buttons button {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -222,25 +246,23 @@ footer p {
     transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
 }
 
-.fab:hover {
+.floating-buttons button:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* 맨 위로 버튼 스타일 */
-.fab-top {
+#toTopBtn {
     background: #6c757d;
     color: #fff;
 }
 
-.fab-top:hover {
+#toTopBtn:hover {
     background: #495057;
 }
 
-.fab-top i {
+#toTopBtn i {
     font-size: 22px;
 }
-
 
 #bgmToggle {
     display: flex;
@@ -252,7 +274,6 @@ footer p {
     padding: 10px 16px;
 }
 
-/* 점 아이콘 */
 .bgm-dot {
     width: 10px;
     height: 10px;
@@ -286,10 +307,63 @@ footer p {
     color: #333;
 }
 
-/* 자동재생 차단 시 클릭 유도(깜빡임 애니메이션) */
 .bgm-needs-gesture {
     animation: pulse 1.2s infinite alternate;
     border: 1px solid #ffcc00 !important;
+}
+.btn-main,
+.btn-cancel,
+.btn-point,
+.btn-outline-main {
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.3rem;
+    transition: 0.3s;
+    display: inline-block;
+}
+.btn-main {
+    background-color: var(--color-main);
+    color: var(--color-white);
+}
+.btn-main:hover,
+.btn-main:hover:active {
+    background-color: #14a7b9;
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.25);
+}
+
+.btn-cancel {
+    background-color: #dfe6e9;
+    color: #2f2f2f;
+    border: none;
+}
+.btn-cancel:hover{
+    background-color: #cfd5d8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-cancel:active {
+    background-color: #cfd5d8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05) ;
+}
+.btn-point {
+    background-color: var(--color-point);
+    color: var(--color-black);
+    border: none;
+}
+.btn-point:hover,
+.btn-point:hover:active {
+    background-color: #eac341;
+    box-shadow: 0 2px 5px rgba(255,216,77,0.25);
+}
+.btn-outline-main {
+    background-color: var(--color-white);
+    color: var(--color-main);
+    border: 1px solid #17b4c7;
+}
+.btn-outline-main:hover {
+    background-color: var(--color-main);
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.1);
 }
 
 @keyframes pulse {

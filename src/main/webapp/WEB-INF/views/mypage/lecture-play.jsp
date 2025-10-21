@@ -2,6 +2,9 @@
 
   <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+  <link rel="stylesheet" href="/css/lecture-play.css">
+  <link rel="stylesheet" href="/css/mypage.css">
+
   <section id="lecture">
     <!-- 왼쪽: 비디오 영역 -->
     <div class="video-area">
