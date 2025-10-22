@@ -38,6 +38,13 @@
     <main class="main-content">
         <h3>내 정보</h3>
 
+        <c:if test="${not empty successMessage}">
+            <div class="alert alert-success">${successMessage}</div>
+        </c:if>
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger">${errorMessage}</div>
+        </c:if>
+
         <form id="signupForm" method="post" action="update" novalidate>
 
             <!-- CSRF -->
@@ -47,23 +54,25 @@
             <div class="field">
                 <label for="email" class="form-label"><span class="required-mark">*</span> 이메일</label>
                 <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    name="email"
-                    placeholder="name@example.com"
-                    readonly
-                    required
-                    disabled
-                    value="${mypage.email}"
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="name@example.com"
+                        readonly
+                        required
+                        disabled
+                        value="${mypage.email}"
                 />
             </div>
 
-            <!-- 비밀번호 -->
-            <div class="field">
-                <label for="password" class="form-label"><span class="required-mark">*</span> 비밀번호</label>
+            <!-- 비밀번호 (LOCAL 로그인만 표시) -->
+            <c:if test="${mypage.provider == 'LOCAL'}">
+                <div class="field">
+                    <label for="password" class="form-label"><span class="required-mark">*</span> 비밀번호</label>
                     <a href="/mypage/password" class="btn-outline-main">비밀번호 바꾸기</a>
-            </div>
+                </div>
+            </c:if>
 
             <!-- 닉네임 -->
             <div class="field">
@@ -93,12 +102,12 @@
             <div class="field">
                 <label for="phone" class="form-label">전화번호</label>
                 <input
-                    type="tel"
-                    class="form-control"
-                    id="phone"
-                    name="phone"
-                    required
-                    value="${mypage.phone}"
+                        type="tel"
+                        class="form-control"
+                        id="phone"
+                        name="phone"
+                        required
+                        value="${mypage.phone}"
                 />
                 <span data-msg="phone"></span>
             </div>
@@ -131,6 +140,27 @@
             </div>
         </form>
     </main>
+
+    <!-- 모달 -->
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">공통 모달 제목</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                </div>
+                <div class="modal-body">
+                    이곳은 모달 내용입니다.<br>
+                    설명이나 폼, 알림 메시지 등을 넣을 수 있습니다.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn-main" data-bs-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- // 모달 -->
 
 </section>
 <!-- 컨텐츠 끝 -->

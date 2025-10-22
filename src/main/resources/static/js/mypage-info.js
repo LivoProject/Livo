@@ -2,9 +2,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     const $ = (sel) => document.querySelector(sel);
 
-    const csrf  = document.querySelector('meta[name="_csrf"]')?.content || '';
+    const csrf = document.querySelector('meta[name="_csrf"]')?.content || '';
     const csrfH = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
-    const form  = $('#signupForm');
+    const form = $('#signupForm');
     const btnSubmit = form?.querySelector('.btn-submit');
 
     // ────────────────────── helper ──────────────────────
@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ────────────────────── 유효성 검사 대상 ──────────────────────
     const nicknameInput = $('#nickname');
-    const phoneInput    = $('#phone');
-    const nameInput     = $('#username');
-    const birthInput    = $('#birth');
+    const phoneInput = $('#phone');
+    const nameInput = $('#username');
+    const birthInput = $('#birth');
 
     // 초기 상태
     const fieldValid = {
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             const res = await fetch(`/auth/validate/nickname?value=${encodeURIComponent(value)}`, {
-                headers: { [csrfH]: csrf },
+                headers: {[csrfH]: csrf},
                 credentials: 'same-origin'
             });
             const data = await safeJson(res);
@@ -115,4 +115,44 @@ document.addEventListener("DOMContentLoaded", function () {
             alert('입력값을 다시 확인해주세요.');
         }
     });
+
+
+    // 정보 수정했을때 확인 모달
+    // ✅ 공통 모달 제어 함수
+    function showInfoModal(title, message) {
+        const modalTitle = document.getElementById("infoModalLabel");
+        const modalBody = document.querySelector("#infoModal .modal-body");
+
+        if (modalTitle) modalTitle.textContent = title;
+        if (modalBody) modalBody.textContent = message;
+
+        // Bootstrap 모달 객체 생성
+        const modalElement = document.getElementById("infoModal");
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
+
+    document.querySelector("#signupForm").addEventListener("submit", function (e) {
+        e.preventDefault(); // 폼 기본 동작 막기
+
+        const formData = new FormData(this);
+
+        fetch("/mypage/update", {
+            method: "POST",
+            body: formData
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showInfoModal("✅ 수정 완료", data.message);
+                } else {
+                    showInfoModal("⚠️ 수정 실패", data.message || "정보 수정 중 오류가 발생했습니다.");
+                }
+            })
+            .catch(err => {
+                showInfoModal("❌ 서버 오류", "서버와의 통신 중 문제가 발생했습니다.");
+                console.error(err);
+            });
+    });
+
 });
