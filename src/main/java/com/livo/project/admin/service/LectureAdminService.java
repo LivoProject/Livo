@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface LectureAdminService {
     Lecture saveLecture(Lecture lecture, int categoryId);
 
-    boolean deleteLecture(int lectureId);
+    void deleteLecture(int lectureId);
 
     Lecture editLecture(int lectureId);
 

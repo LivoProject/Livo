@@ -93,10 +93,19 @@ public class AdminLectureController {
     }
 
 
-    @PostMapping("/delete")
-    public String deleteLecture(@RequestParam("lectureId") int id){
-        lectureAdminService.deleteLecture(id);
-        return "redirect:/admin/lecture";
+    @PostMapping("/delete/{lectureId}")
+    @ResponseBody
+    public ResponseEntity<?> deleteLecture(@PathVariable("lectureId") int lectureId){
+        try {
+            lectureAdminService.deleteLecture(lectureId);
+            return ResponseEntity.ok(Map.of("success", true));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", e.getMessage()
+            ));
+        }
     }
 
     @GetMapping("/edit")

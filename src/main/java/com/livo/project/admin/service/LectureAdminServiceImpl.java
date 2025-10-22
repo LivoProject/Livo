@@ -43,17 +43,12 @@ public class LectureAdminServiceImpl implements LectureAdminService {
     }
 
     @Override
-    public boolean deleteLecture(int lectureId) {
-        if (!lectureRepository.existsById(lectureId)) {
-            return false;
-        }
-        try{
-            lectureRepository.deleteById(lectureId);
-            return true;
-        }catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void deleteLecture(int lectureId) {
+        // 1. 관련 챕터 먼저 삭제 (외래키 제약 방지)
+        chapterListRepository.deleteByLecture_LectureId(lectureId);
+
+        // 2. 강의 삭제
+        lectureRepository.deleteById(lectureId);
     }
 
     @Override
@@ -115,14 +110,53 @@ public class LectureAdminServiceImpl implements LectureAdminService {
         Lecture savedLecture = lectureRepository.save(lecture);
 
         // 챕터 저장 로직
-        if (request.getChapters() != null && !request.getChapters().isEmpty()) {
-            for (ChapterList c : request.getChapters()) {
+        List<ChapterList> chapters = request.getChapters();
+        if (chapters != null && !chapters.isEmpty()) {
+            for (ChapterList c : chapters) {
                 c.setLecture(savedLecture);
-                chapterListRepository.save(c);
             }
+            chapterListRepository.saveAll(chapters);
+            updateLectureThumbnail(savedLecture.getLectureId(), chapters);
         }
 
         return savedLecture;
+    }
+    private void updateLectureThumbnail(int lectureId, List<ChapterList> chapters) {
+        if (chapters == null || chapters.isEmpty()) return;
+
+        String firstUrl = chapters.get(0).getYoutubeUrl();
+        String videoId = extractVideoId(firstUrl);
+        if (videoId == null) return;
+
+        String thumbnailUrl = "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
+
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found: " + lectureId));
+
+        lecture.setThumbnailUrl(thumbnailUrl);
+        lectureRepository.save(lecture);
+    }
+
+    private String extractVideoId(String url) {
+        if (url == null || url.isEmpty()) return null;
+        try {
+            if (url.contains("watch?v=")) {
+                String idPart = url.substring(url.indexOf("watch?v=") + 8);
+                return idPart.split("[&?]")[0]; // ?si= 등 제거
+            }
+            if (url.contains("youtu.be/")) {
+                String idPart = url.substring(url.indexOf("youtu.be/") + 9);
+                return idPart.split("[&?]")[0];
+            }
+            if (url.contains("embed/")) {
+                String idPart = url.substring(url.indexOf("embed/") + 6);
+                return idPart.split("[&?]")[0];
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
