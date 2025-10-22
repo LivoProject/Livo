@@ -12,5 +12,5 @@ public interface  MypageReviewRepository extends JpaRepository <Review,Integer> 
 
     // 내 리뷰 조회
     @Query("SELECT r FROM Review r WHERE r.reservation.email = :email")
-    Page<Review> findAllByEmail(@Param("email") String email, Pageable pageable);
+    Page<Review> findAllByEmail(@Param("email") String email, @Param("provider") String provider, Pageable pageable);
 }

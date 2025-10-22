@@ -32,7 +32,7 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
                     WHERE ll.email = :email
                     """,
             nativeQuery = true)
-    Page<Lecture> findLikedLecturesByEmail(@Param("email") String email, Pageable pageable);
+    Page<Lecture> findLikedLecturesByEmail(@Param("email") String email, @Param("provider") String provider, Pageable pageable);
 
     // 좋아요한 강좌 최신 2개
     @Query(value = """
@@ -43,12 +43,12 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
             ORDER BY ll.createdAt DESC
             LIMIT 2
             """, nativeQuery = true)
-    List<Lecture> findTop2LikedLecturesByEmail(@Param("email") String email);
+    List<Lecture> findTop2LikedLecturesByEmail(@Param("email") String email, @Param("provider") String provider);
 
     // 좋아요 해제
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM lecture_like WHERE lectureId = :lectureId AND email = :email", nativeQuery = true)
-    void deleteLikeByLectureIdAndEmail(@Param("lectureId") Integer lectureId, @Param("email") String email);
+    void deleteLikeByLectureIdAndEmail(@Param("lectureId") Integer lectureId, @Param("email") String email, @Param("provider") String provider);
 
 }
