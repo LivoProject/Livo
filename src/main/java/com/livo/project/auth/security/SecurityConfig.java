@@ -26,6 +26,7 @@ import jakarta.servlet.ServletException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler; //add social
 
 
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -39,7 +40,7 @@ public class SecurityConfig {
 
 
     /**  비밀번호 암호화용 BCrypt 인코더 (DB의 해시와 동일한 알고리즘 사용) */
-   /* @Bean
+   /** @Bean
     public PasswordEncoder passwordEncoder() { // 여기서 사용 안함
         return new BCryptPasswordEncoder();
     }*/
@@ -121,14 +122,20 @@ public class SecurityConfig {
     @Bean
     public AuthenticationFailureHandler oauthFailureHandler() {
         return (request, response, ex) -> {
-            // 이메일 충돌 시 사용자 선택 페이지로
-            if (ex instanceof org.springframework.security.oauth2.core.OAuth2AuthenticationException e
-                    && "account_conflict".equals(e.getError().getErrorCode())) {
-                response.sendRedirect("/auth/link-account");
-            } else {
-                response.sendRedirect("/auth/login?error");
+            if (ex instanceof org.springframework.security.oauth2.core.OAuth2AuthenticationException e) {
+                String code = e.getError().getErrorCode();
+                if ("account_link_required".equals(code) || "account_conflict".equals(code)) { // ★ 수정
+                    response.sendRedirect("/auth/link-account");
+                    return;
+                }
             }
+            response.sendRedirect("/auth/login?error");
         };
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler loginSuccessHandler() {
+        return new LoginSuccessHandler();
     }
 
 
@@ -169,7 +176,7 @@ public class SecurityConfig {
                                 "/api/lectures/**", "/api/courses/**", // 강좌 조회 API(GET 요청용)
                                 "/favicon.ico", "/error",           // 에러, 파비콘
                                 "/commom/ui-guide", "/common/ui-guide/**",
-                                "/admin/**",
+                               // "/admin/**",
                                 //  로그인/회원가입 페이지 및 처리
                                 "/auth/login",
                                 "/auth/register",
@@ -243,7 +250,8 @@ public class SecurityConfig {
                                 .oidcUserService(customOidcUserService) // ★ OIDC(Google openid) 경로
                                 .userService(customOAuth2UserService)   // ★ OAuth2(pure) 경로
                         )
-                        .successHandler(roleBasedSuccessHandler())
+                        //.successHandler(roleBasedSuccessHandler())
+                        .successHandler(loginSuccessHandler())
                         .failureHandler(oauthFailureHandler())
                 )
 
@@ -263,7 +271,8 @@ public class SecurityConfig {
                         .usernameParameter("email")
                         .passwordParameter("password")
                         //.defaultSuccessUrl("/", true)
-                        .successHandler(roleBasedSuccessHandler())
+                        //.successHandler(roleBasedSuccessHandler())
+                        .successHandler(loginSuccessHandler())
                         .failureUrl("/auth/login?error")
                         .permitAll()
                 )

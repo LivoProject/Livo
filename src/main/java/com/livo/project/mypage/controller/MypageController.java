@@ -1,14 +1,15 @@
 package com.livo.project.mypage.controller;
 
-import com.livo.project.auth.security.AppUserDetails;
+
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.security.core.Authentication;
 
 /**
  * 마이페이지 컨트롤러
@@ -24,34 +25,30 @@ public class MypageController {
 
     /** 마이페이지 메인 */
     @GetMapping
-    public String home(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        // 로그인 체크 (앱 로그인 페이지 경로에 맞춰서)
-        if (userDetails == null) return "redirect:/auth/login";
+    public String home(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            return "redirect:/auth/login";
+        }
 
-        MypageDto mypageDto = mypageService.getUserData();   // ✅ email 안 넘김
-        model.addAttribute("mypage", mypageDto);
-        model.addAttribute("notices", mypageDto.getNotices());
-        model.addAttribute("recommendedLectures", mypageDto.getRecommendedLectures());
+        MypageDto dto = mypageService.getUserData(); // ← 파라미터 없이 호출
+        model.addAttribute("mypage", dto);
+        model.addAttribute("notices", dto.getNotices());
+        model.addAttribute("recommendedLectures", dto.getRecommendedLectures());
         return "mypage/index";
     }
 
     /** 내 정보 화면 */
     @GetMapping("/info")
-    public String info(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        if (userDetails == null) return "redirect:/auth/login";
+    public String info(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            return "redirect:/auth/login";
+        }
 
-        MypageDto mypage = mypageService.getUserData();      // ✅ email 안 넘김
-        model.addAttribute("mypage", mypage);
+        model.addAttribute("mypage", mypageService.getUserData()); // ← 동일
         return "mypage/info";
     }
-
-    /** 내 정보 수정 */
-    @PostMapping("/update")
-    public String updateProfile(@ModelAttribute MypageDto mypageDto) {
-        mypageService.updateUserProfile(mypageDto);          // ✅ email 안 넘김
-        return "redirect:/mypage/info";
-    }
-
     // 내 강좌 페이지 이동
     @GetMapping("/lecture")
     public String lecture() {

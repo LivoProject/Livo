@@ -17,8 +17,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 마이페이지 서비스
@@ -34,18 +41,100 @@ public class MypageService {
     private final MypageNoticeRepository mypageNoticeRepository;
     private final MypageLectureRepository mypageLectureRepository;
 
-    // 마이페이지 기본 데이터 조회
-    public MypageDto getUserData() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((AppUserDetails) auth.getPrincipal()).getId();
+    /** 현재 인증 정보에서 (provider, providerId) 또는 id 추출 */
+    private ResolvedPrincipal resolveCurrent() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null)
+            throw new RuntimeException("인증 정보가 없습니다.");
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        Object principal = auth.getPrincipal();
+
+        // 1) LOCAL
+        if (principal instanceof AppUserDetails aud) {
+            return ResolvedPrincipal.builder()
+                    .userId(aud.getId())
+                    .provider("LOCAL")
+                    .providerId(aud.getUsername()) // 현 구조: providerId=email
+                    .email(aud.getUsername())
+                    .build();
+        }
+
+        // 2) OIDC (Google 등)
+        if (principal instanceof OidcUser oidc) {
+            String email = oidc.getEmail();
+            String providerId = oidc.getSubject(); // sub
+            String provider = "GOOGLE";
+            if (auth instanceof OAuth2AuthenticationToken tok) {
+                provider = tok.getAuthorizedClientRegistrationId().toUpperCase(); // google -> GOOGLE
+            }
+            return ResolvedPrincipal.builder()
+                    .provider(provider)
+                    .providerId(providerId)
+                    .email(email)
+                    .build();
+        }
+
+        // 3) OAuth2 (Kakao/Naver)
+        if (principal instanceof DefaultOAuth2User ou) {
+            var attrs = ou.getAttributes();
+            String providerId = null;
+
+            if (attrs.get("id") != null) {
+                providerId = String.valueOf(attrs.get("id"));               // kakao
+            } else if (attrs.get("response") instanceof Map<?,?> resp && resp.get("id") != null) {
+                providerId = String.valueOf(resp.get("id"));               // naver
+            }
+
+            String email = null;
+            if (attrs.get("email") != null) {
+                email = String.valueOf(attrs.get("email"));
+            } else if (attrs.get("kakao_account") instanceof Map<?,?> ka && ka.get("email") != null) {
+                email = String.valueOf(ka.get("email"));
+            }
+
+            String provider = "OAUTH2";
+            if (auth instanceof OAuth2AuthenticationToken tok) {
+                provider = tok.getAuthorizedClientRegistrationId().toUpperCase(); // KAKAO/NAVER
+            }
+
+            return ResolvedPrincipal.builder()
+                    .provider(provider)
+                    .providerId(providerId)
+                    .email(email)
+                    .build();
+        }
+
+        throw new RuntimeException("지원하지 않는 principal 타입: " + principal.getClass().getName());
+    }
+    /** 공통: 현재 로그인 사용자 로드 */
+    private User loadCurrentUser() {
+        ResolvedPrincipal rp = resolveCurrent();
+
+        // PK가 있으면 가장 빠르고 확실
+        if (rp.getUserId() != null) {
+            return userRepository.findById(rp.getUserId())
+                    .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        }
+
+        // 소셜은 (provider, providerId)로 유일성 보장
+        if (rp.getProvider() != null && rp.getProviderId() != null) {
+            return userRepository.findByProviderAndProviderId(rp.getProvider(), rp.getProviderId())
+                    .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        }
+
+        // 혹시 모를 예외적인 케이스 대비(비권장): 이메일만으로는 위험
+        throw new RuntimeException("사용자 식별에 실패했습니다.");
+    }
+
+    // ================== 여기부터 기존 메서드 대체 ==================
+
+    /** 마이페이지 기본 데이터 조회 */
+    public MypageDto getUserData() {
+        User user = loadCurrentUser();
+
         // 공지사항
         List<Notice> notices = mypageNoticeRepository.findTop5ByOrderByCreatedAtDesc();
-        List<NoticeDto> noticeDtos = notices.stream()
-                .map(NoticeDto::fromEntity)
-                .toList();
+        List<NoticeDto> noticeDtos = notices.stream().map(NoticeDto::fromEntity).toList();
 
         // 추천 강좌
         List<Lecture> recommended = mypageLectureRepository.findRandomLectures();
@@ -64,49 +153,33 @@ public class MypageService {
                 .build();
     }
 
-    /** 프로필 수정 (ID 기반) */
+    /** 프로필 수정 */
     @Transactional
     public void updateUserProfile(MypageDto dto) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((AppUserDetails) auth.getPrincipal()).getId();
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        User user = loadCurrentUser();
 
         if (dto.getNickname() != null && !dto.getNickname().isBlank()) user.setNickname(dto.getNickname());
         if (dto.getPhone() != null && !dto.getPhone().isBlank())       user.setPhone(dto.getPhone());
-
-        // birth: DTO가 LocalDate면 그대로, String만 있다면 주석처럼 파싱
-        if (dto.getBirth() != null) {
-            user.setBirth(dto.getBirth());
-        }
-        // if (dto.getBirthStr() != null && !dto.getBirthStr().isBlank()) {
-        //     user.setBirth(LocalDate.parse(dto.getBirthStr()));
-        // }
-
+        if (dto.getBirth() != null)                                    user.setBirth(dto.getBirth());
         if (dto.getUsername() != null && !dto.getUsername().isBlank()) user.setName(dto.getUsername());
-
-        // 성별: 리플렉션 제거, enum 직접 매핑
         if (dto.getGender() != null && !dto.getGender().isBlank()) {
-            try {
-                user.setGender(User.Gender.valueOf(dto.getGender().trim().toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                log.warn("잘못된 gender 값: {}", dto.getGender());
-            }
+            try { user.setGender(User.Gender.valueOf(dto.getGender().trim().toUpperCase())); }
+            catch (IllegalArgumentException e) { log.warn("잘못된 gender 값: {}", dto.getGender()); }
         }
 
         userRepository.save(user);
-        log.info("사용자 정보 수정 완료: id={}", userId);
+        log.info("사용자 정보 수정 완료: id={}", user.getId());
     }
 
-    //  비밀번호 변경 (ID 기반)
+    /** 비밀번호 변경 (LOCAL만 가능하도록 가드하는 게 보통 안전) */
     @Transactional
     public void updateUserPassword(String currentPassword, String newPassword) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((AppUserDetails) auth.getPrincipal()).getId();
+        User user = loadCurrentUser();
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        // 소셜 계정은 비밀번호가 없거나 의미가 다를 수 있으니 가드
+        if (!"LOCAL".equalsIgnoreCase(user.getProvider())) {
+            throw new RuntimeException("소셜 로그인 계정은 비밀번호를 변경할 수 없습니다.");
+        }
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new RuntimeException("현재 비밀번호가 올바르지 않습니다.");
@@ -114,6 +187,16 @@ public class MypageService {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        log.info("비밀번호 변경 완료: id={}", userId);
+        log.info("비밀번호 변경 완료: id={}", user.getId());
+    }
+
+    // ===== 내부 클래스 =====
+    @lombok.Builder
+    @lombok.Getter
+    private static class ResolvedPrincipal {
+        private final Long userId;       // 로컬(AppUserDetails)일 때만 바로 채워짐
+        private final String provider;   // LOCAL / GOOGLE / KAKAO / NAVER ...
+        private final String providerId; // LOCAL: email, GOOGLE: sub, KAKAO/NAVER: id
+        private final String email;
     }
 }

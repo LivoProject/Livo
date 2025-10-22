@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-//import org.springframework.security.oauth2.core.oidc.user.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,97 +25,100 @@ import java.util.*;
 public class CustomOidcUserService extends OidcUserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // ★ BCrypt 주입
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser oidc = super.loadUser(userRequest);
 
-        // 1) 공급자/클레임
-        String provider = Optional.ofNullable(userRequest.getClientRegistration().getRegistrationId())
-                .orElse("UNKNOWN").toUpperCase(Locale.ROOT); // GOOGLE/KAKAO/NAVER
+        //  기본 정보 추출
+        String provider = userRequest.getClientRegistration().getRegistrationId().toUpperCase(Locale.ROOT); // GOOGLE 등
         Map<String, Object> claims = new HashMap<>(oidc.getClaims());
-        String providerId  = asString(claims.get("sub"));              // 필수
-        String email       = Optional.ofNullable((String) claims.get("email"))
-                .map(s -> s.toLowerCase(Locale.ROOT)).orElse(null);
-        String displayName = (claims.get("name") instanceof String s && !s.isBlank()) ? s : "user";
+        String providerId = asString(claims.get("sub"));
+        String email = (String) claims.get("email");
+        String displayName = (String) claims.getOrDefault("name", "user");
 
         if (providerId == null || providerId.isBlank()) {
             throw new OAuth2AuthenticationException("invalid_provider_id");
         }
 
-        // 2) 1순위: provider + providerId
+        log.info("[OIDC] 로그인 요청: provider={} providerId={} email={}", provider, providerId, email);
+
+        //  provider + providerId 기준으로만 식별
         User user = userRepository.findByProviderAndProviderId(provider, providerId).orElse(null);
         boolean isNew = false;
 
-        if (user == null && email != null) {
-            // 3) 2순위: email (이메일 전역 유니크 유지)
-            user = userRepository.findByEmail(email).orElse(null);
-
-            if (user != null) {
-                // 이미 이메일로 존재 → 자동 연결 정책
-                // - provider가 비어있거나 같은 provider면 providerId 세팅
-                // - 다른 provider로 이미 연결돼 있으면 자동 병합 금지 (보안)
-                if (user.getProvider() == null || user.getProvider().equalsIgnoreCase(provider)) {
-                    user.setProvider(provider);
-                    user.setProviderId(providerId);
-                    user.setEmailVerified(true);
-                    if (user.getEmailVerifiedAt() == null) user.setEmailVerifiedAt(LocalDateTime.now());
-                    userRepository.save(user);
-                    log.info(" [OIDC] 기존 이메일 계정에 공급자 연결: email={}, provider={}", email, provider);
-                } else {
-                    throw new OAuth2AuthenticationException(
-                            new org.springframework.security.oauth2.core.OAuth2Error("account_link_required"),
-                            "해당 이메일은 다른 로그인 방식과 이미 연결되어 있습니다. 로그인 후 '계정 연결'에서 연동하세요."
-                    );
-                }
-            }
-        }
-
         if (user == null) {
-            // 4) 정말로 신규
             isNew = true;
+
+            //  닉네임 중복 방지 추가
+            String baseNickname = (displayName != null && !displayName.isBlank())
+                    ? displayName
+                    : "user";
+            String uniqueNickname = generateUniqueNickname(baseNickname, provider);
+
             user = User.builder()
                     .provider(provider)
                     .providerId(providerId)
-                    .email(email) // null 허용
+                    .email(email)
                     .password(passwordEncoder.encode(UUID.randomUUID().toString()))
                     .name(displayName)
-                    .nickname(displayName)
+                    .nickname(uniqueNickname)   //  변경
                     .status(true)
                     .emailVerified(email != null)
                     .emailVerifiedAt(email != null ? LocalDateTime.now() : null)
                     .roleId(1)
                     .build();
             userRepository.save(user);
-            log.info(" [OIDC] 신규 소셜 유저 생성: provider={} providerId={} email={}", provider, providerId, email);
+            log.info(" [OIDC] 신규 소셜 유저 생성: provider={} providerId={} email={} nickname={}",
+                    provider, providerId, email, uniqueNickname);
         } else {
-            // 5) 선택 동기화 (필요 시)
+            //  기존 유저 정보 갱신
             boolean changed = false;
-            if (!Objects.equals(user.getName(), displayName)) { user.setName(displayName); changed = true; }
-            if (!Objects.equals(user.getNickname(), displayName)) { user.setNickname(displayName); changed = true; }
-            if (email != null && !Objects.equals(user.getEmail(), email)) { user.setEmail(email); changed = true; }
-            if (!Boolean.TRUE.equals(user.getEmailVerified()) && email != null) {
-                user.setEmailVerified(true);
-                if (user.getEmailVerifiedAt() == null) user.setEmailVerifiedAt(LocalDateTime.now());
+            if (displayName != null && !displayName.equals(user.getName())) {
+                user.setName(displayName);
+                user.setNickname(displayName);
                 changed = true;
             }
-            if (changed) userRepository.save(user);
-            log.info(" [OIDC] 기존 소셜 유저 동기화: id={} email={}", user.getId(), user.getEmail());
+            if (email != null && (user.getEmail() == null || !email.equals(user.getEmail()))) {
+                user.setEmail(email);
+                changed = true;
+            }
+            if (changed) {
+                userRepository.save(user);
+                log.info("[OIDC] 기존 유저 정보 갱신 완료: id={} email={}", user.getId(), user.getEmail());
+            }
         }
 
-        // 6) 권한/리턴
+        //  권한 매핑
         var authorities = List.of(new SimpleGrantedAuthority(mapRole(user.getRoleId())));
+
+        //  Claims 확장 (isNewUser → LoginSuccessHandler에서 사용)
         claims.put("provider", provider);
         claims.put("providerId", providerId);
         claims.put("isNewUser", isNew);
 
-        OidcIdToken idToken = oidc.getIdToken();
-        var userInfo = oidc.getUserInfo();
-        return new DefaultOidcUser(authorities, idToken, userInfo, "sub");
+        //  OIDC 객체 재구성
+        OidcIdToken raw = oidc.getIdToken();
+        Map<String, Object> mergedClaims = new HashMap<>(raw.getClaims());
+        mergedClaims.putAll(claims);
+
+        OidcIdToken mergedIdToken = new OidcIdToken(
+                raw.getTokenValue(),
+                raw.getIssuedAt(),
+                raw.getExpiresAt(),
+                mergedClaims
+        );
+
+        OidcUserInfo mergedUserInfo = new OidcUserInfo(claims);
+
+        return new DefaultOidcUser(authorities, mergedIdToken, mergedUserInfo, "sub");
     }
-    private String asString(Object o) { return o == null ? null : String.valueOf(o); }
+
+    private String asString(Object o) {
+        return o == null ? null : String.valueOf(o);
+    }
 
     private String mapRole(Integer roleId) {
         if (roleId != null) {
@@ -123,5 +126,15 @@ public class CustomOidcUserService extends OidcUserService {
             if (roleId == 2) return "ROLE_MANAGER";
         }
         return "ROLE_USER";
+    }
+    private String generateUniqueNickname(String base, String provider) {
+        String nickname = base;
+        int counter = 1;
+
+        while (userRepository.existsByNickname(nickname)) {
+            nickname = base + "_" + provider.toLowerCase() + counter;
+            counter++;
+        }
+        return nickname;
     }
 }

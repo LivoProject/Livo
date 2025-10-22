@@ -1,11 +1,11 @@
 package com.livo.project.auth.security;
 
-import com.livo.project.auth.domain.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -17,48 +17,38 @@ import java.util.Map;
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
-    public void onAuthenticationSuccess(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
 
-        HttpSession session = request.getSession();
-        session.setAttribute("PLAY_BGM_ONCE", Boolean.TRUE); // 메인 브금 1회 재생용 플래그
+        var session = request.getSession(true);
+        session.setAttribute("PLAY_BGM_ONCE", Boolean.TRUE);
 
-        Object principal = authentication.getPrincipal();
-        String redirectUrl = request.getContextPath() + "/";
+        // 역할별 세션 만료
+        var set = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+        int adminSecs = 15 * 60, managerSecs = 30 * 60, userSecs = 60 * 60;
+        if (set.contains("ROLE_ADMIN"))       session.setMaxInactiveInterval(adminSecs);
+        else if (set.contains("ROLE_MANAGER")) session.setMaxInactiveInterval(managerSecs);
+        else                                   session.setMaxInactiveInterval(userSecs);
 
+        String redirect;
         try {
-            //  (1) OAuth2User일 경우 (소셜 로그인)
-            if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-                Map<String, Object> attrs = oAuthUser.getAttributes();
-                String provider = (String) attrs.get("provider");
-                String providerId = (String) attrs.get("providerId");
-                Boolean isNewUser = (Boolean) attrs.get("isNewUser");
-
-                log.info("소셜 로그인 성공: provider={} providerId={} isNew={}", provider, providerId, isNewUser);
-
-                // 이메일이 없거나 신규 가입이면 온보딩 페이지로
-                if (isNewUser != null && isNewUser) {
-                    redirectUrl = request.getContextPath() + "/onboarding/email";
-                } else {
-                    redirectUrl = request.getContextPath() + "/mypage";
-                }
-            }
-            //  (2) UserDetails (로컬 로그인)
-            else if (principal instanceof UserDetails userDetails) {
-                log.info("로컬 로그인 성공: {}", userDetails.getUsername());
-                redirectUrl = request.getContextPath() + "/"; // 기본 메인
+            // 역할 기반 라우팅만 유지
+            if (set.contains("ROLE_ADMIN")) {
+                redirect = "/admin/dashboard";
+            } else if (set.contains("ROLE_MANAGER")) {
+                redirect = "/manager";
+            } else {
+                // ✅ 일반 사용자(로컬/소셜 모두) → 메인으로
+                redirect = "/";      // /main 으로 보내고 싶으면 "/main" 으로 변경
             }
         } catch (Exception e) {
-            log.error("로그인 성공 후 리다이렉트 처리 중 오류", e);
-            redirectUrl = request.getContextPath() + "/";
+            log.error("성공 후 리다이렉트 결정 중 오류", e);
+            redirect = "/";
         }
 
-        //  (3) 세션에 로그인 시간 기록 (옵션)
-        session.setAttribute("LOGIN_SUCCESS_AT", LocalDateTime.now());
-
-        //  (4) 리다이렉트 실행
-        response.sendRedirect(redirectUrl);
+        String url = request.getContextPath() + redirect;
+        log.info("[LoginSuccessHandler] redirect to {}", url);
+        response.sendRedirect(url);
     }
 }
