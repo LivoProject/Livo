@@ -59,58 +59,90 @@ $(document).ready(function() {
     $parent.on("change", function() {
         loadChildCategories($(this).val());
     });
-});
 
-$("#uploadThumbnailBtn").on("click", function () {
-    const file = $("#thumbnailFile")[0].files[0];
-    if (!file) {
-        alert("파일을 선택해주세요!");
-        return;
-    }
+    $("#lectureEditForm").on("submit", function(e) {
+        e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("lectureId", $("input[name='lectureId']").val());
-    formData.append("file", file);
+        const formData = new FormData(this);
 
-    $.ajax({
-        url: "/admin/lecture/thumbnail/upload",
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (res) {
-            if (res.success) {
-                $("#lectureThumbnailPreview").attr("src", res.thumbnailUrl);
-                alert("썸네일이 업로드되었습니다!");
-            } else {
-                alert("업로드 실패: " + res.message);
+        $.ajax({
+            url: "/admin/lecture/edit",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dateType: "json",
+            success: function(res) {
+                console.log("응답 도착:", res);
+                console.log("success 값:", res.success);
+                if (res.success) {
+                    alert("강의 정보가 수정되었습니다. 챕터 수정 페이지로 이동합니다.");
+                    console.log("이동 시도:", `/admin/chapter/edit?lectureId=${res.lectureId}`);
+                    setTimeout(() => {
+                        window.location.href = `/admin/chapter/edit?lectureId=${res.lectureId}`;
+                    }, 200);
+                } else {
+                    alert("수정 실패: " + res.message);
+                }
+            },
+            error: function(xhr) {
+                console.error("수정 중 오류:", xhr);
+                alert("서버 오류가 발생했습니다.");
             }
-        },
-        error: function (err) {
-            alert("서버 오류가 발생했습니다.");
-            console.error(err);
-        }
+        });
     });
-});
+    $("#uploadThumbnailBtn").on("click", function () {
+        const file = $("#thumbnailFile")[0].files[0];
+        if (!file) {
+            alert("파일을 선택해주세요!");
+            return;
+        }
 
-$("#resetThumbnailBtn").on("click", function () {
-    const lectureId = $("input[name='lectureId']").val();
-    $.ajax({
-        url: "/admin/lecture/thumbnail/reset",
-        type: "POST",
-        data: { lectureId: lectureId },
-        success: function (res) {
-            if (res.success) {
-                $("#lectureThumbnailPreview").attr("src", res.thumbnailUrl);
-                alert("썸네일이 기본 이미지로 복원되었습니다!");
-            } else {
-                alert("복원 실패: " + res.message);
+        const formData = new FormData();
+        formData.append("lectureId", $("input[name='lectureId']").val());
+        formData.append("file", file);
+
+        $.ajax({
+            url: "/admin/lecture/thumbnail/upload",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                if (res.success) {
+                    $("#lectureThumbnailPreview").attr("src", res.thumbnailUrl);
+                    alert("썸네일이 업로드되었습니다!");
+                } else {
+                    alert("업로드 실패: " + res.message);
+                }
+            },
+            error: function (err) {
+                alert("서버 오류가 발생했습니다.");
+                console.error(err);
             }
-        },
-        error: function (err) {
-            alert("서버 오류가 발생했습니다.");
-            console.error(err);
-        }
+        });
     });
-});
 
+    $("#resetThumbnailBtn").on("click", function () {
+        const lectureId = $("input[name='lectureId']").val();
+        $.ajax({
+            url: "/admin/lecture/thumbnail/reset",
+            type: "POST",
+            data: { lectureId: lectureId },
+            success: function (res) {
+                if (res.success) {
+                    $("#lectureThumbnailPreview").attr("src", res.thumbnailUrl);
+                    alert("썸네일이 기본 이미지로 복원되었습니다!");
+                } else {
+                    alert("복원 실패: " + res.message);
+                }
+            },
+            error: function (err) {
+                alert("서버 오류가 발생했습니다.");
+                console.error(err);
+            }
+        });
+    });
+
+
+});
