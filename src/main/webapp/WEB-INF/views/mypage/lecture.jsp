@@ -3,6 +3,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <link rel="stylesheet" href="/css/mypage.css">
+<script src="/js/mypage.js"></script>
 
 
 <!-- 컨텐츠-->
@@ -13,92 +14,87 @@
     <!-- 강의 -->
     <main class="main-content">
         <h3>내 강의실</h3>
-        <div class="lecture-grid">
-            <!-- 카드 1 -->
-            <div class="card">
-                <img
-                    src="https://picsum.photos/400/200?random=1"
-                    class="card-img-top"
-                    alt="강의 썸네일"
-                />
-                <div class="card-body">
-                    <h6 class="fw-bold mb-1">스프링 부트 입문</h6>
-                    <p class="text-muted small mb-2">홍길동 강사</p>
-                    <p class="text-truncate">
-                    스프링 부트를 처음 배우는 입문자용 강의입니다.
-                    </p>
-                    <div class="progress mt-2">
-                    <div class="progress-bar" style="width: 60%"></div>
-                    </div>
-                </div>
-                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                    <div>
-                        <a href="mypage-lecture-view.html" class="btn btn-sm">이어보기</a>
-                        <button class="btn btn-sm btn-primary"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                          수강평 작성
-                        </button>
-                     </div>
-                    <small class="text-muted">9 mins</small>
-                </div>
-            </div>
+        <div class="lecture-grid large">
+            <c:forEach var="reservations" items="${reservations}">
 
-            <!-- 카드 2 -->
-            <div class="card">
-                <img
-                    src="https://picsum.photos/400/200?random=2"
-                    class="card-img-top"
-                    alt="강의 썸네일"
-                />
-                <div class="card-body">
-                    <h6 class="fw-bold mb-1">JavaScript 심화</h6>
-                    <p class="text-muted small mb-2">이민영 강사</p>
-                    <p class="text-truncate">
-                    비동기 처리, ES6 문법 등 자바스크립트의 핵심을 다룹니다.
-                    </p>
-                    <div class="progress mt-2">
-                    <div class="progress-bar" style="width: 30%"></div>
+                <div class="card">
+                    <img
+                            src="${reservations.thumbnailUrl}"
+                            class="card-img-top"
+                            alt="강의 썸네일"
+                    />
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-1">${reservations.title}</h6>
+                        <p class="text-muted small mb-2">${reservations.tutorName}</p>
+                        <div class="progress mt-2">
+                            <div class="progress-bar" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                        <div>
+                            <a href="mypage-lecture-view.html" class="btn btn-sm">이어보기</a>
+                            <button class="btn btn-sm btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                수강평 작성
+                            </button>
+                            <button class="btn-unreserve btn-main"
+                                    data-lecture-id="${reservations.lectureId}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#reserveModal">
+                                예약 취소
+                            </button>
+                        </div>
+                        <small class="text-muted">9 mins</small>
                     </div>
                 </div>
-                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                    <div>
-                        <a href="mypage-lecture-view.html" class="btn btn-sm">이어보기</a>
-                       <button class="btn btn-sm btn-primary"
-                               data-bs-toggle="modal"
-                               data-bs-target="#exampleModal">
-                         수강평 작성
-                       </button>
-                    </div>
-                    <small class="text-muted">15 mins</small>
-                </div>
-            </div>
+            </c:forEach>
 
-            <!-- 카드 3 -->
-            <div class="card">
-                <img
-                    src="https://picsum.photos/400/200?random=3"
-                    class="card-img-top"
-                    alt="강의 썸네일"
-                />
-                <div class="card-body">
-                    <h6 class="fw-bold mb-1">데이터베이스 기초</h6>
-                    <p class="text-muted small mb-2">서준서 강사</p>
-                    <p class="text-truncate">
-                    SQL 문법과 ERD 설계 개념을 중심으로 학습합니다.
-                    </p>
-                    <div class="progress mt-2">
-                    <div class="progress-bar" style="width: 80%"></div>
-                    </div>
-                </div>
-                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+        </div>
 
-                    <small class="text-muted">27 mins</small>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+                <c:if test="${!page.first}">
+                    <li class="page-item">
+                        <a class="page-link" href="?page=${page.number - 1}">이전</a>
+                    </li>
+                </c:if>
+
+                <%-- totalPages가 0일 때는 forEach 실행 안 함 --%>
+                <c:if test="${page.totalPages > 0}">
+                    <c:forEach var="i" begin="0" end="${page.totalPages - 1}">
+                        <li class="page-item ${page.number == i ? 'active' : ''}">
+                            <a class="page-link" href="?page=${i}">${i + 1}</a>
+                        </li>
+                    </c:forEach>
+                </c:if>
+
+                <c:if test="${!page.last}">
+                    <li class="page-item">
+                        <a class="page-link" href="?page=${page.number + 1}">다음</a>
+                    </li>
+                </c:if>
+            </ul>
+        </nav>
+
+        <!-- 모달 -->
+        <div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header"><h5 class="modal-title" id="reserveModalLabel">공통 모달 제목</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                    </div>
+                    <div class="modal-body"> 이곳은 모달 내용입니다.<br> 설명이나 폼, 알림 메시지 등을 넣을 수 있습니다.</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn-main">확인</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+        <!-- // 모달 -->
 
+    </main>
 
 
 </section>

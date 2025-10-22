@@ -1,5 +1,6 @@
 package com.livo.project.lecture.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,12 +19,13 @@ public class ChapterList {
 
     private String chapterName;
     private int chapterOrder;
-    @Column(name = "lectureId", insertable = false, updatable = false)
+    @Column(name = "lectureId")
     private int lectureId;
     private String youtubeUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lectureId")
+    @JoinColumn(name = "lectureId", insertable = false, updatable = false )
+    @JsonIgnore
     private Lecture lecture;
 
     @Lob

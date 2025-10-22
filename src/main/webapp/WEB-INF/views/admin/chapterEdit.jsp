@@ -6,7 +6,7 @@
 
     <div class="container-fluid py-4 px-5">
         <div class="form-section">
-            <h5 class="mb-4 fw-bold">2단계: 챕터 등록</h5>
+            <h5 class="mb-4 fw-bold">2단계 챕터 수정</h5>
 
             <div id="chapterContainer" class="sortable">
                 <div class="chapter border rounded p-3 mb-3">
@@ -31,10 +31,10 @@
             </div>
 
             <button type="button" id="addChapterBtn" class="btn btn-outline-secondary mt-3">+ 챕터 추가</button>
-            <button type="button" id="editChapterBtn" class="btn btn-primary mt-3">등록 완료</button>
+            <button type="button" id="editChapterBtn" class="btn btn-primary mt-3">챕터 수정 완료</button>
         </div>
     </div>
 </main>
 </div>
 </body>
-<script src="/js/admin/chapterForm.js"></script>
+<script src="/js/admin/chapterEdit.js"></script>
