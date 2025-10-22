@@ -2,17 +2,21 @@ package com.livo.project.admin.service;
 
 import com.livo.project.faq.domain.Faq;
 import com.livo.project.faq.repository.FaqRepository;
+import com.livo.project.faqPage.repository.FaqPageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class FaqAdminServiceImpl implements FaqAdminService {
     private final FaqRepository faqRepository;
-
+    private final FaqPageRepository faqPageRepository;
     @Override
     public List<Faq> getFaqAll() {
         return faqRepository.findAll();
@@ -26,5 +30,10 @@ public class FaqAdminServiceImpl implements FaqAdminService {
     @Override
     public List<Faq> getFaqTop5() {
         return faqRepository.findTop5ByOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public void deleteFaq(long faqId) {
+        faqPageRepository.deleteById(faqId);
     }
 }
