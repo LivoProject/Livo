@@ -25,7 +25,7 @@ public class ChapterAdminService {
     }
 
     public List<ChapterList> getChaptersByLecture(int lectureId) {
-        return chapterListRepository.findByLectureIdOrderByChapterOrderAsc(lectureId);
+        return chapterListRepository.findByLecture_LectureIdOrderByChapterOrderAsc(lectureId);
     }
 
 

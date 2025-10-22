@@ -27,10 +27,15 @@ public class ReportServiceImpl implements ReportService {
     public void approveReport(int reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() ->new IllegalArgumentException("해당 신고가 존재 하지 않습니다."));
+        int reviewId = report.getReviewUId();
+        //관계끊기 (영속성 문제 방지)
+        report.setReview(null);
+        reportRepository.save(report);
+        //리뷰삭제
+        reviewRepository.deleteById(reviewId);
+        //신고상태 변경
         report.setStatus(Report.Status.COMPLETED);
         reportRepository.save(report);
-
-        reviewRepository.deleteById(report.getReviewUId());
     }
 
     @Override

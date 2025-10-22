@@ -1,6 +1,7 @@
 package com.livo.project.lecture.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,6 +40,7 @@ public class Reservation {
     // Lecture와 연결
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lectureId", referencedColumnName = "lectureId", insertable = false, updatable = false)
+    @JsonIgnore
     private Lecture lecture;
 
     //User랑 연결
