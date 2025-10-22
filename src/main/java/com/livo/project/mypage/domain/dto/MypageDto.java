@@ -28,6 +28,10 @@ public class MypageDto {
     private Long joinDays;
     private Long reservations;
 
+    //소셜용
+    private String provider;
+    private String providerId;
+
     // 공지사항
     private List<NoticeDto> notices;
 

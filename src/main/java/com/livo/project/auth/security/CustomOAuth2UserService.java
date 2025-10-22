@@ -9,16 +9,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -34,29 +31,31 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        String provider = userRequest.getClientRegistration().getRegistrationId(); // google, kakao, naver
+        String provider = userRequest.getClientRegistration().getRegistrationId().toUpperCase(Locale.ROOT);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
         String email = extractEmail(provider, attributes);
         String providerId = extractProviderId(provider, attributes);
         String displayName = extractDisplayName(provider, attributes);
 
-        if (email == null) {
-            log.error("  소셜 로그인 실패: 이메일을 가져오지 못했습니다. provider={}", provider);
-            throw new OAuth2AuthenticationException("email_not_found");
+        if (providerId == null) {
+            throw new OAuth2AuthenticationException("providerId_not_found");
         }
 
-        log.info("  소셜 로그인 요청: provider={} email={}", provider, email);
-        User existing = userRepository.findByEmail(email).orElse(null);
+        log.info("소셜 로그인 요청: provider={} providerId={} email={}", provider, providerId, email);
 
-        if (existing == null) {
-            // 신규 소셜 유저 자동가입
-            String randomPwd = UUID.randomUUID().toString();
-            User newUser = User.builder()
+        // --- ① 기존 유저 조회 (provider + providerId 기준) ---
+        User user = userRepository.findByProviderAndProviderId(provider, providerId).orElse(null);
+        boolean isNew = false;
+
+        // --- ② 신규 유저 생성 (providerId 기준으로 없을 경우만) ---
+        if (user == null) {
+            isNew = true;
+            user = User.builder()
                     .email(email)
-                    .password("{noop}" + randomPwd)
+                    .password(null) // 소셜 로그인은 비밀번호 없음
                     .name(displayName != null ? displayName : "user")
-                    .nickname(displayName != null ? displayName : "user")
+                    .nickname(displayName != null ? displayName : UUID.randomUUID().toString().substring(0, 8))
                     .status(true)
                     .emailVerified(true)
                     .emailVerifiedAt(LocalDateTime.now())
@@ -65,73 +64,69 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .roleId(1)
                     .build();
 
-            userRepository.save(newUser);
-            userRepository.flush(); //  DB 반영 강제 확인용
-            log.info(" 신규 소셜 유저 등록 완료: {} ({})", email, provider);
-
+            userRepository.save(user);
+            log.info("신규 소셜 유저 등록 완료: provider={} providerId={} email={}", provider, providerId, email);
         } else {
-            // 기존 유저면 업데이트
-            log.info(" 기존 유저 로그인: {} (기존 provider={})", email, existing.getProvider());
-
-            boolean providerMismatch =
-                    existing.getProvider() == null
-                            || "local".equalsIgnoreCase(existing.getProvider())
-                            || !provider.equalsIgnoreCase(existing.getProvider());
-
-            if (providerMismatch) {
-                if (existing.getProvider() == null || "local".equalsIgnoreCase(existing.getProvider())) {
-                    existing.setProvider(provider);
-                    existing.setProviderId(providerId);
-                    log.info(" 기존 로컬 계정을 소셜로 연동 완료: {} ({})", email, provider);
-                } else {
-                    session.setAttribute("conflictEmail", email);
-                    session.setAttribute("conflictProvider", provider);
-                    log.warn(" 이메일 충돌: {} (기존 provider={}, 현재={})",
-                            email, existing.getProvider(), provider);
-                    throw new OAuth2AuthenticationException(new OAuth2Error("account_conflict"));
-                }
-            }
-
-            // 이름/닉네임 업데이트
+            // 기존 유저는 정보 갱신
             if (displayName != null && !displayName.isBlank()) {
-                existing.setName(displayName);
-                existing.setNickname(displayName);
-                log.info("  이름/닉네임 업데이트: {} -> {}", email, displayName);
+                user.setName(displayName);
+                user.setNickname(displayName);
             }
-
-            // 인증 상태 갱신
-            existing.setEmailVerified(true);
-            if (existing.getEmailVerifiedAt() == null) {
-                existing.setEmailVerifiedAt(LocalDateTime.now());
+            if (email != null && (user.getEmail() == null || user.getEmail().isBlank())) {
+                user.setEmail(email);
             }
+            user.setEmailVerified(true);
+            if (user.getEmailVerifiedAt() == null)
+                user.setEmailVerifiedAt(LocalDateTime.now());
 
-            // DB 반영
-            log.info("  DB 업데이트 시도: {} (provider={}, providerId={})",
-                    existing.getEmail(), existing.getProvider(), existing.getProviderId());
-            userRepository.save(existing);
-            userRepository.flush(); //   강제 flush
-            log.info("  DB 업데이트 완료: {}", existing.getEmail());
+            userRepository.save(user);
+            log.info("기존 소셜 유저 로그인 성공: provider={} providerId={}", provider, providerId);
         }
 
-        String role = mapRole(existing != null ? existing.getRoleId() : 1);
-        log.info("  최종 권한: {}", role);
+        // --- ③ 권한 매핑 ---
+        String role = mapRole(user.getRoleId());
+
+        // --- ④ nameAttributeKey 계산 ---
+        String nameAttrKey = Optional.ofNullable(
+                userRequest.getClientRegistration()
+                        .getProviderDetails()
+                        .getUserInfoEndpoint()
+                        .getUserNameAttributeName()
+        ).filter(s -> !s.isBlank()).orElse(getDefaultNameAttrKey(provider));
+
+        // --- ⑤ 세션 플래그 저장 ---
+        session.setAttribute("isNewSocialUser", isNew);
+
+        // --- ⑥ enriched attributes 구성 ---
+        Map<String, Object> enriched = new HashMap<>(attributes);
+        enriched.put("isNewUser", isNew);
+        enriched.put("provider", provider);
+        enriched.put("providerId", providerId);
 
         return new DefaultOAuth2User(
                 List.of(new SimpleGrantedAuthority(role)),
-                attributes,
-                "sub"
+                enriched,
+                nameAttrKey
         );
     }
 
+    private String getDefaultNameAttrKey(String provider) {
+        return switch (provider.toUpperCase()) {
+            case "GOOGLE" -> "sub";
+            case "KAKAO", "NAVER" -> "id";
+            default -> "sub";
+        };
+    }
+
     private String extractEmail(String provider, Map<String, Object> attributes) {
-        if ("google".equals(provider)) {
+        if ("GOOGLE".equalsIgnoreCase(provider)) {
             return (String) attributes.get("email");
         }
-        if ("kakao".equals(provider)) {
+        if ("KAKAO".equalsIgnoreCase(provider)) {
             Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
             return account == null ? null : (String) account.get("email");
         }
-        if ("naver".equals(provider)) {
+        if ("NAVER".equalsIgnoreCase(provider)) {
             Map<String, Object> resp = (Map<String, Object>) attributes.get("response");
             return resp == null ? null : (String) resp.get("email");
         }
@@ -139,14 +134,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private String extractProviderId(String provider, Map<String, Object> attributes) {
-        if ("google".equals(provider)) {
+        if ("GOOGLE".equalsIgnoreCase(provider)) {
             return (String) attributes.get("sub");
         }
-        if ("kakao".equals(provider)) {
+        if ("KAKAO".equalsIgnoreCase(provider)) {
             Object id = attributes.get("id");
             return id == null ? null : String.valueOf(id);
         }
-        if ("naver".equals(provider)) {
+        if ("NAVER".equalsIgnoreCase(provider)) {
             Map<String, Object> resp = (Map<String, Object>) attributes.get("response");
             Object id = resp == null ? null : resp.get("id");
             return id == null ? null : String.valueOf(id);
@@ -155,17 +150,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private String extractDisplayName(String provider, Map<String, Object> attributes) {
-        if ("google".equals(provider)) {
+        if ("GOOGLE".equalsIgnoreCase(provider)) {
             return (String) attributes.get("name");
         }
-        if ("kakao".equals(provider)) {
+        if ("KAKAO".equalsIgnoreCase(provider)) {
             Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
             if (account != null && account.containsKey("profile")) {
                 Map<String, Object> profile = (Map<String, Object>) account.get("profile");
                 return (String) profile.get("nickname");
             }
         }
-        if ("naver".equals(provider)) {
+        if ("NAVER".equalsIgnoreCase(provider)) {
             Map<String, Object> resp = (Map<String, Object>) attributes.get("response");
             return resp == null ? null : (String) resp.get("name");
         }

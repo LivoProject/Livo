@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -29,8 +30,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public boolean existsEmail(String email) {
         if (email == null) return false;
-        return users.existsByEmail(email.trim().toLowerCase(Locale.ROOT));
+        return users.existsByEmailIgnoreCaseAndProvider(
+                email.trim().toLowerCase(Locale.ROOT),
+                "LOCAL"
+        );
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -55,8 +60,10 @@ public class UserServiceImpl implements UserService {
         final String phone    = normalizePhone(req.getPhone());
 
         // 사전 중복 체크 (최종 방어는 DB UNIQUE)
-        if (users.existsByEmail(email))      throw new BusinessException("email", "이미 사용 중인 이메일입니다.");
-        if (users.existsByNickname(nickname))throw new BusinessException("nickname", "이미 사용 중인 닉네임입니다.");
+        if (users.existsByEmailIgnoreCaseAndProvider(email, "LOCAL"))
+            throw new BusinessException("email", "이미 사용 중인 이메일입니다.");
+        if (users.existsByNickname(nickname))
+            throw new BusinessException("nickname", "이미 사용 중인 닉네임입니다.");
         if (phone != null && hasExistsByPhone() && users.existsByPhone(phone))
             throw new BusinessException("phone", "이미 사용 중인 전화번호입니다.");
 
@@ -68,6 +75,9 @@ public class UserServiceImpl implements UserService {
         u.setPhone(phone);
         u.setStatus(true);
         u.setRoleId(1);
+
+        u.setProvider("LOCAL");
+        u.setProviderId(UUID.randomUUID().toString());
 
         u.setEmailVerified(true);
         u.setEmailVerifiedAt(java.time.LocalDateTime.now());
@@ -116,25 +126,62 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Optional<User> findByEmail(String email) {
         if (email == null) return Optional.empty();
-        return users.findByEmail(email.trim().toLowerCase(Locale.ROOT));
+        return users.findByEmailIgnoreCaseAndProvider(email.trim().toLowerCase(Locale.ROOT), "LOCAL");
     }
+
 
     // ========== 소셜 계정 연동 ==========
     @Override
     @Transactional
     public void linkSocialAccount(String email, String provider) {
-        User user = users.findByEmail(email)
-                .orElseThrow(() -> new BusinessException("user", "사용자를 찾을 수 없습니다."));
+        final String emailNorm = email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
 
-        user.setProvider(provider); // 예: "google", "kakao", "naver"
-        user.setEmailVerified(true); // 소셜 계정이므로 이메일 인증 상태 true로 변경
-        user.setEmailVerifiedAt(LocalDateTime.now());
+        // 1) 로컬 계정은 provider=LOCAL로 명확히 조회
+        User localUser = users.findByEmailIgnoreCaseAndProvider(emailNorm, "LOCAL")
+                .orElseThrow(() -> new BusinessException("user", "로컬 계정을 찾을 수 없습니다."));
 
-        users.save(user);
-        log.info("[LINK] 계정 연동 완료 - email={}, provider={}", email, provider);
+        // 2) (중요) 소셜 로그인 과정에서 받은 providerId가 반드시 있어야 함
+        //    - 실제에선 SecurityContext 또는 파라미터로 받아오세요.
+        String providerId = obtainProviderIdFromContext(); // TODO 구현
+
+        // 3) 동일 소셜 식별자 존재하면 그걸 '연결'했다고 보고 끝
+        Optional<User> socialOpt = users.findByProviderAndProviderId(provider, providerId);
+        if (socialOpt.isPresent()) {
+            // 필요시 연결 테이블 등록만 하고 return
+            linkUsers(localUser.getId(), socialOpt.get().getId(), provider, providerId); // 선택
+            log.info("[LINK] 이미 존재하는 소셜 계정과 연결 - local={}, social={}", localUser.getId(), socialOpt.get().getId());
+            return;
+        }
+
+        // 4) 소셜 신규 레코드 생성 (이메일 같아도 별도 계정)
+        User social = new User();
+        social.setProvider(provider);              // GOOGLE / KAKAO / NAVER ...
+        social.setProviderId(providerId);          // sub / id 등
+        social.setEmail(emailNorm);                // 제공되면 저장 (없어도 무방)
+        social.setName(localUser.getName());       // 혹은 소셜 프로필명
+        social.setNickname(UUID.randomUUID().toString()); // 닉네임 정책에 맞게
+        social.setStatus(true);
+        social.setRoleId(localUser.getRoleId());   // 정책에 맞게
+        social.setEmailVerified(true);
+        social.setEmailVerifiedAt(LocalDateTime.now());
+        users.save(social);
+
+        // 5) (선택) 연결 테이블에 link 기록
+        linkUsers(localUser.getId(), social.getId(), provider, providerId);
+
+        log.info("[LINK] 로컬-소셜 계정 분리 생성 & 연결 - local={}, social={}, provider={}",
+                localUser.getId(), social.getId(), provider);
     }
 
+    // 예시: 실제 구현은 별도 Repository/Entity 로 만드세요.
+    private void linkUsers(Long localUserId, Long socialUserId, String provider, String providerId) {
+        // user_link 테이블에 INSERT 등
+    }
 
+    private String obtainProviderIdFromContext() {
+        // OAuth2 로그인 흐름에서 받은 sub(id)를 꺼내는 코드로 교체
+        throw new UnsupportedOperationException("providerId 주입 로직을 구현하세요.");
+    }
     // ========== 헬퍼 ==========
     private static String safe(String s) { return s == null ? "" : s.trim(); }
 

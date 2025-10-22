@@ -2,6 +2,7 @@ package com.livo.project.mypage.controller;
 
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
+
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.domain.dto.ReservationDto;
 import com.livo.project.mypage.service.MypageService;
@@ -9,15 +10,19 @@ import com.livo.project.review.domain.Review;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.security.core.Authentication;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,41 +39,39 @@ public class MypageController {
 
     private final MypageService mypageService;
 
-    // 마이페이지 메인
-    @GetMapping
-    public String home(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        if (userDetails == null) return "redirect:/login";
 
-        String email = userDetails.getUsername();
-        MypageDto mypateDto = mypageService.getUserData(email);
+    /** 마이페이지 메인 */
+    @GetMapping
+    public String home(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            return "redirect:/auth/login";
+        }
+
+
+        MypageDto mypateDto = mypageService.getUserData();
 
         model.addAttribute("mypage", mypateDto);
         model.addAttribute("notices", mypateDto.getNotices());
         model.addAttribute("recommendedLectures", mypateDto.getRecommendedLectures());
-        List<Lecture> top2LikedLectures = mypageService.getTop2LikedLectures(email);
-        model.addAttribute("top2LikedLectures", top2LikedLectures);
-        model.addAttribute("fr", top2LikedLectures);
+//        List<Lecture> top2LikedLectures = mypageService.getTop2LikedLectures();
+//        model.addAttribute("top2LikedLectures", top2LikedLectures);
+//        model.addAttribute("fr", top2LikedLectures);
+
         return "mypage/index";
     }
 
-    // 내 정보 조회
+    /** 내 정보 화면 */
     @GetMapping("/info")
-    public String info(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        String email = userDetails.getUsername();
-        MypageDto mypage = mypageService.getUserData(email);
-        model.addAttribute("mypage", mypage);
+    public String info(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            return "redirect:/auth/login";
+        }
+
+        model.addAttribute("mypage", mypageService.getUserData());
         return "mypage/info";
     }
-
-    // 내 정보 수정
-    @PostMapping("/update")
-    public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
-                                @ModelAttribute MypageDto mypageDto) {
-        String email = userDetails.getUsername();
-        mypageService.updateUserProfile(email, mypageDto);
-        return "redirect:/mypage/info";
-    }
-
     // 내 강좌 페이지 이동
     @GetMapping("/lecture")
     public String lecture(@AuthenticationPrincipal UserDetails userDetails,
