@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-    //=============좋아요 해제===========//
+    //=== 좋아요 해제 === //
     const likeModal = document.getElementById('likeModal');
     if (likeModal) {
         const likeModalBody = likeModal.querySelector('.modal-body');
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    //=============예약 취소===========//
+    //=== 예약 취소 === //
     const reserveModal = document.getElementById('reserveModal');
     if (reserveModal) {
         const reserveModalBody = reserveModal.querySelector('.modal-body');
@@ -104,5 +104,40 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    //=== 리뷰 모달 ===//
+    const reviewModal = document.getElementById('reviewModal');
+    const modalReviewContent = document.getElementById('modalReviewContent');
+    const modalReviewStar = document.getElementById('modalReviewStar');
+    const reviewMoreBtn = document.getElementById('reviewMoreBtn');
+    let currentLectureId = null;
+
+    const bsReviewModal = new bootstrap.Modal(reviewModal);
+
+    document.querySelectorAll(".review-card").forEach(card => {
+        card.addEventListener("click", function () {
+            const content = this.dataset.reviewContent;
+            const star = this.dataset.reviewStar;
+            currentLectureId = this.dataset.lectureId;
+
+            modalReviewContent.textContent = content;
+            modalReviewStar.textContent = `별점: ${star} ★`;
+
+            bsReviewModal.show();
+        });
+    });
+
+    // “더보기” → 해당 강좌 상세페이지로 이동
+    reviewMoreBtn.addEventListener("click", function () {
+        if (currentLectureId) {
+            window.location.href = `/lecture/content/${currentLectureId}#review`;
+        }
+    });
+    document.querySelectorAll(".review-card").forEach(card => {
+        card.addEventListener("click", function () {
+            currentLectureId = this.dataset.lectureId;
+            console.log("lectureId:", currentLectureId); // ← 여기에 값 찍히면 완벽
+            bsReviewModal.show();
+        });
+    });
 
 });

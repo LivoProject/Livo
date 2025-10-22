@@ -16,7 +16,7 @@
 
       <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="#">프로필 변경</a></li>
-        <li><a class="dropdown-item" href="#">로그아웃</a></li>
+        <li><button class="dropdown-item" onclick="document.getElementById('logoutForm').submit();">로그아웃</button></li>
       </ul>
     </div>
 

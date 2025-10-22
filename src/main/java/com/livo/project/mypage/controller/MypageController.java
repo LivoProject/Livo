@@ -5,6 +5,7 @@ import com.livo.project.lecture.domain.Reservation;
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.domain.dto.ReservationDto;
 import com.livo.project.mypage.service.MypageService;
+import com.livo.project.review.domain.Review;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -82,7 +83,7 @@ public class MypageController {
 
         return "mypage/lecture";
     }
-    
+
     //내 강좌 예약 취소
     @ResponseBody
     @PostMapping("/lecture/delete")
@@ -150,9 +151,21 @@ public class MypageController {
 
     // 리뷰 페이지 이동
     @GetMapping("/review")
-    public String review() {
+    public String review(@RequestParam(required = false) Integer reviewId,
+                         @AuthenticationPrincipal UserDetails userDetails,
+                         @PageableDefault(size = 6, direction = Sort.Direction.DESC)
+                         Pageable pageable,
+                         Model model
+    ) {
+        String email = userDetails.getUsername();
+
+        Page<Review> reviews = mypageService.getMyReviews(email, pageable);
+        model.addAttribute("reviews", reviews.getContent());
+        model.addAttribute("page", reviews);
+
         return "mypage/review";
     }
+
 
     // 비밀번호 변경 페이지 이동
     @GetMapping("/password")
