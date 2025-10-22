@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface ChapterListRepository extends JpaRepository<ChapterList, Integer> {
     List<ChapterList> findByLectureIdOrderByChapterOrderAsc(int lectureId);
-
+    void deleteByLecture_LectureId(int lectureId);
 }

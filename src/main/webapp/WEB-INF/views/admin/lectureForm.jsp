@@ -92,7 +92,7 @@
                     <textarea id="summernote" name="content"></textarea>
                 </div>
 
-                <button class="btn btn-primary w-sm-100" style="max-width: 200px;">다음 단계</button>
+                <button id="nextStepBtn" class="btn btn-primary w-sm-100" style="max-width: 200px;">다음 단계</button>
             </form>
         </div>
     </div>
