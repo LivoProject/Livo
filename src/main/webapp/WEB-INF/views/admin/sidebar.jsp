@@ -47,6 +47,13 @@
         <hr class="horizontal dark mt-0">
         <div class="navbar-collapse w-auto max-height-vh-100 h-100 ps" id="sidebarMenu">
             <ul class="nav nav-pills flex-column mb-3">
+<<<<<<< HEAD
+                <li class="nav-item"><a href="/admin/dashboard" class="nav-link active"><i class="bi bi-house me-2"></i>대시보드</a></li>
+                <li><a href="/admin/chart" class="nav-link"><i class="bi bi-bar-chart me-2"></i>통계</a></li>
+                <li><a href="/admin/lecture" class="nav-link"><i class="bi bi-people me-2"></i>강의 관리</a></li>
+                <li><a href="/admin/report" class="nav-link"><i class="bi bi-people me-2"></i>신고 처리</a></li>
+                <li><a href="/admin/notice/list" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
+=======
                 <li class="nav-item">
                     <a href="/admin/dashboard" class="nav-link active"><i class="bi bi-house me-2"></i>대시보드</a>
                 </li>
@@ -54,6 +61,7 @@
                 <li><a href="/admin/lecture" class="nav-link"><i class="bi bi-people me-2"></i>강의 관리</a></li>
                 <li><a href="/admin/report" class="nav-link"><i class="bi bi-people me-2"></i>신고 처리</a></li>
                 <li><a href="/admin/notice" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
+>>>>>>> main
                 <li><a href="/admin/faq" class="nav-link"><i class="bi bi-gear me-2"></i>FAQ 관리</a></li>
             </ul>
         </div>
@@ -68,13 +76,22 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
+<<<<<<< HEAD
+            <ul class="nav nav-pills flex-column mb-3">
+=======
             <ul class="nav flex-column">
+>>>>>>> main
                 <li class="nav-item"><a href="/admin/dashboard" class="nav-link active"><i class="bi bi-house me-2"></i>대시보드</a></li>
                 <li><a href="/admin/chart" class="nav-link"><i class="bi bi-bar-chart me-2"></i>통계</a></li>
                 <li><a href="/admin/lecture" class="nav-link"><i class="bi bi-people me-2"></i>강의 관리</a></li>
                 <li><a href="/admin/report" class="nav-link"><i class="bi bi-people me-2"></i>신고 처리</a></li>
+<<<<<<< HEAD
+                <li><a href="/admin/notice/list" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
+=======
                 <li><a href="/admin/notice" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
+>>>>>>> main
                 <li><a href="/admin/faq" class="nav-link"><i class="bi bi-gear me-2"></i>FAQ 관리</a></li>
             </ul>
+
         </div>
     </div>

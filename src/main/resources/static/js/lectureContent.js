@@ -111,10 +111,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
     // =====================================================
-// 📖 후기 더보기 기능 (Load More Reviews)
-// =====================================================
+    // 📖 후기 더보기 기능 (Load More Reviews)
+    // =====================================================
     const loadMoreBtn = document.getElementById("loadMoreBtn");
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener("click", function () {
@@ -196,7 +195,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
     // =====================================================
     // 🚨 리뷰 신고 모달 기능 (Report Modal Section)
     // =====================================================
@@ -211,5 +209,21 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    // =====================================================
+    // 🧭 탭 클릭 시 active 유지 (Anchor Scroll Tab)
+    // =====================================================
+    const tabLinks = document.querySelectorAll('#lectureTab .nav-link');
+    if (tabLinks.length > 0) {
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                tabLinks.forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    }
+
+
+
 
 });

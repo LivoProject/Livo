@@ -5,17 +5,19 @@ import com.livo.project.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -23,75 +25,116 @@ import java.util.UUID;
 public class CustomOidcUserService extends OidcUserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
-    public OidcUser loadUser(OidcUserRequest userRequest) {
-        // 원본 OIDC 사용자 정보 조회
-        OidcUser oidcUser = super.loadUser(userRequest);
+    public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
+        OidcUser oidc = super.loadUser(userRequest);
 
-        String provider   = userRequest.getClientRegistration().getRegistrationId(); // google
-        Map<String, Object> attributes = oidcUser.getAttributes();
+        //  기본 정보 추출
+        String provider = userRequest.getClientRegistration().getRegistrationId().toUpperCase(Locale.ROOT); // GOOGLE 등
+        Map<String, Object> claims = new HashMap<>(oidc.getClaims());
+        String providerId = asString(claims.get("sub"));
+        String email = (String) claims.get("email");
+        String displayName = (String) claims.getOrDefault("name", "user");
 
-        // 표준 OIDC 클레임
-        String email       = (String) attributes.get("email");
-        String providerId  = (String) attributes.get("sub");
-        String displayName = (String) attributes.getOrDefault("name", "user");
-
-        if (email == null) {
-            throw new IllegalStateException("OIDC email not found");
+        if (providerId == null || providerId.isBlank()) {
+            throw new OAuth2AuthenticationException("invalid_provider_id");
         }
 
-        // 신규/기존 사용자 처리 (네 OAuth2UserService와 동일 로직)
-        User existing = userRepository.findByEmail(email).orElse(null);
+        log.info("[OIDC] 로그인 요청: provider={} providerId={} email={}", provider, providerId, email);
 
-        if (existing == null) {
-            String randomPwd = UUID.randomUUID().toString();
-            User newUser = User.builder()
-                    .email(email)
-                    .password("{noop}" + randomPwd)
-                    .name(displayName)
-                    .nickname(displayName)
-                    .status(true)
-                    .emailVerified(true)
-                    .emailVerifiedAt(LocalDateTime.now())
+        //  provider + providerId 기준으로만 식별
+        User user = userRepository.findByProviderAndProviderId(provider, providerId).orElse(null);
+        boolean isNew = false;
+
+        if (user == null) {
+            isNew = true;
+
+            //  닉네임 중복 방지 추가
+            String baseNickname = (displayName != null && !displayName.isBlank())
+                    ? displayName
+                    : "user";
+            String uniqueNickname = generateUniqueNickname(baseNickname, provider);
+
+            user = User.builder()
                     .provider(provider)
                     .providerId(providerId)
+                    .email(email)
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .name(displayName)
+                    .nickname(uniqueNickname)   //  변경
+                    .status(true)
+                    .emailVerified(email != null)
+                    .emailVerifiedAt(email != null ? LocalDateTime.now() : null)
                     .roleId(1)
                     .build();
-            userRepository.saveAndFlush(newUser);
-            log.info(" [OIDC] 신규 소셜 유저 등록: {} ({})", email, provider);
+            userRepository.save(user);
+            log.info(" [OIDC] 신규 소셜 유저 생성: provider={} providerId={} email={} nickname={}",
+                    provider, providerId, email, uniqueNickname);
         } else {
-            boolean needsLink =
-                    existing.getProvider() == null ||
-                            "local".equalsIgnoreCase(existing.getProvider());
-
-            if (needsLink) {
-                existing.setProvider(provider);
-                existing.setProviderId(providerId);
-                log.info(" [OIDC] 기존 로컬 계정에 소셜 연동: {} ({})", email, provider);
-            } else if (!provider.equalsIgnoreCase(existing.getProvider())) {
-                // 다른 소셜과 충돌 시 정책에 따라 처리(여기선 막음)
-                log.warn(" [OIDC] 이메일 충돌: {} (기존={}, 현재={})",
-                        email, existing.getProvider(), provider);
-                throw new IllegalStateException("account_conflict");
+            //  기존 유저 정보 갱신
+            boolean changed = false;
+            if (displayName != null && !displayName.equals(user.getName())) {
+                user.setName(displayName);
+                user.setNickname(displayName);
+                changed = true;
             }
-
-            // 이름/닉네임 업데이트(옵션)
-            existing.setName(displayName);
-            existing.setNickname(displayName);
-            existing.setEmailVerified(true);
-            if (existing.getEmailVerifiedAt() == null) {
-                existing.setEmailVerifiedAt(LocalDateTime.now());
+            if (email != null && (user.getEmail() == null || !email.equals(user.getEmail()))) {
+                user.setEmail(email);
+                changed = true;
             }
-
-            userRepository.saveAndFlush(existing);
-            log.info(" [OIDC] 기존 유저 업데이트 완료: {}", email);
+            if (changed) {
+                userRepository.save(user);
+                log.info("[OIDC] 기존 유저 정보 갱신 완료: id={} email={}", user.getId(), user.getEmail());
+            }
         }
 
-        // 권한 매핑(간단히 ROLE_USER)
-        var authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        // nameAttributeKey는 OIDC에선 "sub" 사용
-        return new DefaultOidcUser(authorities, oidcUser.getIdToken(), oidcUser.getUserInfo(), "sub");
+        //  권한 매핑
+        var authorities = List.of(new SimpleGrantedAuthority(mapRole(user.getRoleId())));
+
+        //  Claims 확장 (isNewUser → LoginSuccessHandler에서 사용)
+        claims.put("provider", provider);
+        claims.put("providerId", providerId);
+        claims.put("isNewUser", isNew);
+
+        //  OIDC 객체 재구성
+        OidcIdToken raw = oidc.getIdToken();
+        Map<String, Object> mergedClaims = new HashMap<>(raw.getClaims());
+        mergedClaims.putAll(claims);
+
+        OidcIdToken mergedIdToken = new OidcIdToken(
+                raw.getTokenValue(),
+                raw.getIssuedAt(),
+                raw.getExpiresAt(),
+                mergedClaims
+        );
+
+        OidcUserInfo mergedUserInfo = new OidcUserInfo(claims);
+
+        return new DefaultOidcUser(authorities, mergedIdToken, mergedUserInfo, "sub");
+    }
+
+    private String asString(Object o) {
+        return o == null ? null : String.valueOf(o);
+    }
+
+    private String mapRole(Integer roleId) {
+        if (roleId != null) {
+            if (roleId == 3) return "ROLE_ADMIN";
+            if (roleId == 2) return "ROLE_MANAGER";
+        }
+        return "ROLE_USER";
+    }
+    private String generateUniqueNickname(String base, String provider) {
+        String nickname = base;
+        int counter = 1;
+
+        while (userRepository.existsByNickname(nickname)) {
+            nickname = base + "_" + provider.toLowerCase() + counter;
+            counter++;
+        }
+        return nickname;
     }
 }

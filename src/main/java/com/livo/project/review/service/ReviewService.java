@@ -19,4 +19,13 @@ public interface ReviewService {
 
     // 리뷰 페이징
     Page<Review> getReviewsByLectureIdPaged(int lectureId, Pageable pageable);
+
+    // 단일 리뷰 조회 (수정 모달용)
+    Review getReviewById(int reviewUId);
+
+    // 리뷰 수정
+    void updateReview(int reviewUId, int reviewStar, String reviewContent, String email);
+
+    // 리뷰 삭제
+    void deleteReview(int reviewUId, String email);
 }

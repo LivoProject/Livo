@@ -28,7 +28,7 @@
                     </div>
                     <div class="card-footer bg-white d-flex justify-content-between align-items-center">
                         <div>
-                            <button class="btn-unlike btn-main" data-lecture-id="${lecture.lectureId}">해제</button>
+                            <button class="btn-unlike btn-main" data-lecture-id="${lecture.lectureId}" data-bs-toggle="modal" data-bs-target="#likeModal">해제</button>
                         </div>
                         <small class="text-muted">9 mins</small>
                     </div>
@@ -36,32 +36,47 @@
             </c:forEach>
         </div>
 
-          <nav aria-label="Page navigation">
+        <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center mt-4">
-              <c:if test="${!page.first}">
-                <li class="page-item">
-                  <a class="page-link" href="?page=${page.number - 1}">이전</a>
-                </li>
-              </c:if>
+                <c:if test="${!page.first}">
+                    <li class="page-item">
+                        <a class="page-link" href="?page=${page.number - 1}">이전</a>
+                    </li>
+                </c:if>
 
-              <%-- totalPages가 0일 때는 forEach 실행 안 함 --%>
-              <c:if test="${page.totalPages > 0}">
-                <c:forEach var="i" begin="0" end="${page.totalPages - 1}">
-                  <li class="page-item ${page.number == i ? 'active' : ''}">
-                    <a class="page-link" href="?page=${i}">${i + 1}</a>
-                  </li>
-                </c:forEach>
-              </c:if>
+                <%-- totalPages가 0일 때는 forEach 실행 안 함 --%>
+                <c:if test="${page.totalPages > 0}">
+                    <c:forEach var="i" begin="0" end="${page.totalPages - 1}">
+                        <li class="page-item ${page.number == i ? 'active' : ''}">
+                            <a class="page-link" href="?page=${i}">${i + 1}</a>
+                        </li>
+                    </c:forEach>
+                </c:if>
 
-              <c:if test="${!page.last}">
-                <li class="page-item">
-                  <a class="page-link" href="?page=${page.number + 1}">다음</a>
-                </li>
-              </c:if>
+                <c:if test="${!page.last}">
+                    <li class="page-item">
+                        <a class="page-link" href="?page=${page.number + 1}">다음</a>
+                    </li>
+                </c:if>
             </ul>
-          </nav>
+        </nav>
 
-
+        <!-- 모달 -->
+        <div class="modal fade" id="likeModal" tabindex="-1" aria-labelledby="likeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header"><h5 class="modal-title" id="likeModalLabel">공통 모달 제목</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                    </div>
+                    <div class="modal-body"> 이곳은 모달 내용입니다.<br> 설명이나 폼, 알림 메시지 등을 넣을 수 있습니다.</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn-main">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // 모달 -->
 
     </main>
 

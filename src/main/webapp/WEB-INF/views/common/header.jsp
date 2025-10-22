@@ -37,21 +37,12 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/reset.css"/>
     <link rel="stylesheet" href="/css/common.css"/>
-      <!-- jQuery 관련 -->
-<%--      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--%>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <!-- Custom js -->
-    <script src="/js/common.js"></script>
 </head>
 <body>
 
 <c:url var="loginUrl" value="/auth/login"/>
 <c:url var="joinUrl" value="/auth/register"/>
 <c:url var="logoutUrl" value="/auth/logout"/>
-
 
 
 <!-- 헤더 -->
@@ -136,7 +127,7 @@
 
                         <!-- ★ 일반 로그인 -->
                         <sec:authorize
-                            access="!(principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User))">
+                                access="!(principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User))">
                           <span>
                             <sec:authentication property="principal.nickname"/>
                           </span>
@@ -147,10 +138,10 @@
                             <sec:csrfInput/>
                         </form>
 
-                        <button type="button"
+                        <span class="logout-button"
                                 onclick="document.getElementById('logoutForm').submit();">
                             <i class="bi bi-box-arrow-right"></i> 로그아웃
-                        </button>
+                        </span>
                     </sec:authorize>
 
                 </div>
@@ -165,11 +156,11 @@
     <h4>배우고 싶은 강좌를 찾아보세요.</h4>
     <form action="${pageContext.request.contextPath}/lecture/search" method="get" class="input-group">
         <input
-            type="text"
-            name="keyword"
-            class="form-control"
-            placeholder="강좌명, 키워드 입력"
-            value="${param.keyword}"/>
+                type="text"
+                name="keyword"
+                class="form-control"
+                placeholder="강좌명, 키워드 입력"
+                value="${param.keyword}"/>
         <button type="submit">
             <i class="bi bi-search"></i>
         </button>
