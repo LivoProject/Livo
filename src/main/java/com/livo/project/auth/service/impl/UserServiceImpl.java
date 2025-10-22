@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         u.setRoleId(1);
 
         u.setProvider("LOCAL");
-        u.setProviderId(email);
+        u.setProviderId(UUID.randomUUID().toString());
 
         u.setEmailVerified(true);
         u.setEmailVerifiedAt(java.time.LocalDateTime.now());

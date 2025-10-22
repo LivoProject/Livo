@@ -27,7 +27,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /** 이메일+프로바이더 기준으로 조회 */
     Optional<User> findByEmailIgnoreCaseAndProvider(String email, String provider);
 
-    // Soft-delete(deletedAt) 사용 중이면 아래 버전으로 사용하세요.
-    // boolean existsByEmailIgnoreCaseAndProviderAndDeletedAtIsNull(String email, String provider);
-    // Optional<User> findByEmailIgnoreCaseAndProviderAndDeletedAtIsNull(String email, String provider);
 }
