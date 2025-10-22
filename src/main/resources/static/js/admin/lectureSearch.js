@@ -117,9 +117,34 @@ document.addEventListener("DOMContentLoaded", () =>{
         searchLectures(0);
     });
 
+    window.deleteLecture = function (lectureId) {
+        if (!confirm("정말로 이 강의를 삭제하시겠습니까?")) return;
 
-
-
-
-
+        $.ajax({
+            url: `/admin/lecture/delete/${lectureId}`,
+            type: "POST",
+            beforeSend: function(xhr) {
+                // CSRF 토큰 설정 (Spring Security 적용 시)
+                const token = $("meta[name='_csrf']").attr("content");
+                const header = $("meta[name='_csrf_header']").attr("content");
+                if (token && header) xhr.setRequestHeader(header, token);
+            },
+            success: function (res) {
+                if (res.success) {
+                    alert("강의가 삭제되었습니다.");
+                    if ($("table tbody tr").length === 1 && currentPage > 0) {
+                        searchLectures(currentPage - 1);
+                    } else {
+                        searchLectures(currentPage);
+                    }
+                } else {
+                    alert("삭제 실패: " + (res.message || "알 수 없는 오류"));
+                }
+            },
+            error: function (xhr) {
+                console.error("삭제 오류:", xhr);
+                alert("삭제 중 오류가 발생했습니다.");
+            }
+        });
+    };
 });

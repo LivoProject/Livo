@@ -113,8 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // 📖 후기 더보기 기능 (Load More Reviews)
-    // =====================================================
+// 📖 후기 더보기 기능 (Load More Reviews)
+// =====================================================
     const loadMoreBtn = document.getElementById("loadMoreBtn");
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener("click", function () {
@@ -126,22 +126,51 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(data => {
                     const container = document.getElementById("reviewList");
 
+                    // ✅ 컨트롤러에서 내려준 로그인 정보 꺼내기
+                    const { isLoggedIn, loggedInUserEmail } = data;
+
+                    // ✅ 후기 목록 추가
                     data.content.forEach(r => {
                         const stars = "⭐".repeat(r.reviewStar) + "☆".repeat(5 - r.reviewStar);
+
+                        // 🚨 신고 버튼 조건 로직
+                        let reportBtn = "";
+                        if (isLoggedIn) {
+                            if (r.userEmail === loggedInUserEmail) {
+                                // 본인 리뷰 → 나의 리뷰 버튼 (비활성화)
+                                reportBtn = `<button class="btn btn-outline-secondary btn-sm" disabled>나의 리뷰</button>`;
+                            } else {
+                                // 로그인 O, 타인 리뷰 → 신고 가능
+                                reportBtn = `
+                                <button class="btn btn-outline-danger btn-sm"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#reportModal"
+                                        data-review-id="${r.reviewUId}">
+                                    🚨 신고
+                                </button>`;
+                            }
+                        } else {
+                            // 로그인 X → 로그인 페이지로 이동
+                            reportBtn = `<a href="/login" class="btn btn-outline-danger btn-sm">🚨 신고</a>`;
+                        }
+
+                        // ✅ 후기 HTML 구성
                         const item = `
-                            <div class="col-md-12 mb-3 fade-in-up">
-                                <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm">
-                                    <h4>${r.userName}</h4>
-                                    <h5>${r.createdAt}</h5>
-                                    <h4>${stars}</h4>
-                                    <h4><strong>${r.reviewContent}</strong></h4>
-                                </div>
+                        <div class="col-md-12 mb-3 fade-in-up">
+                            <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm">
+                                <h4>${r.userName}</h4>
+                                <h5>${r.createdAt}</h5>
+                                <h4>${stars}</h4>
+                                <h4><strong>${r.reviewContent}</strong></h4>
+                                ${reportBtn}
                             </div>
-                        `;
+                        </div>
+                    `;
                         container.insertAdjacentHTML("beforeend", item);
                     });
 
-                    // 부드러운 등장
+                    // ✅ 부드러운 등장 애니메이션
                     document.querySelectorAll(".fade-in-up").forEach(el => {
                         el.style.opacity = 0;
                         el.style.transform = "translateY(20px)";
@@ -152,16 +181,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         }, 50);
                     });
 
-                    // 페이지 증가
+                    // ✅ 페이지 증가 및 버튼 숨김 처리
                     page++;
                     loadMoreBtn.dataset.page = page;
 
-                    // 마지막 페이지면 버튼 숨기기
                     if (data.last) {
                         loadMoreBtn.style.display = "none";
                     }
 
-                    // 스크롤 자동 이동
+                    // ✅ 스크롤 자동 이동
                     loadMoreBtn.scrollIntoView({ behavior: "smooth", block: "center" });
                 })
                 .catch(err => console.error("리뷰 불러오기 오류:", err));

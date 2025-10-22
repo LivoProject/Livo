@@ -20,7 +20,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     Page<Lecture> findByTitleContaining(String keyword, Pageable pageable);
 
     // 카테고리별 검색
-    List<Lecture> findByCategoryId(int categoryId);
+    List<Lecture> findByCategory_CategoryId(int categoryId);
 
     // 상위 카테고리(mainCategory)에 속한 하위 카테고리 강좌까지 조회
     @Query("SELECT l FROM LectureEntity l WHERE l.category.categoryId = :mainCategoryId OR l.category.parent.categoryId = :mainCategoryId")

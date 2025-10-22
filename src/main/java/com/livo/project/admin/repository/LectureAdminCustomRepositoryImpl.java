@@ -39,7 +39,7 @@ public class LectureAdminCustomRepositoryImpl implements LectureAdminCustomRepos
             childCategoryIds.add(search.getCategoryId());
 
             if(!childCategoryIds.isEmpty()){
-                builder.and(lecture.categoryId.in(childCategoryIds));
+                builder.and(lecture.category.categoryId.in(childCategoryIds));
             }
         }
         //키워드
