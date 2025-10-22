@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="text-end mb-3">
-                    <a href="lecture/insert" class="btn btn-success">새 강의 등록</a>
+                    <a href="lecture/insert" id="lecInsert" class="btn btn-success">새 강의 등록</a>
                 </div>
                 <div class="card mb-4">
                     <div class="card-body">

@@ -1,3 +1,9 @@
+const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+$(document).ajaxSend(function(e, xhr, options) {
+    xhr.setRequestHeader(csrfHeader, csrfToken);
+});
 document.addEventListener("DOMContentLoaded", function() {
     // 차트1
     const ctx1 = document.getElementById("chart1").getContext("2d");
@@ -45,5 +51,45 @@ document.addEventListener("DOMContentLoaded", function() {
             }]
         }
     });
+});
+$(document).on('click', '#deleteBtn', function() {
+    const type = $(this).data('type');
+    const id = $(this).data('id');
+    console.log("data-type:" +type);
+    console.log("data-id" + id);
+    if (!confirm('정말 삭제하시겠습니까?')) return;
 
+    $.ajax({
+        url: `/admin/${type}/delete/${id}`,
+        type: 'POST',
+        success: function() {
+            alert('삭제 완료');
+            location.reload();
+        },
+        error: function(err) {
+            console.error(err);
+            alert('삭제 실패');
+        }
+    });
+});
+$(document).on('click', '#editBtn', function() {
+    const type = $(this).data('type');
+    const id = $(this).data('id');
+
+    let url = '';
+    switch (type) {
+        case 'lecture':
+            url = `/admin/lecture/edit?lectureId=${id}`;
+            break;
+        case 'notice':
+            url = `/admin/notice/edit?noticeId=${id}`;
+            break;
+        case 'faq':
+            url = `/admin/faq/edit?faqId=${id}`;
+            break;
+        default:
+            console.error('Unknown type: ',type)
+            return;
+    }
+    window.location.href = url;
 });
