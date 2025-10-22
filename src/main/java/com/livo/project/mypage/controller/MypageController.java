@@ -3,7 +3,13 @@ package com.livo.project.mypage.controller;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.service.MypageService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -67,10 +73,16 @@ public class MypageController {
 
     // 즐겨찾기 페이지 이동
     @GetMapping("/like")
-    public String like(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String like(@AuthenticationPrincipal UserDetails userDetails,
+                       @PageableDefault(size=6, direction = Sort.Direction.DESC)
+                       Pageable pageable,
+                       Model model) {
         String email = userDetails.getUsername();
-        List<Lecture> likedLectures = mypageService.getLikedLectures(email);
-        model.addAttribute("likedLectures", likedLectures);
+
+        Page<Lecture> likedLectures = mypageService.getLikedLectures(email, pageable);
+
+        model.addAttribute("likedLectures", likedLectures.getContent());
+        model.addAttribute("page", likedLectures);
         return "mypage/like";
     }
 

@@ -1,3 +1,8 @@
+$(document).ajaxSend(function (e, xhr, options) {
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+    if (token && header) xhr.setRequestHeader(header, token);
+});
 $(document).ready(function() {
     //무료 강의 처리
     const $price = $('#price');
@@ -55,3 +60,57 @@ $(document).ready(function() {
         loadChildCategories($(this).val());
     });
 });
+
+$("#uploadThumbnailBtn").on("click", function () {
+    const file = $("#thumbnailFile")[0].files[0];
+    if (!file) {
+        alert("파일을 선택해주세요!");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("lectureId", $("input[name='lectureId']").val());
+    formData.append("file", file);
+
+    $.ajax({
+        url: "/admin/lecture/thumbnail/upload",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (res) {
+            if (res.success) {
+                $("#lectureThumbnailPreview").attr("src", res.thumbnailUrl);
+                alert("썸네일이 업로드되었습니다!");
+            } else {
+                alert("업로드 실패: " + res.message);
+            }
+        },
+        error: function (err) {
+            alert("서버 오류가 발생했습니다.");
+            console.error(err);
+        }
+    });
+});
+
+$("#resetThumbnailBtn").on("click", function () {
+    const lectureId = $("input[name='lectureId']").val();
+    $.ajax({
+        url: "/admin/lecture/thumbnail/reset",
+        type: "POST",
+        data: { lectureId: lectureId },
+        success: function (res) {
+            if (res.success) {
+                $("#lectureThumbnailPreview").attr("src", res.thumbnailUrl);
+                alert("썸네일이 기본 이미지로 복원되었습니다!");
+            } else {
+                alert("복원 실패: " + res.message);
+            }
+        },
+        error: function (err) {
+            alert("서버 오류가 발생했습니다.");
+            console.error(err);
+        }
+    });
+});
+

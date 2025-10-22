@@ -45,6 +45,7 @@ public class Lecture {
     private String status;
     private int categoryId;
     private String thumbnailUrl;
+    private boolean customThumbnail;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId", insertable = false, updatable = false)
     private Category category;

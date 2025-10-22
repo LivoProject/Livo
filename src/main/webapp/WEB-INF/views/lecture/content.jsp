@@ -68,7 +68,7 @@
 
             <!-- 오른쪽: 썸네일 -->
             <div class="col-lg-5 text-center">
-                <img src="/img/lecture/lecture_${lecture.lectureId}.jpg"
+                <img src="${lecture.thumbnailUrl}"
                      onerror="this.src='/img/common/no-image.png';"
                      alt="lecture thumbnail"
                      class="img-fluid rounded shadow-sm border"
