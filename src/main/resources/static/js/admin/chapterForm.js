@@ -47,9 +47,12 @@ function updateChapterOrder() {
 }
 // 챕터 데이터 수집
 function collectChapterData() {
+    const lectureId = $("#lectureId").val();
     const chapters = [];
+
     $(".chapter").each(function () {
         chapters.push({
+            lectureId: lectureId,
             chapterName: $(this).find(".chapterName").val(),
             chapterOrder: $(this).find(".chapterOrder").val(),
             youtubeUrl: $(this).find(".youtubeUrl").val(),

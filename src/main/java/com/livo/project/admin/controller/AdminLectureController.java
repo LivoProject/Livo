@@ -118,9 +118,15 @@ public class AdminLectureController {
     }
 
     @PostMapping("/edit")
-    public String editLecture(@RequestParam("categoryId") int categoryId, Lecture lecture){
-        lectureAdminService.updateLecture(lecture, categoryId);
-        return "redirect:/admin/lecture";
+    @ResponseBody
+    public ResponseEntity<?> editLecture(@RequestParam("categoryId") int categoryId, @ModelAttribute Lecture lecture){
+        try{
+            Lecture edited =  lectureAdminService.updateLecture(lecture, categoryId);
+            return ResponseEntity.ok(Map.of("success",true, "lectureId", edited.getLectureId()));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
     }
 
     @GetMapping("/search")
