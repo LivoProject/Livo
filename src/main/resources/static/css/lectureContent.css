@@ -43,5 +43,19 @@
     transform: scale(1.1);
 }
 
+/* ==========================================
+   탭 이동형 (앵커 스크롤)
+   ========================================== */
+
+html {
+    scroll-behavior: smooth;
+}
+
+#lectureTab {
+    z-index: 1000;
+    background-color: #fff; /* 스크롤 시 배경색 유지 */
+    position: sticky;
+    top: 0; /* 상단에 고정 위치 명시 */
+}
 
 
