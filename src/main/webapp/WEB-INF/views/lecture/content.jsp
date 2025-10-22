@@ -3,7 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+<%@ include file="/WEB-INF/views/common/modal.jsp" %>
 <link rel="stylesheet" href="/css/main.css" />
+<link rel="stylesheet" href="/css/lectureContent.css">
 
 <!-- 강좌 상세 페이지 시작 -->
 <section id="sub" class="container" style="margin-top: 100px;">
@@ -47,19 +49,27 @@
                     </button>
 
                     <c:choose>
-                        <%-- 무료 강의인 경우 --%>
-                        <c:when test="${lecture.price == 0}">
-                            <form action="/lecture/enroll/${lecture.lectureId}" method="post" style="display:inline;">
-                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                <button type="submit" class="btn btn-success text-white">바로 수강하기</button>
-                            </form>
+                        <%-- 이미 신청한 강의 --%>
+                        <c:when test="${isEnrolled}">
+                            <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
                         </c:when>
 
-                        <%-- 유료 강의인 경우 --%>
+                        <%-- 아직 신청 안한 경우 --%>
                         <c:otherwise>
-                            <a href="#" class="btn btn-warning text-white">
-                                결제하기
-                            </a>
+                            <c:choose>
+                                <%-- 무료 강의 --%>
+                                <c:when test="${lecture.price == 0}">
+                                    <form action="/lecture/enroll/${lecture.lectureId}" method="post" style="display:inline;">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                        <button type="submit" class="btn btn-success text-white">바로 수강하기</button>
+                                    </form>
+                                </c:when>
+
+                                <%-- 유료 강의 --%>
+                                <c:otherwise>
+                                    <a href="#" class="btn btn-warning text-white">결제하기</a>
+                                </c:otherwise>
+                            </c:choose>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -237,7 +247,7 @@
 
                             <c:otherwise>
                                 <!-- 로그인 X → 로그인 페이지로 이동 -->
-                                <a href="/login" class="btn btn-outline-danger btn-sm">
+                                <a href="/auth/login" class="btn btn-outline-danger btn-sm">
                                     🚨 신고
                                 </a>
                             </c:otherwise>
@@ -293,27 +303,29 @@
             </div>
         </div>
 
-        <!-- 신고 모달 -->
+        <!-- 🚨 리뷰 신고 모달 -->
         <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
 
                     <form action="/lecture/content/${lecture.lectureId}/report" method="post">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <input type="hidden" name="reviewUId" id="reportReviewId">
 
+                        <!-- 모달 헤더 (공용 디자인 유지) -->
                         <div class="modal-header">
                             <h5 class="modal-title" id="reportModalLabel">리뷰 신고</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
                         </div>
 
+                        <!-- 모달 본문 (공용 구조 유지) -->
                         <div class="modal-body">
-                            <p>신고 사유</p>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="reportReason" id="abuse" value="부적절한 언어 사용">
+                            <p>신고 사유를 선택해주세요.</p>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="reportReason" id="abuse" value="부적절한 언어 사용" required>
                                 <label class="form-check-label" for="abuse">부적절한 언어 사용</label>
                             </div>
-                            <div class="form-check">
+                            <div class="form-check mb-2">
                                 <input class="form-check-input" type="radio" name="reportReason" id="spam" value="스팸/광고성 내용">
                                 <label class="form-check-label" for="spam">스팸/광고성 내용</label>
                             </div>
@@ -321,20 +333,28 @@
                                 <input class="form-check-input" type="radio" name="reportReason" id="etc" value="기타">
                                 <label class="form-check-label" for="etc">기타</label>
                             </div>
+
+                            <!-- 기타 직접입력 칸 (기본 숨김) -->
+                            <div id="etcInputBox" class="mt-3" style="display:none;">
+                                <textarea class="form-control" name="customReason" rows="3" placeholder="기타 사유를 입력해주세요."></textarea>
+                            </div>
+
                         </div>
 
+                        <!-- 모달 하단 버튼 (공통 버튼 스타일 적용) -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                            <button type="submit" class="btn btn-primary">신고하기</button>
+                            <button type="button" class="btn-cancel" data-bs-dismiss="modal">취소</button>
+                            <button type="submit" class="btn-main">신고하기</button>
                         </div>
                     </form>
 
                 </div>
             </div>
         </div>
+
     </div>
 </section>
 
-<link rel="stylesheet" href="/css/lectureContent.css">
+<script src="/js/modal.js"></script>
 <script src="/js/lectureContent.js"></script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
