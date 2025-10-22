@@ -48,10 +48,10 @@ public class AdminController {
         return "redirect:/admin/dashboard";
     }
 
-    @GetMapping("/notice")
-    public String showNoticePage(){
-        return "admin/noticePage";
-    }
+//    @GetMapping("/notice")
+//    public String showNoticePage(){
+//        return "admin/noticePage";
+//    }
 
     @GetMapping("/lecture")
     public String showLecturePage(@RequestParam(defaultValue = "0") int page,
