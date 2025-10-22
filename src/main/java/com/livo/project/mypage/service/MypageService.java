@@ -2,11 +2,13 @@ package com.livo.project.mypage.service;
 
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.lecture.domain.Lecture;
-import com.livo.project.lecture.domain.LectureLike;
+import com.livo.project.lecture.domain.Reservation;
+import com.livo.project.lecture.repository.LectureRepository;
 import com.livo.project.mypage.domain.dto.MypageDto;
-import com.livo.project.mypage.repository.MypageLectureLikeRepository;
+import com.livo.project.mypage.domain.dto.ReservationDto;
 import com.livo.project.mypage.repository.MypageLectureRepository;
 import com.livo.project.mypage.repository.MypageNoticeRepository;
+import com.livo.project.mypage.repository.MypageReservationRepository;
 import com.livo.project.mypage.repository.MypageUserRepository;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
@@ -24,7 +26,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 마이페이지 서비스
@@ -39,8 +40,8 @@ public class MypageService {
     private final PasswordEncoder passwordEncoder;
     private final MypageNoticeRepository mypageNoticeRepository;
     private final MypageLectureRepository mypageLectureRepository;
-    private final MypageLectureLikeRepository mypageLikeRepository;
-    //private final MypageLectureRepository mypageLectureRepository;
+    private final MypageReservationRepository mypageReservationRepository;
+    private final LectureRepository lectureRepository;
 
     // 마이페이지 기본 데이터 조회
     public MypageDto getUserData(String email) {
@@ -123,19 +124,41 @@ public class MypageService {
     }
 
 
+    // 좋아요 강의
     public Page<Lecture> getLikedLectures(String email, Pageable pageable) {
         return mypageLectureRepository.findLikedLecturesByEmail(email, pageable);
     }
 
+    // 좋아요 강의 2개
     public List<Lecture> getTop2LikedLectures(String email) {
         return mypageLectureRepository.findTop2LikedLecturesByEmail(email);
     }
 
-
-
+    // 좋아요 해제
     @Transactional
     public void removeLikedLecture(Integer lectureId, String email) {
         mypageLectureRepository.deleteLikeByLectureIdAndEmail(lectureId, email);
     }
+
+
+    // 내 강좌 조회
+    public Page<ReservationDto> getMyReservations(String email, Pageable pageable) {
+        Page<Reservation> reservations = mypageReservationRepository.findAllByEmail(email, pageable);
+
+
+        return reservations.map(r -> {
+            Lecture l = lectureRepository.findById(r.getLectureId()).orElse(null);
+            return (l != null) ? ReservationDto.of(r, l) : null;
+        });
+    }
+
+    // 내 강좌 예약 취소
+    @Transactional
+    public void removeReservationLecture(String email, Integer lectureId) {
+        mypageReservationRepository.deleteByEmailAndLectureId(email,lectureId);
+    }
+
+
+
 }
 
