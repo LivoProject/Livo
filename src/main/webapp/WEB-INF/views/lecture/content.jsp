@@ -11,6 +11,12 @@
     <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
         <div class="row align-items-center">
             <!-- 왼쪽: 텍스트 -->
+            <div class="mb-3">
+                <a href="/lecture/list" class="btn-main">
+                    ← 강좌 목록으로
+                </a>
+            </div>
+
             <div class="col-lg-7 px-4">
                 <h1 class="display-5 fw-bold mb-3">${lecture.title}</h1>
 
