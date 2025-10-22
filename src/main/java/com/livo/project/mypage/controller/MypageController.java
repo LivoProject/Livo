@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -107,19 +108,17 @@ public class MypageController {
 
     @ResponseBody
     @PostMapping("/update")
-    public Map<String, Object> updateUser(MypageDto dto) {
-        Map<String, Object> response = new HashMap<>();
-
+    public Map<String, Object> updateUser(MypageDto dto, RedirectAttributes redirectAttributes) {
+        Map<String, Object> result = new HashMap<>();
         try {
             mypageService.updateUserProfile(dto);
-            response.put("success", true);
-            response.put("message", "회원 정보가 수정되었습니다.");
+            result.put("success", true);
+            result.put("message", "회원 정보가 수정되었습니다.");
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", e.getMessage());
+            result.put("success", false);
+            result.put("message", e.getMessage());
         }
-
-        return response;
+        return result;
     }
 
 
