@@ -113,7 +113,7 @@ public class LectureAdminServiceImpl implements LectureAdminService {
         List<ChapterList> chapters = request.getChapters();
         if (chapters != null && !chapters.isEmpty()) {
             for (ChapterList c : chapters) {
-                c.setLecture(savedLecture);
+                c.setLectureId(savedLecture.getLectureId());
             }
             chapterListRepository.saveAll(chapters);
             updateLectureThumbnail(savedLecture.getLectureId(), chapters);
