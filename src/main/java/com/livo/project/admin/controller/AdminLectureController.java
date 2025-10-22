@@ -1,9 +1,11 @@
 package com.livo.project.admin.controller;
 
+import com.livo.project.admin.domain.dto.LectureRequest;
 import com.livo.project.admin.domain.dto.LectureSearch;
 import com.livo.project.admin.service.FileService;
 import com.livo.project.admin.service.LectureAdminService;
 import com.livo.project.lecture.domain.Category;
+import com.livo.project.lecture.domain.ChapterList;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,11 +38,28 @@ public class AdminLectureController {
         return "admin/lectureForm";
     }
 
-    @PostMapping("/save")
+//    @PostMapping("/save")
+//    @ResponseBody
+//    public ResponseEntity<?> saveLecture(@RequestParam("categoryId")int categoryId, @ModelAttribute Lecture lecture){
+//        Lecture saved = lectureAdminService.saveLecture(lecture, categoryId);
+//        return ResponseEntity.ok(Map.of("lectureId", saved.getLectureId()));
+//    }
+
+    @PostMapping(value = "/save", consumes = "multipart/form-data")
     @ResponseBody
-    public ResponseEntity<?> saveLecture(@RequestParam("categoryId")int categoryId, @ModelAttribute Lecture lecture){
-        Lecture saved = lectureAdminService.saveLecture(lecture, categoryId);
-        return ResponseEntity.ok(Map.of("lectureId", saved.getLectureId()));
+    public ResponseEntity<?> saveOrUpdateLecture(@RequestPart("lecture") Lecture lecture,
+                                                 @RequestPart("chapters") List<ChapterList> chapters,
+                                                 @RequestParam("categoryId") int categoryId){
+        LectureRequest request = new LectureRequest();
+        request.setLecture(lecture);
+        request.setChapters(chapters);
+        try{
+            Lecture saved = lectureAdminService.saveOrUpdateLecture(request, categoryId);
+            return ResponseEntity.ok(Map.of("success", true, "lectureId", saved.getLectureId()));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
     }
 
     @PostMapping("/uploadImage")
@@ -59,7 +78,7 @@ public class AdminLectureController {
             Lecture lecture = lectureAdminService.findById(lectureId);
             lecture.setThumbnailUrl(imageUrl);
             lecture.setCustomThumbnail(true);
-            lectureAdminService.saveLecture(lecture,lecture.getCategoryId());
+            lectureAdminService.saveLecture(lecture,lecture.getCategory().getCategoryId());
 
             return ResponseEntity.ok(Map.of(
                     "success",true,

@@ -1,5 +1,6 @@
 package com.livo.project.admin.service;
 
+import com.livo.project.admin.domain.dto.LectureRequest;
 import com.livo.project.admin.domain.dto.LectureSearch;
 import com.livo.project.lecture.domain.Lecture;
 import org.springframework.data.domain.Page;
@@ -22,4 +23,7 @@ public interface LectureAdminService {
     Page<Lecture> searchLecture(LectureSearch search, int page, int pageSize);
 
     List<Lecture> getRecentLectures();
+
+    Lecture saveOrUpdateLecture(LectureRequest request, int categoryId);
+
 }

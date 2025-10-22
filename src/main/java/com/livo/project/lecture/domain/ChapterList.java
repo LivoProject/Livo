@@ -18,12 +18,13 @@ public class ChapterList {
 
     private String chapterName;
     private int chapterOrder;
+    @Column(name = "lectureId", insertable = false, updatable = false)
     private int lectureId;
     private String youtubeUrl;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "lectureId", insertable = false, updatable = false)
-//    private Lecture lecture;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lectureId")
+    private Lecture lecture;
 
     @Lob
     private String content;

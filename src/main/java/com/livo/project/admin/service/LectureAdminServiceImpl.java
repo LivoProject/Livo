@@ -1,9 +1,11 @@
 package com.livo.project.admin.service;
 
+import com.livo.project.admin.domain.dto.LectureRequest;
 import com.livo.project.admin.domain.dto.LectureSearch;
 import com.livo.project.admin.repository.LectureAdminCustomRepositoryImpl;
 import com.livo.project.admin.repository.LectureAdminRepository;
 import com.livo.project.lecture.domain.Category;
+import com.livo.project.lecture.domain.ChapterList;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.repository.ChapterListRepository;
@@ -17,9 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @Transactional
 @RequiredArgsConstructor
-@Service
 public class LectureAdminServiceImpl implements LectureAdminService {
 
     private final CategoryRepository categoryRepository;
@@ -27,6 +29,7 @@ public class LectureAdminServiceImpl implements LectureAdminService {
     private final ChapterListRepository chapterListRepository;
     private final LectureAdminCustomRepositoryImpl lectureCustomRepository;
     private final LectureAdminRepository lectureAdminRepository;
+
     @Override
     public Lecture saveLecture(Lecture lecture, int categoryId) {
         Category category = categoryRepository.findById(categoryId)
@@ -95,6 +98,31 @@ public class LectureAdminServiceImpl implements LectureAdminService {
     @Override
     public List<Lecture> getRecentLectures() {
         return lectureAdminRepository.findTop5ByOrderByLectureIdDesc();
+    }
+
+    @Override
+    public Lecture saveOrUpdateLecture(LectureRequest request, int categoryId) {
+        Lecture lecture = request.getLecture();
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다."));
+        lecture.setCategory(category);
+        // 무료 강의 처리
+        if (lecture.getIsFree()) {
+            lecture.setPrice(0);
+        }
+
+        // 저장 (등록 or 수정)
+        Lecture savedLecture = lectureRepository.save(lecture);
+
+        // 챕터 저장 로직
+        if (request.getChapters() != null && !request.getChapters().isEmpty()) {
+            for (ChapterList c : request.getChapters()) {
+                c.setLecture(savedLecture);
+                chapterListRepository.save(c);
+            }
+        }
+
+        return savedLecture;
     }
 
 }

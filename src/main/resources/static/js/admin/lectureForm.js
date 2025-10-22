@@ -52,28 +52,43 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 강의 등록 AJAX 처리
-    const lectureForm = document.getElementById("lectureForm");
-    if (lectureForm) {
-
-        lectureForm.addEventListener("submit", (e) => {
+    // 강의 폼 데이터 수집
+    function getLectureFormData() {
+        return {
+            title: $('input[name="title"]').val(),
+            tutorName: $('input[name="tutorName"]').val(),
+            tutorInfo: $('textarea[name="tutorInfo"]').val(),
+            totalCount: $('input[name="totalCount"]').val(),
+            price: $('input[name="price"]').val(),
+            isFree: $('#isFree').is(':checked'),
+            reservationStart: $('input[name="reservationStart"]').val(),
+            reservationEnd: $('input[name="reservationEnd"]').val(),
+            lectureStart: $('input[name="lectureStart"]').val(),
+            lectureEnd: $('input[name="lectureEnd"]').val(),
+            content: $('#summernote').val(),
+            category: {
+                categoryId: $('#childCategory').val()
+            }
+        };
+    }
+    // 다음 단계(챕터 등록) 이동 버튼
+    const nextStepBtn = document.getElementById("nextStepBtn");
+    if (nextStepBtn) {
+        nextStepBtn.addEventListener("click", (e) => {
             e.preventDefault();
 
-            const formData = new FormData(lectureForm);
+            const lectureData = getLectureFormData();
 
-            $.ajax({
-                url: '/admin/lecture/save',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(res) {
-                    alert("강의가 등록되었습니다. 다음으로 챕터를 등록하세요!");
-                    window.location.href = `/admin/chapter/form?lectureId=${res.lectureId}`;
-                },
-                error: function(xhr, status, error) {
-                }
-            });
+            if (!lectureData.category.categoryId) {
+                alert("카테고리를 선택해주세요.");
+                return;
+            }
+
+            sessionStorage.setItem('tempLecture', JSON.stringify(lectureData));
+            sessionStorage.setItem('categoryId', lectureData.category.categoryId);
+            console.log("categoryId:", sessionStorage.getItem("categoryId"));
+            alert("챕터 등록 단계로 이동합니다.");
+            location.href = '/admin/chapter/form';
         });
     }
 });
