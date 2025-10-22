@@ -2,34 +2,107 @@ document.addEventListener("DOMContentLoaded", function () {
     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-    // 좋아요 해제
-    document.querySelectorAll(".btn-unlike").forEach(button => {
-        button.addEventListener("click", function () {
-            const lectureId = this.dataset.lectureId;
+    //=============좋아요 해제===========//
+    const likeModal = document.getElementById('likeModal');
+    if (likeModal) {
+        const likeModalBody = likeModal.querySelector('.modal-body');
+        const likeModalTitle = likeModal.querySelector('.modal-title');
+        const likeConfirmBtn = likeModal.querySelector('.btn-main');
+        let likeCurrentLectureId = null;
 
-            if (confirm("좋아요를 해제하시겠습니까?")) {
-                fetch("/mypage/like/delete", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                        [csrfHeader]: csrfToken
-                    },
-                    body: new URLSearchParams({lectureId: lectureId}).toString()
-                })
-                    .then(res => {
-                        if (!res.ok) throw new Error(res.statusText);
-                        return res.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            alert("좋아요가 해제되었습니다.");
-                            this.closest(".card").remove();
-                        } else {
-                            alert("실패: " + data.message);
-                        }
-                    })
-                    .catch(err => alert("실패: " + err.message));
-            }
+        const bsLikeModal = new bootstrap.Modal(likeModal);
+
+        document.querySelectorAll(".btn-unlike").forEach(button => {
+            button.addEventListener("click", function () {
+                likeCurrentLectureId = this.dataset.lectureId;
+                likeModalTitle.textContent = "좋아요 해제";
+                likeModalBody.innerHTML = `선택하신 강의를 좋아요 목록에서<br><strong>정말 해제하시겠습니까?</strong>`;
+                likeConfirmBtn.textContent = "해제";
+                bsLikeModal.show();
+            });
         });
-    });
+
+        likeConfirmBtn.addEventListener("click", function () {
+            if (!likeCurrentLectureId) return;
+
+            fetch("/mypage/like/delete", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    [csrfHeader]: csrfToken
+                },
+                body: new URLSearchParams({lectureId: likeCurrentLectureId}).toString()
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error(res.statusText);
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        likeModalBody.innerHTML = "좋아요가 해제되었습니다.";
+                        likeConfirmBtn.textContent = "닫기";
+                        likeConfirmBtn.onclick = () => window.location.reload();
+                    } else {
+                        likeModalBody.innerHTML = "실패: " + data.message;
+                    }
+                })
+                .catch(err => {
+                    likeModalBody.innerHTML = "에러 발생: " + err.message;
+                });
+
+        });
+    }
+
+    //=============예약 취소===========//
+    const reserveModal = document.getElementById('reserveModal');
+    if (reserveModal) {
+        const reserveModalBody = reserveModal.querySelector('.modal-body');
+        const reserveModalTitle = reserveModal.querySelector('.modal-title');
+        const reserveConfirmBtn = reserveModal.querySelector('.btn-main');
+        let reserveCurrentLectureId = null; // 현재 선택된 lectureId 저장
+
+        const bsReserveModal = new bootstrap.Modal(reserveModal);
+
+        document.querySelectorAll(".btn-unreserve").forEach(button => {
+            button.addEventListener("click", function () {
+                reserveCurrentLectureId = this.dataset.lectureId;
+                reserveModalTitle.textContent = "좋아요 해제";
+                reserveModalBody.innerHTML = `선택하신 강의를 좋아요 목록에서<br><strong>정말 해제하시겠습니까?</strong>`;
+                reserveConfirmBtn.textContent = "해제";
+                bsReserveModal.show();
+            });
+        });
+
+        reserveConfirmBtn.addEventListener("click", function () {
+            if (!reserveCurrentLectureId) return;
+
+            fetch("/mypage/lecture/delete", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    [csrfHeader]: csrfToken
+                },
+                body: new URLSearchParams({lectureId: reserveCurrentLectureId}).toString()
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error(res.statusText);
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        reserveModalBody.innerHTML = "예약이 취소되었습니다.";
+                        reserveConfirmBtn.textContent = "닫기";
+                        reserveConfirmBtn.onclick = () => window.location.reload();
+                    } else {
+                        reserveModalBody.innerHTML = "실패: " + data.message;
+                    }
+                })
+                .catch(err => {
+                    reserveModalBody.innerHTML = "에러 발생: " + err.message;
+                });
+
+        });
+    }
+
+
 });

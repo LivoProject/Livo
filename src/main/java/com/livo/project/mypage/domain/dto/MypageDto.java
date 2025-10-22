@@ -26,6 +26,7 @@ public class MypageDto {
     private String role;
     private String joinDate;
     private Long joinDays;
+    private Long reservations;
 
     // 공지사항
     private List<NoticeDto> notices;
