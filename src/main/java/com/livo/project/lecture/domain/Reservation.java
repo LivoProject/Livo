@@ -36,6 +36,11 @@ public class Reservation {
     private int lectureId; // FK (lecture)
     private String email;  // FK (user)
 
+    // Lecture와 연결
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "lectureId", referencedColumnName = "lectureId", insertable = false, updatable = false)
+    private Lecture lecture;
+
     //User랑 연결
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)

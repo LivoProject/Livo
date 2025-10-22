@@ -6,12 +6,10 @@ import com.livo.project.lecture.domain.Reservation;
 import com.livo.project.lecture.repository.LectureRepository;
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.domain.dto.ReservationDto;
-import com.livo.project.mypage.repository.MypageLectureRepository;
-import com.livo.project.mypage.repository.MypageNoticeRepository;
-import com.livo.project.mypage.repository.MypageReservationRepository;
-import com.livo.project.mypage.repository.MypageUserRepository;
+import com.livo.project.mypage.repository.*;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
+import com.livo.project.review.domain.Review;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +39,7 @@ public class MypageService {
     private final MypageNoticeRepository mypageNoticeRepository;
     private final MypageLectureRepository mypageLectureRepository;
     private final MypageReservationRepository mypageReservationRepository;
+    private final MypageReviewRepository mypageReviewRepository;
     private final LectureRepository lectureRepository;
 
     // 마이페이지 기본 데이터 조회
@@ -158,6 +157,10 @@ public class MypageService {
         mypageReservationRepository.deleteByEmailAndLectureId(email,lectureId);
     }
 
+    // 내 리뷰 조회
+    public Page<Review> getMyReviews(String email, Pageable pageable) {
+        return mypageReviewRepository.findAllByEmail(email, pageable);
+    }
 
 
 }
