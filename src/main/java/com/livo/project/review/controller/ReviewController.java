@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -71,6 +72,7 @@ public class ReviewController {
         // Page<Review> → Page<ReviewDto> 변환
         Page<ReviewDto> dtoPage = reviewPage.map(r -> new ReviewDto(
                 r.getReviewUId(),
+                r.getReservation().getLecture().getLectureId(),
                 r.getReservation().getUser().getName(),
                 r.getReservation().getUser().getEmail(),
                 r.getReviewStar(),
@@ -90,6 +92,40 @@ public class ReviewController {
         response.put("loggedInUserEmail", loggedInUserEmail);
 
         return response;
+    }
+
+    // 단일 리뷰 조회 (수정 모달용)
+    @GetMapping("/review/{reviewUId}")
+    @ResponseBody
+    public ReviewDto getReview(@PathVariable int reviewUId) {
+        Review review = reviewService.getReviewById(reviewUId);
+        return ReviewDto.fromEntity(review);
+    }
+
+    // 리뷰 수정
+    @PostMapping("/review/edit")
+    public String editReview(@RequestParam("reviewUId") int reviewUId,
+                             @RequestParam("reviewStar") int reviewStar,
+                             @RequestParam("reviewContent") String reviewContent,
+                             @AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        reviewService.updateReview(reviewUId, reviewStar, reviewContent, email);
+
+        // lectureId는 DTO 변환에서 사용하므로 다시 redirect 시 필요
+        Review updatedReview = reviewService.getReviewById(reviewUId);
+        int lectureId = updatedReview.getReservation().getLecture().getLectureId();
+
+        return "redirect:/lecture/content/" + lectureId + "#review";
+    }
+
+    // 리뷰 삭제
+    @DeleteMapping("/review/{reviewUId}")
+    @ResponseBody
+    public ResponseEntity<?> deleteReview(@PathVariable int reviewUId,
+                                          @AuthenticationPrincipal UserDetails userDetails) {
+        String email = userDetails.getUsername();
+        reviewService.deleteReview(reviewUId, email);
+        return ResponseEntity.ok().build();
     }
 
 }
