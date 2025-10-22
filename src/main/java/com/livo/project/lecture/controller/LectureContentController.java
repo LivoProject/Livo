@@ -90,13 +90,13 @@ public class LectureContentController {
         return "lecture/content";
     }
 
-    // 무료강의 수강신청 -민영: 이미 신청한 강의일 경우 로직 추가해야해!
+    // 무료강의 수강신청
     @PostMapping("/enroll/{lectureId}")
     public String enrollFreeLecture(@PathVariable int lectureId,
                                     @AuthenticationPrincipal UserDetails userDetails) {
 
         if (userDetails == null) {
-            return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로
+            return "redirect:/auth/login"; // 로그인 안 되어 있으면 로그인 페이지로
         }
 
         String userEmail = userDetails.getUsername();
@@ -104,8 +104,7 @@ public class LectureContentController {
         // 무료강의 수강신청 내역 DB 저장 => 바로 confirmed!
         reservationService.saveReservation(lectureId, userEmail);
 
-        // 마이페이지 리다이렉트
-        return "redirect:/mypage";
+        return "redirect:/lecture/content/" + lectureId + "?enrolled=success";
     }
 
 }
