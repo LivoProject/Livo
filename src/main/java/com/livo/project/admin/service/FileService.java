@@ -13,22 +13,22 @@ import java.util.UUID;
 @Service
 public class FileService {
     private final FileConfig fileConfig;
-
     public String saveFile(MultipartFile file) {
-        try {
-            String uploadDir = fileConfig.getUploadDir();
+        return saveFile(file, "uploads"); // 기본 uploads 폴더로 리다이렉트
+    }
 
+    public String saveFile(MultipartFile file, String folder) {
+        try {
+            String uploadDir = fileConfig.getUploadDir() + "/" + folder;
             File dir = new File(uploadDir);
             if (!dir.exists()) dir.mkdirs();
 
-            // 고유 파일명
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            File dest = new File(uploadDir, fileName);
-
+            File dest = new File(dir, fileName);
             file.transferTo(dest);
 
-            // static 기준으로 접근 가능한 URL 반환
-            return "/img/uploads/" + fileName;
+            // 브라우저에서 접근 가능한 경로 반환
+            return "/img/" + folder + "/" + fileName;
 
         } catch (Exception e) {
             e.printStackTrace();

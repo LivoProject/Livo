@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
@@ -58,24 +59,17 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:forEach var="lecture" items="${recentLectures}" varStatus="status">
                                 <tr>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">Do it! 점프 투 스프링 부트 3</td>
-                                    <td class="text-center">홍길동</td>
+                                    <td class="text-center">${status.index + 1}</td>
+                                    <td class="text-center">${lecture.title}</td>
+                                    <td class="text-center">${lecture.tutorName}</td>
                                     <td class="text-center">
                                         <button class="btn btn-sm btn-outline-primary">수정</button>
                                         <button class="btn btn-sm btn-outline-danger">삭제</button>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="text-center">2</td>
-                                    <td class="text-center">이것이 스프링 부트다 with 자바</td>
-                                    <td class="text-center">김철수</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-sm btn-outline-primary">수정</button>
-                                        <button class="btn btn-sm btn-outline-danger">삭제</button>
-                                    </td>
-                                </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>
@@ -179,14 +173,16 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                 <c:forEach var="faq" items="${recentFaqs}" varStatus="status">
                                 <tr>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">비밀번호를 잊어버렸어요</td>
+                                    <td class="text-center">${status.index + 1}</td>
+                                    <td class="text-center">${faq.question}</td>
                                     <td class="text-center">
                                         <button class="btn btn-sm btn-outline-primary">수정</button>
                                         <button class="btn btn-sm btn-outline-danger">삭제</button>
                                     </td>
                                 </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>

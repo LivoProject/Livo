@@ -1,15 +1,32 @@
 package com.livo.project.mypage.controller;
 
+import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.lecture.domain.Reservation;
 
 import com.livo.project.mypage.domain.dto.MypageDto;
+import com.livo.project.mypage.domain.dto.ReservationDto;
 import com.livo.project.mypage.service.MypageService;
+import com.livo.project.review.domain.Review;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.security.core.Authentication;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 마이페이지 컨트롤러
@@ -31,10 +48,16 @@ public class MypageController {
             return "redirect:/auth/login";
         }
 
-        MypageDto dto = mypageService.getUserData(); // ← 파라미터 없이 호출
-        model.addAttribute("mypage", dto);
-        model.addAttribute("notices", dto.getNotices());
-        model.addAttribute("recommendedLectures", dto.getRecommendedLectures());
+
+        MypageDto mypateDto = mypageService.getUserData();
+
+        model.addAttribute("mypage", mypateDto);
+        model.addAttribute("notices", mypateDto.getNotices());
+        model.addAttribute("recommendedLectures", mypateDto.getRecommendedLectures());
+//        List<Lecture> top2LikedLectures = mypageService.getTop2LikedLectures();
+//        model.addAttribute("top2LikedLectures", top2LikedLectures);
+//        model.addAttribute("fr", top2LikedLectures);
+
         return "mypage/index";
     }
 
@@ -46,26 +69,106 @@ public class MypageController {
             return "redirect:/auth/login";
         }
 
-        model.addAttribute("mypage", mypageService.getUserData()); // ← 동일
+        model.addAttribute("mypage", mypageService.getUserData());
         return "mypage/info";
     }
     // 내 강좌 페이지 이동
     @GetMapping("/lecture")
-    public String lecture() {
+    public String lecture(@AuthenticationPrincipal UserDetails userDetails,
+                          @PageableDefault(size = 6, direction = Sort.Direction.DESC)
+                          Pageable pageable,
+                          Model model) {
+
+        String email = userDetails.getUsername();
+        Page<ReservationDto> reservations = mypageService.getMyReservations(email, pageable);
+        model.addAttribute("reservations", reservations.getContent());
+        model.addAttribute("page", reservations);
+
         return "mypage/lecture";
     }
 
+    //내 강좌 예약 취소
+    @ResponseBody
+    @PostMapping("/lecture/delete")
+    public Map<String, Object> deleteLecture(@AuthenticationPrincipal UserDetails userDetails,
+                                             @RequestParam Integer lectureId) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (userDetails == null) {
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return response;
+        }
+
+        try {
+            String email = userDetails.getUsername();
+            mypageService.removeReservationLecture(email, lectureId);
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+
+        return response;
+    }
+
     // 즐겨찾기 페이지 이동
-    @GetMapping("/bookmark")
-    public String bookmark() {
-        return "mypage/bookmark";
+    @GetMapping("/like")
+    public String like(@AuthenticationPrincipal UserDetails userDetails,
+                       @PageableDefault(size = 6, direction = Sort.Direction.DESC)
+                       Pageable pageable,
+                       Model model) {
+        String email = userDetails.getUsername();
+        Page<Lecture> likedLectures = mypageService.getLikedLectures(email, pageable);
+        model.addAttribute("likedLectures", likedLectures.getContent());
+        model.addAttribute("page", likedLectures);
+        return "mypage/like";
+    }
+
+    // 즐겨찾기 해제
+    @PostMapping("/like/delete")
+    @ResponseBody
+    public Map<String, Object> deleteLike(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam Integer lectureId) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (userDetails == null) {
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return response;
+        }
+
+        try {
+            String email = userDetails.getUsername();
+            mypageService.removeLikedLecture(lectureId, email);
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+
+        return response;
     }
 
     // 리뷰 페이지 이동
     @GetMapping("/review")
-    public String review() {
+    public String review(@RequestParam(required = false) Integer reviewId,
+                         @AuthenticationPrincipal UserDetails userDetails,
+                         @PageableDefault(size = 6, direction = Sort.Direction.DESC)
+                         Pageable pageable,
+                         Model model
+    ) {
+        String email = userDetails.getUsername();
+
+        Page<Review> reviews = mypageService.getMyReviews(email, pageable);
+        model.addAttribute("reviews", reviews.getContent());
+        model.addAttribute("page", reviews);
+
         return "mypage/review";
     }
+
 
     // 비밀번호 변경 페이지 이동
     @GetMapping("/password")

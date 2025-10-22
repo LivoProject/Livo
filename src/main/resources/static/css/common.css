@@ -3,10 +3,11 @@
     --color-white: #fff;
     --color-black: #121212;
     --color-gray: #999;
-    --color-light-gray: #ddd;
+    --color-light-gray: #f8f9fa;
     --color-main: #17b4c7;
     --color-point: #ffcc02;
     --border-black: 1px solid #ddd;
+    --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* 폰트 */
@@ -19,7 +20,6 @@ h3 {
     font-weight: 700;
     margin: 2rem 0;
     position: relative;
-    padding-left: 12px;
 }
 h4 {
     font-size: 1.3rem;
@@ -60,7 +60,8 @@ header .nav-link {
 }
 header .nav-link:hover,
 header .nav-link.active,
-header .header-actions button:hover {
+header .header-actions button:hover,
+header .header-actions .logout-button:hover{
     color: var(--color-main);
 }
 
@@ -88,14 +89,16 @@ header .header-actions a,
 header .header-actions button {
     transition: color 0.3s ease;
 }
-
+header .header-actions .logout-button {
+    transition: 0.3s;
+}
 header .header-actions a:nth-of-type(1),
 header .header-actions span {
     position: relative;
 }
 
 header .header-actions a:nth-of-type(1)::after,
-header .header-actions span::after {
+header .header-actions span:nth-of-type(1)::after {
     content: "";
     right: -12px;
     position: absolute;
@@ -317,6 +320,7 @@ footer p {
 .btn-outline-main {
     padding: 0.7rem 0.9rem;
     border-radius: 0.3rem;
+    font-size: 0.9rem;
     transition: 0.3s;
     display: inline-block;
 }

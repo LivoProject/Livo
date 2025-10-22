@@ -21,8 +21,7 @@ public class ChapterController {
 
     /*챕터 등록*/
     @GetMapping("/form")
-    public String chapterForm(@RequestParam int lectureId, Model model){
-        model.addAttribute("lectureId", lectureId);
+    public String chapterForm(){
         return "admin/chapterForm";
     }
 
@@ -37,5 +36,25 @@ public class ChapterController {
     @ResponseBody
     public List<ChapterList> getChapterList(@PathVariable int lectureId){
         return chapterAdminService.getChaptersByLecture(lectureId);
+    }
+    @GetMapping("/edit")
+    public String editChapterForm(@RequestParam int lectureId, Model model){
+        model.addAttribute("lectureId", lectureId);
+        return "admin/chapterEdit";
+    }
+
+    @PostMapping("/edit")
+    @ResponseBody
+    public ResponseEntity<?> editChapter(@RequestBody List<ChapterList> chapters){
+        try{
+            chapterAdminService.save(chapters);
+            return ResponseEntity.ok(Map.of("success", true));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", e.getMessage()
+            ));
+        }
     }
 }

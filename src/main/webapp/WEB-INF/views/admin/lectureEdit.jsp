@@ -9,11 +9,29 @@
     <!-- 메인 콘텐츠 -->
     <div class="container-fluid py-4 px-5">
         <div class="form-section">
-            <h5 class="mb-4 fw-bold">강의 등록</h5>
+            <h5 class="mb-4 fw-bold">1단계 강의 수정</h5>
 
-            <form action="/admin/lecture/edit" method="post" enctype="multipart/form-data">
+            <form id="lectureEditForm" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <input type="hidden" name="lectureId" value="${lecture.lectureId}"/>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">썸네일</label>
+                    <div class="d-flex align-items-center gap-3">
+                        <img id="lectureThumbnailPreview"
+                             src="${lecture.thumbnailUrl}"
+                             alt="thumbnail"
+                             class="img-thumbnail"
+                             style="width: 180px; height: 100px; object-fit: cover;">
+
+                        <div class="d-flex flex-column gap-2">
+                            <input type="file" id="thumbnailFile" class="form-control" accept="image/*">
+                            <div class="d-flex gap-2">
+                                <button type="button" id="uploadThumbnailBtn" class="btn btn-outline-primary btn-sm">썸네일 업로드</button>
+                                <button type="button" id="resetThumbnailBtn" class="btn btn-outline-secondary btn-sm">기본 썸네일로</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- 기본 정보 -->
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -106,7 +124,7 @@
                     <textarea id="summernote" name="content">${lecture.content}</textarea>
                 </div>
 
-                <button class="btn btn-primary w-sm-100" style="max-width: 200px;">등록하기</button>
+                <button type="submit" class="btn btn-primary w-sm-100" style="max-width: 200px;">저장 후 챕터 수정</button>
             </form>
         </div>
     </div>
@@ -116,8 +134,8 @@
 <!-- Summernote -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
-<script src="/js/lecture.js"></script>
-<script src="/js/lectureEdit.js"></script>
+<script src="/js/admin/lecture.js"></script>
+<script src="/js/admin/lectureEdit.js"></script>
 
 </body>
 </html>

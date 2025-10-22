@@ -1,17 +1,24 @@
 package com.livo.project.mypage.service;
 
 import com.livo.project.auth.domain.entity.User;
+
 import com.livo.project.auth.repository.UserRepository;
 import com.livo.project.auth.security.AppUserDetails;
+
 import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.lecture.domain.Reservation;
+import com.livo.project.lecture.repository.LectureRepository;
 import com.livo.project.mypage.domain.dto.MypageDto;
-import com.livo.project.mypage.repository.MypageLectureRepository;
-import com.livo.project.mypage.repository.MypageNoticeRepository;
+import com.livo.project.mypage.domain.dto.ReservationDto;
+import com.livo.project.mypage.repository.*;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
+import com.livo.project.review.domain.Review;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +34,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Objects;
+
+
 /**
  * 마이페이지 서비스
  * - 유저 데이터 조회 및 수정, 비밀번호 변경 로직 처리
@@ -36,10 +49,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MypageService {
 
-    private final UserRepository userRepository;
+    private final MypageUserRepository mypageUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final MypageNoticeRepository mypageNoticeRepository;
     private final MypageLectureRepository mypageLectureRepository;
+
+    private final MypageReservationRepository mypageReservationRepository;
+    private final MypageReviewRepository mypageReviewRepository;
+    private final LectureRepository lectureRepository;
+    private final UserRepository userRepository;
 
     /** 현재 인증 정보에서 (provider, providerId) 또는 id 추출 */
     private ResolvedPrincipal resolveCurrent() {
@@ -139,6 +157,15 @@ public class MypageService {
         // 추천 강좌
         List<Lecture> recommended = mypageLectureRepository.findRandomLectures();
 
+        long joinDays = 1;
+        if (user.getCreatedAt() != null) {
+            long days = ChronoUnit.DAYS.between(
+                    user.getCreatedAt().toLocalDate(),
+                    LocalDate.now()
+            );
+            joinDays = Math.max(days + 1, 1); // 0일 → 1일로 보정
+        }
+
         return MypageDto.builder()
                 .userId(user.getId())
                 .username(user.getName())
@@ -147,7 +174,7 @@ public class MypageService {
                 .phone(user.getPhone())
                 .birth(user.getBirth())
                 .gender(user.getGender() != null ? user.getGender().toString() : null)
-                .joinDate(user.getCreatedAt() != null ? user.getCreatedAt().toLocalDate().toString() : "")
+                .joinDays(joinDays)
                 .notices(noticeDtos)
                 .recommendedLectures(recommended)
                 .build();
@@ -169,6 +196,7 @@ public class MypageService {
 
         userRepository.save(user);
         log.info("사용자 정보 수정 완료: id={}", user.getId());
+
     }
 
     /** 비밀번호 변경 (LOCAL만 가능하도록 가드하는 게 보통 안전) */
@@ -181,11 +209,13 @@ public class MypageService {
             throw new RuntimeException("소셜 로그인 계정은 비밀번호를 변경할 수 없습니다.");
         }
 
+
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new RuntimeException("현재 비밀번호가 올바르지 않습니다.");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
+
         userRepository.save(user);
         log.info("비밀번호 변경 완료: id={}", user.getId());
     }
@@ -198,5 +228,51 @@ public class MypageService {
         private final String provider;   // LOCAL / GOOGLE / KAKAO / NAVER ...
         private final String providerId; // LOCAL: email, GOOGLE: sub, KAKAO/NAVER: id
         private final String email;
+
+
+//        mypageUserRepository.save(user);
+//        log.info("비밀번호 변경 완료: {}", email);
     }
+
+
+    // 좋아요 강의
+    public Page<Lecture> getLikedLectures(String email, Pageable pageable) {
+        return mypageLectureRepository.findLikedLecturesByEmail(email, pageable);
+    }
+
+    // 좋아요 강의 2개
+    public List<Lecture> getTop2LikedLectures(String email) {
+        return mypageLectureRepository.findTop2LikedLecturesByEmail(email);
+    }
+
+    // 좋아요 해제
+    @Transactional
+    public void removeLikedLecture(Integer lectureId, String email) {
+        mypageLectureRepository.deleteLikeByLectureIdAndEmail(lectureId, email);
+    }
+
+
+    // 내 강좌 조회
+    public Page<ReservationDto> getMyReservations(String email, Pageable pageable) {
+        Page<Reservation> reservations = mypageReservationRepository.findAllByEmail(email, pageable);
+
+
+        return reservations.map(r -> {
+            Lecture l = lectureRepository.findById(r.getLectureId()).orElse(null);
+            return (l != null) ? ReservationDto.of(r, l) : null;
+        });
+    }
+
+    // 내 강좌 예약 취소
+    @Transactional
+    public void removeReservationLecture(String email, Integer lectureId) {
+        mypageReservationRepository.deleteByEmailAndLectureId(email,lectureId);
+    }
+
+    // 내 리뷰 조회
+    public Page<Review> getMyReviews(String email, Pageable pageable) {
+        return mypageReviewRepository.findAllByEmail(email, pageable);
+    }
+
+
 }

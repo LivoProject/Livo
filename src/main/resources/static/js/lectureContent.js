@@ -49,8 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     window.location.href = "/auth/login";
                 } else if (status === "liked") {
                     likeBtn.innerText = "❤️좋아요";
+                    likeBtn.classList.add("active");   // ✅ 추가
                 } else if (status === "unliked") {
                     likeBtn.innerText = "🤍좋아요";
+                    likeBtn.classList.remove("active"); // ✅ 추가
                 } else {
                     console.warn("예상치 못한 응답:", status);
                 }
@@ -89,6 +91,109 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const reviewForm = document.getElementById("reviewForm");
+    if (reviewForm) {
+        reviewForm.addEventListener("submit", function (e) {
+            const content = document.getElementById("reviewContent").value.trim();
+            const star = document.getElementById("selectedStar").value;
+
+            if (content === "") {
+                e.preventDefault();
+                alert("후기 내용을 입력해주세요!");
+                return;
+            }
+
+            if (parseInt(star) === 0) {
+                e.preventDefault();
+                alert("별점을 선택해주세요!");
+                return;
+            }
+        });
+    }
+
+    // =====================================================
+    // 📖 후기 더보기 기능 (Load More Reviews)
+    // =====================================================
+    const loadMoreBtn = document.getElementById("loadMoreBtn");
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener("click", function () {
+            const lectureId = this.dataset.lectureId;
+            let page = parseInt(this.dataset.page);
+
+            fetch(`/lecture/content/${lectureId}/reviews?page=${page}`)
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById("reviewList");
+
+                    // ✅ 컨트롤러에서 내려준 로그인 정보 꺼내기
+                    const { isLoggedIn, loggedInUserEmail } = data;
+
+                    // ✅ 후기 목록 추가
+                    data.content.forEach(r => {
+                        const stars = "⭐".repeat(r.reviewStar) + "☆".repeat(5 - r.reviewStar);
+
+                        // 🚨 신고 버튼 조건 로직
+                        let reportBtn = "";
+                        if (isLoggedIn) {
+                            if (r.userEmail === loggedInUserEmail) {
+                                // 본인 리뷰 → 나의 리뷰 버튼 (비활성화)
+                                reportBtn = `<button class="btn btn-outline-secondary btn-sm" disabled>나의 리뷰</button>`;
+                            } else {
+                                // 로그인 O, 타인 리뷰 → 신고 가능
+                                reportBtn = `
+                                <button class="btn btn-outline-danger btn-sm"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#reportModal"
+                                        data-review-id="${r.reviewUId}">
+                                    🚨 신고
+                                </button>`;
+                            }
+                        } else {
+                            // 로그인 X → 로그인 페이지로 이동
+                            reportBtn = `<a href="/login" class="btn btn-outline-danger btn-sm">🚨 신고</a>`;
+                        }
+
+                        // ✅ 후기 HTML 구성
+                        const item = `
+                        <div class="col-md-12 mb-3 fade-in-up">
+                            <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm">
+                                <h4>${r.userName}</h4>
+                                <h5>${r.createdAt}</h5>
+                                <h4>${stars}</h4>
+                                <h4><strong>${r.reviewContent}</strong></h4>
+                                ${reportBtn}
+                            </div>
+                        </div>
+                    `;
+                        container.insertAdjacentHTML("beforeend", item);
+                    });
+
+                    // ✅ 부드러운 등장 애니메이션
+                    document.querySelectorAll(".fade-in-up").forEach(el => {
+                        el.style.opacity = 0;
+                        el.style.transform = "translateY(20px)";
+                        setTimeout(() => {
+                            el.style.transition = "all 0.4s ease";
+                            el.style.opacity = 1;
+                            el.style.transform = "translateY(0)";
+                        }, 50);
+                    });
+
+                    // ✅ 페이지 증가 및 버튼 숨김 처리
+                    page++;
+                    loadMoreBtn.dataset.page = page;
+
+                    if (data.last) {
+                        loadMoreBtn.style.display = "none";
+                    }
+
+                    // ✅ 스크롤 자동 이동
+                    loadMoreBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+                })
+                .catch(err => console.error("리뷰 불러오기 오류:", err));
+        });
+    }
 
     // =====================================================
     // 🚨 리뷰 신고 모달 기능 (Report Modal Section)
@@ -102,6 +207,19 @@ document.addEventListener("DOMContentLoaded", function () {
             if (input) {
                 input.value = reviewId; // hidden input에 값 넣기
             }
+        });
+    }
+
+    // =====================================================
+    // 🧭 탭 클릭 시 active 유지 (Anchor Scroll Tab)
+    // =====================================================
+    const tabLinks = document.querySelectorAll('#lectureTab .nav-link');
+    if (tabLinks.length > 0) {
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                tabLinks.forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+            });
         });
     }
 

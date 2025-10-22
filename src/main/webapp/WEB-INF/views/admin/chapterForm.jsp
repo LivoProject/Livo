@@ -8,7 +8,7 @@
         <div class="form-section">
             <h5 class="mb-4 fw-bold">2단계: 챕터 등록</h5>
 
-            <input type="hidden" id="lectureId" value="${lectureId}" />
+<%--            <input type="hidden" id="lectureId" value="${lectureId}" />--%>
 
             <div id="chapterContainer" class="sortable">
                 <div class="chapter border rounded p-3 mb-3">
@@ -26,15 +26,15 @@
                     <input type="text" class="form-control mt-2 mb-2 youtubeUrl" />
 
                     <label>내용</label>
-                    <textarea class="form-control content mt-2" rows="3"></textarea>
+                    <textarea class="form-control chapterContent mt-2" rows="3"></textarea>
                 </div>
             </div>
 
             <button type="button" id="addChapterBtn" class="btn btn-outline-secondary mt-3">+ 챕터 추가</button>
-            <button type="button" id="saveChapterBtn" class="btn btn-primary mt-3">등록 완료</button>
+            <button type="button" id="submitAllBtn" class="btn btn-primary mt-3">등록 완료</button>
         </div>
     </div>
 </main>
 </div>
 </body>
-<script src="/js/chapterForm.js"></script>
+<script src="/js/admin/chapterForm.js"></script>

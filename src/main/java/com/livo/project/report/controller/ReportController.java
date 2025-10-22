@@ -23,9 +23,14 @@ public class ReportController {
     public String submitReport(@PathVariable int lectureId,
                                @RequestParam("reviewUId") int reviewUId,
                                @RequestParam("reportReason") String reportReason,
+                               @RequestParam(value = "customReason", required = false) String customReason,
                                @AuthenticationPrincipal UserDetails userDetails) {
 
         String userEmail = userDetails.getUsername();
+
+        if ("기타".equals(reportReason) && customReason != null && !customReason.trim().isEmpty()) {
+            reportReason = customReason.trim();
+        }
 
         Report report = new Report();
         report.setReviewUId(reviewUId);
@@ -34,6 +39,6 @@ public class ReportController {
 
         reportService.saveReport(report);
 
-        return "redirect:/lecture/content/" + lectureId + "#review";
+        return "redirect:/lecture/content/" + lectureId + "?reported=success#review";
     }
 }

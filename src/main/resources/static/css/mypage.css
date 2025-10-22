@@ -129,10 +129,52 @@
   background-color: var(--color-point);
   border-color: var(--color-point);
 }
+
+#mypage .field button {
+    margin: 0 auto;
+}
 #mypage .lecture-grid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1fr;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+/* 기본적으로 반반(2개 이상일 때) */
+.lecture-grid .card {
+    flex: 1 1 calc(50% - 10px);
+    box-sizing: border-box;
+}
+
+/* 카드가 1개일 때만 고정 크기 */
+.lecture-grid:has(.card:only-child) .card {
+    flex: 0 0 400px!important;
+}
+#mypage .lecture-grid.large {
+    display: grid;
+    gap: 1.5rem;
+}
+#mypage .card {
+    flex: 1 1 calc(50% - 20px);
+    transition: all 0.3s ease;
+}
+#mypage .card-img-top {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+#mypage .review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+#mypage .review-grid .card {
+    transition: 0.3s;
+    cursor: pointer;
+}
+#mypage .review-grid .card:hover {
+    background-color: var(--color-light-gray);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-default);
 }
 @media (min-width: 768px) {
   #mypage .lecture-grid {

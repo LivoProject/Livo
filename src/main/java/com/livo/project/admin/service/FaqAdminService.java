@@ -8,4 +8,5 @@ import org.springframework.data.domain.Pageable;
 public interface FaqAdminService {
     List<Faq> getFaqAll();
     Page<Faq> getFaqPage(Pageable pageable);
+    List<Faq> getFaqTop5();
 }
