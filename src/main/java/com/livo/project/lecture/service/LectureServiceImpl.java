@@ -33,7 +33,7 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public List<Lecture> findByCategoryId(int categoryId) {
-        return lectureRepository.findByCategoryId(categoryId);
+        return lectureRepository.findByCategory_CategoryId(categoryId);
     }
 
     @Override

@@ -21,8 +21,7 @@ public class ChapterController {
 
     /*챕터 등록*/
     @GetMapping("/form")
-    public String chapterForm(@RequestParam int lectureId, Model model){
-        model.addAttribute("lectureId", lectureId);
+    public String chapterForm(){
         return "admin/chapterForm";
     }
 

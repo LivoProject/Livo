@@ -8,30 +8,30 @@
         <div class="form-section">
             <h5 class="mb-4 fw-bold">2단계: 챕터 등록</h5>
 
-<%--            <input type="hidden" id="lectureId" value="${lectureId}" />--%>
-
             <div id="chapterContainer" class="sortable">
                 <div class="chapter border rounded p-3 mb-3">
+                    <input type="hidden" id="lectureId" value="${lectureId}" />
+                    <input type="hidden" id="chapterId" value="${chapter.chapterId}" />
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <strong>Chapter <span class="chapter-index">1</span></strong>
+                        <strong>Chapter ${chapter.chapterOrder}</strong>
                         <span class="text-muted small">(드래그하여 순서 변경 가능)</span>
                     </div>
 
                     <label>챕터명</label>
-                    <input type="text" class="form-control mt-2 mb-2 chapterName" />
+                    <input type="text" class="form-control mt-2 mb-2 chapterName"  value="${chapter.chapterName}"/>
 
-                    <input type="hidden" class="chapterOrder" value="1" />
+                    <input type="hidden" class="chapterOrder" value="${chapter.chapterOrder}" />
 
                     <label>유튜브 URL</label>
-                    <input type="text" class="form-control mt-2 mb-2 youtubeUrl" />
+                    <input type="text" class="form-control mt-2 mb-2 youtubeUrl" value="${chapter.youtubeUrl}" />
 
                     <label>내용</label>
-                    <textarea class="form-control chapterContent mt-2" rows="3"></textarea>
+                    <textarea class="form-control content mt-2" rows="3">${chapter.content}</textarea>
                 </div>
             </div>
 
             <button type="button" id="addChapterBtn" class="btn btn-outline-secondary mt-3">+ 챕터 추가</button>
-            <button type="button" id="submitAllBtn" class="btn btn-primary mt-3">등록 완료</button>
+            <button type="button" id="editChapterBtn" class="btn btn-primary mt-3">등록 완료</button>
         </div>
     </div>
 </main>
