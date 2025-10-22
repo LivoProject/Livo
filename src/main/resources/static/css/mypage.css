@@ -161,6 +161,21 @@
     height: 180px;
     object-fit: cover;
 }
+#mypage .review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+#mypage .review-grid .card {
+    transition: 0.3s;
+    cursor: pointer;
+}
+#mypage .review-grid .card:hover {
+    background-color: var(--color-light-gray);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-default);
+}
 @media (min-width: 768px) {
   #mypage .lecture-grid {
     grid-template-columns: repeat(2, 1fr);

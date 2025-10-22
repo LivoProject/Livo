@@ -2,7 +2,7 @@
 package com.livo.project.admin.service;
 
 import com.livo.project.admin.domain.dto.NoticeReq;
-import com.livo.project.notice.repository.NoticeRepository;   // ✅ 공용 레포 사용
+import com.livo.project.notice.repository.NoticeRepository;   //  공용 레포 사용
 import com.livo.project.notice.domain.entity.Notice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;

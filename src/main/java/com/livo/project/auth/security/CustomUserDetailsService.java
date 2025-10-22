@@ -1,4 +1,3 @@
-// com.livo.project.auth.security.CustomUserDetailsService.java
 package com.livo.project.auth.security;
 
 import com.livo.project.auth.domain.entity.User;
@@ -19,13 +18,29 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // 로그인 이메일 소문자 정규화
-        String normalized = email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
+        if (email == null || email.isBlank()) {
+            throw new UsernameNotFoundException("이메일을 입력해주세요.");
+        }
 
-        User u = userRepository.findByEmail(normalized)
-                .orElseThrow(() -> new UsernameNotFoundException("잘못된 자격 증명입니다."));
+        //  로그인 이메일 정규화
+        String normalized = email.trim().toLowerCase(Locale.ROOT);
 
-        // ★ 스프링 기본 User 대신 커스텀 UserDetails 반환(닉네임/권한/상태 포함)
+        //  반드시 provider='LOCAL' 계정만 허용
+        User u = userRepository
+                .findByEmailIgnoreCaseAndProvider(normalized, "LOCAL")
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("이메일 또는 비밀번호가 올바르지 않습니다.")
+                );
+
+        // 3️ 상태/인증 체크
+        if (Boolean.FALSE.equals(u.getStatus())) {
+            throw new UsernameNotFoundException("비활성화된 계정입니다.");
+        }
+        if (!Boolean.TRUE.equals(u.getEmailVerified())) {
+            throw new UsernameNotFoundException("이메일 인증이 필요합니다.");
+        }
+
+        //  커스텀 UserDetails 래퍼 리턴
         return new AppUserDetails(u);
     }
 }
