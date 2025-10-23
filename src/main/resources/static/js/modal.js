@@ -25,20 +25,25 @@ function showCommonModal(title, message, confirmText = "확인", showCancel = fa
 
     const confirmBtn = modalEl.querySelector(".btn-main");
 
-    // ✅ 확인 버튼 클릭 시 페이지 이동
+// ✅ 확인 버튼 클릭 시 페이지 이동
+    confirmBtn.onclick = null; // 기존 클릭 이벤트 제거
     confirmBtn.onclick = () => {
         modal.hide();
 
         if (title === "신고 완료" || title === "리뷰 등록 완료") {
-            window.location.hash = "#intro";
+            window.location.hash = "#review";
+        } else if (title === "리뷰 수정 완료") {
+            window.location.hash = "#review";
+        } else if (title === "리뷰 삭제 완료") {
+            location.reload();
         } else if (title === "수강 신청 완료") {
-            window.location.href = "/mypage/lecture"; // 마이페이지 이동: 정확히 어디 페이지?? 수정 필요
+            window.location.href = "/mypage/lecture";
         }
     };
 }
 
 // =====================================================
-// 공통: 강의신청, 신고, 리뷰 완료 감지 후 모달 표시
+// 공통: 강의신청, 신고, 리뷰 등록 완료 감지 후 모달 표시
 // =====================================================
 document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
@@ -72,6 +77,16 @@ document.addEventListener("DOMContentLoaded", function () {
             false
         );
     }
+
+    // 리뷰 수정 완료
+    if (urlParams.get("reviewUpdated") === "success") {
+        showCommonModal(
+            "리뷰 수정 완료",
+            "리뷰가 성공적으로 수정되었습니다.",
+            "확인",
+            false
+        );
+    }
 });
 
 
@@ -94,3 +109,37 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
+// =====================================================
+// 🗑️ 리뷰 삭제 함수 (공통 모달 사용)
+// =====================================================
+function deleteReview(reviewUId) {
+    showCommonModal(
+        "리뷰 삭제",
+        "선택한 리뷰를 삭제하시겠습니까?",
+        "삭제",
+        true // 취소 버튼 표시
+    );
+
+    const modalEl = document.getElementById("exampleModal");
+    const confirmBtn = modalEl.querySelector(".btn-main");
+
+    confirmBtn.onclick = () => {
+        fetch(`/lecture/review/${reviewUId}`, {
+            method: "DELETE",
+            headers: { "X-XSRF-TOKEN": csrfToken }
+        })
+            .then(response => {
+                if (response.ok) {
+                    showCommonModal(
+                        "리뷰 삭제 완료",
+                        "리뷰가 성공적으로 삭제되었습니다.",
+                        "확인",
+                        false
+                    );
+                }
+            });
+    };
+}
+

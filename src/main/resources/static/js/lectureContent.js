@@ -91,25 +91,71 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // =====================================================
+    // ✏️ 후기 등록 & 수정 통합
+    // =====================================================
     const reviewForm = document.getElementById("reviewForm");
     if (reviewForm) {
-        reviewForm.addEventListener("submit", function (e) {
+        reviewForm.addEventListener("submit", async function (e) {
+            e.preventDefault(); // 항상 JS로 제어
+
             const content = document.getElementById("reviewContent").value.trim();
-            const star = document.getElementById("selectedStar").value;
+            const star = parseInt(document.getElementById("selectedStar").value);
+            const reviewUIdInput = document.getElementById("reviewUId");
+            const reviewUId = reviewUIdInput ? reviewUIdInput.value : null; // ✅ 수정모드 확인
+            const csrfToken = document.querySelector("input[name='_csrf']").value;
+            const lectureId = reviewForm.action.split("/content/")[1].split("/review")[0];
 
             if (content === "") {
-                e.preventDefault();
                 alert("후기 내용을 입력해주세요!");
                 return;
             }
-
-            if (parseInt(star) === 0) {
-                e.preventDefault();
+            if (star === 0) {
                 alert("별점을 선택해주세요!");
                 return;
             }
+
+            const reviewData = {
+                reviewStar: star,
+                reviewContent: content
+            };
+
+            let url, method, body;
+            if (reviewUId) {
+                // ✅ 수정모드
+                url = `/lecture/review/${reviewUId}`;
+                method = "PUT";
+                body = JSON.stringify(reviewData);
+            } else {
+                // ✅ 신규 등록
+                url = `/lecture/content/${lectureId}/review`;
+                method = "POST";
+                body = new URLSearchParams(reviewData);
+            }
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    "Content-Type": method === "POST" ? "application/x-www-form-urlencoded" : "application/json",
+                    "X-XSRF-TOKEN": csrfToken
+                },
+                body: body
+            });
+
+            if (response.ok) {
+                if (reviewUId) {
+                    showCommonModal("리뷰 수정 완료", "리뷰가 성공적으로 수정되었습니다.", "확인", false);
+                    window.location.href = window.location.pathname + "?reviewUpdated=success";
+                } else {
+                    showCommonModal("리뷰 등록 완료", "후기가 성공적으로 등록되었습니다.", "확인", false);
+                    window.location.href = window.location.pathname + "?reviewed=success";
+                }
+            } else {
+                showCommonModal("오류 발생", "리뷰 저장 중 문제가 발생했습니다.", "확인", false);
+            }
         });
     }
+
 
     // =====================================================
     // 📖 후기 더보기 기능 (Load More Reviews)
@@ -132,44 +178,65 @@ document.addEventListener("DOMContentLoaded", function () {
                     data.content.forEach(r => {
                         const stars = "⭐".repeat(r.reviewStar) + "☆".repeat(5 - r.reviewStar);
 
-                        // 🚨 신고 버튼 조건 로직
-                        let reportBtn = "";
+                        // 🚨 신고 / 수정 / 삭제 버튼 조건 로직
+                        let actionBtns = "";
                         if (isLoggedIn) {
                             if (r.userEmail === loggedInUserEmail) {
-                                // 본인 리뷰 → 나의 리뷰 버튼 (비활성화)
-                                reportBtn = `<button class="btn btn-outline-secondary btn-sm" disabled>나의 리뷰</button>`;
+                                // 본인 후기 → 수정/삭제 표시
+                                actionBtns = `
+                                <div class="d-flex gap-2 mt-2">
+                                    <button class="btn btn-outline-secondary btn-sm" disabled>나의 후기</button>
+                                    <button class="btn btn-outline-primary btn-sm"
+                                            type="button"
+                                            onclick="editReview(${r.reviewUId})">
+                                        수정
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm"
+                                            type="button"
+                                            onclick="deleteReview(${r.reviewUId})">
+                                        삭제
+                                    </button>
+                                </div>
+                            `;
                             } else {
-                                // 로그인 O, 타인 리뷰 → 신고 가능
-                                reportBtn = `
-                                <button class="btn btn-outline-danger btn-sm"
-                                        type="button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#reportModal"
-                                        data-review-id="${r.reviewUId}">
-                                    🚨 신고
-                                </button>`;
+                                // 다른 사람 후기 → 신고만 가능
+                                actionBtns = `
+                                <div class="d-flex gap-2 mt-2">
+                                    <button class="btn btn-outline-danger btn-sm"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#reportModal"
+                                            data-review-id="${r.reviewUId}">
+                                        🚨 신고
+                                    </button>
+                                </div>
+                            `;
                             }
                         } else {
-                            // 로그인 X → 로그인 페이지로 이동
-                            reportBtn = `<a href="/login" class="btn btn-outline-danger btn-sm">🚨 신고</a>`;
+                            // 로그인 X → 로그인 유도
+                            actionBtns = `
+                            <div class="d-flex gap-2 mt-2">
+                                <a href="/auth/login" class="btn btn-outline-danger btn-sm">🚨 신고</a>
+                            </div>
+                        `;
                         }
 
                         // ✅ 후기 HTML 구성
                         const item = `
                         <div class="col-md-12 mb-3 fade-in-up">
-                            <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm">
+                            <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm" data-review-id="${r.reviewUId}">
                                 <h4>${r.userName}</h4>
-                                <h5>${r.createdAt}</h5>
+                                <h5>${r.createdAt}${r.isEdited ? ' <span class="text-muted small">(수정)</span>' : ''}</h5>
                                 <h4>${stars}</h4>
                                 <h4><strong>${r.reviewContent}</strong></h4>
-                                ${reportBtn}
+                                ${actionBtns}
                             </div>
                         </div>
                     `;
                         container.insertAdjacentHTML("beforeend", item);
                     });
 
-                    // ✅ 부드러운 등장 애니메이션
+                    // ✅ 애니메이션
                     document.querySelectorAll(".fade-in-up").forEach(el => {
                         el.style.opacity = 0;
                         el.style.transform = "translateY(20px)";
@@ -180,20 +247,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         }, 50);
                     });
 
-                    // ✅ 페이지 증가 및 버튼 숨김 처리
                     page++;
                     loadMoreBtn.dataset.page = page;
-
                     if (data.last) {
                         loadMoreBtn.style.display = "none";
                     }
-
-                    // ✅ 스크롤 자동 이동
                     loadMoreBtn.scrollIntoView({ behavior: "smooth", block: "center" });
                 })
                 .catch(err => console.error("리뷰 불러오기 오류:", err));
         });
     }
+
 
     // =====================================================
     // 🚨 리뷰 신고 모달 기능 (Report Modal Section)
@@ -201,11 +265,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const reportModal = document.getElementById("reportModal");
     if (reportModal) {
         reportModal.addEventListener("show.bs.modal", function (event) {
-            const button = event.relatedTarget; // 클릭한 신고 버튼
+            const button = event.relatedTarget;
             const reviewId = button.getAttribute("data-review-id");
             const input = document.getElementById("reportReviewId");
             if (input) {
-                input.value = reviewId; // hidden input에 값 넣기
+                input.value = reviewId;
             }
         });
     }
@@ -223,7 +287,90 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+}); // ✅ document.addEventListener 끝
 
 
+// =====================================================
+// ✏️ 리뷰 수정 함수 (리뷰 카드 자체를 폼으로 변신)
+// =====================================================
+function editReview(reviewUId) {
+    fetch(`/lecture/review/${reviewUId}`)
+        .then(res => res.json())
+        .then(data => {
+            const card = document.querySelector(`[data-review-id="${reviewUId}"]`);
+            if (!card) return;
 
-});
+            // 원본 HTML 저장 (수정 후 복구용)
+            const originalHTML = card.innerHTML;
+
+            // 별점 버튼 5개 생성
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const active = i <= data.reviewStar ? 'active' : '';
+                starsHTML += `<button type="button" class="bi bi-star-fill ${active}" data-value="${i}"></button>`;
+            }
+
+            // 수정 폼으로 교체
+            card.innerHTML = `
+                <form id="inlineEditForm-${reviewUId}" class="p-4 bg-body-secondary border rounded-3">
+                    <div class="star-wrap mb-3">${starsHTML}</div>
+                    <input type="hidden" id="editStar-${reviewUId}" value="${data.reviewStar}">
+                    <textarea class="form-control mb-3" id="editContent-${reviewUId}" rows="4">${data.reviewContent}</textarea>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary btn-sm cancelEditBtn">취소</button>
+                        <button type="button" class="btn btn-primary btn-sm saveEditBtn">수정 완료</button>
+                    </div>
+                </form>
+            `;
+
+            // ⭐ 별점 클릭 이벤트
+            const stars = card.querySelectorAll(".bi-star-fill");
+            const starInput = card.querySelector(`#editStar-${reviewUId}`);
+            stars.forEach((s, idx) => {
+                s.addEventListener("click", () => {
+                    starInput.value = idx + 1;
+                    stars.forEach((st, i) => {
+                        st.classList.toggle("active", i <= idx);
+                    });
+                });
+            });
+
+            // ❌ 취소 버튼 (복구)
+            card.querySelector(".cancelEditBtn").addEventListener("click", () => {
+                card.innerHTML = originalHTML;
+            });
+
+            // 💾 수정 완료 버튼
+            card.querySelector(".saveEditBtn").addEventListener("click", async () => {
+                const reviewContent = card.querySelector(`#editContent-${reviewUId}`).value.trim();
+                const reviewStar = parseInt(starInput.value);
+                const csrfToken = document.querySelector("input[name='_csrf']").value;
+
+                if (reviewContent === "" || reviewStar === 0) {
+                    alert("내용을 입력해주세요!");
+                    return;
+                }
+
+                const response = await fetch(`/lecture/review/${reviewUId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-XSRF-TOKEN": csrfToken
+                    },
+                    body: JSON.stringify({
+                        reviewContent,
+                        reviewStar
+                    })
+                });
+
+                if (response.ok) {
+                    // 페이지 새로고침 대신 쿼리파라미터 붙이기
+                    window.location.href = window.location.pathname + "?reviewUpdated=success";
+                } else {
+                    showCommonModal("오류 발생", "리뷰 수정 중 오류가 발생했습니다.", "확인", false);
+                }
+            });
+        })
+        .catch(err => console.error("리뷰 수정 모드 전환 실패:", err));
+}
+
