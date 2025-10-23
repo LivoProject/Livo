@@ -10,6 +10,7 @@ import com.livo.project.lecture.domain.Reservation;
 import com.livo.project.lecture.repository.LectureRepository;
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.domain.dto.ReservationDto;
+import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.repository.*;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
@@ -58,6 +59,11 @@ public class MypageService {
     private final MypageReviewRepository mypageReviewRepository;
     private final LectureRepository lectureRepository;
     private final UserRepository userRepository;
+
+
+
+    private final LectureProgressRepository lectureProgressRepository;
+
 
     /** 현재 인증 정보에서 (provider, providerId) 또는 id 추출 */
     private ResolvedPrincipal resolveCurrent() {
@@ -146,8 +152,9 @@ public class MypageService {
 
     // 기본데이터
     public MypageDto getUserData(String email, String provider) {
-        User user =  mypageUserRepository.findByEmailAndProvider(email, provider)
+        User user = userRepository.findByEmailIgnoreCaseAndProvider(email, provider)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
 
         // 공지사항
         List<Notice> notices = mypageNoticeRepository.findTop5ByOrderByCreatedAtDesc();
@@ -254,26 +261,35 @@ public class MypageService {
 
 
     // 내 강좌 조회
-    public Page<ReservationDto> getMyReservations(String email, String provider, Pageable pageable) {
-        Page<Reservation> reservations = mypageReservationRepository.findAllByEmail(email, provider, pageable);
-
+    public Page<ReservationDto> getMyReservations(String email, Pageable pageable) {
+        Page<Reservation> reservations = mypageReservationRepository.findAllByEmail(email, pageable);
 
         return reservations.map(r -> {
-            Lecture l = lectureRepository.findById(r.getLectureId()).orElse(null);
-            return (l != null) ? ReservationDto.of(r, l) : null;
+            Lecture lecture = r.getLecture();
+
+            Double progressPercent = lectureProgressRepository
+                    .findByLectureAndEmail(lecture, email)
+                    .map(LectureProgress::getProgressPercent)
+                    .orElse(0.0);
+
+            return ReservationDto.of(r, lecture, progressPercent);
         });
     }
 
+
+
     // 내 강좌 예약 취소
     @Transactional
-    public void removeReservationLecture(Integer lectureId, String email, String provider) {
-        mypageReservationRepository.deleteByEmailAndLectureId(lectureId, email, provider);
+    public void removeReservationLecture(Integer lectureId, String email) {
+        mypageReservationRepository.deleteByLectureIdAndEmail(lectureId, email);
     }
 
     // 내 리뷰 조회
     public Page<Review> getMyReviews(String email, String provider, Pageable pageable) {
         return mypageReviewRepository.findAllByEmail(email, provider, pageable);
     }
+
+
 
 
 }

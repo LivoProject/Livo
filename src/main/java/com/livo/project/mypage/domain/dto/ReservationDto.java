@@ -29,8 +29,11 @@ public class ReservationDto {
     private String tutorName;
     private String thumbnailUrl;
 
+    // 수강률 추가
+    private Double progressPercent;
+
     // 변환 메서드
-    public static ReservationDto of(Reservation r, Lecture l) {
+    public static ReservationDto of(Reservation r, Lecture l, Double progressPercent) {
 
         LocalDateTime createdAt = null;
         Date createdAtDate = r.getCreatedAt();
@@ -42,13 +45,14 @@ public class ReservationDto {
 
         return ReservationDto.builder()
                 .reservationId(r.getReservationId())
-                .email(r.getEmail())
+                .email(r.getUser().getEmail())
                 .lectureId(r.getLectureId())
                 .createdAt(createdAt)
                 .status(r.getStatus().name())
                 .title(l.getTitle())
                 .tutorName(l.getTutorName())
                 .thumbnailUrl(l.getThumbnailUrl())
+                .progressPercent(progressPercent != null ? progressPercent : 0.0)
                 .build();
     }
 }
