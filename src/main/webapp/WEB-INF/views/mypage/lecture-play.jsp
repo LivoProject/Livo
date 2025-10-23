@@ -1,10 +1,48 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ include file="/WEB-INF/views/common/header.jsp" %>
 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>LiVO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<link rel="stylesheet" href="/css/lecture-play.css"/>
+    <!-- CSRF -->
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+
+    <!-- 파비콘 (브라우저 탭 아이콘) -->
+    <link rel="shortcut icon" href="/img/common/favicon.ico" type="image/x-icon"/>
+    <!-- Bootstrap -->
+    <link  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
+    <!-- Swiper -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/reset.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/lecture-play.css"/>
+    <link rel="preload" href="/audio/login_success.mp3" as="audio" type="audio/mpeg"/>
+
+    <!-- jQuery 관련 -->
+    <%--      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--%>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- Custom js -->
+    <script src="/js/common.js"></script>
+    <script src="/js/bgm-inline.js"></script>
+
+</head>
+<body>
+
+<c:url var="loginUrl" value="/auth/login"/>
+<c:url var="joinUrl" value="/auth/register"/>
+<c:url var="logoutUrl" value="/auth/logout"/>
+
 
 <section id="lecture" class="d-flex">
   <!-- 왼쪽: 비디오 영역 -->
@@ -43,7 +81,10 @@
   </div>
 
   <!-- 오른쪽: 커리큘럼 -->
-  <aside class="curriculum border-start p-4" style="width: 400px;">
+  <aside class="curriculum border-start p-4">
+      <div class="lecture-close-button">
+          <a href="/mypage/lecture" class="btn-point">닫기</a>
+      </div>
     <h3 class="fw-bold mb-1">${lecture.title}</h3>
     <h6 class="text-secondary mb-4">${lecture.tutorName}</h6>
 
