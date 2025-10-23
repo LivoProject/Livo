@@ -77,7 +77,8 @@ public class ReviewController {
                 r.getReservation().getUser().getEmail(),
                 r.getReviewStar(),
                 r.getReviewContent(),
-                sdf.format(r.getCreatedAt())
+                sdf.format(r.getCreatedAt()),
+                r.isBlocked()
         ));
 
         // 로그인 상태 및 유저 이메일 추가 -> 신고하기 위해!
