@@ -101,12 +101,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach var="report" items="${notReport}" varStatus="status">
+                                <c:forEach var="report" items="${reports}" varStatus="status">
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
                                     <td class="text-center">${report.email}</td>
                                     <td class="text-center">${report.reportReason}</td>
-                                    <td class="text-center"><button class="btn btn-sm btn-outline-danger">보류</button></td>
+                                    <td class="text-center"><button class="btn btn-sm update-status">승인</button></td>
+                                    <td class="text-center"><button class="btn btn-sm update-status">보류</button></td>
                                 </tr>
                                 </c:forEach>
                                 </tbody>

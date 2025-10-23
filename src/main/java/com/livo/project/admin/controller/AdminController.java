@@ -11,6 +11,7 @@ import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.service.LectureService;
 import com.livo.project.report.domain.Report;
+import com.livo.project.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +34,7 @@ public class AdminController {
     private final FaqRepository faqRepository;
     private final FaqService faqService;
     private final LectureAdminService lectureAdminService;
+    private final ReportService reportService;
 
     @GetMapping("/dashboard")
     public String showAdminPage(Model model){
@@ -40,7 +42,8 @@ public class AdminController {
         model.addAttribute("recentLectures",recentLectures);
         List<Faq> recentFaqs = faqAdminService.getFaqTop5();
         model.addAttribute("recentFaqs",recentFaqs);
-        List<Report> reports;
+        List<Report> reports = reportService.getNotApprovedReport();
+        model.addAttribute("reports",reports);
         return "admin/dashboard";
     }
     @GetMapping("")

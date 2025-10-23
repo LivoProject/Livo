@@ -19,7 +19,7 @@ public class ReviewDto {
     private int reviewStar;        // 별점
     private String reviewContent;  // 리뷰 내용
     private String createdAt;      // 작성일 포맷 문자열
-
+    private boolean blocked;
     // Entity → DTO 변환 메서드
     public static ReviewDto fromEntity(Review review) {
         String formattedDate = null;
@@ -34,7 +34,9 @@ public class ReviewDto {
                 review.getReservation().getUser().getEmail(),
                 review.getReviewStar(),
                 review.getReviewContent(),
-                formattedDate
+                formattedDate,
+                review.isBlocked()
+
         );
     }
 }
