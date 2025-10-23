@@ -26,6 +26,7 @@ public class LectureViewController {
         Lecture lecture = lectureAdminService.findById(lectureId);
         List<ChapterList> chapters = chapterListService.getChaptersByLecture(lectureId);
         String youtubeUrl = (chapters != null && !chapters.isEmpty())?chapters.get(0).getYoutubeUrl():null;
+
         model.addAttribute("lecture", lecture);
         model.addAttribute("chapters", chapters);
         model.addAttribute("youtubeUrl", youtubeUrl);
