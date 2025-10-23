@@ -21,6 +21,7 @@
                                     <th>사유</th>
                                     <th>신고일자</th>
                                     <th>상태</th>
+                                    <th>관리</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -37,6 +38,7 @@
 </main>
 </div>
 </div>
+<script src="/js/modal.js"></script>
 <script src="/js/admin/report.js"></script>
 <script>
     $(document).ready(function() {

@@ -1,6 +1,7 @@
 package com.livo.project.report.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.livo.project.lecture.domain.User;
 import com.livo.project.review.domain.Review;
 import jakarta.persistence.*;
@@ -33,11 +34,12 @@ public class Report {
     private Status status = Status.PROCESSING;
 
     private String email;   // FK (user)
-    private int reviewUId;  // FK (review)
+//    @Column(name = "reviewUId", insertable = false, updatable = false)
+//    private int reviewUId;  // FK (review)
 
     // Review 연결
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "reviewUId", referencedColumnName = "reviewUId", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "reviewUId", referencedColumnName = "reviewUId")
     private Review review;
 
     // User 연결
@@ -46,6 +48,6 @@ public class Report {
     private User user;
 
     public enum Status {
-        COMPLETED, PROCESSING, REJECT
+        PROCESSING, COMPLETED, REJECT
     }
 }

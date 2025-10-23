@@ -37,6 +37,9 @@ public class Review {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    @Column(nullable = false)
+    private boolean blocked = false; // true면 신고 처리된 리뷰
+
     private int reservationId; // FK (reservation)
 
     //reservation이랑 연결

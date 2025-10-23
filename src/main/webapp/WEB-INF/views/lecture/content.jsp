@@ -49,7 +49,6 @@
                     </button>
 
                     <c:choose>
-                        <%-- 이미 신청한 강의 --%>
                         <c:when test="${isEnrolled}">
                             <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
                         </c:when>
@@ -217,7 +216,17 @@
                             </c:forEach>
                         </h4>
 
-                        <h4><strong>${review.reviewContent}</strong></h4>
+                        <h4>
+                         <c:choose>
+                            <c:when test="${review.blocked}">
+                                <span class="text-muted fst-italic">🚫 신고된 리뷰입니다.</span>
+                            </c:when>
+
+                            <c:otherwise>
+                                <strong>${review.reviewContent}</strong>
+                            </c:otherwise>
+                        </c:choose>
+                        </h4>
 
                         <!-- 신고/수정/삭제 버튼 -->
                         <div class="d-flex gap-2 mt-2">
@@ -225,6 +234,9 @@
                                 <c:when test="${isLoggedIn}">
                                     <!-- 로그인 O → 본인 리뷰인지 검사 -->
                                     <c:choose>
+                                        <c:when test="${review.blocked}">
+                                            <button class="btn btn-outline-secondary btn-sm" disabled>신고된 리뷰</button>
+                                        </c:when>
                                         <c:when test="${review.reservation.user.email ne loggedInUserEmail}">
                                             <button class="btn btn-outline-danger btn-sm"
                                                     type="button"
