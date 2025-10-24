@@ -318,10 +318,14 @@ public class MypageService {
 
 
     // 내 강좌 예약 취소
-    @CacheEvict(cacheNames = { "chartTopLectures", "chartMonthlyRevenue" }, allEntries = true)
     @Transactional
+    @CacheEvict(cacheNames = { "chartTopLectures", "chartMonthlyRevenue" }, allEntries = true)
     public void removeReservationLecture(Integer lectureId, String email) {
         int changed = mypageReservationRepository.cancelByLectureIdAndEmail(lectureId, email);
+        System.out.println("변경된 행 수: " + changed);
+        if (changed == 0) {
+            throw new RuntimeException("해당 예약을 찾을 수 없거나 이미 취소되었습니다.");
+        }
     }
 
 

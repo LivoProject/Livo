@@ -31,7 +31,7 @@
                 <div class="card-box recent-card">
                     <div class="card-header">
                         <h6>최근 학습 강의</h6>
-                        <a href="#" class="more-link">
+                        <a href="/mypage/lecture" class="more-link">
                             학습 목록 <i class="bi bi-chevron-right"></i>
                         </a>
                     </div>

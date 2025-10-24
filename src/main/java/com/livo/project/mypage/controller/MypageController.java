@@ -164,7 +164,12 @@ public class MypageController {
     @PostMapping("/lecture/delete")
     public Map<String, Object> deleteLecture(Authentication authentication,
                                              @RequestParam Integer lectureId) {
+
+        System.out.println("=== 예약 취소 요청 시작 ===");
+        System.out.println("lectureId: " + lectureId);
+
         Map<String, Object> response = new HashMap<>();
+
 
         if (authentication == null || !authentication.isAuthenticated()) {
             response.put("success", false);

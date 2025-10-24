@@ -17,20 +17,13 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
 
 
     // 내 예약 강좌
-    @Query("""
-                SELECT r
-                FROM Reservation r
-                JOIN r.user u
-                WHERE u.email = :email
-                  AND u.provider = :provider
-            """)
+    @Query("SELECT r FROM Reservation r WHERE r.user.email = :email AND r.status = 'CONFIRMED'")
     Page<Reservation> findAllByEmailAndProvider(@Param("email") String email, @Param("provider") String provider, Pageable pageable);
 
 
     // 예약 취소
     @Modifying
     @Query("UPDATE Reservation r SET r.status = 'CANCEL' WHERE r.lecture.lectureId = :lectureId AND r.user.email = :email")
-
     int cancelByLectureIdAndEmail(@Param("lectureId") Integer lectureId,
                                   @Param("email") String email);
 
