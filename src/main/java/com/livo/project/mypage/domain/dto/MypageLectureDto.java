@@ -13,6 +13,7 @@ public class MypageLectureDto {
     private Integer lectureId;
     private String title;
     private String tutorName;
+    private int price;
     private String thumbnailUrl;
     private int progressPercent;
 

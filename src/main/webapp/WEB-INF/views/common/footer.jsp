@@ -4,7 +4,7 @@
 
 <!-- Footer -->
 
-<!-- 🔹 플로팅 버튼 컨테이너 -->
+<!-- 플로팅 버튼 컨테이너 -->
 <div class="floating-buttons">
     <!-- 챗봇 -->
     <button id="chat-fab" class="chat-fab" aria-label="챗봇 열기" title="챗봇">

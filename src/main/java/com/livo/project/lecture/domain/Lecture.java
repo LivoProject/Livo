@@ -48,4 +48,11 @@ public class Lecture {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId")
     private Category category;
+
+
+
+
+    public Lecture(Integer lectureId) {
+        this.lectureId = lectureId;
+    }
 }

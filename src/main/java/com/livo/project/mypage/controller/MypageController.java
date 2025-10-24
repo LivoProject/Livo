@@ -2,16 +2,13 @@ package com.livo.project.mypage.controller;
 
 import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.lecture.domain.Lecture;
-import com.livo.project.lecture.domain.Reservation;
 
 import com.livo.project.mypage.domain.dto.MypageDto;
-import com.livo.project.mypage.domain.dto.MypageLectureDto;
-import com.livo.project.mypage.domain.dto.ProgressDto;
-import com.livo.project.mypage.domain.dto.ReservationDto;
+import com.livo.project.mypage.domain.dto.MypageLikedLectureDto;
+import com.livo.project.mypage.domain.dto.MypageProgressDto;
+import com.livo.project.mypage.domain.dto.MypageReservationDto;
 import com.livo.project.mypage.service.MypageService;
 import com.livo.project.review.domain.Review;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -31,7 +28,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -144,7 +140,7 @@ public class MypageController {
             email = appUser.getEmail();
             provider = appUser.getProvider();
         } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-            email = (String) oAuthUser.getAttribute("email");     // ✅ 이메일 속성 추출
+            email = (String) oAuthUser.getAttribute("email");
             provider = (String) oAuthUser.getAttribute("provider");
         }
 
@@ -153,9 +149,7 @@ public class MypageController {
         }
 
 
-        Page<ReservationDto> reservations = mypageService.getMyReservations(email, pageable);
-
-        //Page<MypageLectureDto> lectures = mypageService.getMyLecturesWithProgress(email, pageable);
+        Page<MypageReservationDto> reservations = mypageService.getMyReservations(email, provider, pageable);
 
         model.addAttribute("lectures", reservations.getContent());
         model.addAttribute("reservations", reservations.getContent());
@@ -224,19 +218,20 @@ public class MypageController {
             provider = appUser.getProvider();
         } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
             email = (String) oAuthUser.getAttribute("email");
-            provider = (String) oAuthUser.getAttribute("provider"); // 커스텀 속성 필요
+            provider = (String) oAuthUser.getAttribute("provider");
         }
 
         if (email == null) {
             return "redirect:/auth/login";
         }
 
-        Page<Lecture> likedLectures = mypageService.getLikedLectures(email, provider, pageable);
+        Page<MypageLikedLectureDto> likedLectures = mypageService.getLikedLecturesWithProgress(email, provider, pageable);
         model.addAttribute("likedLectures", likedLectures.getContent());
         model.addAttribute("page", likedLectures);
         return "mypage/like";
     }
 
+    // 좋아요 취소
     @PostMapping("/like/delete")
     @ResponseBody
     public Map<String, Object> deleteLike(Authentication authentication,
@@ -345,19 +340,36 @@ public class MypageController {
         }
     }
 
-    // 진행률 저장
-
     // 현재 진행률 저장
     @PostMapping("/save")
     @ResponseBody
-    public ResponseEntity<?> saveProgress(@AuthenticationPrincipal UserDetails user,
-                                          @RequestBody ProgressDto progressDto) {
+    public ResponseEntity<String> saveProgress(Authentication authentication,
+                                               @RequestBody MypageProgressDto dto) {
 
-        if (user == null) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
         }
 
-        mypageService.saveProgress(user.getUsername(), progressDto);
+        // 이메일 / provider 간단히 구분
+        String email = null;
+        String provider = "local";
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof AppUserDetails appUser) {
+            email = appUser.getEmail();
+            provider = appUser.getProvider();
+        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
+            email = (String) oAuthUser.getAttribute("email");
+            Object p = oAuthUser.getAttribute("provider");
+            if (p != null) provider = p.toString();
+        }
+
+        if (email == null) {
+            return ResponseEntity.badRequest().body("이메일을 찾을 수 없습니다.");
+        }
+
+        mypageService.saveProgress(email, provider, dto);
         return ResponseEntity.ok("진행률 저장 완료");
     }
+
 }

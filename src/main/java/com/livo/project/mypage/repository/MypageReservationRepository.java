@@ -15,18 +15,22 @@ import java.util.List;
 @Repository
 public interface MypageReservationRepository extends JpaRepository<Reservation, Integer> {
 
-    @Query("SELECT r FROM Reservation r WHERE r.user.email = :email AND r.status = 'CONFIRMED'")
-    Page<Reservation> findConfirmedByEmail(String email, Pageable pageable);
+    // 내 예약 강좌
+    @Query("""
+                SELECT r
+                FROM Reservation r
+                JOIN r.user u
+                WHERE u.email = :email
+                  AND u.provider = :provider
+            """)
+    Page<Reservation> findAllByEmailAndProvider(@Param("email") String email, @Param("provider") String provider, Pageable pageable);
 
-   // void deleteByLectureIdAndEmail(Integer lectureId, String email);
-
+    // 예약 취소
     @Modifying
     @Query("UPDATE Reservation r SET r.status = 'CANCEL' WHERE r.lecture.lectureId = :lectureId AND r.user.email = :email")
-    void cancelByLectureIdAndEmail(@Param("lectureId") Integer lectureId,
-                                   @Param("email") String email);
+    int cancelByLectureIdAndEmail(@Param("lectureId") Integer lectureId,
+                                  @Param("email") String email);
 
-//    @Modifying
-//    @Transactional
-//    @Query("DELETE FROM Reservation r WHERE r.user.id = :userId AND r.lecture.lectureId = :lectureId")
-//    void deleteByUserIdAndLectureId(@Param("email") String email, @Param("lectureId") Integer lectureId);
+    // 좋아요한 강좌가 예약된 강좌인지 확인
+    boolean existsByLecture_LectureIdAndUser_Email(Integer lectureId, String email);
 }
