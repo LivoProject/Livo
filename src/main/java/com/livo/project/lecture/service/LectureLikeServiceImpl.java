@@ -14,10 +14,10 @@ public class LectureLikeServiceImpl implements LectureLikeService {
     private final LectureLikeRepository lectureLikeRepository;
 
     @Override
-    public boolean toggleLike(int lectureId, String email) {
+    public boolean toggleLike(int lectureId, String email, String provider) {
         boolean alreadyLiked = lectureLikeRepository.existsByLectureIdAndEmail(lectureId, email);
 
-        if(alreadyLiked) {
+        if (alreadyLiked) {
             // 이미 눌렀으면 좋아요 취소
             lectureLikeRepository.deleteByLectureIdAndEmail(lectureId, email);
             return false;
@@ -32,7 +32,7 @@ public class LectureLikeServiceImpl implements LectureLikeService {
     }
 
     @Override
-    public boolean isLiked(int lectureId, String email) {
+    public boolean isLiked(int lectureId, String email, String provider) {
         return lectureLikeRepository.existsByLectureIdAndEmail(lectureId, email);
     }
 }

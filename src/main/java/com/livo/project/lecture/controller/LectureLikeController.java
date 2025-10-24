@@ -1,8 +1,8 @@
 package com.livo.project.lecture.controller;
 
+import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.lecture.service.LectureLikeService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,34 +16,66 @@ public class LectureLikeController {
         this.lectureLikeService = lectureLikeService;
     }
 
-    //AJAX 요청 처리
+    // ✅ 좋아요 토글
     @PostMapping("/like/{lectureId}")
     @ResponseBody
     public String toggleLike(@PathVariable int lectureId,
-                             @AuthenticationPrincipal UserDetails userDetails) {
+                             Authentication authentication) {
 
-        if (userDetails == null) {
-            return "unauthorized"; // 문자열로 반환
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "unauthorized";
         }
 
-        String userEmail = userDetails.getUsername();
+        Object principal = authentication.getPrincipal();
+        String email = null;
+        String provider = null;
 
-        boolean isLiked = lectureLikeService.toggleLike(lectureId, userEmail);
+        // 로컬 로그인
+        if (principal instanceof AppUserDetails appUser) {
+            email = appUser.getEmail();
+            provider = appUser.getProvider();
+        }
+        // 소셜 로그인
+        else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
+            email = (String) oAuthUser.getAttribute("email");
+            provider = (String) oAuthUser.getAttribute("provider");
+        }
+
+        if (email == null) {
+            return "unauthorized";
+        }
+
+        boolean isLiked = lectureLikeService.toggleLike(lectureId, email, provider);
         return isLiked ? "liked" : "unliked";
     }
 
-    //좋아요 여부 확인
+    // ✅ 좋아요 여부 확인
     @GetMapping("/like/check/{lectureId}")
     @ResponseBody
     public boolean checkLike(@PathVariable int lectureId,
-                             @AuthenticationPrincipal UserDetails userDetails) {
+                             Authentication authentication) {
 
-        if (userDetails == null) {
-            return false; // 로그인 안 되어 있으면 false 반환
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
         }
 
-        String userEmail = userDetails.getUsername();
-        return lectureLikeService.isLiked(lectureId, userEmail);
+        Object principal = authentication.getPrincipal();
+        String email = null;
+        String provider = null;
+
+        if (principal instanceof AppUserDetails appUser) {
+            email = appUser.getEmail();
+            provider = appUser.getProvider();
+        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
+            email = (String) oAuthUser.getAttribute("email");
+            provider = (String) oAuthUser.getAttribute("provider");
+        }
+
+        if (email == null) {
+            return false;
+        }
+
+        return lectureLikeService.isLiked(lectureId, email, provider);
     }
 
 }

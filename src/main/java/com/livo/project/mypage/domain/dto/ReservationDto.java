@@ -30,10 +30,10 @@ public class ReservationDto {
     private String thumbnailUrl;
 
     // 수강률 추가
-    private Double progressPercent;
+    private double progressPercent;
 
     // 변환 메서드
-    public static ReservationDto of(Reservation r, Lecture l, Double progressPercent) {
+    public static ReservationDto of(Reservation r, Lecture l, double progressPercent) {
 
         LocalDateTime createdAt = null;
         Date createdAtDate = r.getCreatedAt();
@@ -52,7 +52,7 @@ public class ReservationDto {
                 .title(l.getTitle())
                 .tutorName(l.getTutorName())
                 .thumbnailUrl(l.getThumbnailUrl())
-                .progressPercent(progressPercent != null ? progressPercent : 0.0)
+                .progressPercent(progressPercent)
                 .build();
     }
 }

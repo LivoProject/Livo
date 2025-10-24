@@ -47,6 +47,6 @@ public class Reservation {
     private User user;
 
     public enum Status {
-        PENDING, CONFIRMED, CANCELED
+        PENDING, CONFIRMED, CANCEL
     }
 }

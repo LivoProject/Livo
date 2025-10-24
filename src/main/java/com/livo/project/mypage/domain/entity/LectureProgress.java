@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "lecture_progress")
 @Getter
@@ -25,17 +27,16 @@ public class LectureProgress {
 
 
     @Column(nullable = false)
-    private String email; // ✅ 진행률 저장용
+    private String email; // 진행률 저장용
 
     // 시청 정보
-    private double lastWatchedTime; //마지막 시청 위치
     private double progressPercent; //진도율
+    private double lastWatchedTime; //마지막 시청 위치
+    private LocalDateTime lastAccessedAt;
 
 
     public LectureProgress(String email, Lecture lecture) {
         this.email = email;
         this.lecture = lecture;
-        this.lastWatchedTime = 0;
-        this.progressPercent = 0;
     }
 }
