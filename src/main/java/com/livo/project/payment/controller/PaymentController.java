@@ -1,15 +1,17 @@
 package com.livo.project.payment.controller;
 
+import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.payment.domain.dto.PaymentConfirmDTO;
 import com.livo.project.payment.domain.dto.PaymentRequestDTO;
 import com.livo.project.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,5 +27,19 @@ public class PaymentController {
     @PostMapping("/confirm")
     public ResponseEntity<?> confirmPayment(@RequestBody PaymentConfirmDTO dto) {
         return ResponseEntity.ok(paymentService.confirmPayment(dto));
+    }
+
+    @GetMapping("/success")
+    public String success(@RequestParam String paymentKey,
+                          @RequestParam String orderId,
+                          @RequestParam int amount,
+                          @RequestParam(required = false) String email,
+                          Model model) {
+        PaymentConfirmDTO dto = new PaymentConfirmDTO(paymentKey, orderId, amount);
+        dto.setEmail(email);
+        Map<String, Object> result = paymentService.confirmPayment(dto);
+        model.addAttribute("result", result);
+        return "payment/success";
+
     }
 }

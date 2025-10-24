@@ -54,7 +54,7 @@ public class PaymentService {
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(secretKey, "");
         headers.setContentType(MediaType.APPLICATION_JSON);
-
+        log.info("🔑 secretKey=[{}]", secretKey);
         Map<String, Object> body = new HashMap<>();
         body.put("paymentKey", dto.getPaymentKey());
         body.put("orderId", dto.getOrderId());
@@ -102,6 +102,7 @@ public class PaymentService {
             }
 
         } catch (Exception e) {
+            log.error("❌ [TOSS 결제 승인 실패]", e);
             res.put("status", "FAIL");
             res.put("error", e.getMessage());
         }

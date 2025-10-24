@@ -1,6 +1,8 @@
 package com.livo.project.lecture.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.livo.project.auth.domain.entity.User;
+import com.livo.project.payment.domain.Payment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +23,7 @@ public class Reservation {
     private int reservationId;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.PENDING;
+    private ReservationStatus status = ReservationStatus.PENDING;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="Asia/Seoul")
     @CreationTimestamp
@@ -46,7 +48,10 @@ public class Reservation {
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private User user;
 
-    public enum Status {
-        PENDING, CONFIRMED, CANCELED
+    @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
+    private Payment payment;
+
+    public enum ReservationStatus {
+        PENDING, PAID, CANCEL, CONFIRMED, EXPIRED
     }
 }
