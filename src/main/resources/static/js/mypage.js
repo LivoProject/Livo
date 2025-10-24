@@ -54,27 +54,40 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     //=== 예약 취소 === //
+    //=== 예약 취소 === //
     const reserveModal = document.getElementById('reserveModal');
     if (reserveModal) {
         const reserveModalBody = reserveModal.querySelector('.modal-body');
         const reserveModalTitle = reserveModal.querySelector('.modal-title');
         const reserveConfirmBtn = reserveModal.querySelector('.btn-main');
-        let reserveCurrentLectureId = null; // 현재 선택된 lectureId 저장
+        let reserveCurrentLectureId = null;
 
         const bsReserveModal = new bootstrap.Modal(reserveModal);
 
+        // 예약 취소 버튼 클릭
         document.querySelectorAll(".btn-unreserve").forEach(button => {
             button.addEventListener("click", function () {
                 reserveCurrentLectureId = this.dataset.lectureId;
-                reserveModalTitle.textContent = "좋아요 해제";
-                reserveModalBody.innerHTML = `선택하신 강의를 좋아요 목록에서<br><strong>정말 해제하시겠습니까?</strong>`;
-                reserveConfirmBtn.textContent = "해제";
+                console.log('선택된 lectureId:', reserveCurrentLectureId); // 여기 찍히는지 확인
+
+                reserveModalTitle.textContent = "예약 취소";
+                reserveModalBody.innerHTML = `선택하신 강의 예약을<br><strong>정말 취소하시겠습니까?</strong>`;
+                reserveConfirmBtn.textContent = "취소";
                 bsReserveModal.show();
             });
         });
 
+        // 확인 버튼 클릭
         reserveConfirmBtn.addEventListener("click", function () {
-            if (!reserveCurrentLectureId) return;
+            console.log('확인 버튼 클릭됨');
+            console.log('현재 lectureId:', reserveCurrentLectureId);
+
+            if (!reserveCurrentLectureId) {
+                alert('lectureId가 없습니다!');
+                return;
+            }
+
+            console.log('fetch 시작');
 
             fetch("/mypage/lecture/delete", {
                 method: "POST",
@@ -82,50 +95,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                     [csrfHeader]: csrfToken
                 },
-                body: new URLSearchParams({ lectureId: reserveCurrentLectureId }).toString()
+                body: new URLSearchParams({lectureId: reserveCurrentLectureId}).toString()
             })
                 .then(res => {
+                    console.log('응답 받음, status:', res.status);
                     if (!res.ok) throw new Error(res.statusText);
                     return res.json();
                 })
                 .then(data => {
-                    if (data.success) {
-                        reserveModalBody.innerHTML = "예약이 취소되었습니다.";
-                        reserveConfirmBtn.textContent = "닫기";
-
-                        reserveConfirmBtn.onclick = () => {
-                            // 같은 페이지에 차트가 있으면 즉시 갱신
-                            const from = document.querySelector("#from")?.value;
-                            const to   = document.querySelector("#to")?.value;
-                            if (typeof window.loadTopLectures === "function" && from && to) {
-                                window.loadTopLectures(from, to);
-                            }
-
-                            // 관리자 페이지(또는 다른 탭)에 실시간 반영 신호 전송
-                            try {
-                                const bc = new BroadcastChannel("reservations");
-                                bc.postMessage({ type: "changed", at: Date.now() });
-                                bc.close();
-                            } catch(_) {}
-
-                            // Fallback: storage 이벤트로도 알림
-                            try {
-                                localStorage.setItem("reservationChanged", String(Date.now()));
-                            } catch(_) {}
-
-                            // 모달 닫기
-                            bootstrap.Modal.getInstance(reserveModal)?.hide();
-                        };
-
-                    } else {
-                        reserveModalBody.innerHTML = "실패: " + data.message;
-                    }
+                    console.log('응답 데이터:', data);
+                    alert('성공: ' + JSON.stringify(data));
+                    window.location.reload();
                 })
                 .catch(err => {
-                    reserveModalBody.innerHTML = "에러 발생: " + err.message;
+                    console.error('에러 발생:', err);
+                    alert('에러: ' + err.message);
                 });
         });
-
     }
 
     //=== 리뷰 모달 ===//
