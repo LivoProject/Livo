@@ -8,6 +8,7 @@ import com.livo.project.lecture.service.AttachmentService;
 import com.livo.project.lecture.service.ChapterListService;
 import com.livo.project.lecture.service.LectureService;
 import com.livo.project.lecture.service.ReservationService;
+import com.livo.project.report.service.ReportService;
 import com.livo.project.review.domain.Review;
 import com.livo.project.review.domain.dto.ReviewDto;
 import com.livo.project.review.service.ReviewService;
@@ -24,9 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Controller
@@ -38,6 +37,7 @@ public class LectureContentController {
     private final AttachmentService attachmentService;
     private final ReviewService reviewService;
     private final ReservationService reservationService;
+    private final ReportService reportService;
 
     // 강좌 상세 (강의 목록 + 리뷰 + 첨부파일 조회!!)
     @GetMapping("/content/{lectureId}")
@@ -91,6 +91,12 @@ public class LectureContentController {
             }
         }
 
+        // 추가 부분 : 현재 사용자가 신고한 리뷰 목록
+        Set<Integer> reportedIds = Collections.emptySet();
+        if (isLoggedIn) {
+            reportedIds = reportService.getReportedReviewIdsByUser(email);
+        }
+
         //첨부파일
         List<Attachment> attachments = attachmentService.getAttachmentsByLectureId(lectureId);
 
@@ -104,6 +110,7 @@ public class LectureContentController {
         model.addAttribute("isEnrolled", isEnrolled);
         model.addAttribute("loggedInUserEmail", email);
         model.addAttribute("attachments", attachments);
+        model.addAttribute("reportedIds", reportedIds);
 
         return "lecture/content";
     }

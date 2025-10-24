@@ -8,4 +8,5 @@ import java.util.List;
 public interface ReportRepository extends JpaRepository<Report, Integer> {
     List<Report> findByReview_ReviewUId(int reviewUId);
     List<Report> findTop5ByStatusOrderByReportTimeAsc(Report.Status status);
+    List<Report> findAllByEmail(String email);
 }

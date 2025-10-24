@@ -14,7 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -23,8 +26,6 @@ public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
     private final ReviewRepository reviewRepository;
-
-
 
     @Transactional
     @Override
@@ -73,5 +74,13 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<Report> getNotApprovedReport() {
         return reportRepository.findTop5ByStatusOrderByReportTimeAsc(Report.Status.PROCESSING);
+    }
+
+    @Override
+    public Set<Integer> getReportedReviewIdsByUser(String userEmail) {
+        if (userEmail == null) return Collections.emptySet();
+        return reportRepository.findAllByEmail(userEmail).stream()
+                .map(r -> r.getReview().getReviewUId())
+                .collect(Collectors.toSet());
     }
 }
