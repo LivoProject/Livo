@@ -1,5 +1,6 @@
 package com.livo.project.lecture.repository;
 
+import com.livo.project.auth.domain.entity.User;
 import com.livo.project.lecture.domain.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     boolean existsByLectureIdAndEmail(int lectureId, String email);
 
     // 취소되지 않은 수강 여부 확인
-    boolean existsByEmailAndLectureIdAndStatusNot(String email, int lectureId, Reservation.Status status);
+    boolean existsByEmailAndLectureIdAndStatusNot(String email, int lectureId, Reservation.ReservationStatus status);
 
     // 리뷰 등록 시 실제 reservationId 찾기
     @Query("""
@@ -24,4 +25,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
         """)
     Optional<Integer> findReservationIdByUserAndLecture(@Param("email") String email,
                                                         @Param("lectureId") int lectureId);
+
+    Optional<Reservation> findByReservationId(int reservationId);
+
 }

@@ -1,5 +1,8 @@
 package com.livo.project.auth.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.livo.project.lecture.domain.Reservation;
+import com.livo.project.payment.domain.Payment;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(
@@ -94,4 +98,12 @@ public class User {
         if (status == null) status = true;
         if (emailVerified == null) emailVerified = false;
     }
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Reservation> reservations;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Payment> payments;
 }
