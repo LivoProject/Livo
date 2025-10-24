@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ReportService {
 
@@ -18,4 +19,6 @@ public interface ReportService {
     Page<Report> getReport(Pageable pageable);
 
     List<Report> getNotApprovedReport();
+
+    Set<Integer> getReportedReviewIdsByUser(String userEmail);
 }

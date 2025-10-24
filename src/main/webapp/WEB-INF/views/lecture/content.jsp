@@ -244,6 +244,11 @@
                                         <c:when test="${review.blocked}">
                                             <button class="btn btn-outline-secondary btn-sm" disabled>신고된 리뷰</button>
                                         </c:when>
+                                        <%-- 민영 추가: 이미 신고한 리뷰일 경우 --%>
+                                        <c:when test="${reportedIds.contains(review.reviewUId)}">
+                                            <button class="btn btn-secondary btn-sm" disabled>검토중</button>
+                                        </c:when>
+                                        <%-- 본인 리뷰가 아닌 경우: 신고 버튼 --%>
                                         <c:when test="${review.userEmail ne loggedInUserEmail}">
                                             <button class="btn btn-outline-danger btn-sm"
                                                     type="button"
@@ -255,7 +260,7 @@
                                         </c:when>
 
                                         <c:otherwise>
-                                            <!-- 본인 리뷰: 나의 리뷰 + 수정 + 삭제 -->
+                                            <!-- 본인 리뷰: 수정 + 삭제 -->
                                             <button class="btn btn-outline-secondary btn-sm" disabled>
                                                 나의 후기
                                             </button>
