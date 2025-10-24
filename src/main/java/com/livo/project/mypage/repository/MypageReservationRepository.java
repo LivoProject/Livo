@@ -22,7 +22,7 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
 
     @Modifying
     @Query("UPDATE Reservation r SET r.status = 'CANCEL' WHERE r.lecture.lectureId = :lectureId AND r.user.email = :email")
-    void cancelByLectureIdAndEmail(@Param("lectureId") Integer lectureId,
+    int cancelByLectureIdAndEmail(@Param("lectureId") Integer lectureId,
                                    @Param("email") String email);
 
 //    @Modifying

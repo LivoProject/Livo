@@ -1,11 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page isELIgnored="false" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%@ include file="/WEB-INF/views/common/modal.jsp" %>
 <link rel="stylesheet" href="/css/main.css" />
 <link rel="stylesheet" href="/css/lectureContent.css">
+<script src="https://js.tosspayments.com/v2/standard"></script>
 
 <!-- 강좌 상세 페이지 시작 -->
 <section id="sub" class="container" style="margin-top: 100px;">
@@ -66,7 +68,7 @@
 
                                 <%-- 유료 강의 --%>
                                 <c:otherwise>
-                                    <a href="#" class="btn btn-warning text-white">결제하기</a>
+                                    <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">결제하기</button>
                                 </c:otherwise>
                             </c:choose>
                         </c:otherwise>
@@ -399,8 +401,15 @@
 <script>
     const csrfToken = "${_csrf.token}";
 </script>
-
+<script>
+    // 로그인 유저 이메일 JSP에서 JS 변수로 넘기기
+    const userEmail = "${loggedInUserEmail != null ? loggedInUserEmail : ''}";
+    const lectureId = ${lecture.lectureId};
+    const amount = ${lecture.price};
+    console.log("로그인된 사용자 이메일:", userEmail);
+</script>
 <script src="/js/modal.js"></script>
 <script src="/js/lectureContent.js"></script>
+<script src="/js/payment.js"></script>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

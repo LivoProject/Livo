@@ -156,6 +156,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers("/lecture/like/**") // <-민영추가!!
+                        .ignoringRequestMatchers("/payment/confirm")
                 )
 
                 /* -------------------------------
