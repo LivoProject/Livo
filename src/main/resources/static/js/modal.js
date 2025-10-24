@@ -32,10 +32,18 @@ function showCommonModal(title, message, confirmText = "확인", showCancel = fa
 
         if (title === "신고 완료" || title === "리뷰 등록 완료") {
             window.location.hash = "#review";
+
         } else if (title === "리뷰 수정 완료") {
             window.location.hash = "#review";
+
         } else if (title === "리뷰 삭제 완료") {
+            // URL 파라미터 제거
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+
+            // 새로고침
             location.reload();
+
         } else if (title === "수강 신청 완료") {
             window.location.href = "/mypage/lecture";
         }
