@@ -10,8 +10,11 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
-    //이미 수강 중인지 확인 (중복 방지 + 후기 등록 조건!!)
+    // 이미 수강 중인지 확인 (중복 방지 + 후기 등록 조건!!)
     boolean existsByLectureIdAndEmail(int lectureId, String email);
+
+    // 취소되지 않은 수강 여부 확인
+    boolean existsByEmailAndLectureIdAndStatusNot(String email, int lectureId, Reservation.Status status);
 
     // 리뷰 등록 시 실제 reservationId 찾기
     @Query("""
