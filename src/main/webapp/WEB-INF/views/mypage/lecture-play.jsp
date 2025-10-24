@@ -143,6 +143,8 @@
     let player;
     let progressInterval;
     const lectureId = document.getElementById("lectureVideo").dataset.lectureId;
+    const lastWatchedTime = <c:out value="${lastWatchedTime != null ? lastWatchedTime : 0}" default="0"/>;
+    console.log("🎬 lastWatchedTime:", lastWatchedTime);
 
     // videoId와 startSeconds 파싱 함수
     function parseYouTubeUrl(url) {
@@ -176,21 +178,24 @@
     function onYouTubeIframeAPIReady() {
         console.log("🔥 API Ready 실행됨");
 
+        const startTime = lastWatchedTime && lastWatchedTime > 0 ? lastWatchedTime : 0;
+
         if (!initialVideoId) {
             console.error("❌ 초기 videoId 없음 (서버에서 youtubeUrl 확인 필요)");
             return;
         }
+
 
         player = new YT.Player("lectureVideo", {
             videoId: initialVideoId,
             width: "100%",
             height: "500",
             playerVars: {
-                autoplay: 1,       // 처음엔 자동 재생
+                autoplay: 1,
                 controls: 1,
                 rel: 0,
                 modestbranding: 1,
-                start: 0           // 항상 0초부터
+                start: startTime
             },
             events: {
                 onReady: onPlayerReady,
@@ -201,6 +206,16 @@
 
     function onPlayerReady(event) {
         console.log("✅ onPlayerReady 실행됨");
+
+        // ✅ 1. 비디오 준비된 직후, 지정한 시점으로 이동
+        if (lastWatchedTime && lastWatchedTime > 0) {
+            player.seekTo(lastWatchedTime, true);
+        }
+
+        // ✅ 2. 자동 재생 시작
+        player.playVideo();
+
+        // ✅ 3. 진행률 감시 시작
         startProgressLoop();
     }
 

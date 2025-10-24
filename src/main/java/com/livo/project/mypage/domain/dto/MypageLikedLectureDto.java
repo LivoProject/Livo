@@ -1,20 +1,19 @@
 package com.livo.project.mypage.domain.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MypageLectureDto {
+@Builder
+public class MypageLikedLectureDto {
     private Integer lectureId;
     private String title;
     private String tutorName;
     private int price;
     private String thumbnailUrl;
-    private int progressPercent;
-
+    private Double progressPercent;
+    private boolean reserved;
 }
