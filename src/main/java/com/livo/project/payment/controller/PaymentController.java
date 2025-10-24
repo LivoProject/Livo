@@ -48,6 +48,5 @@ public class PaymentController {
         Map<String, Object> result = paymentService.confirmPayment(dto);
         model.addAttribute("result", result);
         return "payment/success";
-
     }
 }
