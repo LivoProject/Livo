@@ -9,7 +9,7 @@ import java.util.List;
 public interface ReportService {
 
     //신고 등록 (민영은 등록만 하면 될 것 같음!)
-    void saveReport(int lectureId, int reviewUId, String reportReason, String customReason, String userEmail);
+    void saveReport(int lectureId, int reviewUId, String reportReason, String customReason, String userEmail, String provider);
 
     void approveReport(int reportId);
 
