@@ -54,6 +54,9 @@ public class Review {
     protected void onUpdate() {
         this.updatedAt = new Date();
     }
+
+    @Column(nullable = false)
+    private boolean blocked = false;
 }
 
 

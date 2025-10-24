@@ -21,6 +21,7 @@ public class ReviewDto {
     private String createdAt;      // 작성일 포맷 문자열
     private String updatedAt;      // ✅ 수정일 포맷 문자열
     private boolean edited;      // ✅ 수정 여부
+    private boolean blocked;
 
     // ✅ Entity → DTO 변환 메서드
     public static ReviewDto fromEntity(Review review) {
@@ -44,7 +45,8 @@ public class ReviewDto {
                 review.getReviewContent(),
                 created,
                 updated,
-                edited
+                edited,
+                review.isBlocked()
         );
     }
 }
