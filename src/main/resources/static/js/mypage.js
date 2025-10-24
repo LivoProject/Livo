@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                     [csrfHeader]: csrfToken
                 },
-                body: new URLSearchParams({lectureId: reserveCurrentLectureId}).toString()
+                body: new URLSearchParams({ lectureId: reserveCurrentLectureId }).toString()
             })
                 .then(res => {
                     if (!res.ok) throw new Error(res.statusText);
@@ -92,7 +92,31 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (data.success) {
                         reserveModalBody.innerHTML = "예약이 취소되었습니다.";
                         reserveConfirmBtn.textContent = "닫기";
-                        reserveConfirmBtn.onclick = () => window.location.reload();
+
+                        reserveConfirmBtn.onclick = () => {
+                            // 같은 페이지에 차트가 있으면 즉시 갱신
+                            const from = document.querySelector("#from")?.value;
+                            const to   = document.querySelector("#to")?.value;
+                            if (typeof window.loadTopLectures === "function" && from && to) {
+                                window.loadTopLectures(from, to);
+                            }
+
+                            // 관리자 페이지(또는 다른 탭)에 실시간 반영 신호 전송
+                            try {
+                                const bc = new BroadcastChannel("reservations");
+                                bc.postMessage({ type: "changed", at: Date.now() });
+                                bc.close();
+                            } catch(_) {}
+
+                            // Fallback: storage 이벤트로도 알림
+                            try {
+                                localStorage.setItem("reservationChanged", String(Date.now()));
+                            } catch(_) {}
+
+                            // 모달 닫기
+                            bootstrap.Modal.getInstance(reserveModal)?.hide();
+                        };
+
                     } else {
                         reserveModalBody.innerHTML = "실패: " + data.message;
                     }
@@ -100,8 +124,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(err => {
                     reserveModalBody.innerHTML = "에러 발생: " + err.message;
                 });
-
         });
+
     }
 
     //=== 리뷰 모달 ===//

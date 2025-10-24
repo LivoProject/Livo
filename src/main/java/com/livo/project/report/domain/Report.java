@@ -1,6 +1,7 @@
 package com.livo.project.report.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.livo.project.lecture.domain.User;
 import com.livo.project.review.domain.Review;

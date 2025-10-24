@@ -9,4 +9,6 @@ public interface ReservationService {
 
     // 리뷰 등록 시 reservationId 가져오기 (ReviewController)
     Integer findReservationIdByEmailAndLectureId(String email, int lectureId, String provider);
+
+    int createPendingReservation(int lectureId, String email);
 }

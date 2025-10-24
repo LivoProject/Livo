@@ -1,11 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page isELIgnored="false" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%@ include file="/WEB-INF/views/common/modal.jsp" %>
 <link rel="stylesheet" href="/css/main.css" />
 <link rel="stylesheet" href="/css/lectureContent.css">
+<script src="https://js.tosspayments.com/v2/standard"></script>
 
 <!-- 강좌 상세 페이지 시작 -->
 <section id="sub" class="container" style="margin-top: 100px;">
@@ -66,7 +68,7 @@
 
                                 <%-- 유료 강의 --%>
                                 <c:otherwise>
-                                    <a href="#" class="btn btn-warning text-white">결제하기</a>
+                                    <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">결제하기</button>
                                 </c:otherwise>
                             </c:choose>
                         </c:otherwise>
@@ -244,6 +246,11 @@
                                         <c:when test="${review.blocked}">
                                             <button class="btn btn-outline-secondary btn-sm" disabled>신고된 리뷰</button>
                                         </c:when>
+                                        <%-- 민영 추가: 이미 신고한 리뷰일 경우 --%>
+                                        <c:when test="${reportedIds.contains(review.reviewUId)}">
+                                            <button class="btn btn-secondary btn-sm" disabled>검토중</button>
+                                        </c:when>
+                                        <%-- 본인 리뷰가 아닌 경우: 신고 버튼 --%>
                                         <c:when test="${review.userEmail ne loggedInUserEmail}">
                                             <button class="btn btn-outline-danger btn-sm"
                                                     type="button"
@@ -255,7 +262,7 @@
                                         </c:when>
 
                                         <c:otherwise>
-                                            <!-- 본인 리뷰: 나의 리뷰 + 수정 + 삭제 -->
+                                            <!-- 본인 리뷰: 수정 + 삭제 -->
                                             <button class="btn btn-outline-secondary btn-sm" disabled>
                                                 나의 후기
                                             </button>
@@ -314,7 +321,21 @@
                                         <div>
                                             <strong>${file.fileName}</strong>
                                         </div>
-                                        <a href="${file.fileUrl}" class="btn btn-outline-primary btn-sm" download>다운로드</a>
+
+                                        <!-- ✅ 수강 여부에 따라 버튼 다르게 표시 -->
+                                        <c:choose>
+                                            <c:when test="${isEnrolled}">
+                                                <a href="${file.fileUrl}" class="btn btn-outline-primary btn-sm" download>
+                                                    다운로드
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="btn btn-secondary btn-sm" disabled>
+                                                    수강신청 필요
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
+
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -328,6 +349,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- 🚨 리뷰 신고 모달 -->
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
@@ -379,8 +401,15 @@
 <script>
     const csrfToken = "${_csrf.token}";
 </script>
-
+<script>
+    // 로그인 유저 이메일 JSP에서 JS 변수로 넘기기
+    const userEmail = "${loggedInUserEmail != null ? loggedInUserEmail : ''}";
+    const lectureId = ${lecture.lectureId};
+    const amount = ${lecture.price};
+    console.log("로그인된 사용자 이메일:", userEmail);
+</script>
 <script src="/js/modal.js"></script>
 <script src="/js/lectureContent.js"></script>
+<script src="/js/payment.js"></script>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
