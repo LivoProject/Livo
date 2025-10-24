@@ -140,7 +140,7 @@ public class MypageController {
             email = appUser.getEmail();
             provider = appUser.getProvider();
         } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-            email = (String) oAuthUser.getAttribute("email");
+            email = (String) oAuthUser.getAttribute("email");     // ✅ 이메일 속성 추출
             provider = (String) oAuthUser.getAttribute("provider");
         }
 
@@ -148,12 +148,13 @@ public class MypageController {
             return "redirect:/auth/login";
         }
 
-        Page<ReservationDto> reservations = mypageService.getMyReservations(email, provider, pageable);
+        Page<ReservationDto> reservations = mypageService.getMyReservations(email, pageable);
         model.addAttribute("reservations", reservations.getContent());
         model.addAttribute("page", reservations);
 
         return "mypage/lecture";
     }
+
 
     //내 강좌 예약 취소
     @ResponseBody
@@ -170,14 +171,11 @@ public class MypageController {
 
         Object principal = authentication.getPrincipal();
         String email = null;
-        String provider = null;
 
         if (principal instanceof AppUserDetails appUser) {
             email = appUser.getEmail();
-            provider = appUser.getProvider();
         } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
             email = (String) oAuthUser.getAttribute("email");
-            provider = (String) oAuthUser.getAttribute("provider");
         }
 
         if (email == null) {
@@ -187,7 +185,7 @@ public class MypageController {
         }
 
         try {
-            mypageService.removeReservationLecture(lectureId, email, provider);
+            mypageService.removeReservationLecture(lectureId, email);
             response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);
