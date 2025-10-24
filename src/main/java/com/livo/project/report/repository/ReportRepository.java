@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ReportRepository extends JpaRepository<Report, Integer> {
-    List<Report> findByReviewUId(int reviewUId);
+    List<Report> findByReview_ReviewUId(int reviewUId);
+    List<Report> findTop5ByStatusOrderByReportTimeAsc(Report.Status status);
 }

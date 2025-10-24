@@ -139,5 +139,5 @@ table {
 }
 a {
   color: var(--color-black);
-  text-decoration: none;
+  text-decoration: none!important;
 }

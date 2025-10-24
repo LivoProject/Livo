@@ -47,6 +47,7 @@ public class ReviewDto {
                 updated,
                 edited,
                 review.isBlocked()
+
         );
     }
 }

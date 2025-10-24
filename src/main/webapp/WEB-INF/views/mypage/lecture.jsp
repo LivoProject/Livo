@@ -32,7 +32,7 @@
                     </div>
                     <div class="card-footer bg-white d-flex justify-content-between align-items-center">
                         <div>
-                            <a href="mypage-lecture-view.html" class="btn-main">이어보기</a>
+                            <a href="/lecture/view/${reservations.lectureId}" class="btn-main">이어보기</a>
                             <button class="btn-main"
                                     data-bs-toggle="modal"
                                     data-bs-target="#exampleModal">

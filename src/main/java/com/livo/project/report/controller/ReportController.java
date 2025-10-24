@@ -28,16 +28,7 @@ public class ReportController {
 
         String userEmail = userDetails.getUsername();
 
-        if ("기타".equals(reportReason) && customReason != null && !customReason.trim().isEmpty()) {
-            reportReason = customReason.trim();
-        }
-
-        Report report = new Report();
-        report.setReviewUId(reviewUId);
-        report.setReportReason(reportReason);
-        report.setEmail(userEmail);
-
-        reportService.saveReport(report);
+        reportService.saveReport(lectureId, reviewUId, reportReason, customReason, userEmail);
 
         return "redirect:/lecture/content/" + lectureId + "?reported=success#review";
     }

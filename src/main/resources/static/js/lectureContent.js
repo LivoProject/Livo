@@ -177,10 +177,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     // ✅ 후기 목록 추가
                     data.content.forEach(r => {
                         const stars = "⭐".repeat(r.reviewStar) + "☆".repeat(5 - r.reviewStar);
+                        const reviewContentHtml = r.blocked
+                            ? `<span class="text-muted fst-italic">🚫 신고된 리뷰입니다.</span>`
+                            : `<strong>${r.reviewContent}</strong>`;
 
                         // 🚨 신고 / 수정 / 삭제 버튼 조건 로직
                         let actionBtns = "";
-                        if (isLoggedIn) {
+
+                        // 🚨 신고 버튼 조건 로직
+                        if(r.blocked){
+                            actionBtns = `<button class="btn btn-outline-secondary btn-sm" disabled>신고된 리뷰</button>`;
+                        }
+                        else if (isLoggedIn) {
                             if (r.userEmail === loggedInUserEmail) {
                                 // 본인 후기 → 수정/삭제 표시
                                 actionBtns = `
@@ -228,7 +236,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <h4>${r.userName}</h4>
                                 <h5>${r.createdAt}${r.isEdited ? ' <span class="text-muted small">(수정)</span>' : ''}</h5>
                                 <h4>${stars}</h4>
-                                <h4><strong>${r.reviewContent}</strong></h4>
+                                <h4>
+                                <strong>${reviewContentHtml}</strong>
+                                </h4>
                                 ${actionBtns}
                             </div>
                         </div>
