@@ -26,8 +26,9 @@
                     <div class="card-body">
                         <h6 class="fw-bold mb-1">${reservations.title}</h6>
                         <p class="text-muted small mb-2">${reservations.tutorName}</p>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" style="width: 60%"></div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success"
+                                 style="width: ${reservations.progressPercent}%;"></div>
                         </div>
                     </div>
                     <div class="card-footer bg-white d-flex justify-content-between align-items-center">

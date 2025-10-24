@@ -10,8 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MypageLectureDto {
-    private Long lectureId;
+    private Integer lectureId;
     private String title;
     private String tutorName;
-    private double progressPercent;
+    private String thumbnailUrl;
+    private int progressPercent;
+
 }

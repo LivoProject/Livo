@@ -14,12 +14,19 @@ import java.util.List;
 
 @Repository
 public interface MypageReservationRepository extends JpaRepository<Reservation, Integer> {
-    Page<Reservation> findAllByEmail(String email, Pageable pageable);
 
-    void deleteByLectureIdAndEmail(Integer lectureId, String email);
+    @Query("SELECT r FROM Reservation r WHERE r.user.email = :email AND r.status = 'CONFIRMED'")
+    Page<Reservation> findConfirmedByEmail(String email, Pageable pageable);
+
+   // void deleteByLectureIdAndEmail(Integer lectureId, String email);
 
     @Modifying
-    @Transactional
-    @Query("DELETE FROM Reservation r WHERE r.user.id = :userId AND r.lecture.lectureId = :lectureId")
-    void deleteByUserIdAndLectureId(@Param("email") String email, @Param("lectureId") Integer lectureId);
+    @Query("UPDATE Reservation r SET r.status = 'CANCEL' WHERE r.lecture.lectureId = :lectureId AND r.user.email = :email")
+    void cancelByLectureIdAndEmail(@Param("lectureId") Integer lectureId,
+                                   @Param("email") String email);
+
+//    @Modifying
+//    @Transactional
+//    @Query("DELETE FROM Reservation r WHERE r.user.id = :userId AND r.lecture.lectureId = :lectureId")
+//    void deleteByUserIdAndLectureId(@Param("email") String email, @Param("lectureId") Integer lectureId);
 }
