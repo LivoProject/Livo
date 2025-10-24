@@ -46,7 +46,7 @@
   <!-- 왼쪽: 비디오 영역 -->
     <div class="video-area flex-grow-1 p-3">
         <!-- YouTube 플레이어가 동적으로 여기에 렌더링됨 -->
-        <div id="lectureVideo"></div>
+        <div id="lectureVideo" data-lecture-id="${lecture.lectureId}"></div>
     </div>
 <%--  <div class="video-area flex-grow-1 p-3">--%>
 <%--    <c:if test="${not empty youtubeUrl}">--%>
@@ -142,6 +142,7 @@
 
     let player;
     let progressInterval;
+    const lectureId = document.getElementById("lectureVideo").dataset.lectureId;
 
     // videoId와 startSeconds 파싱 함수
     function parseYouTubeUrl(url) {
@@ -149,6 +150,7 @@
         let startSeconds = 0;
         if (!url) return { videoId, startSeconds };
 
+        // 🎬 URL 형태별 videoId 추출
         if (url.includes("watch?v=")) {
             videoId = url.split("v=")[1]?.split("&")[0];
         } else if (url.includes("youtu.be/")) {
@@ -159,8 +161,10 @@
             videoId = url.split("shorts/")[1]?.split(/[?&]/)[0];
         }
 
-        const startMatch = url.match(/[?&]start=(\d+)/);
-        if (startMatch) startSeconds = parseInt(startMatch[1]);
+        // 🎯 start 또는 t 파라미터 추출
+        const startMatch = url.match(/[?&](start|t)=(\d+)/);
+        if (startMatch) startSeconds = parseInt(startMatch[2]);
+
         return { videoId, startSeconds };
     }
 
@@ -203,6 +207,12 @@
     function onPlayerStateChange(event) {
         if (event.data === YT.PlayerState.ENDED) {
             document.getElementById("progressBar").style.width = "100%";
+
+            const cur = player.getCurrentTime();
+            const dur = player.getDuration();
+            const percent = (cur / dur) * 100;
+
+            saveProgress(lectureId, percent, cur);
         }
     }
 
@@ -217,20 +227,39 @@
                 // 진행률
                 const percent = Math.floor((cur / dur) * 100);
 
-                // 현재 챕터 계산 (예시: 100개 중 75%)
-                // 총 챕터 수를 실제 값으로 넣거나 전역 변수로 관리
-                //const totalChapters = chapters.length;
-                //const currentChapter = Math.floor((percent / 100) * totalChapters);
-
-                ///document.getElementById("currentChap").innerText = currentChapter;
-                //document.getElementById("totalChap").innerText = totalChapters;
-
                 document.getElementById("progressBar").style.width = percent + "%";
                 document.getElementById("progressText").innerText = percent;
 
+                saveProgress(percent, cur); //lectureId는 전역변수니까 여기서 넘겨주지 않아도 값 있음
             }
         }, 1000);
     }
+
+    // 현재 진행률 서버에 전송
+    function saveProgress(percent, currentTime) {
+        const csrfHeader = document.querySelector("meta[name='_csrf_header']").content;
+        const csrfToken = document.querySelector("meta[name='_csrf']").content;
+
+        fetch("/mypage/save", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({
+                lectureId: lectureId,
+                progressPercent: percent,
+                lastWatchedTime: currentTime
+            })
+        })
+            .then(res => {
+                if(!res.ok) throw new Error("서버 통신 실패");
+                return res.text();
+            })
+            .then(msg => console.log("✅ 진행률 저장 완료:", msg))
+            .catch(err => console.error("❌ 진행률 저장 실패:", err));
+    }
+
 
     // 챕터 버튼 클릭 시
     $(document).on("click", ".play-chapter", function() {
