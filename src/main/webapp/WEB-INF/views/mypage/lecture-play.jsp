@@ -95,7 +95,7 @@
         <div id="progressBar" class="bar bg-success" style="height: 8px;"></div>
       </div>
       <p class="progress-text mt-2 mb-0 text-secondary">
-        진도율 <span>81</span> / 98 <span>(83%)</span>
+          진도율 <span id="progressText">0</span> %
       </p>
     </div>
 
@@ -133,6 +133,13 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
+    // JSP의 chapters 데이터를 JS 배열로 변환
+    <%--const chapters = [--%>
+    <%--    <c:forEach var="ch" items="${chapters}" varStatus="st">--%>
+    <%--    "${ch.chapterName}"<c:if test="${!st.last}">,</c:if>--%>
+    <%--    </c:forEach>--%>
+    <%--];--%>
+
     let player;
     let progressInterval;
 
@@ -175,11 +182,11 @@
             width: "100%",
             height: "500",
             playerVars: {
-                autoplay: 1,       // ✅ 처음엔 자동 재생
+                autoplay: 1,       // 처음엔 자동 재생
                 controls: 1,
                 rel: 0,
                 modestbranding: 1,
-                start: 0           // ✅ 항상 0초부터
+                start: 0           // 항상 0초부터
             },
             events: {
                 onReady: onPlayerReady,
@@ -206,8 +213,21 @@
             const dur = player.getDuration();
             const cur = player.getCurrentTime();
             if (dur > 0) {
-                const percent = (cur / dur) * 100;
+                //const percent = (cur / dur) * 100;
+                // 진행률
+                const percent = Math.floor((cur / dur) * 100);
+
+                // 현재 챕터 계산 (예시: 100개 중 75%)
+                // 총 챕터 수를 실제 값으로 넣거나 전역 변수로 관리
+                //const totalChapters = chapters.length;
+                //const currentChapter = Math.floor((percent / 100) * totalChapters);
+
+                ///document.getElementById("currentChap").innerText = currentChapter;
+                //document.getElementById("totalChap").innerText = totalChapters;
+
                 document.getElementById("progressBar").style.width = percent + "%";
+                document.getElementById("progressText").innerText = percent;
+
             }
         }, 1000);
     }
@@ -216,10 +236,8 @@
     $(document).on("click", ".play-chapter", function() {
         const rawUrl = $(this).data("url");
         const { videoId, startSeconds } = parseYouTubeUrl(rawUrl);
-        console.log("🎯 챕터 이동:", videoId, startSeconds);
 
         if (!player || !videoId) {
-            console.error("❌ player 미초기화 또는 videoId 없음");
             return;
         }
 
@@ -227,14 +245,12 @@
         if (videoId === player.getVideoData().video_id) {
             player.seekTo(startSeconds || 0, true);
             player.playVideo();
-            console.log("⏩ 동일 영상 내 구간 이동:", startSeconds, "초");
         } else {
             player.loadVideoById({
                 videoId: videoId,
                 startSeconds: startSeconds || 0,
                 suggestedQuality: "hd720"
             });
-            console.log("✅ 다른 영상으로 변경:", videoId);
         }
     });
 </script>
