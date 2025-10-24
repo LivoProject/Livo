@@ -30,4 +30,10 @@ public class User { //민영 테스트 위한 간단 버전!!
 
     @Column(name = "role_id")
     private int roleId;
+
+    @Column(nullable = false, length = 30)
+    private String provider;
+
+    @Column(name = "providerId")
+    private String providerId;
 }

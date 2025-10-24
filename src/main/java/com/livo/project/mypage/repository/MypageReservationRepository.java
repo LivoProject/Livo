@@ -14,12 +14,13 @@ import java.util.List;
 
 @Repository
 public interface MypageReservationRepository extends JpaRepository<Reservation, Integer> {
+
     Page<Reservation> findAllByEmail(String email, Pageable pageable);
 
     void deleteByLectureIdAndEmail(Integer lectureId, String email);
 
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Reservation r WHERE r.user.id = :userId AND r.lecture.lectureId = :lectureId")
-    void deleteByUserIdAndLectureId(@Param("email") String email, @Param("lectureId") Integer lectureId);
+//    @Modifying
+//    @Transactional
+//    @Query("DELETE FROM Reservation r WHERE r.user.id = :userId AND r.lecture.lectureId = :lectureId")
+//    void deleteByUserIdAndLectureId(@Param("email") String email, @Param("lectureId") Integer lectureId);
 }

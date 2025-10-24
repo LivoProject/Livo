@@ -125,7 +125,7 @@ public class MypageController {
     // 내 강좌 페이지 이동
     @GetMapping("/lecture")
     public String lecture(Authentication authentication,
-                          @PageableDefault(size = 6, direction = Sort.Direction.DESC) Pageable pageable,
+                          @PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                           Model model) {
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -199,7 +199,7 @@ public class MypageController {
     // 즐겨찾기 페이지 이동
     @GetMapping("/like")
     public String like(Authentication authentication,
-                       @PageableDefault(size = 6, direction = Sort.Direction.DESC) Pageable pageable,
+                       @PageableDefault(size = 6) Pageable pageable,
                        Model model) {
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -274,7 +274,7 @@ public class MypageController {
     @GetMapping("/review")
     public String review(@RequestParam(required = false) Integer reviewId,
                          Authentication authentication,
-                         @PageableDefault(size = 6, direction = Sort.Direction.DESC)
+                         @PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC)
                          Pageable pageable,
                          Model model) {
 

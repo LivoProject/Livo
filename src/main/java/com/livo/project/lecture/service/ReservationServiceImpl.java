@@ -17,13 +17,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public void saveReservation(int lectureId, String email) {
-
-        //중복방지인데, 이거 모달창 해야 하나... 일단 나중에!
-        if (reservationRepository.existsByLectureIdAndEmail(lectureId, email)) {
-            System.out.println("이미 수강 중인 강의입니다."); //모달로?
-            return;
-        }
+    public void saveReservation(int lectureId, String email, String provider) {
 
         //수강신청
         Reservation reservation = new Reservation();
@@ -39,18 +33,16 @@ public class ReservationServiceImpl implements ReservationService {
         lecture.setReservationCount(lecture.getReservationCount() + 1);
         lectureRepository.save(lecture);
 
-        System.out.println("무료강의 수강신청 완료!"); //모달로?
-
     }
 
     @Override
-    public boolean isUserEnrolled(int lectureId, String email) {
+    public boolean isUserEnrolled(int lectureId, String email, String provider) {
         return reservationRepository.existsByLectureIdAndEmail(lectureId, email);
     }
 
     // 리뷰 등록 시 reservationId 반환 (ReviewController용)
     @Override
-    public Integer findReservationIdByEmailAndLectureId(String email, int lectureId) {
+    public Integer findReservationIdByEmailAndLectureId(String email, int lectureId, String provider) {
         return reservationRepository.findReservationIdByUserAndLecture(email, lectureId)
                 .orElse(null);
     }
