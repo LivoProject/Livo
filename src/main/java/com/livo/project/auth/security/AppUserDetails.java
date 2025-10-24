@@ -23,6 +23,10 @@ public class AppUserDetails implements UserDetails {
     @Override public String getUsername() { return user.getEmail(); }
     @Override public String getPassword() { return user.getPassword(); }
 
+    /** 컨트롤러에서 사용하기 위한 추가 getter */
+    public String getEmail() { return user.getEmail(); }
+    public String getProvider() { return user.getProvider(); }
+
     /** roleId → ROLE_* 매핑 */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

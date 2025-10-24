@@ -10,6 +10,7 @@ import com.livo.project.lecture.domain.Reservation;
 import com.livo.project.lecture.repository.LectureRepository;
 import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.domain.dto.ReservationDto;
+import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.repository.*;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
@@ -58,6 +59,11 @@ public class MypageService {
     private final MypageReviewRepository mypageReviewRepository;
     private final LectureRepository lectureRepository;
     private final UserRepository userRepository;
+
+
+
+    private final LectureProgressRepository lectureProgressRepository;
+
 
     /** 현재 인증 정보에서 (provider, providerId) 또는 id 추출 */
     private ResolvedPrincipal resolveCurrent() {
@@ -144,11 +150,11 @@ public class MypageService {
         throw new RuntimeException("사용자 식별에 실패했습니다.");
     }
 
-    // ================== 여기부터 기존 메서드 대체 ==================
+    // 기본데이터
+    public MypageDto getUserData(String email, String provider) {
+        User user = userRepository.findByEmailIgnoreCaseAndProvider(email, provider)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-    /** 마이페이지 기본 데이터 조회 */
-    public MypageDto getUserData() {
-        User user = loadCurrentUser();
 
         // 공지사항
         List<Notice> notices = mypageNoticeRepository.findTop5ByOrderByCreatedAtDesc();
@@ -177,10 +183,12 @@ public class MypageService {
                 .joinDays(joinDays)
                 .notices(noticeDtos)
                 .recommendedLectures(recommended)
+                .provider(user.getProvider())
+                .providerId(user.getProviderId())
                 .build();
     }
 
-    /** 프로필 수정 */
+    // 프로필 수정
     @Transactional
     public void updateUserProfile(MypageDto dto) {
         User user = loadCurrentUser();
@@ -199,7 +207,7 @@ public class MypageService {
 
     }
 
-    /** 비밀번호 변경 (LOCAL만 가능하도록 가드하는 게 보통 안전) */
+    // 비밀번호 변경
     @Transactional
     public void updateUserPassword(String currentPassword, String newPassword) {
         User user = loadCurrentUser();
@@ -236,19 +244,19 @@ public class MypageService {
 
 
     // 좋아요 강의
-    public Page<Lecture> getLikedLectures(String email, Pageable pageable) {
-        return mypageLectureRepository.findLikedLecturesByEmail(email, pageable);
+    public Page<Lecture> getLikedLectures(String email, String provider, Pageable pageable) {
+        return mypageLectureRepository.findLikedLecturesByEmail(email, provider, pageable);
     }
 
     // 좋아요 강의 2개
-    public List<Lecture> getTop2LikedLectures(String email) {
-        return mypageLectureRepository.findTop2LikedLecturesByEmail(email);
+    public List<Lecture> getTop2LikedLectures(String email, String provider) {
+        return mypageLectureRepository.findTop2LikedLecturesByEmail(email, provider);
     }
 
     // 좋아요 해제
     @Transactional
-    public void removeLikedLecture(Integer lectureId, String email) {
-        mypageLectureRepository.deleteLikeByLectureIdAndEmail(lectureId, email);
+    public void removeLikedLecture(Integer lectureId, String email, String provider) {
+        mypageLectureRepository.deleteLikeByLectureIdAndEmail(lectureId, email, provider);
     }
 
 
@@ -256,23 +264,32 @@ public class MypageService {
     public Page<ReservationDto> getMyReservations(String email, Pageable pageable) {
         Page<Reservation> reservations = mypageReservationRepository.findAllByEmail(email, pageable);
 
-
         return reservations.map(r -> {
-            Lecture l = lectureRepository.findById(r.getLectureId()).orElse(null);
-            return (l != null) ? ReservationDto.of(r, l) : null;
+            Lecture lecture = r.getLecture();
+
+            Double progressPercent = lectureProgressRepository
+                    .findByLectureAndEmail(lecture, email)
+                    .map(LectureProgress::getProgressPercent)
+                    .orElse(0.0);
+
+            return ReservationDto.of(r, lecture, progressPercent);
         });
     }
 
+
+
     // 내 강좌 예약 취소
     @Transactional
-    public void removeReservationLecture(String email, Integer lectureId) {
-        mypageReservationRepository.deleteByEmailAndLectureId(email,lectureId);
+    public void removeReservationLecture(Integer lectureId, String email) {
+        mypageReservationRepository.deleteByLectureIdAndEmail(lectureId, email);
     }
 
     // 내 리뷰 조회
-    public Page<Review> getMyReviews(String email, Pageable pageable) {
-        return mypageReviewRepository.findAllByEmail(email, pageable);
+    public Page<Review> getMyReviews(String email, String provider, Pageable pageable) {
+        return mypageReviewRepository.findAllByEmail(email, provider, pageable);
     }
+
+
 
 
 }

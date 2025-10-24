@@ -9,4 +9,5 @@ public interface FaqAdminService {
     List<Faq> getFaqAll();
     Page<Faq> getFaqPage(Pageable pageable);
     List<Faq> getFaqTop5();
+    void deleteFaq(long faqId);
 }

@@ -65,8 +65,12 @@
                                     <td class="text-center">${lecture.title}</td>
                                     <td class="text-center">${lecture.tutorName}</td>
                                     <td class="text-center">
-                                        <button class="btn btn-sm btn-outline-primary">수정</button>
-                                        <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                        <button id="editBtn" class="btn btn-sm btn-outline-primary"
+                                         data-type="lecture"
+                                        data-id="${lecture.lectureId}">수정</button>
+                                        <button id="deleteBtn" class="btn btn-sm btn-outline-danger"
+                                        data-type="lecture"
+                                        data-id="${lecture.lectureId}">삭제</button>
                                     </td>
                                 </tr>
                                 </c:forEach>
@@ -97,19 +101,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:forEach var="report" items="${reports}" varStatus="status">
                                 <tr>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">홍길동</td>
-                                    <td class="text-center">부적절한 게시물 신고</td>
-                                    <td class="text-center"><button class="btn btn-sm btn-outline-danger">보류</button></td>
+                                    <td class="text-center">${status.index + 1}</td>
+                                    <td class="text-center">${report.email}</td>
+                                    <td class="text-center">${report.reportReason}</td>
+                                    <td class="text-center"><button class="btn btn-sm update-status">승인</button></td>
+                                    <td class="text-center"><button class="btn btn-sm update-status">보류</button></td>
                                 </tr>
-                                <tr>
-                                    <td class="text-center">2</td>
-                                    <td class="text-center">김철수</td>
-                                    <td class="text-center">댓글 도배</td>
-                                    <td class="text-center"><button class="btn btn-sm btn-outline-primary">처리완료</button></td>
-
-                                </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>
@@ -139,15 +139,21 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:forEach var="notice" items="${recentNotice}" varStatus="status">
                                 <tr>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center">사이트 점검 안내</td>
-                                    <td class="text-center">10월 15일 오전 2시 점검 예정</td>
+                                    <td class="text-center">${status.index + 1}</td>
+                                    <td class="text-center">${notice.title}</td>
+                                    <td class="text-center">${notice.content}</td>
                                     <td class="text-center">
-                                        <button class="btn btn-sm btn-outline-primary">수정</button>
-                                        <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                        <button id="editBtn" class="btn btn-sm btn-outline-primary"
+                                        data-type="notice"
+                                        data-id="${notice.noticeId}">수정</button>
+                                        <button id="deleteBtn" class="btn btn-sm btn-outline-danger"
+                                        data-type="notice"
+                                        data-id="${notice.noticeId}">삭제</button>
                                     </td>
                                 </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>
@@ -178,8 +184,12 @@
                                     <td class="text-center">${status.index + 1}</td>
                                     <td class="text-center">${faq.question}</td>
                                     <td class="text-center">
-                                        <button class="btn btn-sm btn-outline-primary">수정</button>
-                                        <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                        <button id="editBtn" class="btn btn-sm btn-outline-primary"
+                                        data-type="faq"
+                                        data-id="${faq.id}">수정</button>
+                                        <button id="deleteBtn" class="btn btn-sm btn-outline-danger"
+                                        data-type="faq"
+                                        data-id="${faq.id}">삭제</button>
                                     </td>
                                 </tr>
                                 </c:forEach>
@@ -194,6 +204,7 @@
     </div>
 </main>
 </div>
+<script src="/js/admin/dashboard.js"></script>
 </body>
 
 </html>

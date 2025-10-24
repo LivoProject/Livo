@@ -1,25 +1,25 @@
 package com.livo.project.mypage.repository;
 
 import com.livo.project.lecture.domain.Reservation;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-
+@Repository
 public interface MypageReservationRepository extends JpaRepository<Reservation, Integer> {
-    //내 강좌 조회
-    @Query("SELECT r FROM Reservation r WHERE r.email = :email")
-    Page<Reservation> findAllByEmail(@Param("email") String email, Pageable pageable);
+    Page<Reservation> findAllByEmail(String email, Pageable pageable);
 
-    // 내 강좌 예약 취소
+    void deleteByLectureIdAndEmail(Integer lectureId, String email);
+
     @Modifying
-    @Query("DELETE FROM Reservation r WHERE r.user.email = :email AND r.lectureId = :lectureId")
-    void deleteByEmailAndLectureId(@Param("email") String email, @Param("lectureId") Integer lectureId);
-
-
-
+    @Transactional
+    @Query("DELETE FROM Reservation r WHERE r.user.id = :userId AND r.lecture.lectureId = :lectureId")
+    void deleteByUserIdAndLectureId(@Param("email") String email, @Param("lectureId") Integer lectureId);
 }

@@ -49,7 +49,6 @@
                     </button>
 
                     <c:choose>
-                        <%-- 이미 신청한 강의 --%>
                         <c:when test="${isEnrolled}">
                             <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
                         </c:when>
@@ -217,37 +216,64 @@
                             </c:forEach>
                         </h4>
 
-                        <h4><strong>${review.reviewContent}</strong></h4>
-
-                        <!-- 🚨 신고 버튼 -->
-                        <c:choose>
-                            <c:when test="${isLoggedIn}">
-                                <!-- 로그인 O → 본인 리뷰인지 검사 -->
-                                <c:choose>
-                                    <c:when test="${review.reservation.user.email ne loggedInUserEmail}">
-                                        <button class="btn btn-outline-danger btn-sm"
-                                                type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#reportModal"
-                                                data-review-id="${review.reviewUId}">
-                                            🚨 신고
-                                        </button>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <button class="btn btn-outline-secondary btn-sm" disabled>
-                                            나의 리뷰
-                                        </button>
-                                    </c:otherwise>
-                                </c:choose>
+                        <h4>
+                         <c:choose>
+                            <c:when test="${review.blocked}">
+                                <span class="text-muted fst-italic">🚫 신고된 리뷰입니다.</span>
                             </c:when>
 
                             <c:otherwise>
-                                <!-- 로그인 X → 로그인 페이지로 이동 -->
-                                <a href="/auth/login" class="btn btn-outline-danger btn-sm">
-                                    🚨 신고
-                                </a>
+                                <strong>${review.reviewContent}</strong>
                             </c:otherwise>
                         </c:choose>
+                        </h4>
+
+                        <!-- 신고/수정/삭제 버튼 -->
+                        <div class="d-flex gap-2 mt-2">
+                            <c:choose>
+                                <c:when test="${isLoggedIn}">
+                                    <!-- 로그인 O → 본인 리뷰인지 검사 -->
+                                    <c:choose>
+                                        <c:when test="${review.blocked}">
+                                            <button class="btn btn-outline-secondary btn-sm" disabled>신고된 리뷰</button>
+                                        </c:when>
+                                        <c:when test="${review.reservation.user.email ne loggedInUserEmail}">
+                                            <button class="btn btn-outline-danger btn-sm"
+                                                    type="button"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#reportModal"
+                                                    data-review-id="${review.reviewUId}">
+                                                🚨 신고
+                                            </button>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                            <!-- 본인 리뷰: 나의 리뷰 + 수정 + 삭제 -->
+                                            <button class="btn btn-outline-secondary btn-sm" disabled>
+                                                나의 후기
+                                            </button>
+                                            <button class="btn btn-outline-primary btn-sm"
+                                                    type="button"
+                                                    onclick="openEditModal(${review.reviewUId})">
+                                                수정
+                                            </button>
+                                            <button class="btn btn-outline-danger btn-sm"
+                                                    type="button"
+                                                    onclick="deleteReview(${review.reviewUId})">
+                                                삭제
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <!-- 로그인 X → 로그인 페이지로 이동 -->
+                                    <a href="/auth/login" class="btn btn-outline-danger btn-sm">
+                                        🚨 신고
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
                     </div>
                 </div>
             </c:forEach>

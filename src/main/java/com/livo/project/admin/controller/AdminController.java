@@ -11,6 +11,7 @@ import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.service.LectureService;
 import com.livo.project.report.domain.Report;
+import com.livo.project.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +34,7 @@ public class AdminController {
     private final FaqRepository faqRepository;
     private final FaqService faqService;
     private final LectureAdminService lectureAdminService;
+    private final ReportService reportService;
 
     @GetMapping("/dashboard")
     public String showAdminPage(Model model){
@@ -40,31 +42,22 @@ public class AdminController {
         model.addAttribute("recentLectures",recentLectures);
         List<Faq> recentFaqs = faqAdminService.getFaqTop5();
         model.addAttribute("recentFaqs",recentFaqs);
-        List<Report> reports;
+        List<Report> reports = reportService.getNotApprovedReport();
+        model.addAttribute("reports",reports);
         return "admin/dashboard";
     }
     @GetMapping("")
     public String redirectToDashboard() {//추가한 메서드
         return "redirect:/admin/dashboard";
     }
-    @GetMapping("/faq")
-    public String showFaqPage(@RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "9") int size,
-                              Model model){
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Faq> faqPage = faqAdminService.getFaqPage(pageable);
 
-        model.addAttribute("faqPage",faqPage);
-        model.addAttribute("faq",faqPage.getContent());
-        return "admin/faqPage";
-    }
-   /** @GetMapping("/notice")
-    public String showNoticePage(){
-        return "admin/noticePage";
-    }*/
+//    @GetMapping("/notice")
+//    public String showNoticePage(){
+//        return "admin/noticePage";
+//    }
 
     @GetMapping("/lecture")
-    public String adminLectureList(@RequestParam(defaultValue = "0") int page,
+    public String showLecturePage(@RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "9") int size,
                                    Model model) {
 
@@ -74,24 +67,6 @@ public class AdminController {
         model.addAttribute("lecturePage", lecturePage);
         model.addAttribute("lectures", lecturePage.getContent());
         return "admin/lecturePage";
-    }
-
-    @GetMapping("/faq/insert")
-    public String showFaqForm(){
-        return "admin/faqForm";
-    }
-
-    @PostMapping("/faq/save")
-    public String add(@RequestParam String question, @RequestParam String answer, Model model){
-        Faq faq = new Faq();
-        faq.setQuestion(question);
-        faq.setAnswer(answer);
-        faqRepository.save(faq);
-
-        faqService.addFaqToVectorStore(faq);
-
-        model.addAttribute("message", "faq가 성공적으로 등록되었습니다.");
-        return "redirect:/admin/faq";
     }
 
 

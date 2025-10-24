@@ -50,8 +50,12 @@
   padding: 1.5rem 2rem;
 } */
 .nav-link {
+    color: #14a7b9;
     margin-left: 16px;
     margin-right: 16px;
+}
+.nav-link:hover{
+    color: #14a7b9;
 }
 
 .sidenav-header {
@@ -137,7 +141,7 @@ label {
 }
 
 .nav-pills .nav-link.active {
-    /* background-color: #17b4c7; /* 원하는 색상 */
+    background-color: #14a7b9;
     color: #fff;
     border-radius: 50px;
 }
@@ -165,6 +169,116 @@ label {
     height: 120px; /* 챕터 높이와 비슷하게 */
     margin-bottom: 10px;
 }
+/*관리자 버튼 모음*/
+.btn-success{
+    background-color: var(--color-point);
+    color: var(--color-black);
+    border: none;
+}
+.btn-success:hover,
+.btn-success:hover:active {
+    background-color: #eac341;
+    box-shadow: 0 2px 5px rgba(255,216,77,0.25);
+}
+.btn-primary{
+    background-color: var(--color-main);
+    color: var(--color-white);
+    border-color: #14a7b9;
+}
+.btn-primary:hover{
+    background-color: #14a7b9;
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.25);
+    border-color: #14a7b9;
+}
+#editBtn{
+    background-color: var(--color-main);
+    color: var(--color-white);
+    border-color: #14a7b9;
+}
+#editBtn:hover{
+    background-color: #14a7b9;
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.25);
+    border-color: #14a7b9;
+}
+#deleteBtn{
+    background-color: var(--color-white);
+    color: var(--color-main);
+    border: 1px solid #17b4c7;
+}
+#deleteBtn:hover{
+    background-color: var(--color-main);
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.1);
+}
+.btn-danger{
+    background-color: var(--color-white);
+    color: var(--color-main);
+    border: 1px solid #17b4c7;
+}
+.btn-danger:hover{
+    background-color: var(--color-main);
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.1);
+    border-color: #14a7b9;
+}
+.pagination .page-link {
+    color: #17b4c7;
+}
+
+.pagination .page-link:hover,
+.pagination .page-link:focus {
+    color: #17b4c7;
+}
+
+.pagination .page-link.active,
+.pagination .active>.page-link {
+    background-color: #17b4c7;
+    border-color: #17b4c7;
+    color: #fff;
+}
+#uploadThumbnailBtn{
+    background-color: var(--color-white);
+    color: var(--color-main);
+    border: 1px solid #17b4c7;
+}
+#uploadThumbnailBtn:hover{
+    background-color: var(--color-main);
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.1);
+}
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    /* 크기 조정 */
+    min-width: 85px;         /* Processing이 여유 있게 들어갈 정도 */
+    padding: 0.35em 0.6em;   /* 기본보다 살짝 여유 */
+    font-size: 0.70rem;
+    line-height: 1.1;        /* 살짝만 키워주면 위아래 잘림 방지 */
+
+    /* 보기 좋은 정렬 */
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    box-sizing: border-box;
+    border-radius: 9999px;   /* 모서리 부드럽게 */
+}
+#approveBtn{
+    background-color: var(--color-main);
+    color: var(--color-white);
+    border-color: #14a7b9;
+}
+#approveBtn:hover,
+#approveBtn:active{
+    background-color: #14a7b9;
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.25);
+    border-color: #14a7b9;
+}
+
 /*
 #chapterContainer {
     background: #f8f9fa;
