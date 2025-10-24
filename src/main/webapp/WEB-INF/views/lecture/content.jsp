@@ -176,6 +176,7 @@
             <div class="col-md-12 mt-4">
                 <form id="reviewForm" action="/lecture/content/${lecture.lectureId}/review" method="post">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                    <input type="hidden" id="reviewUId" value=""> <!-- 수정용 ID 저장 -->
 
                     <div class="h-100 p-5 bg-body-secondary border rounded-3">
                         <!-- 별점 버튼 -->
@@ -203,9 +204,15 @@
         <div id="reviewList">
             <c:forEach var="review" items="${reviews}">
                 <div class="col-md-12 mb-3">
-                    <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                        <h4>${review.reservation.user.name}</h4>
-                        <h5><fmt:formatDate value="${review.createdAt}" pattern="yyyy.MM.dd" /></h5>
+                    <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm"
+                        data-review-id="${review.reviewUId}">
+                        <h4>${review.userName}</h4>
+                        <h5>
+                            ${review.createdAt}
+                            <c:if test="${review.edited}">
+                                <span class="text-muted small">(수정)</span>
+                            </c:if>
+                        </h5>
 
                         <h4>
                             <c:forEach var="i" begin="1" end="5">
@@ -237,7 +244,7 @@
                                         <c:when test="${review.blocked}">
                                             <button class="btn btn-outline-secondary btn-sm" disabled>신고된 리뷰</button>
                                         </c:when>
-                                        <c:when test="${review.reservation.user.email ne loggedInUserEmail}">
+                                        <c:when test="${review.userEmail ne loggedInUserEmail}">
                                             <button class="btn btn-outline-danger btn-sm"
                                                     type="button"
                                                     data-bs-toggle="modal"
@@ -254,7 +261,7 @@
                                             </button>
                                             <button class="btn btn-outline-primary btn-sm"
                                                     type="button"
-                                                    onclick="openEditModal(${review.reviewUId})">
+                                                    onclick="editReview(${review.reviewUId})">
                                                 수정
                                             </button>
                                             <button class="btn btn-outline-danger btn-sm"
@@ -368,6 +375,10 @@
         </div>
     </div>
 </section>
+
+<script>
+    const csrfToken = "${_csrf.token}";
+</script>
 
 <script src="/js/modal.js"></script>
 <script src="/js/lectureContent.js"></script>
