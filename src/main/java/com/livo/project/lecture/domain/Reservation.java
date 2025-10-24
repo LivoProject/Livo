@@ -1,7 +1,6 @@
 package com.livo.project.lecture.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.livo.project.auth.domain.entity.User;
 import com.livo.project.payment.domain.Payment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

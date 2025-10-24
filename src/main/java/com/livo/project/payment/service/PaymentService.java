@@ -89,10 +89,10 @@ public class PaymentService {
                 paymentRepository.save(payment);
 
                 // 예약 상태 변경
-                Reservation reservation = reservationRepository.findByReservationId(dto.getReservationId())
+                /*Reservation reservation = reservationRepository.findByReservationId(dto.getReservationId())
                         .orElseThrow(() -> new IllegalArgumentException("예약 정보 없음"));
                 reservation.setStatus(Reservation.ReservationStatus.PAID);
-                reservationRepository.save(reservation);
+                reservationRepository.save(reservation);*/
 
                 res.put("status", "SUCCESS");
                 res.put("message", "결제 승인 및 DB 저장 완료");
