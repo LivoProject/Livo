@@ -28,7 +28,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Transactional
     @Override
-    public void saveReport(int lectureId, int reviewUId, String reportReason, String customReason, String userEmail) {
+    public void saveReport(int lectureId, int reviewUId, String reportReason, String customReason, String userEmail, String provider) {
         if ("기타".equals(reportReason) && customReason != null && !customReason.trim().isEmpty()) {
             reportReason = customReason.trim();
         }
