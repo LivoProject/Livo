@@ -238,8 +238,8 @@ public class MypageService {
         private final String email;
 
 
-        mypageUserRepository.save(user);
-       log.info("비밀번호 변경 완료: {}", email);
+//        mypageUserRepository.save(user);
+//        log.info("비밀번호 변경 완료: {}", email);
     }
 
 

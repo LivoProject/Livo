@@ -1,0 +1,31 @@
+/* 카드 */
+.lv-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    padding: 16px 18px;
+}
+.lv-card + .lv-card { margin-top: 16px; }
+.lv-card-header { padding-bottom: 8px; border-bottom: 1px solid #f0f2f4; margin-bottom: 12px; }
+
+/* 필터 카드 */
+.lv-filter { position: sticky; top: 0; z-index: 2; }
+
+/* 차트 영역: 고정 높이 + 상태 레이어 */
+.lv-chart-wrap { position: relative; height: 420px; }
+.lv-chart-wrap canvas { width: 100% !important; height: 100% !important; }
+
+/* 상태 메시지 */
+.lv-loading, .lv-empty, .lv-error {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    font-weight: 600; color: #6c757d; background: #fff8; backdrop-filter: blur(2px);
+}
+.lv-error { color: #dc3545; }
+
+/* 표 래퍼: 헤더 고정 + 스크롤 */
+.lv-table-wrap { max-height: 420px; overflow: auto; }
+#topTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; }
+#topTable td, #topTable th { white-space: nowrap; }
+
+/* 숫자 정렬 */
+.text-end { text-align: right; }
