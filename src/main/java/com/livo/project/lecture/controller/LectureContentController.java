@@ -1,5 +1,6 @@
 package com.livo.project.lecture.controller;
 
+import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.lecture.domain.Attachment;
 import com.livo.project.lecture.domain.ChapterList;
 import com.livo.project.lecture.domain.Lecture;
@@ -15,8 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +42,7 @@ public class LectureContentController {
     // 강좌 상세 (강의 목록 + 리뷰 + 첨부파일 조회!!)
     @GetMapping("/content/{lectureId}")
     public String lectureContent(@PathVariable int lectureId,
-                                 @AuthenticationPrincipal UserDetails userDetails,
+                                 Authentication authentication,
                                  Model model) {
 
         Lecture lecture = lectureService.findById(lectureId).orElseThrow();
@@ -70,13 +70,25 @@ public class LectureContentController {
         reviewCountMap.put(lectureId, reviewCount);
 
         //로그인 및 수강여부 확인 -> 리뷰 작성 위해!
-        boolean isLoggedIn = (userDetails != null);
+        boolean isLoggedIn = (authentication != null && authentication.isAuthenticated());
         boolean isEnrolled = false;
-        String loggedInUserEmail = null;
+        String email = null;
+        String provider = null;
 
         if (isLoggedIn) {
-            loggedInUserEmail = userDetails.getUsername();
-            isEnrolled = reservationService.isUserEnrolled(lectureId, loggedInUserEmail);
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof AppUserDetails appUser) {
+                email = appUser.getEmail();
+                provider = appUser.getProvider();
+            } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
+                email = (String) oAuthUser.getAttribute("email");
+                provider = (String) oAuthUser.getAttribute("provider");
+            }
+
+            if (email != null) {
+                isEnrolled = reservationService.isUserEnrolled(lectureId, email, provider);
+            }
         }
 
         //첨부파일
@@ -90,7 +102,7 @@ public class LectureContentController {
         model.addAttribute("reviewCount", reviewCount);
         model.addAttribute("isLoggedIn", isLoggedIn);
         model.addAttribute("isEnrolled", isEnrolled);
-        model.addAttribute("loggedInUserEmail", loggedInUserEmail);
+        model.addAttribute("loggedInUserEmail", email);
         model.addAttribute("attachments", attachments);
 
         return "lecture/content";
@@ -99,16 +111,33 @@ public class LectureContentController {
     // 무료강의 수강신청
     @PostMapping("/enroll/{lectureId}")
     public String enrollFreeLecture(@PathVariable int lectureId,
-                                    @AuthenticationPrincipal UserDetails userDetails) {
+                                    Authentication authentication) {
 
-        if (userDetails == null) {
-            return "redirect:/auth/login"; // 로그인 안 되어 있으면 로그인 페이지로
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/auth/login";
         }
 
-        String userEmail = userDetails.getUsername();
+        Object principal = authentication.getPrincipal();
+        String email = null;
+        String provider = null;
 
-        // 무료강의 수강신청 내역 DB 저장 => 바로 confirmed!
-        reservationService.saveReservation(lectureId, userEmail);
+        // 로컬 로그인
+        if (principal instanceof AppUserDetails appUser) {
+            email = appUser.getEmail();
+            provider = appUser.getProvider();
+        }
+        // 소셜 로그인
+        else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
+            email = (String) oAuthUser.getAttribute("email");
+            provider = (String) oAuthUser.getAttribute("provider");
+        }
+
+        if (email == null) {
+            return "redirect:/auth/login";
+        }
+
+        // 무료강의 수강신청 DB 저장
+        reservationService.saveReservation(lectureId, email, provider);
 
         return "redirect:/lecture/content/" + lectureId + "?enrolled=success";
     }
