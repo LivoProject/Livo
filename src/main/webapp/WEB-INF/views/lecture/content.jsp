@@ -314,7 +314,21 @@
                                         <div>
                                             <strong>${file.fileName}</strong>
                                         </div>
-                                        <a href="${file.fileUrl}" class="btn btn-outline-primary btn-sm" download>다운로드</a>
+
+                                        <!-- ✅ 수강 여부에 따라 버튼 다르게 표시 -->
+                                        <c:choose>
+                                            <c:when test="${isEnrolled}">
+                                                <a href="${file.fileUrl}" class="btn btn-outline-primary btn-sm" download>
+                                                    다운로드
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="btn btn-secondary btn-sm" disabled>
+                                                    수강신청 필요
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
+
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -328,6 +342,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- 🚨 리뷰 신고 모달 -->
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
