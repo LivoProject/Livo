@@ -14,7 +14,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     boolean existsByLectureIdAndEmail(int lectureId, String email);
 
     // 취소되지 않은 수강 여부 확인
-    boolean existsByEmailAndLectureIdAndStatusNot(String email, int lectureId, Reservation.Status status);
+    boolean existsByEmailAndLectureIdAndStatusNot(String email, int lectureId, Reservation.ReservationStatus status);
 
     // 리뷰 등록 시 실제 reservationId 찾기
     @Query("""

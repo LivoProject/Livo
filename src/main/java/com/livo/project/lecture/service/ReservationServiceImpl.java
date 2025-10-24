@@ -42,7 +42,7 @@ public class ReservationServiceImpl implements ReservationService {
     public boolean isUserEnrolled(int lectureId, String email, String provider) {
         // CANCEL 제외하고 수강 여부 확인
         return reservationRepository.existsByEmailAndLectureIdAndStatusNot(
-                email, lectureId, Reservation.Status.CANCEL
+                email, lectureId, Reservation.ReservationStatus.CANCEL
         );
     }
 
