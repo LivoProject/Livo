@@ -29,3 +29,31 @@
 
 /* 숫자 정렬 */
 .text-end { text-align: right; }
+
+/* 표 가독성 */
+#topTable {
+    --bd: 1px solid #eef1f4;
+    border: var(--bd);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+}
+#topTable thead th {
+    background: #f8fafc;
+    position: sticky; top: 0;
+    z-index: 1;
+}
+#topTable td, #topTable th { vertical-align: middle; }
+#topTable tbody tr:nth-child(even) { background: #fafafa; }
+#topTable .title-cell { font-weight: 600; }
+#topTable .num { text-align: right; white-space: nowrap; }
+
+/* 배지 */
+.badge {
+    display: inline-block; min-width: 2.2em; padding: .15rem .45rem;
+    border-radius: 999px; font-weight: 600;
+}
+.badge.ok    { background: rgba(34,197,94,.12);  color: #16a34a; }  /* 확정 */
+.badge.bad   { background: rgba(244,63,94,.12);  color: #e11d48; }  /* 취소 */
+.badge.warn  { background: rgba(245,158,11,.12); color: #d97706; }  /* 대기 */
+.badge.rate  { background: rgba(250,204,21,.12); color: #ca8a04; }  /* 예약률 */

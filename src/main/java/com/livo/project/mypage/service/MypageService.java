@@ -20,6 +20,7 @@ import com.livo.project.review.domain.Review;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -292,9 +293,10 @@ public class MypageService {
 
 
     // 내 강좌 예약 취소
+    @CacheEvict(cacheNames = { "chartTopLectures", "chartMonthlyRevenue" }, allEntries = true)
     @Transactional
     public void removeReservationLecture(Integer lectureId, String email) {
-        mypageReservationRepository.cancelByLectureIdAndEmail(lectureId, email);
+        int changed = mypageReservationRepository.cancelByLectureIdAndEmail(lectureId, email);
     }
 
     // 내 리뷰 조회

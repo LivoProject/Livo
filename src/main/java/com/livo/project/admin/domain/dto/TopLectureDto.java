@@ -18,6 +18,7 @@ public class TopLectureDto {
     private long canceled;      // 취소
     private long pending;       // 대기
     private long expired;       // 만료
+    private Double reservationRate;
 
     // 예약률 계산용 (편의 메서드)
     public double getReservationRate() {

@@ -25,7 +25,7 @@ public class ChartServiceImpl implements ChartService {
     }
 
     @Override
-    @Cacheable(cacheNames = "chartTopLectures", key = "#from + '_' + #to + '_' + #limit")
+    @Cacheable(cacheNames = "chartTopLecturesV2", key = "#from + '_' + #to + '_' + #limit")
     public List<TopLectureDto> topLectures(LocalDate from, LocalDate to, int limit) {
         LocalDateTime f = atStartOfDay(from);
         LocalDateTime t = atEndOfDay(to);
@@ -38,6 +38,9 @@ public class ChartServiceImpl implements ChartService {
                     long canceled   = row[3] == null ? 0L : ((Number) row[3]).longValue();
                     long pending    = row[4] == null ? 0L : ((Number) row[4]).longValue();
                     long expired    = row[5] == null ? 0L : ((Number) row[5]).longValue();
+
+                    double reservationRate = (total == 0) ? 0 : (double) confirmed / total;
+
                     return TopLectureDto.builder()
                             .lectureId(lectureId)
                             .total(total)
@@ -45,6 +48,7 @@ public class ChartServiceImpl implements ChartService {
                             .canceled(canceled)
                             .pending(pending)
                             .expired(expired)
+                            .reservationRate(reservationRate)
                             .build();
                 })
                 .toList();
