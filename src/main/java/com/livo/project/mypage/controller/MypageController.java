@@ -7,6 +7,7 @@ import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.domain.dto.MypageLikedLectureDto;
 import com.livo.project.mypage.domain.dto.MypageProgressDto;
 import com.livo.project.mypage.domain.dto.MypageReservationDto;
+import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.service.MypageService;
 import com.livo.project.review.domain.Review;
 import lombok.RequiredArgsConstructor;
@@ -68,11 +69,20 @@ public class MypageController {
         }
 
         MypageDto mypageDto = mypageService.getUserData(email, provider);
+        // 최근 학습한 강의 1개
+        LectureProgress recentProgress = mypageService.getRecentLecture(email);
+
 
         model.addAttribute("mypage", mypageDto);
         model.addAttribute("notices", mypageDto.getNotices());
         model.addAttribute("recommendedLectures", mypageDto.getRecommendedLectures());
         model.addAttribute("top2LikedLectures", mypageService.getTop2LikedLectures(email, provider));
+        model.addAttribute("recentLecture", recentProgress);
+        model.addAttribute("totalStudyHours", mypageService.getTotalStudyHours(email));
+        model.addAttribute("completedLectures", mypageService.getCompletedLectureCount(email));
+        model.addAttribute("studyDays", mypageService.getStudyDaysThisMonth(email));
+
+
 
         return "mypage/index";
     }

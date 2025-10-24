@@ -27,8 +27,8 @@
 
         <!-- 학습 현황 -->
         <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card-box recent-card">
+            <div class="col-md-6 card-box">
+                <div class="recent-card">
                     <div class="card-header">
                         <h6>최근 학습 강의</h6>
                         <a href="/mypage/lecture" class="more-link">
@@ -39,24 +39,56 @@
                         <div class="play-icon">
                             <i class="bi bi-play-fill"></i>
                         </div>
-                        <div class="lecture-info">
-                            <h6 class="lecture-title">Svelte.js 입문 가이드</h6>
-                            <p><strong>9강</strong> / 11강 (81.82%)</p>
+
+                        <c:if test="${recentLecture != null}">
+                            <div class="recent-lecture">
+                                <h5>${recentLecture.lecture.title}</h5>
+                                <p>진도율: ${recentLecture.progressPercent}%</p>
+                            </div>
+                        </c:if>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 학습 통계 -->
+            <!-- 📊 학습 통계 미리보기 -->
+            <div class="card learning-summary shadow-sm border-0 rounded-4 p-4 mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-semibold m-0">📊 학습 통계 미리보기</h6>
+                    <a href="/mypage/stats" class="text-decoration-none small text-muted">
+                        자세히 보기 <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+
+                <div class="row text-center">
+                    <div class="col">
+                        <div class="stat-item">
+                            <div class="fs-4 fw-bold text-primary">
+                                ${totalStudyHours}시간
+                            </div>
+                            <small class="text-muted">총 학습시간</small>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="stat-item">
+                            <div class="fs-4 fw-bold text-success">
+                                ${completedLectures}개
+                            </div>
+                            <small class="text-muted">완강 강좌</small>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="stat-item">
+                            <div class="fs-4 fw-bold text-warning">
+                                ${studyDays}일
+                            </div>
+                            <small class="text-muted">이번 달 학습일수</small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card-box">
-                    <h6>학습 진행률</h6>
-                    <div class="progress" style="height: 8px;">
-                        <div class="progress-bar bg-success"
-                             style="width: ${lecture.progressPercent}%;"></div>
-                    </div>
-                    <p>이번 주 학습 <span>2</span>시간</p>
-                </div>
-            </div>
+
         </div>
 
         <!-- 알림 / 공지 -->

@@ -15,7 +15,7 @@ import com.livo.project.mypage.repository.projection.LikedLectureProjection;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
 import com.livo.project.review.domain.Review;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -329,7 +329,6 @@ public class MypageService {
     }
 
 
-
     // 내 리뷰 조회
     public Page<Review> getMyReviews(String email, String provider, Pageable pageable) {
         return mypageReviewRepository.findAllByEmail(email, provider, pageable);
@@ -369,5 +368,28 @@ public class MypageService {
                 progress.getProgressPercent(),
                 progress.getLastWatchedTime()
         )).orElse(null);
+    }
+
+    // 최근 학습한 강의
+    @Transactional(readOnly = true)
+    public LectureProgress getRecentLecture(String email) {
+        List<LectureProgress> list = mypageProgressRepository.findTopWithLectureByEmail(email);
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    // 학습 목표
+    public int getTotalStudyHours(String email) {
+        Double totalSeconds = mypageProgressRepository.sumTotalWatchedTime(email);
+        if (totalSeconds == null) return 0;  // ✅ null-safe 처리
+        return (int) (totalSeconds / 3600);
+    }
+
+    public int getCompletedLectureCount(String email) {
+        Integer count = mypageProgressRepository.countByEmailAndProgressPercentGreaterThanEqual(email, 100.0);
+        return (count != null) ? count : 0;
+    }
+
+    public int getStudyDaysThisMonth(String email) {
+        return mypageProgressRepository.countDistinctDaysThisMonth(email);
     }
 }

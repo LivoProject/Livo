@@ -176,6 +176,17 @@
     transform: translateY(-5px);
     box-shadow: var(--shadow-default);
 }
+#mypage .learning-summary {
+    background-color: #fff;
+    border: 1px solid #f2f2f2;
+    transition: all 0.2s ease-in-out;
+}
+#mypage .learning-summary:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+#mypage .stat-item {
+    padding: 10px 0;
+}
 @media (min-width: 768px) {
   #mypage .lecture-grid {
     grid-template-columns: repeat(2, 1fr);

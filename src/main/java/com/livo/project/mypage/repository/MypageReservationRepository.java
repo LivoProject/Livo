@@ -29,4 +29,7 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
 
     // 좋아요한 강좌가 예약된 강좌인지 확인
     boolean existsByLecture_LectureIdAndUser_Email(Integer lectureId, String email);
+
+
+
 }
