@@ -5,6 +5,8 @@ import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
 
 import com.livo.project.mypage.domain.dto.MypageDto;
+import com.livo.project.mypage.domain.dto.MypageLectureDto;
+import com.livo.project.mypage.domain.dto.ProgressDto;
 import com.livo.project.mypage.domain.dto.ReservationDto;
 import com.livo.project.mypage.service.MypageService;
 import com.livo.project.review.domain.Review;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -148,7 +152,12 @@ public class MypageController {
             return "redirect:/auth/login";
         }
 
+
         Page<ReservationDto> reservations = mypageService.getMyReservations(email, pageable);
+
+        //Page<MypageLectureDto> lectures = mypageService.getMyLecturesWithProgress(email, pageable);
+
+        model.addAttribute("lectures", reservations.getContent());
         model.addAttribute("reservations", reservations.getContent());
         model.addAttribute("page", reservations);
 
@@ -336,4 +345,19 @@ public class MypageController {
         }
     }
 
+    // 진행률 저장
+
+    // 현재 진행률 저장
+    @PostMapping("/save")
+    @ResponseBody
+    public ResponseEntity<?> saveProgress(@AuthenticationPrincipal UserDetails user,
+                                          @RequestBody ProgressDto progressDto) {
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
+        }
+
+        mypageService.saveProgress(user.getUsername(), progressDto);
+        return ResponseEntity.ok("진행률 저장 완료");
+    }
 }

@@ -9,6 +9,8 @@ import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
 import com.livo.project.lecture.repository.LectureRepository;
 import com.livo.project.mypage.domain.dto.MypageDto;
+import com.livo.project.mypage.domain.dto.MypageLectureDto;
+import com.livo.project.mypage.domain.dto.ProgressDto;
 import com.livo.project.mypage.domain.dto.ReservationDto;
 import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.repository.*;
@@ -20,11 +22,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -33,12 +35,8 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -62,7 +60,7 @@ public class MypageService {
 
 
 
-    private final LectureProgressRepository lectureProgressRepository;
+    private final MypageProgressRepository mypageProgressRepository;
 
 
     /** 현재 인증 정보에서 (provider, providerId) 또는 id 추출 */
@@ -260,19 +258,34 @@ public class MypageService {
     }
 
 
-    // 내 강좌 조회
+    // 내 강좌 조회 + 프로그래스
+//    public Page<ReservationDto> getMyReservations(String email, Pageable pageable) {
+//        Page<Reservation> reservations = mypageReservationRepository.findAllByEmail(email, pageable);
+//
+//        return reservations.map(r -> {
+//            Lecture lecture = r.getLecture();
+//
+//            Double progressPercent = mypageProgressRepository
+//                    .findByLectureAndEmail(lecture, email)
+//                    .map(LectureProgress::getProgressPercent)
+//                    .orElse(0.0);
+//
+//            return ReservationDto.of(r, lecture, progressPercent);
+//        });
+//    }
+
     public Page<ReservationDto> getMyReservations(String email, Pageable pageable) {
-        Page<Reservation> reservations = mypageReservationRepository.findAllByEmail(email, pageable);
+        Page<Reservation> reservations = mypageReservationRepository.findConfirmedByEmail(email, pageable);
 
-        return reservations.map(r -> {
-            Lecture lecture = r.getLecture();
+        return reservations.map(reservation -> {
+            Lecture lecture = reservation.getLecture();
 
-            Double progressPercent = lectureProgressRepository
-                    .findByLectureAndEmail(lecture, email)
+            int progressPercent = mypageProgressRepository.findByLectureAndEmail(lecture, email)
                     .map(LectureProgress::getProgressPercent)
-                    .orElse(0.0);
+                    .orElse(0.0)
+                    .intValue();
 
-            return ReservationDto.of(r, lecture, progressPercent);
+            return ReservationDto.of(reservation, lecture, progressPercent);
         });
     }
 
@@ -281,7 +294,7 @@ public class MypageService {
     // 내 강좌 예약 취소
     @Transactional
     public void removeReservationLecture(Integer lectureId, String email) {
-        mypageReservationRepository.deleteByLectureIdAndEmail(lectureId, email);
+        mypageReservationRepository.cancelByLectureIdAndEmail(lectureId, email);
     }
 
     // 내 리뷰 조회
@@ -290,6 +303,24 @@ public class MypageService {
     }
 
 
+    // 현재 진행률 저장
+    @Transactional
+    public void saveProgress(String email, ProgressDto progressDto) {
+        // 1️⃣ lectureId로 Lecture 엔티티 조회
+        Lecture lecture = lectureRepository.findById(progressDto.getLectureId())
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found: " + progressDto.getLectureId()));
 
+        // 2️⃣ 기존 진행 데이터 조회 or 새로 생성
+        LectureProgress progress = mypageProgressRepository.findByLectureAndEmail(lecture, email)
+                .orElseGet(() -> new LectureProgress(email, lecture));
+
+        // 3️⃣ 값 갱신
+        progress.setProgressPercent(progressDto.getProgressPercent());
+        progress.setLastWatchedTime(progressDto.getLastWatchedTime());
+        progress.setLastAccessedAt(LocalDateTime.now());
+
+        // 4️⃣ 저장
+        mypageProgressRepository.save(progress);
+    }
 
 }

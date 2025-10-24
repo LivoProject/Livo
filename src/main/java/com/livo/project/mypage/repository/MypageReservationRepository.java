@@ -15,9 +15,15 @@ import java.util.List;
 @Repository
 public interface MypageReservationRepository extends JpaRepository<Reservation, Integer> {
 
-    Page<Reservation> findAllByEmail(String email, Pageable pageable);
+    @Query("SELECT r FROM Reservation r WHERE r.user.email = :email AND r.status = 'CONFIRMED'")
+    Page<Reservation> findConfirmedByEmail(String email, Pageable pageable);
 
-    void deleteByLectureIdAndEmail(Integer lectureId, String email);
+   // void deleteByLectureIdAndEmail(Integer lectureId, String email);
+
+    @Modifying
+    @Query("UPDATE Reservation r SET r.status = 'CANCEL' WHERE r.lecture.lectureId = :lectureId AND r.user.email = :email")
+    void cancelByLectureIdAndEmail(@Param("lectureId") Integer lectureId,
+                                   @Param("email") String email);
 
 //    @Modifying
 //    @Transactional
