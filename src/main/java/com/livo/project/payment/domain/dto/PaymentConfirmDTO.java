@@ -11,9 +11,4 @@ public class PaymentConfirmDTO {
     private Integer reservationId;
     private Integer lectureId;
 
-    public PaymentConfirmDTO(String paymentKey, String orderId, Integer amount) {
-        this.paymentKey = paymentKey;
-        this.orderId = orderId;
-        this.amount = amount;
-    }
 }

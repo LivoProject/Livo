@@ -74,7 +74,8 @@ public class PaymentService {
                 //db의 로그인 유저 이메일 기준
                 User user = userRepository.findByEmail(dto.getEmail())
                         .orElseThrow(() -> new IllegalArgumentException("회원 정보 없음"));
-
+                Reservation reservation = reservationRepository.findByReservationId(dto.getReservationId())
+                        .orElseThrow(() -> new IllegalArgumentException("예약 정보 없음"));
                 // Payment 저장
                 Payment payment = new Payment();
                 payment.setPaymentKey(dto.getPaymentKey());
@@ -85,14 +86,12 @@ public class PaymentService {
                 payment.setMethod(method);
                 payment.setStatus(Payment.PaymentStatus.SUCCESS);
                 payment.setApprovedAt(LocalDateTime.now());
-
+                payment.setReservation(reservation);
                 paymentRepository.save(payment);
 
                 // 예약 상태 변경
-                /*Reservation reservation = reservationRepository.findByReservationId(dto.getReservationId())
-                        .orElseThrow(() -> new IllegalArgumentException("예약 정보 없음"));
                 reservation.setStatus(Reservation.ReservationStatus.PAID);
-                reservationRepository.save(reservation);*/
+                reservationRepository.save(reservation);
 
                 res.put("status", "SUCCESS");
                 res.put("message", "결제 승인 및 DB 저장 완료");

@@ -4,6 +4,7 @@ import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.payment.domain.dto.PaymentConfirmDTO;
 import com.livo.project.payment.domain.dto.PaymentRequestDTO;
 import com.livo.project.payment.service.PaymentService;
+import com.livo.project.utils.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -33,9 +34,16 @@ public class PaymentController {
     public String success(@RequestParam String paymentKey,
                           @RequestParam String orderId,
                           @RequestParam int amount,
-                          @RequestParam(required = false) String email,
+                          @RequestParam int reservationId,
+                          @RequestParam int lectureId,
                           Model model) {
-        PaymentConfirmDTO dto = new PaymentConfirmDTO(paymentKey, orderId, amount);
+        String email = AuthUtil.getLoginUserEmail();
+        PaymentConfirmDTO dto = new PaymentConfirmDTO();
+        dto.setPaymentKey(paymentKey);
+        dto.setOrderId(orderId);
+        dto.setAmount(amount);
+        dto.setReservationId(reservationId);
+        dto.setLectureId(lectureId);
         dto.setEmail(email);
         Map<String, Object> result = paymentService.confirmPayment(dto);
         model.addAttribute("result", result);

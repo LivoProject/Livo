@@ -384,6 +384,8 @@
 <script>
     // 로그인 유저 이메일 JSP에서 JS 변수로 넘기기
     const userEmail = "${loggedInUserEmail != null ? loggedInUserEmail : ''}";
+    const lectureId = ${lecture.lectureId};
+    const amount = ${lecture.price};
     console.log("로그인된 사용자 이메일:", userEmail);
 </script>
 <script src="/js/modal.js"></script>

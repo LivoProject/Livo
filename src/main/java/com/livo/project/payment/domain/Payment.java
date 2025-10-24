@@ -29,6 +29,7 @@ public class Payment {
     private Integer amount;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private PaymentStatus status; // PENDING, SUCCESS, CANCEL, FAIL, REFUND
 
     private LocalDateTime requestedAt;

@@ -11,6 +11,23 @@ const payment = tossPayments.payment({customerKey});
 //현재 로그인 유저의 이메일
 async function requestPayment() {
     try {
+        //결제 전 예약 생성
+        const response = await fetch(`/reservation/create/${lectureId}`,{
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json",
+                [_csrfHeader]: _csrfToken
+            }
+        });
+
+        const data = await response.json();
+        if (!data.success) {
+            alert(data.message || "예약 생성 실패");
+            return;
+        }
+        const reservationId = data.reservationId;
+        console.log("예약 생성됨, ID:"+reservationId);
+        //결제요청
         await payment.requestPayment({
             method: "CARD", // 카드 결제
             amount: {
@@ -22,9 +39,8 @@ async function requestPayment() {
             successUrl:
                 window.location.origin +
                 "/payment/success?" +
-                "email=" + encodeURIComponent(userEmail)+
                 "&reservationId=" + reservationId +
-                "&lectureIr=" + lectureId+
+                "&lectureId=" + lectureId+
                 "&amount=" + 1000,
             failUrl: window.location.origin + "/payment/fail",
             customerEmail: "test@naver.com",

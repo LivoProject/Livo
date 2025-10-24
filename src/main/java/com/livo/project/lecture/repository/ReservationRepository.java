@@ -1,5 +1,6 @@
 package com.livo.project.lecture.repository;
 
+import com.livo.project.auth.domain.entity.User;
 import com.livo.project.lecture.domain.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
         """)
     Optional<Integer> findReservationIdByUserAndLecture(@Param("email") String email,
                                                         @Param("lectureId") int lectureId);
+
+    Optional<Reservation> findByReservationId(int reservationId);
+
 }
