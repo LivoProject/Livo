@@ -5,12 +5,16 @@ import com.livo.project.lecture.domain.ChapterList;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.service.ChapterListService;
 import com.livo.project.lecture.service.LectureService;
+import com.livo.project.mypage.domain.dto.ProgressDto;
+import com.livo.project.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +24,7 @@ import java.util.List;
 public class LectureViewController {
     private final LectureAdminService lectureAdminService;
     private final ChapterListService chapterListService;
+    private final MypageService mypageService;
 
     @GetMapping("/view/{lectureId}")
     public String viewLecture(@PathVariable("lectureId") int lectureId, Model model) {
