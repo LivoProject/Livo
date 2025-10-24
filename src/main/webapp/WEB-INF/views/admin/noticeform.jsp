@@ -166,7 +166,7 @@
     </div>
 </div>
 
-<<<<<<< HEAD
+
 <script src="<c:url value='/js/notice-form.js?v=1'/>"></script>
 <script>
     // 제목 글자수 초기화(수정 모드에서 서버 값 기준)
@@ -179,8 +179,8 @@
         update();
     })();
 </script>
-=======
+
 <script src="<c:url value='/js/admin/notice-form.js?v=1'/>"></script>
->>>>>>> main
+
 </body>
 </html>

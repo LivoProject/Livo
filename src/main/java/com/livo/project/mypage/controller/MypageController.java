@@ -54,9 +54,9 @@ public class MypageController {
         model.addAttribute("mypage", mypateDto);
         model.addAttribute("notices", mypateDto.getNotices());
         model.addAttribute("recommendedLectures", mypateDto.getRecommendedLectures());
-//        List<Lecture> top2LikedLectures = mypageService.getTop2LikedLectures();
-//        model.addAttribute("top2LikedLectures", top2LikedLectures);
-//        model.addAttribute("fr", top2LikedLectures);
+       List<Lecture> top2LikedLectures = mypageService.getTop2LikedLectures();
+       model.addAttribute("top2LikedLectures", top2LikedLectures);
+       model.addAttribute("fr", top2LikedLectures);
 
         return "mypage/index";
     }
