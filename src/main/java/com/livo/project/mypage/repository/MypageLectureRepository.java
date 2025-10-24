@@ -1,6 +1,7 @@
 package com.livo.project.mypage.repository;
 
 import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.mypage.repository.projection.LikedLectureProjection;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,36 +20,67 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
 
     // 좋아요한 강좌
     @Query(value = """
-             SELECT l.* 
-            FROM lecture l
-            JOIN lecture_like ll ON l.lectureId = ll.lectureId
-            WHERE ll.email = :email
-            ORDER BY ll.createdAt DESC
+                SELECT 
+                    l.lectureId AS lectureId,
+                    l.title AS title,
+                    l.tutorName AS tutorName,
+                    l.thumbnailUrl AS thumbnailUrl,
+                    COALESCE(lp.progressPercent, 0) AS progressPercent
+                FROM lecture l
+                JOIN lecture_like ll ON l.lectureId = ll.lectureId
+                JOIN user u ON ll.email = u.email
+                LEFT JOIN lecture_progress lp 
+                    ON lp.lectureId = l.lectureId
+                    AND lp.email = u.email
+                WHERE u.email = :email
+                  AND u.provider = :provider
+                ORDER BY ll.createdAt DESC
             """,
             countQuery = """
-                    SELECT COUNT(*) 
-                    FROM lecture l
-                    JOIN lecture_like ll ON l.lectureId = ll.lectureId
-                    WHERE ll.email = :email
+                        SELECT COUNT(*)
+                        FROM lecture_like ll
+                        JOIN user u ON ll.email = u.email
+                        WHERE u.email = :email
+                          AND u.provider = :provider
                     """,
             nativeQuery = true)
-    Page<Lecture> findLikedLecturesByEmail(@Param("email") String email, @Param("provider") String provider, Pageable pageable);
+    Page<LikedLectureProjection> findLikedLecturesWithProgress(
+            @Param("email") String email,
+            @Param("provider") String provider,
+            Pageable pageable
+    );
 
     // 좋아요한 강좌 최신 2개
     @Query(value = """
-            SELECT l.* 
+            SELECT 
+                l.lectureId AS lectureId,
+                l.title AS title,
+                l.tutorName AS tutorName,
+                l.thumbnailUrl AS thumbnailUrl,
+                COALESCE(lp.progressPercent, 0) AS progressPercent
             FROM lecture l
-            JOIN lecture_like ll ON l.lectureId = ll.lectureId
+            JOIN lecture_like ll 
+                ON l.lectureId = ll.lectureId
+            LEFT JOIN lecture_progress lp 
+                ON lp.lectureId = l.lectureId AND lp.email = :email
             WHERE ll.email = :email
             ORDER BY ll.createdAt DESC
             LIMIT 2
-            """, nativeQuery = true)
-    List<Lecture> findTop2LikedLecturesByEmail(@Param("email") String email, @Param("provider") String provider);
+            """,
+            countQuery = """
+                    SELECT COUNT(*) 
+                    FROM lecture_like ll 
+                    WHERE ll.email = :email
+                    LIMIT 2
+                    """,
+            nativeQuery = true)
+    List<LikedLectureProjection> findTop2LikedLecturesByEmailWithProgress(@Param("email") String email, @Param("provider") String provider);
 
     // 좋아요 해제
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM lecture_like WHERE lectureId = :lectureId AND email = :email", nativeQuery = true)
     void deleteLikeByLectureIdAndEmail(@Param("lectureId") Integer lectureId, @Param("email") String email, @Param("provider") String provider);
+
 
 }

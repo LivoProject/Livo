@@ -52,7 +52,16 @@ public class Lecture {
     @JoinColumn(name = "categoryId")
     private Category category;
 
+
+
+
+
+    public Lecture(Integer lectureId) {
+        this.lectureId = lectureId;
+    }
+
     @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Payment> payments;
+
 }

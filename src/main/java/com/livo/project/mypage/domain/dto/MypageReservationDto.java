@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReservationDto {
+public class MypageReservationDto {
 
     // Reservation 기본 정보
     private Integer reservationId;
@@ -33,7 +33,7 @@ public class ReservationDto {
     private double progressPercent;
 
     // 변환 메서드
-    public static ReservationDto of(Reservation r, Lecture l, double progressPercent) {
+    public static MypageReservationDto of(Reservation r, Lecture l, double progressPercent) {
 
         LocalDateTime createdAt = null;
         Date createdAtDate = r.getCreatedAt();
@@ -43,7 +43,7 @@ public class ReservationDto {
                     .toLocalDateTime();
         }
 
-        return ReservationDto.builder()
+        return MypageReservationDto.builder()
                 .reservationId(r.getReservationId())
                 .email(r.getUser().getEmail())
                 .lectureId(r.getLectureId())

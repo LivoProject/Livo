@@ -6,8 +6,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProgressDto {
+public class MypageProgressDto {
     private Integer lectureId;
-    private Integer progressPercent;
+    private Double progressPercent;
     private Double lastWatchedTime;
 }
