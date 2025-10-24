@@ -19,22 +19,33 @@ public class ReviewDto {
     private int reviewStar;        // 별점
     private String reviewContent;  // 리뷰 내용
     private String createdAt;      // 작성일 포맷 문자열
+    private String updatedAt;      // ✅ 수정일 포맷 문자열
+    private boolean edited;      // ✅ 수정 여부
     private boolean blocked;
-    // Entity → DTO 변환 메서드
+
+    // ✅ Entity → DTO 변환 메서드
     public static ReviewDto fromEntity(Review review) {
-        String formattedDate = null;
-        if (review.getCreatedAt() != null) {
-            formattedDate = new SimpleDateFormat("yyyy.MM.dd HH:mm").format(review.getCreatedAt());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+
+        String created = review.getCreatedAt() != null ? sdf.format(review.getCreatedAt()) : "";
+        String updated = review.getUpdatedAt() != null ? sdf.format(review.getUpdatedAt()) : "";
+
+        // ✅ 수정 여부 정확하게 계산
+        boolean edited = false;
+        if (review.getUpdatedAt() != null && review.getCreatedAt() != null) {
+            edited = review.getUpdatedAt().getTime() > review.getCreatedAt().getTime();
         }
 
         return new ReviewDto(
                 review.getReviewUId(),
-                review.getReservation().getLecture().getLectureId(),     // FK 접근
+                review.getReservation().getLecture().getLectureId(),
                 review.getReservation().getUser().getName(),
                 review.getReservation().getUser().getEmail(),
                 review.getReviewStar(),
                 review.getReviewContent(),
-                formattedDate,
+                created,
+                updated,
+                edited,
                 review.isBlocked()
 
         );

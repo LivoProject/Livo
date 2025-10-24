@@ -67,19 +67,8 @@ public class ReviewController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Review> reviewPage = reviewService.getReviewsByLectureIdPaged(lectureId, pageable);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
-
-        // Page<Review> → Page<ReviewDto> 변환
-        Page<ReviewDto> dtoPage = reviewPage.map(r -> new ReviewDto(
-                r.getReviewUId(),
-                r.getReservation().getLecture().getLectureId(),
-                r.getReservation().getUser().getName(),
-                r.getReservation().getUser().getEmail(),
-                r.getReviewStar(),
-                r.getReviewContent(),
-                sdf.format(r.getCreatedAt()),
-                r.isBlocked()
-        ));
+        // fromEntity()를 사용해 변환
+        Page<ReviewDto> dtoPage = reviewPage.map(ReviewDto::fromEntity);
 
         // 로그인 상태 및 유저 이메일 추가 -> 신고하기 위해!
         boolean isLoggedIn = (userDetails != null);
@@ -95,7 +84,7 @@ public class ReviewController {
         return response;
     }
 
-    // 단일 리뷰 조회 (수정 모달용)
+    // 단일 리뷰 조회 (수정용: Ajax로 기존 내용 불러오기)
     @GetMapping("/review/{reviewUId}")
     @ResponseBody
     public ReviewDto getReview(@PathVariable int reviewUId) {
@@ -103,20 +92,15 @@ public class ReviewController {
         return ReviewDto.fromEntity(review);
     }
 
-    // 리뷰 수정
-    @PostMapping("/review/edit")
-    public String editReview(@RequestParam("reviewUId") int reviewUId,
-                             @RequestParam("reviewStar") int reviewStar,
-                             @RequestParam("reviewContent") String reviewContent,
-                             @AuthenticationPrincipal UserDetails userDetails) {
+    // 리뷰 수정 (Ajax 기반)
+    @PutMapping("/review/{reviewUId}")
+    @ResponseBody
+    public ResponseEntity<?> updateReview(@PathVariable int reviewUId,
+                                          @RequestBody Review updatedReview,
+                                          @AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
-        reviewService.updateReview(reviewUId, reviewStar, reviewContent, email);
-
-        // lectureId는 DTO 변환에서 사용하므로 다시 redirect 시 필요
-        Review updatedReview = reviewService.getReviewById(reviewUId);
-        int lectureId = updatedReview.getReservation().getLecture().getLectureId();
-
-        return "redirect:/lecture/content/" + lectureId + "#review";
+        reviewService.updateReview(reviewUId, updatedReview, email);
+        return ResponseEntity.ok("SUCCESS");
     }
 
     // 리뷰 삭제

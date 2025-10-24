@@ -8,6 +8,7 @@ import com.livo.project.lecture.service.ChapterListService;
 import com.livo.project.lecture.service.LectureService;
 import com.livo.project.lecture.service.ReservationService;
 import com.livo.project.review.domain.Review;
+import com.livo.project.review.domain.dto.ReviewDto;
 import com.livo.project.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -52,7 +53,12 @@ public class LectureContentController {
         //리뷰 목록 (첫 5개만)
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Review> reviewPage = reviewService.getReviewsByLectureIdPaged(lectureId, pageable);
-        List<Review> reviews = reviewPage.getContent();
+
+        // Review → ReviewDto 변환
+        List<ReviewDto> reviews = reviewPage.getContent()
+                .stream()
+                .map(ReviewDto::fromEntity)
+                .toList();
 
         // 평균별점 & 전체개수 (list.jsp 방식으로 똑같이!)
         Double avgStar = reviewService.getAverageStarByLecture(lectureId);
