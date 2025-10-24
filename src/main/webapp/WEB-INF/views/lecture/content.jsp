@@ -1,11 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page isELIgnored="false" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%@ include file="/WEB-INF/views/common/modal.jsp" %>
 <link rel="stylesheet" href="/css/main.css" />
 <link rel="stylesheet" href="/css/lectureContent.css">
+<script src="https://js.tosspayments.com/v2/standard"></script>
 
 <!-- 강좌 상세 페이지 시작 -->
 <section id="sub" class="container" style="margin-top: 100px;">
@@ -49,7 +51,6 @@
                     </button>
 
                     <c:choose>
-                        <%-- 이미 신청한 강의 --%>
                         <c:when test="${isEnrolled}">
                             <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
                         </c:when>
@@ -67,7 +68,7 @@
 
                                 <%-- 유료 강의 --%>
                                 <c:otherwise>
-                                    <a href="#" class="btn btn-warning text-white">결제하기</a>
+                                    <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">결제하기</button>
                                 </c:otherwise>
                             </c:choose>
                         </c:otherwise>
@@ -177,6 +178,7 @@
             <div class="col-md-12 mt-4">
                 <form id="reviewForm" action="/lecture/content/${lecture.lectureId}/review" method="post">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                    <input type="hidden" id="reviewUId" value=""> <!-- 수정용 ID 저장 -->
 
                     <div class="h-100 p-5 bg-body-secondary border rounded-3">
                         <!-- 별점 버튼 -->
@@ -204,9 +206,15 @@
         <div id="reviewList">
             <c:forEach var="review" items="${reviews}">
                 <div class="col-md-12 mb-3">
-                    <div class="h-100 p-5 bg-body-tertiary border rounded-3">
-                        <h4>${review.reservation.user.name}</h4>
-                        <h5><fmt:formatDate value="${review.createdAt}" pattern="yyyy.MM.dd" /></h5>
+                    <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm"
+                        data-review-id="${review.reviewUId}">
+                        <h4>${review.userName}</h4>
+                        <h5>
+                            ${review.createdAt}
+                            <c:if test="${review.edited}">
+                                <span class="text-muted small">(수정)</span>
+                            </c:if>
+                        </h5>
 
                         <h4>
                             <c:forEach var="i" begin="1" end="5">
@@ -217,7 +225,17 @@
                             </c:forEach>
                         </h4>
 
-                        <h4><strong>${review.reviewContent}</strong></h4>
+                        <h4>
+                         <c:choose>
+                            <c:when test="${review.blocked}">
+                                <span class="text-muted fst-italic">🚫 신고된 리뷰입니다.</span>
+                            </c:when>
+
+                            <c:otherwise>
+                                <strong>${review.reviewContent}</strong>
+                            </c:otherwise>
+                        </c:choose>
+                        </h4>
 
                         <!-- 신고/수정/삭제 버튼 -->
                         <div class="d-flex gap-2 mt-2">
@@ -225,7 +243,15 @@
                                 <c:when test="${isLoggedIn}">
                                     <!-- 로그인 O → 본인 리뷰인지 검사 -->
                                     <c:choose>
-                                        <c:when test="${review.reservation.user.email ne loggedInUserEmail}">
+                                        <c:when test="${review.blocked}">
+                                            <button class="btn btn-outline-secondary btn-sm" disabled>신고된 리뷰</button>
+                                        </c:when>
+                                        <%-- 민영 추가: 이미 신고한 리뷰일 경우 --%>
+                                        <c:when test="${reportedIds.contains(review.reviewUId)}">
+                                            <button class="btn btn-secondary btn-sm" disabled>검토중</button>
+                                        </c:when>
+                                        <%-- 본인 리뷰가 아닌 경우: 신고 버튼 --%>
+                                        <c:when test="${review.userEmail ne loggedInUserEmail}">
                                             <button class="btn btn-outline-danger btn-sm"
                                                     type="button"
                                                     data-bs-toggle="modal"
@@ -236,13 +262,13 @@
                                         </c:when>
 
                                         <c:otherwise>
-                                            <!-- 본인 리뷰: 나의 리뷰 + 수정 + 삭제 -->
+                                            <!-- 본인 리뷰: 수정 + 삭제 -->
                                             <button class="btn btn-outline-secondary btn-sm" disabled>
                                                 나의 후기
                                             </button>
                                             <button class="btn btn-outline-primary btn-sm"
                                                     type="button"
-                                                    onclick="openEditModal(${review.reviewUId})">
+                                                    onclick="editReview(${review.reviewUId})">
                                                 수정
                                             </button>
                                             <button class="btn btn-outline-danger btn-sm"
@@ -295,7 +321,21 @@
                                         <div>
                                             <strong>${file.fileName}</strong>
                                         </div>
-                                        <a href="${file.fileUrl}" class="btn btn-outline-primary btn-sm" download>다운로드</a>
+
+                                        <!-- ✅ 수강 여부에 따라 버튼 다르게 표시 -->
+                                        <c:choose>
+                                            <c:when test="${isEnrolled}">
+                                                <a href="${file.fileUrl}" class="btn btn-outline-primary btn-sm" download>
+                                                    다운로드
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="btn btn-secondary btn-sm" disabled>
+                                                    수강신청 필요
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
+
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -309,6 +349,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- 🚨 리뷰 신고 모달 -->
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
@@ -357,7 +398,18 @@
     </div>
 </section>
 
+<script>
+    const csrfToken = "${_csrf.token}";
+</script>
+<script>
+    // 로그인 유저 이메일 JSP에서 JS 변수로 넘기기
+    const userEmail = "${loggedInUserEmail != null ? loggedInUserEmail : ''}";
+    const lectureId = ${lecture.lectureId};
+    const amount = ${lecture.price};
+    console.log("로그인된 사용자 이메일:", userEmail);
+</script>
 <script src="/js/modal.js"></script>
 <script src="/js/lectureContent.js"></script>
+<script src="/js/payment.js"></script>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

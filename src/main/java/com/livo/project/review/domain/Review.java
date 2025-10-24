@@ -1,9 +1,7 @@
 package com.livo.project.review.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.livo.project.lecture.domain.Reservation;
-import com.livo.project.report.domain.Report;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -41,6 +37,9 @@ public class Review {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+    @Column(nullable = false)
+    private boolean blocked = false; // true면 신고 처리된 리뷰
+
     private int reservationId; // FK (reservation)
 
     //reservation이랑 연결
@@ -48,7 +47,17 @@ public class Review {
     @JoinColumn(name = "reservationId", referencedColumnName = "reservationId", insertable = false, updatable = false)
     private Reservation reservation;
 
-    @OneToMany(mappedBy = "review", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnore
-    private List<Report> reports = new ArrayList<>();
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Date();
+        this.updatedAt = this.createdAt;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Date();
+    }
+
 }
+
+

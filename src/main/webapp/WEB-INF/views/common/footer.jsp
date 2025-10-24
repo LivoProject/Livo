@@ -4,7 +4,7 @@
 
 <!-- Footer -->
 
-<!-- 🔹 플로팅 버튼 컨테이너 -->
+<!-- 플로팅 버튼 컨테이너 -->
 <div class="floating-buttons">
     <!-- 챗봇 -->
     <button id="chat-fab" class="chat-fab" aria-label="챗봇 열기" title="챗봇">
@@ -64,18 +64,6 @@
     --%>
 
 </footer>
-
-<link rel="preload" href="/audio/login_success.mp3" as="audio" type="audio/mpeg"/>
-
-<!-- jQuery 관련 -->
-<%--      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--%>
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<!-- Custom js -->
-<script src="/js/common.js"></script>
-<script src="/js/bgm-inline.js"></script>
 
 </body>
 

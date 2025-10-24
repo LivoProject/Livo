@@ -8,23 +8,26 @@ import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
 import com.livo.project.lecture.repository.LectureRepository;
-import com.livo.project.mypage.domain.dto.MypageDto;
-import com.livo.project.mypage.domain.dto.ReservationDto;
+import com.livo.project.mypage.domain.dto.*;
+import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.repository.*;
+import com.livo.project.mypage.repository.projection.LikedLectureProjection;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
 import com.livo.project.review.domain.Review;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
+
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -32,12 +35,8 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -59,7 +58,13 @@ public class MypageService {
     private final LectureRepository lectureRepository;
     private final UserRepository userRepository;
 
-    /** 현재 인증 정보에서 (provider, providerId) 또는 id 추출 */
+
+    private final MypageProgressRepository mypageProgressRepository;
+
+
+    /**
+     * 현재 인증 정보에서 (provider, providerId) 또는 id 추출
+     */
     private ResolvedPrincipal resolveCurrent() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || auth.getPrincipal() == null)
@@ -99,14 +104,14 @@ public class MypageService {
 
             if (attrs.get("id") != null) {
                 providerId = String.valueOf(attrs.get("id"));               // kakao
-            } else if (attrs.get("response") instanceof Map<?,?> resp && resp.get("id") != null) {
+            } else if (attrs.get("response") instanceof Map<?, ?> resp && resp.get("id") != null) {
                 providerId = String.valueOf(resp.get("id"));               // naver
             }
 
             String email = null;
             if (attrs.get("email") != null) {
                 email = String.valueOf(attrs.get("email"));
-            } else if (attrs.get("kakao_account") instanceof Map<?,?> ka && ka.get("email") != null) {
+            } else if (attrs.get("kakao_account") instanceof Map<?, ?> ka && ka.get("email") != null) {
                 email = String.valueOf(ka.get("email"));
             }
 
@@ -124,7 +129,10 @@ public class MypageService {
 
         throw new RuntimeException("지원하지 않는 principal 타입: " + principal.getClass().getName());
     }
-    /** 공통: 현재 로그인 사용자 로드 */
+
+    /**
+     * 공통: 현재 로그인 사용자 로드
+     */
     private User loadCurrentUser() {
         ResolvedPrincipal rp = resolveCurrent();
 
@@ -146,8 +154,9 @@ public class MypageService {
 
     // 기본데이터
     public MypageDto getUserData(String email, String provider) {
-        User user =  mypageUserRepository.findByEmailAndProvider(email, provider)
+        User user = userRepository.findByEmailIgnoreCaseAndProvider(email, provider)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
 
         // 공지사항
         List<Notice> notices = mypageNoticeRepository.findTop5ByOrderByCreatedAtDesc();
@@ -187,12 +196,15 @@ public class MypageService {
         User user = loadCurrentUser();
 
         if (dto.getNickname() != null && !dto.getNickname().isBlank()) user.setNickname(dto.getNickname());
-        if (dto.getPhone() != null && !dto.getPhone().isBlank())       user.setPhone(dto.getPhone());
-        if (dto.getBirth() != null)                                    user.setBirth(dto.getBirth());
+        if (dto.getPhone() != null && !dto.getPhone().isBlank()) user.setPhone(dto.getPhone());
+        if (dto.getBirth() != null) user.setBirth(dto.getBirth());
         if (dto.getUsername() != null && !dto.getUsername().isBlank()) user.setName(dto.getUsername());
         if (dto.getGender() != null && !dto.getGender().isBlank()) {
-            try { user.setGender(User.Gender.valueOf(dto.getGender().trim().toUpperCase())); }
-            catch (IllegalArgumentException e) { log.warn("잘못된 gender 값: {}", dto.getGender()); }
+            try {
+                user.setGender(User.Gender.valueOf(dto.getGender().trim().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                log.warn("잘못된 gender 값: {}", dto.getGender());
+            }
         }
 
         userRepository.save(user);
@@ -237,13 +249,33 @@ public class MypageService {
 
 
     // 좋아요 강의
-    public Page<Lecture> getLikedLectures(String email, String provider, Pageable pageable) {
-        return mypageLectureRepository.findLikedLecturesByEmail(email, provider, pageable);
+    public Page<MypageLikedLectureDto> getLikedLecturesWithProgress(String email, String provider, Pageable pageable) {
+        Page<LikedLectureProjection> results = mypageLectureRepository.findLikedLecturesWithProgress(email, provider, pageable);
+
+
+        return results.map(row -> {
+            Integer lectureId = row.getLectureId();
+
+            // ✅ 여기에서 isReserved 선언 (map 내부)
+            boolean isReserved = mypageReservationRepository.existsByLecture_LectureIdAndUser_Email(lectureId, email);
+
+            return MypageLikedLectureDto.builder()
+                    .lectureId(lectureId)
+                    .title(row.getTitle())
+                    .tutorName(row.getTutorName())
+                    .price(row.getPrice() != null
+                            ? Integer.parseInt(row.getPrice())
+                            : 0)
+                    .thumbnailUrl(row.getThumbnailUrl())
+                    .progressPercent(row.getProgressPercent() != null ? row.getProgressPercent() : 0.0)
+                    .reserved(isReserved) // ✅ 예약 여부 표시
+                    .build();
+        });
     }
 
     // 좋아요 강의 2개
-    public List<Lecture> getTop2LikedLectures(String email, String provider) {
-        return mypageLectureRepository.findTop2LikedLecturesByEmail(email, provider);
+    public List<LikedLectureProjection> getTop2LikedLectures(String email, String provider) {
+        return mypageLectureRepository.findTop2LikedLecturesByEmailWithProgress(email, provider);
     }
 
     // 좋아요 해제
@@ -253,22 +285,49 @@ public class MypageService {
     }
 
 
-    // 내 강좌 조회
-    public Page<ReservationDto> getMyReservations(String email, String provider, Pageable pageable) {
-        Page<Reservation> reservations = mypageReservationRepository.findAllByEmail(email, provider, pageable);
+    // 내 강좌 조회 + 프로그래스
+//    public Page<ReservationDto> getMyReservations(String email, Pageable pageable) {
+//        Page<Reservation> reservations = mypageReservationRepository.findAllByEmail(email, pageable);
+//
+//        return reservations.map(r -> {
+//            Lecture lecture = r.getLecture();
+//
+//            Double progressPercent = mypageProgressRepository
+//                    .findByLectureAndEmail(lecture, email)
+//                    .map(LectureProgress::getProgressPercent)
+//                    .orElse(0.0);
+//
+//            return ReservationDto.of(r, lecture, progressPercent);
+//        });
+//    }
 
+    public Page<MypageReservationDto> getMyReservations(String email, String provider, Pageable pageable) {
+        Page<Reservation> reservations = mypageReservationRepository.findAllByEmailAndProvider(email, provider, pageable);
 
-        return reservations.map(r -> {
-            Lecture l = lectureRepository.findById(r.getLectureId()).orElse(null);
-            return (l != null) ? ReservationDto.of(r, l) : null;
+        return reservations.map(reservation -> {
+            Lecture lecture = reservation.getLecture();
+
+            int progressPercent = mypageProgressRepository.findByLectureAndUser(lecture, email, provider)
+                    .map(LectureProgress::getProgressPercent)
+                    .orElse(0.0)
+                    .intValue();
+
+            return MypageReservationDto.of(reservation, lecture, progressPercent);
         });
     }
 
+
     // 내 강좌 예약 취소
     @Transactional
-    public void removeReservationLecture(Integer lectureId, String email, String provider) {
-        mypageReservationRepository.deleteByEmailAndLectureId(lectureId, email, provider);
+    @CacheEvict(cacheNames = { "chartTopLectures", "chartMonthlyRevenue" }, allEntries = true)
+    public void removeReservationLecture(Integer lectureId, String email) {
+        int changed = mypageReservationRepository.cancelByLectureIdAndEmail(lectureId, email);
+        System.out.println("변경된 행 수: " + changed);
+        if (changed == 0) {
+            throw new RuntimeException("해당 예약을 찾을 수 없거나 이미 취소되었습니다.");
+        }
     }
+
 
     // 내 리뷰 조회
     public Page<Review> getMyReviews(String email, String provider, Pageable pageable) {
@@ -276,4 +335,61 @@ public class MypageService {
     }
 
 
+    // 현재 진행률 저장
+    @Transactional
+    public void saveProgress(String email, String provider, MypageProgressDto mypageProgressDto) {
+        // lectureId로 Lecture 엔티티 조회
+        Lecture lecture = lectureRepository.findById(mypageProgressDto.getLectureId())
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found: " + mypageProgressDto.getLectureId()));
+
+        // 기존 진행 데이터 조회 or 새로 생성
+        LectureProgress progress = mypageProgressRepository.findByLectureAndUser(lecture, email, provider)
+                .orElseGet(() -> new LectureProgress(email, lecture));
+
+        // 값 갱신
+        progress.setProgressPercent(mypageProgressDto.getProgressPercent());
+        progress.setLastWatchedTime(mypageProgressDto.getLastWatchedTime());
+        progress.setLastAccessedAt(LocalDateTime.now());
+
+        // 저장
+        mypageProgressRepository.save(progress);
+    }
+
+    // 유저별 진행률 가져오기
+    public MypageProgressDto getUserProgress(String email, String provider, int lectureId) {
+        if (email == null) return null;
+
+        return mypageProgressRepository.findByLectureAndUser(
+                new Lecture(lectureId),
+                email,
+                provider
+        ).map(progress -> new MypageProgressDto(
+                progress.getLecture().getLectureId(),
+                progress.getProgressPercent(),
+                progress.getLastWatchedTime()
+        )).orElse(null);
+    }
+
+    // 최근 학습한 강의
+    @Transactional(readOnly = true)
+    public LectureProgress getRecentLecture(String email) {
+        List<LectureProgress> list = mypageProgressRepository.findTopWithLectureByEmail(email);
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    // 학습 목표
+    public int getTotalStudyHours(String email) {
+        Double totalSeconds = mypageProgressRepository.sumTotalWatchedTime(email);
+        if (totalSeconds == null) return 0;  // ✅ null-safe 처리
+        return (int) (totalSeconds / 3600);
+    }
+
+    public int getCompletedLectureCount(String email) {
+        Integer count = mypageProgressRepository.countByEmailAndProgressPercentGreaterThanEqual(email, 100.0);
+        return (count != null) ? count : 0;
+    }
+
+    public int getStudyDaysThisMonth(String email) {
+        return mypageProgressRepository.countDistinctDaysThisMonth(email);
+    }
 }

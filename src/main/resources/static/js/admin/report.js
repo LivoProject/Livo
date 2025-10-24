@@ -26,8 +26,8 @@ function loadReports(page = 0) {
                             </span>
                         </td>
                         <td>
-                            <button class="btn btn-sm btn-success update-status" data-id="${r.reportId}" data-status="COMPLETED">승인</button>
-                            <button class="btn btn-sm btn-danger update-status" data-id="${r.reportId}" data-status="REJECT">거절</button>
+                            <button id="approveBtn" class="btn btn-sm btn-success update-status" data-id="${r.reportId}" data-status="COMPLETED">승인</button>
+                            <button class="btn btn-sm btn-danger update-status " data-id="${r.reportId}" data-status="REJECT">거절</button>
                         </td>
                     </tr>
                 `);

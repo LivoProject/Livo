@@ -2,20 +2,22 @@ package com.livo.project.mypage.controller;
 
 import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.lecture.domain.Lecture;
-import com.livo.project.lecture.domain.Reservation;
 
 import com.livo.project.mypage.domain.dto.MypageDto;
-import com.livo.project.mypage.domain.dto.ReservationDto;
+import com.livo.project.mypage.domain.dto.MypageLikedLectureDto;
+import com.livo.project.mypage.domain.dto.MypageProgressDto;
+import com.livo.project.mypage.domain.dto.MypageReservationDto;
+import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.service.MypageService;
 import com.livo.project.review.domain.Review;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,7 +29,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,11 +69,20 @@ public class MypageController {
         }
 
         MypageDto mypageDto = mypageService.getUserData(email, provider);
+        // 최근 학습한 강의 1개
+        LectureProgress recentProgress = mypageService.getRecentLecture(email);
+
 
         model.addAttribute("mypage", mypageDto);
         model.addAttribute("notices", mypageDto.getNotices());
         model.addAttribute("recommendedLectures", mypageDto.getRecommendedLectures());
         model.addAttribute("top2LikedLectures", mypageService.getTop2LikedLectures(email, provider));
+        model.addAttribute("recentLecture", recentProgress);
+        model.addAttribute("totalStudyHours", mypageService.getTotalStudyHours(email));
+        model.addAttribute("completedLectures", mypageService.getCompletedLectureCount(email));
+        model.addAttribute("studyDays", mypageService.getStudyDaysThisMonth(email));
+
+
 
         return "mypage/index";
     }
@@ -125,7 +135,7 @@ public class MypageController {
     // 내 강좌 페이지 이동
     @GetMapping("/lecture")
     public String lecture(Authentication authentication,
-                          @PageableDefault(size = 6, direction = Sort.Direction.DESC) Pageable pageable,
+                          @PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                           Model model) {
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -148,19 +158,28 @@ public class MypageController {
             return "redirect:/auth/login";
         }
 
-        Page<ReservationDto> reservations = mypageService.getMyReservations(email, provider, pageable);
+
+        Page<MypageReservationDto> reservations = mypageService.getMyReservations(email, provider, pageable);
+
+        model.addAttribute("lectures", reservations.getContent());
         model.addAttribute("reservations", reservations.getContent());
         model.addAttribute("page", reservations);
 
         return "mypage/lecture";
     }
 
+
     //내 강좌 예약 취소
     @ResponseBody
     @PostMapping("/lecture/delete")
     public Map<String, Object> deleteLecture(Authentication authentication,
                                              @RequestParam Integer lectureId) {
+
+        System.out.println("=== 예약 취소 요청 시작 ===");
+        System.out.println("lectureId: " + lectureId);
+
         Map<String, Object> response = new HashMap<>();
+
 
         if (authentication == null || !authentication.isAuthenticated()) {
             response.put("success", false);
@@ -170,14 +189,11 @@ public class MypageController {
 
         Object principal = authentication.getPrincipal();
         String email = null;
-        String provider = null;
 
         if (principal instanceof AppUserDetails appUser) {
             email = appUser.getEmail();
-            provider = appUser.getProvider();
         } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
             email = (String) oAuthUser.getAttribute("email");
-            provider = (String) oAuthUser.getAttribute("provider");
         }
 
         if (email == null) {
@@ -187,7 +203,7 @@ public class MypageController {
         }
 
         try {
-            mypageService.removeReservationLecture(lectureId, email, provider);
+            mypageService.removeReservationLecture(lectureId, email);
             response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);
@@ -201,7 +217,7 @@ public class MypageController {
     // 즐겨찾기 페이지 이동
     @GetMapping("/like")
     public String like(Authentication authentication,
-                       @PageableDefault(size = 6, direction = Sort.Direction.DESC) Pageable pageable,
+                       @PageableDefault(size = 6) Pageable pageable,
                        Model model) {
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -217,19 +233,20 @@ public class MypageController {
             provider = appUser.getProvider();
         } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
             email = (String) oAuthUser.getAttribute("email");
-            provider = (String) oAuthUser.getAttribute("provider"); // 커스텀 속성 필요
+            provider = (String) oAuthUser.getAttribute("provider");
         }
 
         if (email == null) {
             return "redirect:/auth/login";
         }
 
-        Page<Lecture> likedLectures = mypageService.getLikedLectures(email, provider, pageable);
+        Page<MypageLikedLectureDto> likedLectures = mypageService.getLikedLecturesWithProgress(email, provider, pageable);
         model.addAttribute("likedLectures", likedLectures.getContent());
         model.addAttribute("page", likedLectures);
         return "mypage/like";
     }
 
+    // 좋아요 취소
     @PostMapping("/like/delete")
     @ResponseBody
     public Map<String, Object> deleteLike(Authentication authentication,
@@ -276,7 +293,7 @@ public class MypageController {
     @GetMapping("/review")
     public String review(@RequestParam(required = false) Integer reviewId,
                          Authentication authentication,
-                         @PageableDefault(size = 6, direction = Sort.Direction.DESC)
+                         @PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC)
                          Pageable pageable,
                          Model model) {
 
@@ -336,6 +353,38 @@ public class MypageController {
             model.addAttribute("error", e.getMessage());
             return "mypage/password";
         }
+    }
+
+    // 현재 진행률 저장
+    @PostMapping("/save")
+    @ResponseBody
+    public ResponseEntity<String> saveProgress(Authentication authentication,
+                                               @RequestBody MypageProgressDto dto) {
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
+        }
+
+        // 이메일 / provider 간단히 구분
+        String email = null;
+        String provider = "local";
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof AppUserDetails appUser) {
+            email = appUser.getEmail();
+            provider = appUser.getProvider();
+        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
+            email = (String) oAuthUser.getAttribute("email");
+            Object p = oAuthUser.getAttribute("provider");
+            if (p != null) provider = p.toString();
+        }
+
+        if (email == null) {
+            return ResponseEntity.badRequest().body("이메일을 찾을 수 없습니다.");
+        }
+
+        mypageService.saveProgress(email, provider, dto);
+        return ResponseEntity.ok("진행률 저장 완료");
     }
 
 }

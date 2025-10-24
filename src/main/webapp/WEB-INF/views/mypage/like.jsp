@@ -15,25 +15,50 @@
         <h3>즐겨찾는 강의</h3>
         <div class="lecture-grid large">
             <!-- 카드 1 -->
-            <c:forEach var="lecture" items="${likedLectures}">
-                <div class="card">
-                    <img src="${lecture.thumbnailUrl}" class="card-img-top" alt="${lecture.title}">
+            <c:if test="${not empty likedLectures}">
+                <c:forEach var="lecture" items="${likedLectures}">
+                    <div class="card">
+                        <a href="/lecture/content/${lecture.lectureId}">
+                            <img src="${lecture.thumbnailUrl}" class="card-img-top" alt="${lecture.title}">
 
-                    <div class="card-body">
-                        <h5 class="card-title">${lecture.title}</h5>
-                        <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/> 원</p>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" style="width: 60%"></div>
+                            <div class="card-body">
+                                <h5 class="card-title">${lecture.title}</h5>
+                                <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/> 원</p>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success"
+                                         style="width: ${lecture.progressPercent}%;"></div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                            <div>
+                                <c:choose>
+                                    <c:when test="${lecture.reserved}">
+                                        <a href="/lecture/view/${lecture.lectureId}"
+                                           class="btn btn-outline-success btn-sm">
+                                            ▶ 이어보기
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button class="btn-unlike btn-main btn-sm"
+                                                data-lecture-id="${lecture.lectureId}"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#likeModal">해제
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
+                                <button class="btn-unlike btn-main" data-lecture-id="${lecture.lectureId}"
+                                        data-bs-toggle="modal" data-bs-target="#likeModal">해제
+                                </button>
+                            </div>
+                            <small class="text-muted">9 mins</small>
                         </div>
                     </div>
-                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                        <div>
-                            <button class="btn-unlike btn-main" data-lecture-id="${lecture.lectureId}" data-bs-toggle="modal" data-bs-target="#likeModal">해제</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                    </div>
-                </div>
-            </c:forEach>
+                </c:forEach>
+            </c:if>
+            <c:if test="${empty likedLectures}">
+                <p class="text-muted">좋아요 강의가 없습니다.</p>
+            </c:if>
         </div>
 
         <nav aria-label="Page navigation">

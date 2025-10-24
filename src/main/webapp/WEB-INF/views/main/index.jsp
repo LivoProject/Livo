@@ -34,8 +34,10 @@
             <div class="swiper-wrapper">
                 <c:forEach var="notice" items="${notices}">
                     <div class="swiper-slide">
-                        <span class="notice-text">${notice.title}</span>
-                        <small class="notice-date">${notice.createdAt}</small>
+                        <a href="/notice/content?id=${notice.id}">
+                            <span class="notice-text">${notice.title}</span>
+                            <small class="notice-date">${notice.createdAt}</small>
+                        </a>
                     </div>
                 </c:forEach>
             </div>
@@ -55,7 +57,7 @@
             <div class="recommend-grid">
 
                 <c:forEach var="lecture" items="${recommendedLectures}">
-                    <a href="#" class="card popular-card">
+                    <a href="/lecture/content/${lecture.lectureId}" class="card popular-card">
                         <div>
                             <img src="${lecture.thumbnailUrl}">
                         </div>
@@ -126,7 +128,7 @@
                     <c:forEach var="lectureP" items="${popularLectures}">
                         <!-- -->
                         <div class="swiper-slide">
-                            <a href="#" class="card popular-card">
+                             <a href="/lecture/content/${lectureP.lectureId}" class="card popular-card">
                                 <div>
                                     <img src="${lectureP.thumbnailUrl}">
                                 </div>
@@ -174,7 +176,7 @@
         <div class="banner-content py-5">
             <h2 class="fw-bold mb-3">지금 인기 강좌 TOP 100 공개!</h2>
             <p class="mb-3">가장 많은 학습자들이 선택한 강의를 만나보세요.</p>
-            <a href="#" class="btn-outline-main">강좌 보러가기</a>
+            <a href="/lecture/list" class="btn-outline-main">강좌 보러가기</a>
         </div>
     </section>
 
@@ -186,12 +188,12 @@
             <div class="board">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h3>공지사항</h3>
-                    <a href="#"><i class="bi bi-plus-lg"></i></a>
+                    <a href=/notice/content"><i class="bi bi-plus-lg"></i></a>
                 </div>
                 <ul class="list-unstyled">
                     <c:forEach var="notice" items="${notices}">
                         <li>
-                            <a href="#">
+                            <a href="/notice/content?id=${notice.id}">
                                 <span>${notice.title}</span>
                                 <small>${notice.createdAt}</small>
                             </a>

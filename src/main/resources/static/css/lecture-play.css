@@ -12,7 +12,7 @@ html {
   height: 100%;
 }
 #lecture .video-area {
-  flex: 3;
+  /*flex: 3;*/
   background: #000;
   display: flex;
   align-items: center;
@@ -21,10 +21,15 @@ html {
   font-size: 1.2rem;
 }
 #lecture .curriculum {
-  flex: 1;
+  flex: 5;
   border-left: 1px solid #ddd;
-  padding: 20px;
+  padding: 1.25rem;
   overflow-y: auto;
+}
+#lecture .lecture-close-button {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 1.25rem;
 }
 #lecture .progress-wrap {
   margin: 1.5rem 0;
@@ -103,7 +108,18 @@ html {
   padding: 1.5rem;
 }
 #lecture .accordion-button {
-  background-color: #ededed;
+    background-color: #dafbff;
+    color: var(--color-black);
+    transition: 0.3s;
+}
+#lecture .accordion-button:hover {
+    background-color: #cdeff3;
+}
+#lecture .accordion-button.collapsed {
+    background-color: #f1f3f5;
+}
+#lecture .accordion-button.collapsed:hover {
+    background-color: #ededed;
 }
 @media (max-width: 991.98px) {
   #lecture {

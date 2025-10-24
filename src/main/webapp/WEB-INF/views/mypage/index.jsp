@@ -13,7 +13,7 @@
     <%@ include file="/WEB-INF/views/common/sideMenu.jsp" %>
 
     <!-- 메인 컨텐츠 -->
-    <sc class="main-content">
+    <main class="main-content">
         <!-- 프로필 / 환영 -->
         <div class="welcome-box mb-4">
             <div>
@@ -27,11 +27,11 @@
 
         <!-- 학습 현황 -->
         <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card-box recent-card">
+            <div class="col-md-6 card-box">
+                <div class="recent-card">
                     <div class="card-header">
                         <h6>최근 학습 강의</h6>
-                        <a href="#" class="more-link">
+                        <a href="/mypage/lecture" class="more-link">
                             학습 목록 <i class="bi bi-chevron-right"></i>
                         </a>
                     </div>
@@ -39,23 +39,56 @@
                         <div class="play-icon">
                             <i class="bi bi-play-fill"></i>
                         </div>
-                        <div class="lecture-info">
-                            <h6 class="lecture-title">Svelte.js 입문 가이드</h6>
-                            <p><strong>9강</strong> / 11강 (81.82%)</p>
+
+                        <c:if test="${recentLecture != null}">
+                            <div class="recent-lecture">
+                                <h5>${recentLecture.lecture.title}</h5>
+                                <p>진도율: ${recentLecture.progressPercent}%</p>
+                            </div>
+                        </c:if>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 학습 통계 -->
+            <!-- 📊 학습 통계 미리보기 -->
+            <div class="card learning-summary shadow-sm border-0 rounded-4 p-4 mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-semibold m-0">📊 학습 통계 미리보기</h6>
+                    <a href="/mypage/stats" class="text-decoration-none small text-muted">
+                        자세히 보기 <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+
+                <div class="row text-center">
+                    <div class="col">
+                        <div class="stat-item">
+                            <div class="fs-4 fw-bold text-primary">
+                                ${totalStudyHours}시간
+                            </div>
+                            <small class="text-muted">총 학습시간</small>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="stat-item">
+                            <div class="fs-4 fw-bold text-success">
+                                ${completedLectures}개
+                            </div>
+                            <small class="text-muted">완강 강좌</small>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="stat-item">
+                            <div class="fs-4 fw-bold text-warning">
+                                ${studyDays}일
+                            </div>
+                            <small class="text-muted">이번 달 학습일수</small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card-box">
-                    <h6>학습 진행률</h6>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 70%"></div>
-                    </div>
-                    <p>이번 주 학습 <span>2</span>시간</p>
-                </div>
-            </div>
+
         </div>
 
         <!-- 알림 / 공지 -->
@@ -67,14 +100,19 @@
                 ></a>
             </div>
             <ul>
-                <c:forEach var="notice" items="${notices}">
-                    <li>
-                        <a href="#">
-                            <span>${notice.title}</span>
-                            <small>${notice.createdAt}</small>
-                        </a>
-                    </li>
-                </c:forEach>
+                <c:if test="${not empty notices}">
+                    <c:forEach var="notice" items="${notices}">
+                        <li>
+                            <a href="/notice/content?id=${notice.id}">
+                                <span>${notice.title}</span>
+                                <small>${notice.createdAt}</small>
+                            </a>
+                        </li>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty notices}">
+                    <p class="text-muted">공지사항이 없습니다.</p>
+                </c:if>
             </ul>
         </div>
 
@@ -85,26 +123,35 @@
                 <a href="mypage/like" class="more-link">더보기 <i class="bi bi-chevron-right"></i></a>
             </div>
             <div class="lecture-grid">
-                <c:forEach var="lecture" items="${top2LikedLectures}">
-                    <div class="card">
-                        <img src="${lecture.thumbnailUrl}" class="card-img-top" alt="${lecture.title}">
-
-                        <div class="card-body">
-                            <h5 class="card-title">${lecture.title}</h5>
-                            <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/> 원</p>
-                            <div class="progress mt-2">
-                                <div class="progress-bar" style="width: 60%"></div>
+                <c:if test="${not empty top2LikedLectures}">
+                    <c:forEach var="lecture" items="${top2LikedLectures}">
+                        <div class="card">
+                            <a href="">
+                                <img src="${lecture.thumbnailUrl}" class="card-img-top" alt="${lecture.title}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${lecture.title}</h5>
+                                    <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/>
+                                        원</p>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success"
+                                             style="width: ${lecture.progressPercent}%;"></div>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                                <div>
+                                    <button class="btn-unlike btn-main" data-lecture-id="${lecture.lectureId}"
+                                            data-bs-toggle="modal" data-bs-target="#likeModal">해제
+                                    </button>
+                                </div>
+                                <small class="text-muted">9 mins</small>
                             </div>
                         </div>
-                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                            <div>
-                                <button class="btn-unlike btn-main" data-lecture-id="${lecture.lectureId}">해제
-                                </button>
-                            </div>
-                            <small class="text-muted">9 mins</small>
-                        </div>
-                    </div>
-                </c:forEach>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty top2LikedLectures}">
+                    <p class="text-muted">좋아요 강의가 없습니다.</p>
+                </c:if>
 
 
             </div>
@@ -128,7 +175,25 @@
 
             </div>
         </div>
-    </sc>
+
+
+        <!-- 모달 -->
+        <div class="modal fade" id="likeModal" tabindex="-1" aria-labelledby="likeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header"><h5 class="modal-title" id="likeModalLabel">공통 모달 제목</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                    </div>
+                    <div class="modal-body"> 이곳은 모달 내용입니다.<br> 설명이나 폼, 알림 메시지 등을 넣을 수 있습니다.</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn-main">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- // 모달 -->
+    </main>
 
 </section>
 <!-- 컨텐츠 끝 -->

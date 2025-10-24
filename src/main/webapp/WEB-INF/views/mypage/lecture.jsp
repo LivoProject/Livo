@@ -15,40 +15,49 @@
     <main class="main-content">
         <h3>내 강의실</h3>
         <div class="lecture-grid large">
-            <c:forEach var="reservations" items="${reservations}">
+            <c:if test="${not empty reservations}">
+                <c:forEach var="reservations" items="${reservations}">
 
-                <div class="card">
-                    <img
-                            src="${reservations.thumbnailUrl}"
-                            class="card-img-top"
-                            alt="강의 썸네일"
-                    />
-                    <div class="card-body">
-                        <h6 class="fw-bold mb-1">${reservations.title}</h6>
-                        <p class="text-muted small mb-2">${reservations.tutorName}</p>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" style="width: 60%"></div>
+                    <div class="card">
+                        <a href="/lecture/view/${reservations.lectureId}">
+                            <img
+                                    src="${reservations.thumbnailUrl}"
+                                    class="card-img-top"
+                                    alt="강의 썸네일"
+                            />
+                            <div class="card-body">
+                                <h6 class="fw-bold mb-1">${reservations.title}</h6>
+                                <p class="text-muted small mb-2">${reservations.tutorName}</p>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success"
+                                         style="width: ${reservations.progressPercent}%;"></div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="/lecture/view/${reservations.lectureId}" class="btn-main">이어보기</a>
+                                <button class="btn-main"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">
+                                    수강평 작성
+                                </button>
+                                <button class="btn-unreserve btn-main"
+                                        data-lecture-id="${reservations.lectureId}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#reserveModal">
+                                    예약 취소
+                                </button>
+                            </div>
+                            <small class="text-muted">9 mins</small>
                         </div>
                     </div>
-                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                        <div>
-                            <a href="mypage-lecture-view.html" class="btn-main">이어보기</a>
-                            <button class="btn-main"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">
-                                수강평 작성
-                            </button>
-                            <button class="btn-unreserve btn-main"
-                                    data-lecture-id="${reservations.lectureId}"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#reserveModal">
-                                예약 취소
-                            </button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                    </div>
-                </div>
-            </c:forEach>
+                </c:forEach>
+            </c:if>
+
+            <c:if test="${empty reservations}">
+                <p class="text-muted">예약한 강의가 없습니다.</p>
+            </c:if>
 
         </div>
 
