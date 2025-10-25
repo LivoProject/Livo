@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
@@ -24,19 +25,14 @@ public class PaymentController {
     public ResponseEntity<?> readyPayment(@RequestBody PaymentRequestDTO dto) {
         return ResponseEntity.ok(paymentService.readyPayment(dto));
     }
-    //결제 승인(Toss redirect 이후 호출)
-    @PostMapping("/confirm")
-    public ResponseEntity<?> confirmPayment(@RequestBody PaymentConfirmDTO dto) {
-        return ResponseEntity.ok(paymentService.confirmPayment(dto));
-    }
 
-    @GetMapping("/success")
+    @GetMapping("/confirm")
     public String success(@RequestParam String paymentKey,
                           @RequestParam String orderId,
                           @RequestParam int amount,
                           @RequestParam int reservationId,
                           @RequestParam int lectureId,
-                          Model model) {
+                          RedirectAttributes redirectAttributes) {
         String email = AuthUtil.getLoginUserEmail();
         PaymentConfirmDTO dto = new PaymentConfirmDTO();
         dto.setPaymentKey(paymentKey);
@@ -46,7 +42,12 @@ public class PaymentController {
         dto.setLectureId(lectureId);
         dto.setEmail(email);
         Map<String, Object> result = paymentService.confirmPayment(dto);
-        model.addAttribute("result", result);
+        redirectAttributes.addFlashAttribute("result", result);
+        return "redirect:/payment/success";
+    }
+
+    @GetMapping("/success")
+    public String success(){
         return "payment/success";
     }
 }
