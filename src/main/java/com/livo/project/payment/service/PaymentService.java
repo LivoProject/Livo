@@ -16,10 +16,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -121,4 +124,109 @@ public class PaymentService {
 
         return res;
     }
+    @Transactional
+    public Map<String, Object> cancelPayment(String paymentKey, String cancelReason) {
+        log.info("🚨 [환불 요청] paymentKey={}, reason={}", paymentKey, cancelReason);
+        Payment payment = paymentRepository.findByPaymentKey(paymentKey)
+                .orElseThrow(() -> new IllegalArgumentException("결제 정보 없음"));
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth(secretKey, "");
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("cancelReason", cancelReason);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+
+        String url = "https://api.tosspayments.com/v1/payments/"+paymentKey+"/cancel";
+
+        Map<String, Object> res = new HashMap<>();
+
+        try{
+            log.info("💳 [토스 환불 요청] url={}, paymentKey={}", url, paymentKey);
+            ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
+            log.info("✅ [토스 환불 응답] status={}, body={}", response.getStatusCode(), response.getBody());
+            if(response.getStatusCode() == HttpStatus.OK){
+                Map<String, Object> responseBody = response.getBody();
+                List<Map<String, Object>> cancels = (List<Map<String, Object>>) responseBody.get("cancels");
+                String canceledAtStr = (String) cancels.get(0).get("canceledAt");
+                log.info("🕒 [토스 canceledAt] {}", canceledAtStr);
+                OffsetDateTime canceledDate = OffsetDateTime.parse(canceledAtStr);
+                payment.setStatus(Payment.PaymentStatus.REFUND);
+                payment.setCanceledAt(canceledDate.toLocalDateTime());
+                paymentRepository.save(payment);
+
+                Reservation reservation = payment.getReservation();
+                reservation.setStatus(Reservation.ReservationStatus.CANCEL);
+                reservationRepository.save(reservation);
+                log.info("📝 [DB 업데이트 완료] payment={}, reservation={}", payment.getStatus(), reservation.getStatus());
+                res.put("status", "SUCCESS");
+            }else {
+                log.warn("⚠️ [토스 환불 실패 응답] {}", response.getStatusCode());
+                res.put("status", "FAIL");
+            }
+        } catch (HttpClientErrorException e) {
+            if (e.getMessage().contains("ALREADY_CANCELED_PAYMENT")) {
+                log.info("🔄 [DB 상태 동기화 시작] 이미 취소된 결제입니다.");
+                syncCanceledPayment(paymentKey);
+                res.put("status", "SUCCESS");
+                res.put("message", "이미 취소된 결제였으며, DB 상태를 동기화했습니다.");
+                return res;
+            }
+            res.put("status", "FAIL");
+            res.put("error", e.getMessage());
+        } catch (Exception e){
+            res.put("status", "FAIL");
+            res.put("error", e.getMessage());
+        }
+        return res;
+    }
+    //토스 결제 단건 조회 API로 조회
+    public Map<String, Object> getPaymentDetail(String paymentKey) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth(secretKey, "");
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        ResponseEntity<Map> response = restTemplate.exchange(
+                "https://api.tosspayments.com/v1/payments/" + paymentKey,
+                HttpMethod.GET,
+                request,
+                Map.class
+        );
+
+        return response.getBody();
+    }
+    //DB 상태를 싱크
+    @Transactional
+    public void syncCanceledPayment(String paymentKey) {
+        Payment payment = paymentRepository.findByPaymentKey(paymentKey)
+                .orElseThrow(() -> new IllegalArgumentException("결제 정보 없음"));
+
+        Map<String, Object> detail = getPaymentDetail(paymentKey);
+        log.info("🔄 [토스 조회 결과] status={}", detail.get("status"));
+        if ("CANCELED".equals(detail.get("status"))) {
+            List<Map<String, Object>> cancels = (List<Map<String, Object>>) detail.get("cancels");
+            if (cancels != null && !cancels.isEmpty()) {
+                String canceledAtStr = (String) cancels.get(0).get("canceledAt");
+                OffsetDateTime canceledDate = OffsetDateTime.parse(canceledAtStr);
+                payment.setStatus(Payment.PaymentStatus.REFUND);
+                payment.setCanceledAt(canceledDate.toLocalDateTime());
+                paymentRepository.save(payment);
+
+                Reservation reservation = payment.getReservation();
+                reservation.setStatus(Reservation.ReservationStatus.CANCEL);
+                reservationRepository.save(payment.getReservation());
+
+                log.info("✅ [DB 동기화 완료] paymentStatus={}, reservationStatus={}",
+                        payment.getStatus(), reservation.getStatus());
+            }else{
+                log.warn("⚠️ [동기화 실패] cancels 데이터 없음 → 토스 응답 확인 필요");
+            }
+        }
+    }
+
+
 }

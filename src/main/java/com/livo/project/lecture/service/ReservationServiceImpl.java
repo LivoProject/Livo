@@ -57,7 +57,7 @@ public class ReservationServiceImpl implements ReservationService {
     public int createPendingReservation(int lectureId, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원 정보 없음"));
-        if(reservationRepository.existsByLectureIdAndEmail(lectureId, email)) {
+        if(reservationRepository.existsByEmailAndLectureIdAndStatusNot(email, lectureId, Reservation.ReservationStatus.CANCEL)) {
             throw new IllegalArgumentException("이미 예약된 강의입니다.");
         }
         Reservation reservation = new Reservation();

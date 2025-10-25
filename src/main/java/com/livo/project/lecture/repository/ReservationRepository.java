@@ -1,6 +1,7 @@
 package com.livo.project.lecture.repository;
 
 import com.livo.project.auth.domain.entity.User;
+import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,5 +28,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
                                                         @Param("lectureId") int lectureId);
 
     Optional<Reservation> findByReservationId(int reservationId);
+    boolean existsByEmailAndLectureIdAndStatus(String email, int lectureId, Reservation.ReservationStatus status);
 
+    int lecture(Lecture lecture);
 }
