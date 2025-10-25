@@ -406,6 +406,9 @@
     const userEmail = "${loggedInUserEmail != null ? loggedInUserEmail : ''}";
     const lectureId = ${lecture.lectureId};
     const amount = ${lecture.price};
+    const lectureName = "${lecture.title}";
+
+    console.log("강의이름:", lectureName);
     console.log("로그인된 사용자 이메일:", userEmail);
 </script>
 <script src="/js/modal.js"></script>

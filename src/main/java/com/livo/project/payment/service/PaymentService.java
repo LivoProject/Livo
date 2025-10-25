@@ -2,7 +2,9 @@ package com.livo.project.payment.service;
 
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.auth.repository.UserRepository;
+import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
+import com.livo.project.lecture.repository.LectureRepository;
 import com.livo.project.lecture.repository.ReservationRepository;
 import com.livo.project.payment.domain.Payment;
 import com.livo.project.payment.domain.dto.PaymentConfirmDTO;
@@ -28,6 +30,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
+    private final LectureRepository lectureLectureRepository;
 
     @Value("${toss.secret-key}")
     private String secretKey;
@@ -70,23 +73,28 @@ public class PaymentService {
 
                 String orderName = (String) responseBody.get("orderName");
                 String method = (String) responseBody.get("method");
+                Integer amount = (Integer) responseBody.get("totalAmount");
+                String approvedAt = (String) responseBody.get("approvedAt");
 
                 //db의 로그인 유저 이메일 기준
                 User user = userRepository.findByEmail(dto.getEmail())
                         .orElseThrow(() -> new IllegalArgumentException("회원 정보 없음"));
                 Reservation reservation = reservationRepository.findByReservationId(dto.getReservationId())
                         .orElseThrow(() -> new IllegalArgumentException("예약 정보 없음"));
+                Lecture lecture = lectureLectureRepository.findByLectureId(dto.getLectureId())
+                        .orElseThrow(() -> new IllegalArgumentException("강의 정보 없음"));
                 // Payment 저장
                 Payment payment = new Payment();
                 payment.setPaymentKey(dto.getPaymentKey());
                 payment.setOrderId(dto.getOrderId());
                 payment.setOrderName(orderName);
                 payment.setUser(user);
-                payment.setAmount(dto.getAmount());
+                payment.setAmount(amount);
                 payment.setMethod(method);
                 payment.setStatus(Payment.PaymentStatus.SUCCESS);
                 payment.setApprovedAt(LocalDateTime.now());
                 payment.setReservation(reservation);
+                payment.setLecture(lecture);
                 paymentRepository.save(payment);
 
                 // 예약 상태 변경
@@ -94,7 +102,12 @@ public class PaymentService {
                 reservationRepository.save(reservation);
 
                 res.put("status", "SUCCESS");
-                res.put("message", "결제 승인 및 DB 저장 완료");
+                res.put("orderName", orderName);
+                res.put("amount", amount);
+                res.put("orderId", dto.getOrderId());
+                res.put("paymentKey", dto.getPaymentKey());
+                res.put("method", method);
+                res.put("approvedAt", approvedAt);
             } else {
                 res.put("status", "FAIL");
                 res.put("message", "Toss 결제 승인 실패");

@@ -52,10 +52,6 @@ public class Lecture {
     @JoinColumn(name = "categoryId")
     private Category category;
 
-
-
-
-
     public Lecture(Integer lectureId) {
         this.lectureId = lectureId;
     }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface ChapterListRepository extends JpaRepository<ChapterList, Integer> {
-    List<ChapterList> findByLectureIdOrderByChapterOrderAsc(int lectureId);
+    List<ChapterList> findByLecture_LectureIdOrderByChapterOrderAsc(int lectureId);
     void deleteByLecture_LectureId(int lectureId);
 }

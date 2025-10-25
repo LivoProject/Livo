@@ -32,16 +32,11 @@ async function requestPayment() {
             method: "CARD", // 카드 결제
             amount: {
                 currency: "KRW",
-                value: 1000, // 결제 금액
+                value: amount, // 결제 금액
             },
             orderId: "ORD-" + new Date().getTime(), // 주문번호
-            orderName: "LIVO 강좌 결제",
-            successUrl:
-                window.location.origin +
-                "/payment/success?" +
-                "&reservationId=" + reservationId +
-                "&lectureId=" + lectureId+
-                "&amount=" + 1000,
+            orderName: lectureName,
+            successUrl: window.location.origin + `/payment/success?reservationId=${reservationId}&lectureId=${lectureId}`,
             failUrl: window.location.origin + "/payment/fail",
             customerEmail: "test@naver.com",
             customerName: "홍길동",

@@ -14,7 +14,7 @@ public class ChapterListService {
     private final ChapterListRepository chapterListRepository;
 
     public List<ChapterList> getChaptersByLecture(int lectureId) {
-        return chapterListRepository.findByLectureIdOrderByChapterOrderAsc(lectureId);
+        return chapterListRepository.findByLecture_LectureIdOrderByChapterOrderAsc(lectureId);
     }
 
     public ChapterList findById(int chapterId) {
