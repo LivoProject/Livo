@@ -50,29 +50,58 @@
                         🤍좋아요
                     </button>
 
-                    <c:choose>
-                        <c:when test="${isEnrolled}">
-                            <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
-                        </c:when>
+<%--                    <c:choose>--%>
+<%--                        <c:when test="${isEnrolled}">--%>
+<%--                            <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>--%>
+<%--                        </c:when>--%>
 
-                        <%-- 아직 신청 안한 경우 --%>
-                        <c:otherwise>
+<%--                        &lt;%&ndash; 아직 신청 안한 경우 &ndash;%&gt;--%>
+<%--                        <c:otherwise>--%>
                             <c:choose>
                                 <%-- 무료 강의 --%>
                                 <c:when test="${lecture.price == 0}">
-                                    <form action="/lecture/enroll/${lecture.lectureId}" method="post" style="display:inline;">
-                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                        <button type="submit" class="btn btn-success text-white">바로 수강하기</button>
-                                    </form>
-                                </c:when>
+                                    <c:choose>
+                                        <%-- 이미 수강중 --%>
+                                        <c:when test="${reservationStatus == 'CONFIRMED'}">
+                                            <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
+                                        </c:when>
 
+                                        <%-- 무료 수강 가능 --%>
+                                        <c:otherwise>
+                                            <form action="/lecture/enroll/${lecture.lectureId}" method="post" style="display:inline;">
+                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                                <button type="submit" class="btn btn-success text-white">바로 수강하기</button>
+                                            </form>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:when>
                                 <%-- 유료 강의 --%>
                                 <c:otherwise>
-                                    <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">결제하기</button>
+                                    <c:choose>
+                                        <%-- 아직 예약 자체가 없음 (전혀 신청 전) --%>
+                                        <c:when test="${empty reservationStatus}">
+                                            <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">결제하기</button>
+                                        </c:when>
+
+                                        <%-- 결제 대기 상태 (위젯닫힘/실패 등) --%>
+                                        <c:when test="${reservationStatus == 'PENDING'}">
+                                            <button class="btn btn-warning text-white" onclick="requestPayment()">결제 다시 시도</button>
+                                        </c:when>
+
+                                        <%-- 결제 완료됨 --%>
+                                        <c:when test="${reservationStatus == 'PAID'}">
+                                            <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
+                                        </c:when>
+
+                                        <%-- 환불됨 (다시 신청 가능) --%>
+                                        <c:when test="${reservationStatus == 'CANCEL'}">
+                                            <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">환불 후 재결제하기</button>
+                                        </c:when>
+                                    </c:choose>
                                 </c:otherwise>
                             </c:choose>
-                        </c:otherwise>
-                    </c:choose>
+<%--                        </c:otherwise>--%>
+<%--                    </c:choose>--%>
                 </div>
             </div>
 

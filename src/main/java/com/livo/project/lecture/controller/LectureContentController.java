@@ -4,6 +4,7 @@ import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.lecture.domain.Attachment;
 import com.livo.project.lecture.domain.ChapterList;
 import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.lecture.domain.Reservation;
 import com.livo.project.lecture.service.AttachmentService;
 import com.livo.project.lecture.service.ChapterListService;
 import com.livo.project.lecture.service.LectureService;
@@ -74,6 +75,7 @@ public class LectureContentController {
         boolean isEnrolled = false;
         String email = null;
         String provider = null;
+        Reservation.ReservationStatus reservationStatus = null;
 
         if (isLoggedIn) {
             Object principal = authentication.getPrincipal();
@@ -88,6 +90,7 @@ public class LectureContentController {
 
             if (email != null) {
                 isEnrolled = reservationService.isUserEnrolled(lectureId, email, provider);
+                reservationStatus = reservationService.getReservationStatus(email, lectureId);
             }
         }
 
@@ -111,6 +114,7 @@ public class LectureContentController {
         model.addAttribute("loggedInUserEmail", email);
         model.addAttribute("attachments", attachments);
         model.addAttribute("reportedIds", reportedIds);
+        model.addAttribute("reservationStatus", reservationStatus);
 
         return "lecture/content";
     }
