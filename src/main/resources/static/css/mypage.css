@@ -1,215 +1,377 @@
+/* ===============================
+   📘 기본 레이아웃
+=============================== */
 #mypage {
-  display: flex;
-  min-height: 100vh;
-  margin-top: 5rem;
+    display: flex;
+    min-height: 100vh;
+    margin-top: 5rem;
 }
+
+/* 메인/사이드 영역 */
+#mypage .side-menu {
+    width: 25%;
+    padding: 1rem;
+    border-left: var(--border-black);
+    border-right: var(--border-black);
+    background: #f8f9fa;
+}
+
+#mypage .main-content {
+    width: 75%;
+    padding: 1.5rem;
+}
+
+/* 제목, 텍스트 기본 스타일 */
 #mypage h3 {
     margin-top: 0;
 }
-#mypage .side-menu {
-  width: 25%;
-  padding: 1rem;
-  border-left: var(--border-black);
-  border-right: var(--border-black);
-  background: #f8f9fa;
-}
-#mypage .side-menu .profile {
-  margin-bottom: 2rem;
-}
-#mypage .side-menu ul {
-  gap: 1rem;
-}
-#mypage .side-menu .nav-link {
-  color: var(--color-black);
-  transition: all 0.3s;
-}
-#mypage .side-menu .nav-link:hover {
-  color: var(--color-main);
-}
-#mypage .side-menu .nav-link.active {
-  background-color: var(--color-main);
-  color: var(--color-white);
-  border-radius: 0.3rem;
-}
-#mypage .welcome-box > div {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-#mypage .welcome-box > div h3 {
-  margin: 0;
-}
-#mypage span {
-  color: var(--color-main);
-}
-#mypage .more-link {
-  color: #444;
-  font-size: 0.9rem;
-  transition: 0.3s;
-}
-#mypage .more-link:hover {
-    color: var(--color-main);
-}
-#mypage .main-content {
-  width: 75%;
-  padding: 1.5rem;
-}
+
 #mypage .main-content h6 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-#mypage .card-box {
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 1rem;
-  border-radius: 0.5rem;
-}
-#mypage .recent-lecture {
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-#mypage .recent-lecture .play-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background-color: var(--color-point);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#mypage .recent-lecture .play-icon i {
-  color: white;
-  font-size: 1.5rem;
-}
-#mypage .card-header {
-  display: flex;
-  justify-content: space-between;
-}
-#mypage .progress {
-  margin: 0.75rem 0;
-  border-radius: 1rem;
-  height: 0.7rem;
-}
-#mypage .progress-bar {
-  background-color: var(--color-point);
-}
-#mypage .lecture-card {
-  height: 100px;
-  background: #eee;
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#mypage .card-box ul {
-  margin-top: 1rem;
-}
-#mypage .card-box ul li {
-  padding: 0.5rem 0;
-}
-#mypage .card-box ul li a {
-    transition: 0.3s;
-}
-#mypage .card-box ul li a:hover {
-    color: var(--color-main);
-}
-#mypage .card-box .row {
-  margin-top: 1rem;
-}
-#mypage .card-footer .btn-sm {
-  background-color: var(--color-main);
-  border-color: var(--color-main);
-  color: var(--color-white);
-}
-#mypage .card-footer .btn-sm:hover {
-  background-color: var(--color-point);
-  border-color: var(--color-point);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
 }
 
-#mypage .field button {
-    margin: 0 auto;
+#mypage span {
+    color: var(--color-main);
 }
+
+/* ===============================
+   📘 사이드 메뉴
+=============================== */
+#mypage .side-menu .profile {
+    margin-bottom: 2rem;
+}
+
+#mypage .side-menu ul {
+    gap: 1rem;
+}
+
+#mypage .side-menu .nav-link {
+    color: var(--color-black);
+    transition: all 0.3s;
+}
+
+#mypage .side-menu .nav-link:hover {
+    color: var(--color-main);
+}
+
+#mypage .side-menu .nav-link.active {
+    background-color: var(--color-main);
+    color: var(--color-white);
+    border-radius: 0.3rem;
+}
+
+/* ===============================
+   📘 상단 인사 영역
+=============================== */
+#mypage .welcome-box > div {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+#mypage .welcome-box > div h3 {
+    margin: 0;
+}
+
+/* ===============================
+   📘 공통 카드 스타일
+=============================== */
+#mypage .card {
+    flex: 1 1 calc(50% - 20px);
+    position: relative;
+    transition: all 0.3s ease;
+}
+#mypage .card-header {
+    display: flex;
+    justify-content: space-between;
+}
+#mypage .card-box-wrap {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+#mypage .card-box {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    transition: 0.3s;
+}
+#mypage .card-box:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+#mypage .card-body h6,
+#mypage .card-body p {
+    transition: 0.3s;
+}
+
+#mypage .card-body:hover h6,
+#mypage .card-body:hover p {
+    color: var(--color-main);
+}
+/* 카드 푸터 버튼 */
+#mypage .card-footer .button-wrap {
+    display: flex;
+    justify-content: space-between;
+}
+
+#mypage .card-footer .button-wrap a {
+    display: block;
+}
+
+/* 소형 버튼 */
+.btn-sm {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 0.3rem;
+}
+
+/* 카드 내부 버튼 스타일 */
+#mypage .card-footer .btn-sm {
+    background-color: var(--color-main);
+    border-color: var(--color-main);
+    color: var(--color-white);
+}
+
+#mypage .card-footer .btn-sm:hover {
+    background-color: var(--color-point);
+    border-color: var(--color-point);
+}
+
+/* ===============================
+   📘 강의 카드 썸네일 + 재생 버튼
+=============================== */
+#mypage .card-img-wrap {
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+}
+#mypage .card-img-wrap > a {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+#mypage .card-img-wrap img {
+    transition: 0.3s;
+}
+#mypage .card-img-wrap:hover img{
+    transform: translateY(-5px);
+    transform: scale(1.1);
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 17px 17px -7px, rgba(0, 0, 0, 0.05) 0px 36px 28px -7px, rgba(0, 0, 0, 0.05) 0px 1px 3px 0px;
+}
+#mypage .card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 재생 버튼 */
+#mypage .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    cursor: pointer;
+}
+
+/* ===============================
+   📘 강의 리스트 (lecture-grid)
+=============================== */
 #mypage .lecture-grid {
     display: flex;
     justify-content: space-between;
     gap: 20px;
 }
-/* 기본적으로 반반(2개 이상일 때) */
+
+/* 카드가 여러 개일 때 */
 .lecture-grid .card {
     flex: 1 1 calc(50% - 10px);
     box-sizing: border-box;
 }
 
-/* 카드가 1개일 때만 고정 크기 */
+/* 카드가 1개일 때 고정 크기 */
 .lecture-grid:has(.card:only-child) .card {
-    flex: 0 0 400px!important;
+    flex: 0 0 400px !important;
 }
+
+/* large grid 형태 */
 #mypage .lecture-grid.large {
     display: grid;
     gap: 1.5rem;
 }
-#mypage .card {
-    flex: 1 1 calc(50% - 20px);
-    transition: all 0.3s ease;
-}
-#mypage .card-img-top {
+
+/* ===============================
+   📘 학습 진행 / 통계 / 최근 학습
+=============================== */
+#mypage .recent-card,
+#mypage .summary-card {
     width: 100%;
-    height: 180px;
-    object-fit: cover;
 }
-#mypage .review-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 1.2rem;
-    margin-top: 1.5rem;
+#mypage .recent-lecture {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
-#mypage .review-grid .card {
-    transition: 0.3s;
+#mypage .text-wrap {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+#mypage .play-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background-color: var(--color-point);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mypage .play-icon i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+#mypage .progress {
+    margin: 0.75rem 0;
+    border-radius: 1rem;
+    height: 0.7rem;
+}
+
+#mypage .progress-bar {
+    background-color: var(--color-point);
+}
+
+/* ===============================
+   📘 수강평 카드
+=============================== */
+.review-list {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.review-card {
+    width: 100%;
+    background: var(--color-white);
+    border: 1px solid #e4e4e4;
+    border-radius: 0.6rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.2rem 1.5rem;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
     cursor: pointer;
 }
-#mypage .review-grid .card:hover {
-    background-color: var(--color-light-gray);
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-default);
+
+.review-card:hover {
+    box-shadow: 0 4px 12px rgba(23, 180, 199, 0.15);
+    transform: translateY(-2px);
 }
-#mypage .learning-summary {
-    background-color: #fff;
-    border: 1px solid #f2f2f2;
-    transition: all 0.2s ease-in-out;
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
 }
-#mypage .learning-summary:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+
+.review-header h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-black);
 }
-#mypage .stat-item {
-    padding: 10px 0;
+
+.review-stars {
+    font-size: 1rem;
+    letter-spacing: 1px;
+    color: var(--color-main);
 }
+
+.review-body {
+    background: var(--color-light-gray);
+    border-radius: 0.4rem;
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+.review-body p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    margin: 0;
+    background: none;
+}
+
+.review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.8rem;
+}
+
+.review-footer small {
+    color: var(--color-gray);
+}
+
+.review-actions {
+    display: flex;
+    gap: 0.5rem;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.review-card:hover .review-actions {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ===============================
+   📘 반응형
+=============================== */
 @media (min-width: 768px) {
-  #mypage .lecture-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    #mypage .lecture-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (min-width: 1200px) {
-  #mypage .lecture-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+    #mypage .lecture-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
+
 @media (max-width: 768px) {
-  #mypage {
-    display: block;
-  }
-  #mypage .side-menu {
-    width: 100%;
-    border-bottom: var(--border-black);
-  }
-  #mypage .main-content {
-    width: 100%;
-  }
-  #mypage .lecture-card {
-    margin-bottom: 1rem;
-  }
+    #mypage {
+        display: block;
+    }
+    #mypage .side-menu {
+        width: 100%;
+        border-bottom: var(--border-black);
+    }
+    #mypage .main-content {
+        width: 100%;
+    }
+    #mypage .lecture-card {
+        margin-bottom: 1rem;
+    }
 }

@@ -11,6 +11,13 @@ import org.springframework.data.repository.query.Param;
 public interface  MypageReviewRepository extends JpaRepository <Review,Integer> {
 
     // 내 리뷰 조회
-    @Query("SELECT r FROM Review r WHERE r.reservation.email = :email")
-    Page<Review> findAllByEmail(@Param("email") String email, @Param("provider") String provider, Pageable pageable);
+    @Query("""
+    SELECT r
+    FROM Review r
+    JOIN r.reservation res
+    JOIN res.user u
+    WHERE u.email = :email
+""")
+    Page<Review> findAllByEmail(@Param("email") String email, Pageable pageable);
+
 }

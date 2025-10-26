@@ -25,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -330,8 +331,8 @@ public class MypageService {
 
 
     // 내 리뷰 조회
-    public Page<Review> getMyReviews(String email, String provider, Pageable pageable) {
-        return mypageReviewRepository.findAllByEmail(email, provider, pageable);
+    public Page<Review> getMyReviews(String email, Pageable pageable) {
+        return mypageReviewRepository.findAllByEmail(email, pageable);
     }
 
 
@@ -392,4 +393,22 @@ public class MypageService {
     public int getStudyDaysThisMonth(String email) {
         return mypageProgressRepository.countDistinctDaysThisMonth(email);
     }
+
+    // 진행중인 강의
+    @Transactional(readOnly = true)
+    public long getInProgressLectureCount(String email) {
+        return mypageProgressRepository.countInProgressByEmail(email);
+    }
+
+    // 이번주 진행 시간
+    @Transactional(readOnly = true)
+    public double getWeeklyStudyHours(String email) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfWeek = now.with(DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
+        LocalDateTime endOfWeek = now.with(DayOfWeek.SUNDAY).toLocalDate().atTime(23, 59, 59);
+
+        Double totalSeconds = mypageProgressRepository.sumWeeklyStudySeconds(email, startOfWeek, endOfWeek);
+        return totalSeconds != null ? totalSeconds / 3600.0 : 0.0; // 초 → 시간
+    }
 }
+

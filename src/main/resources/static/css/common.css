@@ -6,6 +6,7 @@
     --color-light-gray: #f8f9fa;
     --color-main: #17b4c7;
     --color-point: #ffcc02;
+    --color-hover: rgba(23, 180, 199, 0.05);
     --border-black: 1px solid #ddd;
     --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
@@ -33,7 +34,9 @@ section.sub {
     margin-top: 120px!important;
 }
 section.sub h3 {margin-top:0!important;}
-
+.modal-body {
+    lin-height:1.5!important;
+}
 
 /* 헤더 */
 header {
@@ -465,5 +468,149 @@ footer p {
     html,
     body {
         font-size: 14px;
+    }
+}
+
+
+/* 페이징 */
+/* ===== Pagination ===== */
+.pagination-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 40px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-main);
+    background-color: var(--color-white);
+    border: 1px solid #e0e0e0;
+    border-radius: 0.4rem;
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+
+.pagination .page-link:hover {
+    background-color: rgba(23, 180, 199, 0.08);
+    color: var(--color-main);
+    border-color: var(--color-main);
+    box-shadow: 0 2px 6px rgba(23, 180, 199, 0.15);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--color-main);
+    color: var(--color-white);
+    font-weight: 600;
+    border-color: var(--color-main);
+    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pagination .page-item.next .page-link {
+    width: auto;
+    padding: 0 16px;
+    font-weight: 600;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: var(--color-gray);
+    background-color: var(--color-light-gray);
+    pointer-events: none;
+    opacity: 0.6;
+}
+/* === LiVO 기본 테이블 스타일 === */
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1rem;
+    border-radius: 0.6rem;
+    box-shadow: var(--shadow-default);
+    background: var(--color-white);
+}
+
+/* 테이블 전체 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.95rem;
+    min-width: 800px;
+}
+
+/* 헤더 */
+thead {
+    background: var(--color-main);
+    color: var(--color-white);
+    font-weight: 600;
+}
+
+th, td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* hover 효과 */
+tbody tr:hover {
+    background-color: rgba(23, 180, 199, 0.05);
+    transition: background 0.2s ease;
+}
+
+/* 마지막 행 밑줄 제거 */
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 상태 배지 */
+.status {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status.success {
+    background: rgba(23, 180, 199, 0.1);
+    color: var(--color-main);
+}
+
+.status.cancel {
+    background: rgba(255, 0, 0, 0.08);
+    color: #e74c3c;
+}
+
+.status.pending {
+    background: rgba(255, 204, 2, 0.15);
+    color: var(--color-point);
+}
+
+.status.refund {
+    background: rgba(150, 150, 150, 0.1);
+    color: #555;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    th, td {
+        font-size: 0.85rem;
+        padding: 0.7rem;
     }
 }

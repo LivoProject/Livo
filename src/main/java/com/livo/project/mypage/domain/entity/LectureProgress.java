@@ -3,6 +3,7 @@ package com.livo.project.mypage.domain.entity;
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.lecture.domain.Lecture;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class LectureProgress {
 
     @Id
