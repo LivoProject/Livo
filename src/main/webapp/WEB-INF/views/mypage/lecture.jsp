@@ -19,37 +19,41 @@
                 <c:forEach var="reservations" items="${reservations}">
 
                     <div class="card">
-                        <a href="/lecture/view/${reservations.lectureId}">
-                            <img
-                                    src="${reservations.thumbnailUrl}"
-                                    class="card-img-top"
-                                    alt="강의 썸네일"
-                            />
-                            <div class="card-body">
+                        <div class="card-img-wrap">
+                            <a href="/lecture/view/${reservations.lectureId}">
+                                <img src="${reservations.thumbnailUrl}" class="card-img-top" alt="강의 썸네일"/>
+                                <button class="play-btn">
+                                    <i class="bi bi-play-fill"></i>
+                                </button>
+                            </a>
+                        </div>
+                        <div class="card-body">
+
+                            <a href="/lecture/content/${reservations.lectureId}">
                                 <h6 class="fw-bold mb-1">${reservations.title}</h6>
-                                <p class="text-muted small mb-2">${reservations.tutorName}</p>
+                                <p class="mb-2">${reservations.tutorName}</p>
                                 <div class="progress" style="height: 8px;">
                                     <div class="progress-bar bg-success"
                                          style="width: ${reservations.progressPercent}%;"></div>
                                 </div>
-                            </div>
-                        </a>
-                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                            <div>
+                                <small class="text-muted">${reservations.progressPercent}%</small>
+                            </a>
+                        </div>
+
+                        <div class="card-footer">
+
+                            <div class="button-wrap">
                                 <a href="/lecture/view/${reservations.lectureId}" class="btn-main">이어보기</a>
-                                <button class="btn-main"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal">
-                                    수강평 작성
-                                </button>
-                                <button class="btn-unreserve btn-main"
+                                <button class="btn-unreserve btn-cancel"
                                         data-lecture-id="${reservations.lectureId}"
                                         data-bs-toggle="modal"
                                         data-bs-target="#reserveModal">
                                     예약 취소
                                 </button>
+                                <a href="/lecture/content/${reservations.lectureId}#review" class="btn-cancel">
+                                    수강평 작성
+                                </a>
                             </div>
-                            <small class="text-muted">9 mins</small>
                         </div>
                     </div>
                 </c:forEach>
@@ -86,27 +90,13 @@
             </ul>
         </nav>
 
-        <!-- 모달 -->
-        <div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header"><h5 class="modal-title" id="reserveModalLabel">공통 모달 제목</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
-                    </div>
-                    <div class="modal-body"> 이곳은 모달 내용입니다.<br> 설명이나 폼, 알림 메시지 등을 넣을 수 있습니다.</div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn-cancel" data-bs-dismiss="modal">취소</button>
-                        <button type="button" class="btn-main">확인</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- // 모달 -->
-
     </main>
-
 
 </section>
 <!-- 컨텐츠 끝 -->
+
+
+<!-- 모달 -->
+<%@ include file="/WEB-INF/views/common/modal.jsp" %>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
