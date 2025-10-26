@@ -21,52 +21,43 @@
                 <p>🌱 <span>${mypage.joinDays}</span>일 째 성장 중</p>
             </div>
             <p>
-                진행 중인 강의 <span>3</span>개 · 이번 주 학습시간 <span>4</span>시간
+                진행 중인 강의 <span>${inProgressLectureCount}</span>개 · 이번 주 학습시간 <span>${weeklyStudyHours}</span>시간
             </p>
         </div>
 
         <!-- 학습 현황 -->
-        <div class="row mb-4">
-            <div class="col-md-6 card-box">
-                <div class="recent-card">
-                    <div class="card-header">
-                        <h6>최근 학습 강의</h6>
-                        <a href="/mypage/lecture" class="more-link">
-                            학습 목록 <i class="bi bi-chevron-right"></i>
-                        </a>
+        <div class="card-box-wrap mb-4">
+            <div class="card-box recent-card">
+                <div class="card-header">
+                    <h6>최근 학습 강의</h6>
+                    <a href="/mypage/lecture" class="more-link">
+                        학습 목록 <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+                <div class="recent-lecture">
+                    <div class="play-icon">
+                        <i class="bi bi-play-fill"></i>
                     </div>
-                    <div class="recent-lecture">
-                        <div class="play-icon">
-                            <i class="bi bi-play-fill"></i>
-                        </div>
 
-                        <c:if test="${recentLecture != null}">
-                            <div class="recent-lecture">
-                                <h5>${recentLecture.lecture.title}</h5>
-                                <p>진도율: ${recentLecture.progressPercent}%</p>
-                            </div>
-                        </c:if>
-                    </div>
+                    <c:if test="${recentLecture != null}">
+                        <div class="text-wrap">
+                            <h5>${recentLecture.lecture.title}</h5>
+                            <p>진도율: ${recentLecture.progressPercent}%</p>
+                        </div>
+                    </c:if>
                 </div>
             </div>
 
             <!-- 학습 통계 -->
-            <!-- 📊 학습 통계 미리보기 -->
-            <div class="card learning-summary shadow-sm border-0 rounded-4 p-4 mt-3">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="fw-semibold m-0">📊 학습 통계 미리보기</h6>
-                    <a href="/mypage/stats" class="text-decoration-none small text-muted">
-                        자세히 보기 <i class="bi bi-chevron-right"></i>
-                    </a>
-                </div>
-
-                <div class="row text-center">
+            <div class="card-box summary-card">
+                <h6 class="">학습 통계</h6>
+                <div class="row">
                     <div class="col">
                         <div class="stat-item">
                             <div class="fs-4 fw-bold text-primary">
                                 ${totalStudyHours}시간
                             </div>
-                            <small class="text-muted">총 학습시간</small>
+                            <small class="text-muted">누적 학습시간</small>
                         </div>
                     </div>
                     <div class="col">
@@ -87,10 +78,7 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
-
         <!-- 알림 / 공지 -->
         <div class="card-box mb-4">
             <div class="card-header">
@@ -126,25 +114,38 @@
                 <c:if test="${not empty top2LikedLectures}">
                     <c:forEach var="lecture" items="${top2LikedLectures}">
                         <div class="card">
-                            <a href="">
-                                <img src="${lecture.thumbnailUrl}" class="card-img-top" alt="${lecture.title}">
-                                <div class="card-body">
-                                    <h5 class="card-title">${lecture.title}</h5>
-                                    <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/>
+
+                            <div class="card-img-wrap">
+                                <a href="/lecture/view/${lecture.lectureId}">
+                                    <img src="${lecture.thumbnailUrl}" class="card-img-top" alt="${lecture.title}">
+                                    <button class="play-btn">
+                                        <i class="bi bi-play-fill"></i>
+                                    </button>
+
+                                </a>
+
+                            </div>
+                            <div class="card-body">
+                                <a href="/lecture/content/${lecture.lectureId}">
+                                    <h6 class="card-title">${lecture.title}</h6>
+                                    <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}"
+                                                                              type="number"/>
                                         원</p>
                                     <div class="progress" style="height: 8px;">
                                         <div class="progress-bar bg-success"
                                              style="width: ${lecture.progressPercent}%;"></div>
                                     </div>
-                                </div>
-                            </a>
-                            <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+
+                                    <small class="text-muted">${lecture.progressPercent}%</small>
+                                </a>
+                            </div>
+
+                            <div class="card-footer">
                                 <div>
                                     <button class="btn-unlike btn-main" data-lecture-id="${lecture.lectureId}"
                                             data-bs-toggle="modal" data-bs-target="#likeModal">해제
                                     </button>
                                 </div>
-                                <small class="text-muted">9 mins</small>
                             </div>
                         </div>
                     </c:forEach>
@@ -177,25 +178,12 @@
         </div>
 
 
-        <!-- 모달 -->
-        <div class="modal fade" id="likeModal" tabindex="-1" aria-labelledby="likeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header"><h5 class="modal-title" id="likeModalLabel">공통 모달 제목</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
-                    </div>
-                    <div class="modal-body"> 이곳은 모달 내용입니다.<br> 설명이나 폼, 알림 메시지 등을 넣을 수 있습니다.</div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn-cancel" data-bs-dismiss="modal">취소</button>
-                        <button type="button" class="btn-main">확인</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- // 모달 -->
     </main>
 
 </section>
 <!-- 컨텐츠 끝 -->
+
+
+<%@ include file="/WEB-INF/views/common/modal.jsp" %>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

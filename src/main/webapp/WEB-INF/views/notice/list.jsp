@@ -7,8 +7,8 @@
 <section id="notice" class="container sub">
     <h3>공지사항</h3>
 
-    <table class="table table-hover bg-white shadow-sm">
-        <thead class="table-primary">
+    <table class="">
+        <thead>
         <tr>
             <th class="text-center" style="width:10%">번호</th>
             <th style="width:60%">제목</th>
