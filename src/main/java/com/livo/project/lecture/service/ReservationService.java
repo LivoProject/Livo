@@ -1,5 +1,9 @@
 package com.livo.project.lecture.service;
 
+import com.livo.project.lecture.domain.Reservation;
+
+import java.util.Optional;
+
 public interface ReservationService {
 
     void saveReservation(int lectureId, String email, String provider);
@@ -11,4 +15,7 @@ public interface ReservationService {
     Integer findReservationIdByEmailAndLectureId(String email, int lectureId, String provider);
 
     int createPendingReservation(int lectureId, String email);
+
+    Reservation.ReservationStatus getReservationStatus(String Email, int lectureId);
+    Optional<Reservation> findPendingReservation(int lectureId, String email);
 }

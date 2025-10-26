@@ -16,22 +16,22 @@
         <div class="summary-box">
             <div class="info-row">
                 <span>강의명</span>
-                <span>${result['orderName']}</span>
+                <span>${result.orderName}</span>
             </div>
 
             <div class="info-row">
                 <span>결제금액</span>
-                <span>${result['amount']}원</span>
+                <span>${result.amount}원</span>
             </div>
 
             <div class="info-row">
                 <span>주문번호</span>
-                <span>${result['orderId']}</span>
+                <span>${result.orderId}</span>
             </div>
 
             <div class="info-row">
                 <span>결제일시</span>
-                <span>${result['approvedAt']}</span>
+                <span>${result.approvedAt}</span>
             </div>
         </div>
 

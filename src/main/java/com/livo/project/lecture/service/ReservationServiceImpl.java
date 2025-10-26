@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -57,7 +59,7 @@ public class ReservationServiceImpl implements ReservationService {
     public int createPendingReservation(int lectureId, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원 정보 없음"));
-        if(reservationRepository.existsByLectureIdAndEmail(lectureId, email)) {
+        if(reservationRepository.existsByEmailAndLectureIdAndStatusNot(email, lectureId, Reservation.ReservationStatus.CANCEL)) {
             throw new IllegalArgumentException("이미 예약된 강의입니다.");
         }
         Reservation reservation = new Reservation();
@@ -68,5 +70,19 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservationRepository.save(reservation);
         return reservation.getReservationId();
+    }
+
+
+
+    @Override
+    public Reservation.ReservationStatus getReservationStatus(String email, int lectureId) {
+        return reservationRepository.findTopByLecture_LectureIdAndUser_EmailOrderByCreatedAtDesc(lectureId, email)
+                .map(Reservation::getStatus)
+                .orElse(null);
+    }
+
+    @Override
+    public Optional<Reservation> findPendingReservation(int lectureId, String email) {
+        return reservationRepository.findByLecture_LectureIdAndUser_EmailAndStatus(lectureId, email, Reservation.ReservationStatus.PENDING);
     }
 }
