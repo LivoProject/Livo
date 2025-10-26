@@ -116,7 +116,18 @@ public class PaymentService {
                 res.put("message", "Toss 결제 승인 실패");
             }
 
-        } catch (Exception e) {
+        }catch(HttpClientErrorException e) {
+            if(e.getMessage().contains("ALREADY_PROCESSED_PAYMENT")){
+                log.info("🔄 [DB 상태 동기화 시작] 이미 처리된 결제입니다.");
+                syncPaidPayment(dto.getPaymentKey());
+                res.put("status", "SUCCESS");
+                res.put("message", "이미 처리된 결제였으며, DB 상태를 동기화했습니다.");
+                return res;
+            }
+            res.put("status", "FAIL");
+            res.put("error", e.getMessage());
+        }
+        catch (Exception e) {
             log.error("❌ [TOSS 결제 승인 실패]", e);
             res.put("status", "FAIL");
             res.put("error", e.getMessage());
@@ -200,6 +211,43 @@ public class PaymentService {
         return response.getBody();
     }
     //DB 상태를 싱크
+    @Transactional
+    public void syncPaidPayment(String paymentKey) {
+        Map<String, Object> detail = getPaymentDetail(paymentKey);
+
+        String orderName = (String) detail.get("orderName");
+        Integer amount = (Integer) detail.get("totalAmount");
+        String method = (String) detail.get("method");
+        String approvedAt = (String) detail.get("approvedAt");
+
+        Payment payment = paymentRepository.findByPaymentKey(paymentKey)
+                .orElseThrow(() -> new IllegalArgumentException("해당 paymentKey로 저장된 결제가 없습니다."));
+        Reservation reservation = payment.getReservation();
+        if(reservation == null){
+            throw new IllegalArgumentException("paymentKey로 연결된 예약 정보가 없습니다.");
+        }
+        Lecture lecture = reservation.getLecture();
+        User user = reservation.getUser();
+
+        // Payment 새로 기록
+        payment.setOrderName(orderName);
+        payment.setUser(user);
+        payment.setAmount(amount);
+        payment.setMethod(method);
+        payment.setStatus(Payment.PaymentStatus.SUCCESS);
+        payment.setApprovedAt(LocalDateTime.parse(approvedAt));
+        payment.setReservation(reservation);
+        payment.setLecture(lecture);
+        paymentRepository.save(payment);
+
+        // 예약 상태 PAID로
+        reservation.setStatus(Reservation.ReservationStatus.PAID);
+        reservationRepository.save(reservation);
+
+        log.info("✅ [DB 동기화 완료] paymentKey={}, reservationId={}, lectureId={}",
+                paymentKey, reservation.getReservationId(), lecture.getLectureId());
+    }
+
     @Transactional
     public void syncCanceledPayment(String paymentKey) {
         Payment payment = paymentRepository.findByPaymentKey(paymentKey)
