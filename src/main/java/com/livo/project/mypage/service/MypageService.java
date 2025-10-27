@@ -99,7 +99,6 @@ public class MypageService {
                     .email(email)
                     .build();
         }
-
         // 3) OAuth2 (Kakao/Naver)
         if (principal instanceof DefaultOAuth2User ou) {
             var attrs = ou.getAttributes();
