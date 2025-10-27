@@ -139,7 +139,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach var="notice" items="${recentNotice}" varStatus="status">
+                                <c:forEach var="notice" items="${notices}" varStatus="status">
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
                                     <td class="text-center">${notice.title}</td>
@@ -147,10 +147,10 @@
                                     <td class="text-center">
                                         <button id="editBtn" class="btn btn-sm btn-outline-primary"
                                         data-type="notice"
-                                        data-id="${notice.noticeId}">수정</button>
+                                        data-id="${notice.id}">노출</button>
                                         <button id="deleteBtn" class="btn btn-sm btn-outline-danger"
                                         data-type="notice"
-                                        data-id="${notice.noticeId}">삭제</button>
+                                        data-id="${notice.id}">고정</button>
                                     </td>
                                 </tr>
                                 </c:forEach>

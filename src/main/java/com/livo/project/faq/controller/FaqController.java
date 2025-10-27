@@ -4,6 +4,7 @@ import com.livo.project.faq.domain.Faq;
 import com.livo.project.faq.dto.ChatMessage;
 import com.livo.project.faq.repository.FaqRepository;
 import com.livo.project.faq.service.FaqService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,10 @@ import java.util.Map;
 public class FaqController {
     private final FaqService faqService;
     private final FaqRepository faqRepository;
+    @ModelAttribute("chatHistory")
+    public List<ChatMessage> chatHistory(){
+        return new ArrayList<>();
+    }
 
     @GetMapping("/ask")
     public String showAskForm(){
@@ -39,12 +44,17 @@ public class FaqController {
     }
     @PostMapping("/ask-ajax")
     @ResponseBody
-    public Map<String, String> askAjax(@ModelAttribute("chatHistory")List<ChatMessage> chatHistory,
+    public Map<String, String> askAjax(HttpSession session,
                                        @RequestParam String question){
-        double threshold = 0.15;
-        String answer = faqService.refineAnswerWithLLM(question, threshold, "gpt-4o-mini");
+        List<ChatMessage> chatHistory =
+                (List<ChatMessage>) session.getAttribute("chatHistory");
+        if (chatHistory == null) {
+            chatHistory = new java.util.ArrayList<>();
+        }
+        String answer = faqService.refineAnswerWithLLM(question, 0.15, "gpt-4o-mini");
         chatHistory.add(new ChatMessage("user", question));
         chatHistory.add(new ChatMessage("ai", answer));
+        session.setAttribute("chatHistory", chatHistory);
         return Map.of(
                 "user", question,
                 "ai", answer
@@ -74,8 +84,5 @@ public class FaqController {
     }
 
 
-    @ModelAttribute("chatHistory")
-    public List<ChatMessage> chatHistory(){
-        return new ArrayList<>();
-    }
+
 }
