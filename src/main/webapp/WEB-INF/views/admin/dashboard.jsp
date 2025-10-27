@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
@@ -95,8 +96,8 @@
                                 <thead>
                                 <tr>
                                     <th class="text-center">#</th>
-                                    <th class="text-center">신고자</th>
-                                    <th class="text-center">신고내용</th>
+                                    <th class="text-center">리뷰내용</th>
+                                    <th class="text-center">신고사유</th>
                                     <th class="text-center">관리</th>
                                 </tr>
                                 </thead>
@@ -104,7 +105,16 @@
                                 <c:forEach var="report" items="${reports}" varStatus="status">
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
-                                    <td class="text-center">${report.email}</td>
+                                    <td class="text-center">
+                                    <c:choose>
+                                        <c:when test="${fn:length(report.review.reviewContent) > 100}">
+                                          ${fn:substring(report.review.reviewContent, 0, 100)}...
+                                        </c:when>
+                                        <c:otherwise>
+                                          ${report.review.reviewContent}
+                                        </c:otherwise>
+                                    </c:choose>
+                                    </td>
                                     <td class="text-center">${report.reportReason}</td>
                                     <td class="text-center"><button class="btn btn-sm update-status">승인</button></td>
                                     <td class="text-center"><button class="btn btn-sm update-status">보류</button></td>
@@ -143,7 +153,16 @@
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
                                     <td class="text-center">${notice.title}</td>
-                                    <td class="text-center">${notice.content}</td>
+                                    <td class="text-center">
+                                    <c:choose>
+                                        <c:when test="${fn:length(notice.content) > 50}">
+                                          ${fn:substring(notice.content, 0, 50)}...
+                                        </c:when>
+                                        <c:otherwise>
+                                          ${notice.content}
+                                        </c:otherwise>
+                                    </c:choose>
+                                    </td>
                                     <td class="text-center">
                                         <button id="editBtn" class="btn btn-sm btn-outline-primary"
                                         data-type="notice"

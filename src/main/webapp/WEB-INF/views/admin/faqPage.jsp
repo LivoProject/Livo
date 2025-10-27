@@ -10,7 +10,7 @@
           <div class="row">
             <div class="col-12">
               <div class="text-end mb-3">
-                <a href="faq/insert" class="btn btn-success">새 FAQ 등록</a>
+                  <a href="faq/insert" class="btn btn-success">새 FAQ 등록</a>
               </div>
               <div class="card mb-4">
                 <div class="card-header pb-0">
@@ -62,7 +62,6 @@
       </main>
     </div>
   </div>
-
 </body>
 
 </html>
