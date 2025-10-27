@@ -1,54 +1,68 @@
 /* =========================
-   Login Page Styles — Light / Blue-Mint Accent (#17b4c7)
+   LiVO Login Page — Blue-Mint Accent (#17b4c7)
    ========================= */
 
-:root{
-    --bg: #f6f9fe;
-    --bg-accent: rgba(23,180,199,.08);
+:root {
+    --bg: #f6f9fa;
+    --bg-accent: rgba(23, 180, 199, .05);
     --card: #ffffff;
-    --text: #0f1720;
-    --muted: #5c6b7a;
-    --primary: #17b4c7;        /* 버튼 포인트 색상 */
-    --primary-strong: #0d9ab1;
-    --danger: #ea4a4a;
-    --success: #17a865;
+    --text: #1d252c;
+    --muted: #6c7a87;
+    --primary: #17b4c7;
+    --primary-strong: #0da3b9;
+    --point: #ffcc02;
     --border: #e5eef7;
-    --ring: rgba(23,180,199,.25);
-    --shadow-sm: 0 4px 16px rgba(0,0,0,.06);
-    --shadow-md: 0 18px 50px rgba(0,180,190,.18);
+    --ring: rgba(23, 180, 199, .2);
+    --shadow-sm: 0 3px 12px rgba(0, 0, 0, .04);
+    --shadow-md: 0 12px 36px rgba(23, 180, 199, .15);
     --radius: 22px;
-    --radius-input: 14px;
+    --radius-input: 12px;
 }
 
-*{ box-sizing:border-box; }
-html,body{ height:100%; margin:0; }
-
-body{
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR",
-    "Apple SD Gothic Neo", "Malgun Gothic", Arial, "Helvetica Neue", Helvetica, sans-serif;
-    color: var(--text);
-    line-height: 1.55;
-    display: grid;
-    place-items: start center;
-    padding: 56px 16px 36px;
-    background:
-            radial-gradient(1000px 700px at 110% -10%, var(--bg-accent), transparent 65%),
-            radial-gradient(800px 600px at -10% 120%, rgba(31,168,90,.08), transparent 60%),
-            var(--bg);
+/* 기본 구조 */
+body {
+    background: radial-gradient(900px 600px at 110% -10%, var(--bg-accent), transparent 70%),
+    radial-gradient(800px 500px at -10% 120%, rgba(255, 204, 2, .05), transparent 70%),
+    var(--bg);
 }
 
 /* 제목 */
-h2{
-    margin: 0 0 18px;
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: .2px;
-    color: #0d1b2a;
-    text-align: center;
+h2 {
+    width: 100px;
+    margin: 0 auto;
 }
 
+h2 img {
+    width: 100%;
+}
+
+.input-wrap {
+    position: relative;
+}
+
+.input-wrap .bi-lock,
+.input-wrap .bi-person,
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.input-wrap .bi-lock,
+.input-wrap .bi-person {
+    right: auto;
+    left: 10px;
+}
+
+.toggle-password {
+    border: none;
+    background-color: transparent;
+}
+
+
 /* 안내/에러 메시지 */
-body > div[style]{
+body > div[style] {
     width: 100%;
     max-width: 560px;
     padding: 12px 14px;
@@ -61,21 +75,25 @@ body > div[style]{
 }
 
 /* 카드형 폼 */
-form{
+form {
     width: 100%;
     max-width: 560px;
-    background: linear-gradient(180deg, #ffffff, #fbfdff 70%);
+    background: #fff;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow-md);
-    padding: 28px;
-    transition: transform .2s ease, box-shadow .2s ease;
+    padding: 30px;
+    transition: transform .2s ease, box-shadow .25s ease;
 }
-form:hover{ transform: translateY(-1px); box-shadow: 0 24px 60px rgba(23,180,199,.22); }
+
+form:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 60px rgba(23, 180, 199, .22);
+}
 
 /* 라벨 */
-label{
-    display:block;
+label {
+    display: block;
     font-size: 13px;
     font-weight: 600;
     color: var(--muted);
@@ -83,31 +101,34 @@ label{
 }
 
 /* 입력창 */
-input[type="email"],
-input[type="password"]{
+input {
     width: 100%;
     height: 46px;
-    padding: 0 14px;
+    padding: 0 40px;
     border: 1px solid #d9e6f6;
     border-radius: var(--radius-input);
-    background: #fff;
+    background: #fbfeff;
     color: var(--text);
     outline: none;
     transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
 }
-input::placeholder{ color: #9aa9b8; }
-input:focus{
+
+input::placeholder {
+    color: #9aa9b8;
+}
+
+input:focus {
     border-color: var(--primary);
     background: #fefeff;
     box-shadow: 0 0 0 7px var(--ring);
 }
 
-/* 로그인 버튼 */
-button[type="submit"]{
+/* 메인 버튼 */
+button[type="submit"] {
     margin-top: 20px;
     min-width: 500px;
     height: 54px;
-    border-radius: 22px;
+    border-radius: 20px;
     border: 0;
     cursor: pointer;
     font-size: 17px;
@@ -115,39 +136,24 @@ button[type="submit"]{
     letter-spacing: .2px;
     color: #fff;
     background: linear-gradient(180deg, var(--primary), var(--primary-strong));
-    box-shadow: 0 10px 24px rgba(23,180,199,.35);
-    transition: transform .05s ease, filter .2s ease, box-shadow .2s ease;
-}
-button[type="submit"]:hover{ filter: brightness(1.06); box-shadow: 0 10px 22px rgba(23,180,199,.42); }
-button[type="submit"]:active{ transform: translateY(1px); box-shadow: 0 6px 14px rgba(23,180,199,.28); }
-button[type="submit"]:disabled{ opacity:.65; cursor:not-allowed; }
-
-/* 구분선 */
-hr{
-    width: 100%;
-    max-width: 560px;
-    border: 0;
-    border-top: 1px solid var(--border);
-    margin: 22px 0 14px;
+    box-shadow: 0 10px 24px rgba(23, 180, 199, .35);
+    transition: all .2s ease;
 }
 
-/* 링크 */
-a{
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 700;
+button[type="submit"]:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 10px 28px rgba(23, 180, 199, .3);
 }
-a:hover{ text-decoration: underline; }
 
-/* 반응형 */
-@media (max-width: 620px){
-    body{ padding: 36px 12px 28px; }
-    form{ padding: 22px; border-radius: 18px; }
-    h2{ font-size: 24px; }
+button[type="submit"]:active {
+    transform: translateY(1px);
+    box-shadow: 0 6px 14px rgba(23, 180, 199, .28);
 }
-/* =========================
-   하단 링크 정렬 수정
-   ========================= */
+
+button[type="submit"]:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+}
 
 /* 구분선 */
 hr {
@@ -158,16 +164,14 @@ hr {
     margin: 26px 0 20px;
 }
 
-/* 하단 섹션 */
-body > hr + p,
-body > hr + a,
-body > hr + span,
-body > hr + a + span,
-body > hr + a + span + a {
-    display: none; /* 기존 inline 구조 숨김 */
+/* 링크 */
+a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
 }
 
-/* 새 하단 영역 */
+/* 하단 섹션 */
 .login-footer {
     width: 100%;
     max-width: 560px;
@@ -185,78 +189,97 @@ body > hr + a + span + a {
 .login-footer .links {
     display: flex;
     justify-content: center;
-    gap: 36px; /* 간격 조정 */
+    gap: 36px;
 }
 
 .login-footer .links a {
     color: var(--primary);
     font-weight: 800;
-    text-decoration: none;
     transition: color .2s ease;
 }
 
 .login-footer .links a:hover {
-    color: var(--primary-strong);
-    text-decoration: underline;
+    color: var(--point);
 }
 
-/* ====== 소셜 영역 (폼 내부) ====== */
-.or-sep{
+/* 소셜 로그인 */
+.or-sep {
     position: relative;
     margin: 18px 0 14px;
     height: 1px;
     background: var(--border);
 }
-.or-sep span{
-    position: absolute; left: 50%; top: -10px; transform: translateX(-50%);
+
+.or-sep span {
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    transform: translateX(-50%);
     padding: 0 10px;
     background: #fff;
-    color: #8a96a3; font-size: 13px; font-weight: 700;
+    color: #8a96a3;
+    font-size: 13px;
+    font-weight: 700;
     letter-spacing: .2px;
-    border-radius: 999px; border: 1px solid #eef2f7;
+    border-radius: 999px;
+    border: 1px solid #eef2f7;
 }
 
-.social-grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+.social-grid {
     margin-top: 6px;
 }
-@media (max-width: 560px){
-    .social-grid{ grid-template-columns: 1fr; }
-}
 
-/* 공통 버튼 */
-.btn-social{
+
+.btn-social {
     height: 46px;
     border-radius: 12px;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    text-decoration: none; font-weight: 800; letter-spacing: .1px;
-    border: 1px solid #e6edf5;
-    background: #fff; color: #1f2937;
-    transition: transform .12s ease, box-shadow .2s ease, filter .2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    font-weight: 800;
+    border: 1px solid #e9eef4;
+    background: #fff;
+    color: #1f2937;
+    transition: all .2s ease;
 }
 
-/* === 아이콘 크기 강제 (핵심!) === */
+.btn-social:hover {
+    background: var(--bg);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .05);
+}
+
 .btn-social .ico,
-.btn-social svg{
+.btn-social svg {
     width: 18px !important;
     height: 18px !important;
-    display: block;
     flex: 0 0 18px;
 }
 
-.btn-social:hover{ transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.06); }
-
-/* Google */
-.btn-social.google:hover{ box-shadow: 0 6px 20px rgba(66,133,244,.18); }
-
-/* Kakao */
-.btn-social.kakao{
-    background: #FEE500; border-color: #FEE500; color: #3A1D1D;
+/* Kakao 버튼 */
+.btn-social.kakao {
+    background: #FEE500;
+    border-color: #FEE500;
+    color: #3A1D1D;
 }
-.btn-social.kakao:hover{ filter: brightness(.97); }
 
-/* 카드 하단 여백 소폭 축소 */
-form{ padding-bottom: 22px; }
+.btn-social.kakao:hover {
+    filter: brightness(.97);
+}
 
+/* 반응형 */
+@media (max-width: 620px) {
+    body {
+        padding: 36px 12px 28px;
+    }
+
+    form {
+        padding: 22px;
+        border-radius: 18px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+}
