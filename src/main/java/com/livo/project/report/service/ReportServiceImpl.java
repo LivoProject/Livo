@@ -79,8 +79,11 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Set<Integer> getReportedReviewIdsByUser(String userEmail) {
         if (userEmail == null) return Collections.emptySet();
+
         return reportRepository.findAllByEmail(userEmail).stream()
-                .map(r -> r.getReview().getReviewUId())
+                // ✅ REJECT(거절)된 신고는 제외하고, PROCESSING(검토중)만 포함: 민영 추가
+                .filter(report -> report.getStatus() == Report.Status.PROCESSING)
+                .map(report -> report.getReview().getReviewUId())
                 .collect(Collectors.toSet());
     }
 }
