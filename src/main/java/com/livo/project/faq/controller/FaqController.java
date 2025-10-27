@@ -22,10 +22,22 @@ import java.util.Map;
 public class FaqController {
     private final FaqService faqService;
     private final FaqRepository faqRepository;
-    @ModelAttribute("chatHistory")
-    public List<ChatMessage> chatHistory(){
-        return new ArrayList<>();
-    }
+
+//    @ModelAttribute("chatHistory")
+//    public List<ChatMessage> chatHistory(){
+//        List<ChatMessage> history = new ArrayList<>();
+//        history.add(new ChatMessage("ai", """
+//        안녕하세요! 😊
+//        LiVO 챗봇입니다.
+//
+//        궁금하신 내용을 편하게 질문해주세요!
+//        예시)
+//        - 환불 규정 알려줘
+//        - 신고하면 언제 처리돼?
+//        - 결제 중 오류났을 때 어떻게 해?
+//        """));
+//        return history;
+//    }
 
     @GetMapping("/ask")
     public String showAskForm(){

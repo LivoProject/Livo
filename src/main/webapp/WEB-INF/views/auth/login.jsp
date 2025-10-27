@@ -20,7 +20,7 @@
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
 </head>
-<body>
+<body id="loginAndReg">
 <!-- 상단 메시지 -->
 <c:if test="${param.error != null}">
     <div style="color:red">이메일 또는 비밀번호가 올바르지 않습니다.</div>

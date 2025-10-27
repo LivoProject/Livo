@@ -232,9 +232,9 @@ footer p {
 }
 
 .chat-panel-body {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     padding: 16px;
     overflow-y: auto;
     flex: 1;
@@ -272,6 +272,7 @@ footer p {
 }
 
 .message {
+    display: inline-block;
     max-width: 80%;
     padding: 10px 14px;
     border-radius: 14px;

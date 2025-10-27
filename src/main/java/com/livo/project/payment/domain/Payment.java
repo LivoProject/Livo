@@ -1,5 +1,6 @@
 package com.livo.project.payment.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
@@ -46,6 +47,7 @@ public class Payment {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservationId", nullable = false)
+    @JsonIgnore
     private Reservation reservation;
 
     public enum PaymentStatus {
