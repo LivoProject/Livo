@@ -12,4 +12,6 @@ public interface NoticeService {
     Notice update(int id, NoticeReq form);
     void delete(int id);
     void increaseView(int id);
+    void toggleVisible(int id);
+    void togglePin(int id);
 }

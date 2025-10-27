@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
-$(document).on('click', '#deleteBtn', function() {
+$(document).on('click', '.deleteBtn', function() {
     const type = $(this).data('type');
     const id = $(this).data('id');
     console.log("data-type:" +type);
@@ -72,7 +72,7 @@ $(document).on('click', '#deleteBtn', function() {
         }
     });
 });
-$(document).on('click', '#editBtn', function() {
+$(document).on('click', '.editBtn', function() {
     const type = $(this).data('type');
     const id = $(this).data('id');
 
@@ -92,4 +92,41 @@ $(document).on('click', '#editBtn', function() {
             return;
     }
     window.location.href = url;
+});
+
+$(document).on('click', '.update-status', function () {
+    const id = $(this).data('id');
+    const action = $(this).data('action'); // approve / reject
+
+    if (!confirm(`정말 ${action === 'approve' ? '승인' : '반려'} 처리하시겠습니까?`)) return;
+
+    $.ajax({
+        url: `/admin/report/${action}/${id}`,
+        type: 'POST',
+        success: function () {
+            alert(`${action === 'approve' ? '승인' : '반려'} 완료되었습니다.`);
+            location.reload();
+        },
+        error: function (err) {
+            console.error(err);
+            alert(`${action === 'approve' ? '승인' : '반려'} 처리 실패`);
+        }
+    });
+});
+
+$(document).on('click', '.toggle-notice-status', function () {
+    const id = $(this).data('id');
+    const action = $(this).data('action'); // visible / pin
+
+    $.ajax({
+        url: `/admin/notice/${action}/${id}`,
+        type: 'POST',
+        success: function () {
+            location.reload();
+        },
+        error: function (err) {
+            console.error(err);
+            alert('처리 실패');
+        }
+    });
 });
