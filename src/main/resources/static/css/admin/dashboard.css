@@ -249,22 +249,14 @@ label {
     box-shadow: 0 2px 5px rgba(23,180,199,0.1);
 }
 .badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    /* 크기 조정 */
-    min-width: 85px;         /* Processing이 여유 있게 들어갈 정도 */
-    padding: 0.35em 0.6em;   /* 기본보다 살짝 여유 */
-    font-size: 0.70rem;
-    line-height: 1.1;        /* 살짝만 키워주면 위아래 잘림 방지 */
-
-    /* 보기 좋은 정렬 */
+    display: inline-block;
+    padding: 4px 10px;        /* 여백 적당하게 */
+    font-size: 0.75rem;       /* 가독성 좋은 사이즈 */
+    font-weight: 600;         /* 약간 굵게 */
+    border-radius: 9999px;    /* pill 형태 유지 */
     white-space: nowrap;
-    text-align: center;
     vertical-align: middle;
-    box-sizing: border-box;
-    border-radius: 9999px;   /* 모서리 부드럽게 */
+    line-height: 1.2;         /* 위아래 여백 안정화 */
 }
 #approveBtn{
     background-color: var(--color-main);

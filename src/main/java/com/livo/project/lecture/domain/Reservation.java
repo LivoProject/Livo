@@ -1,6 +1,7 @@
 package com.livo.project.lecture.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.livo.project.auth.domain.entity.User;
 import com.livo.project.payment.domain.Payment;
 import jakarta.persistence.*;
@@ -51,6 +52,7 @@ public class Reservation {
     private User user;
 
     @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Payment payment;
 
     public enum ReservationStatus {

@@ -70,4 +70,16 @@ public class AdminNoticeController {
         service.delete(id);
         return "redirect:/admin/notice/list";
     }
+
+    @PostMapping("/visible/{id}")
+    @ResponseBody
+    public void toggleVisible(@PathVariable int id) {
+        service.toggleVisible(id);
+    }
+
+    @PostMapping("/pin/{id}")
+    @ResponseBody
+    public void togglePin(@PathVariable int id) {
+        service.togglePin(id);
+    }
 }

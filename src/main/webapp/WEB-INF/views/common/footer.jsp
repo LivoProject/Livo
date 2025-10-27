@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
 <!-- Footer -->
@@ -39,9 +40,7 @@
     <div class="chat-panel-header">LiVO 챗봇</div>
     <div id="chat-panel-body" class="chat-panel-body">
          <c:forEach var="msg" items="${chatHistory}">
-            <div class="message ${msg.role == 'user' ? 'user-message' : 'ai-message'}">
-                ${msg.content}
-            </div>
+            <div class="message ${msg.role == 'user' ? 'user-message' : 'ai-message'}">${fn:trim(msg.content)}</div>
         </c:forEach>
     </div>
     <form id="chatForm" class="chat-panel-input">

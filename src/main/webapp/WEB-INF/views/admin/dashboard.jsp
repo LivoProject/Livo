@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
@@ -65,12 +66,18 @@
                                     <td class="text-center">${lecture.title}</td>
                                     <td class="text-center">${lecture.tutorName}</td>
                                     <td class="text-center">
-                                        <button id="editBtn" class="btn btn-sm btn-outline-primary"
-                                         data-type="lecture"
-                                        data-id="${lecture.lectureId}">수정</button>
-                                        <button id="deleteBtn" class="btn btn-sm btn-outline-danger"
-                                        data-type="lecture"
-                                        data-id="${lecture.lectureId}">삭제</button>
+                                        <button class="btn btn-sm editBtn"
+                                                data-type="lecture"
+                                                data-id="${lecture.lectureId}"
+                                                title="수정">
+                                            <i class="bi bi-pencil-square text-secondary"></i>
+                                        </button>
+                                        <button class="btn btn-sm deleteBtn"
+                                                data-type="lecture"
+                                                data-id="${lecture.lectureId}"
+                                                title="삭제">
+                                            <i class="bi bi-trash text-secondary"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 </c:forEach>
@@ -95,8 +102,8 @@
                                 <thead>
                                 <tr>
                                     <th class="text-center">#</th>
-                                    <th class="text-center">신고자</th>
-                                    <th class="text-center">신고내용</th>
+                                    <th class="text-center">리뷰내용</th>
+                                    <th class="text-center">신고사유</th>
                                     <th class="text-center">관리</th>
                                 </tr>
                                 </thead>
@@ -104,10 +111,31 @@
                                 <c:forEach var="report" items="${reports}" varStatus="status">
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
-                                    <td class="text-center">${report.email}</td>
+                                    <td class="text-center">
+                                    <c:choose>
+                                        <c:when test="${fn:length(report.review.reviewContent) > 100}">
+                                          ${fn:substring(report.review.reviewContent, 0, 100)}...
+                                        </c:when>
+                                        <c:otherwise>
+                                          ${report.review.reviewContent}
+                                        </c:otherwise>
+                                    </c:choose>
+                                    </td>
                                     <td class="text-center">${report.reportReason}</td>
-                                    <td class="text-center"><button class="btn btn-sm update-status">승인</button></td>
-                                    <td class="text-center"><button class="btn btn-sm update-status">보류</button></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm update-status"
+                                                data-action="approve"
+                                                data-id="${report.reportId}"
+                                                title="승인">
+                                            <i class="bi bi-check fs-4 text-success"></i>
+                                        </button>
+                                        <button class="btn btn-sm update-status"
+                                                data-action="reject"
+                                                data-id="${report.reportId}"
+                                                title="반려">
+                                            <i class="bi bi-x fs-4 text-danger"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 </c:forEach>
                                 </tbody>
@@ -143,14 +171,29 @@
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
                                     <td class="text-center">${notice.title}</td>
-                                    <td class="text-center">${notice.content}</td>
                                     <td class="text-center">
-                                        <button id="editBtn" class="btn btn-sm btn-outline-primary"
-                                        data-type="notice"
-                                        data-id="${notice.id}">노출</button>
-                                        <button id="deleteBtn" class="btn btn-sm btn-outline-danger"
-                                        data-type="notice"
-                                        data-id="${notice.id}">고정</button>
+                                    <c:choose>
+                                        <c:when test="${fn:length(notice.content) > 50}">
+                                          ${fn:substring(notice.content, 0, 50)}...
+                                        </c:when>
+                                        <c:otherwise>
+                                          ${notice.content}
+                                        </c:otherwise>
+                                    </c:choose>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm toggle-notice-status"
+                                                data-action="visible"
+                                                data-id="${notice.id}"
+                                                title="${notice.visible ? '숨기기' : '노출하기'}">
+                                            <i class="bi ${notice.visible ? 'bi-eye text-success' : 'bi-eye-slash text-secondary'}"></i>
+                                        </button>
+                                        <button class="btn btn-sm toggle-notice-status"
+                                                data-action="pin"
+                                                data-id="${notice.id}"
+                                                title="${notice.pinned ? '고정 해제' : '상단 고정'}">
+                                            <i class="bi ${notice.pinned ? 'bi-pin-angle-fill text-warning' : 'bi-pin text-secondary'}"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 </c:forEach>
@@ -184,12 +227,18 @@
                                     <td class="text-center">${status.index + 1}</td>
                                     <td class="text-center">${faq.question}</td>
                                     <td class="text-center">
-                                        <button id="editBtn" class="btn btn-sm btn-outline-primary"
-                                        data-type="faq"
-                                        data-id="${faq.id}">수정</button>
-                                        <button id="deleteBtn" class="btn btn-sm btn-outline-danger"
-                                        data-type="faq"
-                                        data-id="${faq.id}">삭제</button>
+                                        <button class="btn btn-sm editBtn"
+                                                data-type="faq"
+                                                data-id="${faq.id}"
+                                                title="수정">
+                                            <i class="bi bi-pencil-square text-secondary"></i>
+                                        </button>
+                                        <button class="btn btn-sm deleteBtn"
+                                                data-type="faq"
+                                                data-id="${faq.id}"
+                                                title="삭제">
+                                            <i class="bi bi-trash text-secondary"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 </c:forEach>

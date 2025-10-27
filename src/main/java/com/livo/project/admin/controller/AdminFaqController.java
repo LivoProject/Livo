@@ -81,4 +81,11 @@ public class AdminFaqController {
         faqAdminService.updateFaq(id, question, answer);
         return "redirect:/admin/faq";
     }
+
+//    @PostMapping("/rebuild-vector")
+//    @ResponseBody
+//    public String rebuildFaqVector(){
+//        faqService.rebuildVectorStore();
+//        return "OK";
+//    }
 }

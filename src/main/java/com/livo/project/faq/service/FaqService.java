@@ -12,7 +12,9 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,7 +53,22 @@ public class FaqService {
         }
         log.info("FAQ 벡터스토어 초기화 완료");
     }
-
+//    @Transactional
+//    public void rebuildVectorStore(){
+//        vectorStore = SimpleVectorStore.builder(embeddingService.getEmbeddingModel()).build();
+//        List<Faq> faqs = faqRepository.findAll();
+//        int batchSize = 100;
+//        for (int i = 0; i < faqs.size(); i += batchSize) {
+//            List<Faq> batch = faqs.subList(i, Math.min(i + batchSize, faqs.size()));
+//            for (Faq faq : batch) {
+//                String ragText = buildRagFormat(faq.getQuestion(), faq.getAnswer());
+//                Document doc = new Document(ragText, Map.of("faqId", faq.getId()));
+//                List<Document> chunks = textSplitter.split(doc);
+//                vectorStore.add(chunks);
+//            }
+//        }
+//        log.info(" 벡터스토어 전체 재구축 완료 (총 {}개 FAQ)", faqs.size());
+//    }
     public String refineAnswerWithLLM(String question, double threshold, String model) {
         log.info("Hybrid 방식 RAG 답변 생성 - question='{}', model={}", question, model);
 
@@ -112,17 +129,29 @@ public class FaqService {
     }
 
     public String buildRagFormat(String question, String answer) {
+        String variations = generateQuestionVariations(question);
+        String keywords = extractKeywords(answer);
         return """
-        [제목]: %s
-        [질문]: %s
-        [답변]: %s
-        [핵심키워드]: %s
-        """.formatted(
-            question,
-            question,
-            answer,
-            extractKeywords(answer) // 키워드는 간단 자동 추출
+            [질문들]
+            - %s
+            %s
+        
+            [답변]
+            %s
+        
+            [핵심키워드]
+            %s
+            """.formatted(
+                question,
+                prependHyphens(variations), // 보기 좋은 정렬 처리
+                answer,
+                keywords
         );
+    }
+    private String prependHyphens(String text) {
+        return Arrays.stream(text.split("\n"))
+                .map(line -> "- " + line.trim())
+                .collect(Collectors.joining("\n"));
     }
 
     private String extractKeywords(String text) {
@@ -137,5 +166,21 @@ public class FaqService {
         if (res == null || res.getResult() == null) return "";
         return res.getResult().getOutput().getText().trim();
     }
+
+    private String generateQuestionVariations(String question) {
+        String systemMessage = """
+        너는 FAQ 질문을 다양한 표현으로 재작성해주는 도움 AI야.
+        같은 의미를 가지지만 말투와 표현이 다른 질문을 5개 만들어줘.
+        설명 없이 질문만 줄바꿈으로 출력해.
+        어투는 자연스럽고 사용자 질문 스타일로.
+    """;
+
+        ChatResponse res = chatService.openAiChat(question, systemMessage, "gpt-4o-mini");
+
+        if (res == null || res.getResult() == null) return question;
+
+        return res.getResult().getOutput().getText().trim();
+    }
+
 
 }

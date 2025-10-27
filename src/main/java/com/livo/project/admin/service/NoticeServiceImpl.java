@@ -77,4 +77,16 @@ public class NoticeServiceImpl implements NoticeService {
         Notice n = get(id);
         n.setViewCount(n.getViewCount() + 1);
     }
+
+    @Override
+    public void toggleVisible(int id) {
+        Notice n = get(id);
+        n.setVisible(!n.isVisible());
+    }
+
+    @Override
+    public void togglePin(int id) {
+        Notice n = get(id);
+        n.setPinned(!n.isPinned());
+    }
 }

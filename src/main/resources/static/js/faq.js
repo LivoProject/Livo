@@ -10,8 +10,10 @@ form.addEventListener("submit", function (e) {
     if (question === "") return;
 
     // 사용자 메시지 표시
-    chatBody.innerHTML += `<div class="message user-message">${question}</div>`;
-    chatBody.scrollTop = chatBody.scrollHeight;
+    const userMsg = document.createElement("div");
+    userMsg.className = "message user-message";
+    userMsg.textContent = question;
+    chatBody.appendChild(userMsg);
 
     //  로딩 말풍선 추가
     const loading = document.createElement("div");
@@ -30,8 +32,13 @@ form.addEventListener("submit", function (e) {
         .then(res => res.json())
         .then(data => {
             loading.remove();
-            chatBody.innerHTML += `<div class="message ai-message">${data.ai}</div>`;
-            chatBody.scrollTop = chatBody.scrollHeight; // ✅ 자동 스크롤
+
+            const aiMsg = document.createElement("div");
+            aiMsg.className = "message ai-message";
+            aiMsg.textContent = data.ai;
+            chatBody.appendChild(aiMsg);
+
+            chatBody.scrollTop = chatBody.scrollHeight;
         });
 
     input.value = "";
