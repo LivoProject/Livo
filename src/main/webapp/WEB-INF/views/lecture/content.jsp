@@ -50,58 +50,50 @@
                         🤍좋아요
                     </button>
 
-<%--                    <c:choose>--%>
-<%--                        <c:when test="${isEnrolled}">--%>
-<%--                            <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>--%>
-<%--                        </c:when>--%>
-
-<%--                        &lt;%&ndash; 아직 신청 안한 경우 &ndash;%&gt;--%>
-<%--                        <c:otherwise>--%>
+                    <c:choose>
+                        <%-- 무료 강의 --%>
+                        <c:when test="${lecture.price == 0}">
                             <c:choose>
-                                <%-- 무료 강의 --%>
-                                <c:when test="${lecture.price == 0}">
-                                    <c:choose>
-                                        <%-- 이미 수강중 --%>
-                                        <c:when test="${reservationStatus == 'CONFIRMED'}">
-                                            <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
-                                        </c:when>
-
-                                        <%-- 무료 수강 가능 --%>
-                                        <c:otherwise>
-                                            <form action="/lecture/enroll/${lecture.lectureId}" method="post" style="display:inline;">
-                                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                                <button type="submit" class="btn btn-success text-white">바로 수강하기</button>
-                                            </form>
-                                        </c:otherwise>
-                                    </c:choose>
+                                <%-- 이미 수강중 --%>
+                                <c:when test="${reservationStatus == 'CONFIRMED'}">
+                                    <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
                                 </c:when>
-                                <%-- 유료 강의 --%>
+
+                                <%-- 무료 수강 가능 --%>
                                 <c:otherwise>
-                                    <c:choose>
-                                        <%-- 아직 예약 자체가 없음 (전혀 신청 전) --%>
-                                        <c:when test="${empty reservationStatus}">
-                                            <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">결제하기</button>
-                                        </c:when>
-
-                                        <%-- 결제 대기 상태 (위젯닫힘/실패 등) --%>
-                                        <c:when test="${reservationStatus == 'PENDING'}">
-                                            <button class="btn btn-warning text-white" onclick="requestPayment()">결제 다시 시도</button>
-                                        </c:when>
-
-                                        <%-- 결제 완료됨 --%>
-                                        <c:when test="${reservationStatus == 'PAID'}">
-                                            <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
-                                        </c:when>
-
-                                        <%-- 환불됨 (다시 신청 가능) --%>
-                                        <c:when test="${reservationStatus == 'CANCEL'}">
-                                            <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">환불 후 재결제하기</button>
-                                        </c:when>
-                                    </c:choose>
+                                    <form action="/lecture/enroll/${lecture.lectureId}" method="post" style="display:inline;">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                        <button type="submit" class="btn btn-success text-white">바로 수강하기</button>
+                                    </form>
                                 </c:otherwise>
                             </c:choose>
-<%--                        </c:otherwise>--%>
-<%--                    </c:choose>--%>
+                        </c:when>
+
+                        <%-- 유료 강의 --%>
+                        <c:otherwise>
+                            <c:choose>
+                                <%-- 아직 예약 자체가 없음 (전혀 신청 전) --%>
+                                <c:when test="${empty reservationStatus}">
+                                    <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">결제하기</button>
+                                </c:when>
+
+                                <%-- 결제 대기 상태 (위젯닫힘/실패 등) --%>
+                                <c:when test="${reservationStatus == 'PENDING'}">
+                                    <button class="btn btn-warning text-white" onclick="requestPayment()">결제 다시 시도</button>
+                                </c:when>
+
+                                <%-- 결제 완료됨 --%>
+                                <c:when test="${reservationStatus == 'PAID' || reservationStatus == 'CONFIRMED'}">
+                                    <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
+                                </c:when>
+
+                                <%-- 환불됨 (다시 신청 가능) --%>
+                                <c:when test="${reservationStatus == 'CANCEL'}">
+                                    <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">환불 후 재결제하기</button>
+                                </c:when>
+                            </c:choose>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
 
@@ -142,7 +134,9 @@
             </li>
             <li class="list-group-item">학습단계: 입문</li>
             <li class="list-group-item">수준: 초급</li>
-            <li class="list-group-item">별점⭐: <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" /></li>
+            <li class="list-group-item">별점⭐:
+                <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" />
+            </li>
         </ul>
         <h4 class="mt-3">${lecture.content}</h4>
     </div>
@@ -195,48 +189,52 @@
             <div class="p-5 mb-4 bg-body-tertiary rounded-3">
                 <div class="container-fluid py-5 text-center">
                     <h1 class="display-5 fw-bold">
-                        평균 <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" /> ⭐
+                        평균
+                        <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" /> ⭐
                     </h1>
                     <p class="col-md-8 fs-4 mx-auto">${reviewCountMap[lecture.lectureId]}개의 수강평</p>
                 </div>
             </div>
         </div>
 
-        <!-- 후기 등록 (로그인 + 수강중 사용자만 보이게) -->
-        <c:if test="${isLoggedIn and isEnrolled}">
-            <div class="col-md-12 mt-4">
-                <form id="reviewForm" action="/lecture/content/${lecture.lectureId}/review" method="post">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                    <input type="hidden" id="reviewUId" value=""> <!-- 수정용 ID 저장 -->
+        <!-- 후기 등록 (CONFIRMED or PAID) -->
+        <c:choose>
+            <c:when test="${reservationStatus == 'CONFIRMED' || reservationStatus == 'PAID'}">
+                <div class="col-md-12 mt-4">
+                    <form id="reviewForm" action="/lecture/content/${lecture.lectureId}/review" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                        <input type="hidden" id="reviewUId" value="">
 
-                    <div class="h-100 p-5 bg-body-secondary border rounded-3">
-                        <!-- 별점 버튼 -->
-                        <div class="star-wrap mb-3">
-                            <button type="button" class="bi bi-star-fill" data-value="1"></button>
-                            <button type="button" class="bi bi-star-fill" data-value="2"></button>
-                            <button type="button" class="bi bi-star-fill" data-value="3"></button>
-                            <button type="button" class="bi bi-star-fill" data-value="4"></button>
-                            <button type="button" class="bi bi-star-fill" data-value="5"></button>
+                        <div class="h-100 p-5 bg-body-secondary border rounded-3">
+                            <!-- 별점 버튼 -->
+                            <div class="star-wrap mb-3">
+                                <button type="button" class="bi bi-star-fill" data-value="1"></button>
+                                <button type="button" class="bi bi-star-fill" data-value="2"></button>
+                                <button type="button" class="bi bi-star-fill" data-value="3"></button>
+                                <button type="button" class="bi bi-star-fill" data-value="4"></button>
+                                <button type="button" class="bi bi-star-fill" data-value="5"></button>
+                            </div>
+                            <input type="hidden" name="reviewStar" id="selectedStar" value="0">
+
+                            <h4>내용입력</h4>
+                            <div class="mb-3">
+                                <textarea class="form-control" id="reviewContent" name="reviewContent" rows="5"
+                                          placeholder="수강 후기를 입력하세요"></textarea>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg" type="submit">등록</button>
                         </div>
-                        <input type="hidden" name="reviewStar" id="selectedStar" value="0">
-
-                        <h4>내용입력</h4>
-                        <div class="mb-3">
-                            <textarea class="form-control" id="reviewContent" name="reviewContent" rows="5" placeholder="수강 후기를 입력하세요"></textarea>
-                        </div>
-
-                        <button class="btn btn-primary btn-lg" type="submit">등록</button>
-                    </div>
-                </form>
-            </div>
-        </c:if>
+                    </form>
+                </div>
+            </c:when>
+        </c:choose>
 
         <!-- 후기 목록 -->
         <div id="reviewList">
             <c:forEach var="review" items="${reviews}">
                 <div class="col-md-12 mb-3">
                     <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm"
-                        data-review-id="${review.reviewUId}">
+                         data-review-id="${review.reviewUId}">
                         <h4>${review.userName}</h4>
                         <h5>
                             ${review.createdAt}
@@ -255,15 +253,14 @@
                         </h4>
 
                         <h4>
-                         <c:choose>
-                            <c:when test="${review.blocked}">
-                                <span class="text-muted fst-italic">🚫 신고된 리뷰입니다.</span>
-                            </c:when>
-
-                            <c:otherwise>
-                                <strong>${review.reviewContent}</strong>
-                            </c:otherwise>
-                        </c:choose>
+                            <c:choose>
+                                <c:when test="${review.blocked}">
+                                    <span class="text-muted fst-italic">🚫 신고된 리뷰입니다.</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <strong>${review.reviewContent}</strong>
+                                </c:otherwise>
+                            </c:choose>
                         </h4>
 
                         <!-- 신고/수정/삭제 버튼 -->
@@ -333,12 +330,11 @@
                 </button>
             </div>
         </c:if>
-    </div>
+
 
     <!-- 학습자료실 -->
     <div id="material" class="mt-5">
         <h3>학습 자료실</h3>
-
         <div class="container py-4">
             <div class="p-5 mb-4 bg-body-tertiary rounded-3 shadow-sm">
                 <div class="container-fluid">
@@ -364,12 +360,10 @@
                                                 </button>
                                             </c:otherwise>
                                         </c:choose>
-
                                     </li>
                                 </c:forEach>
                             </ul>
                         </c:when>
-
                         <c:otherwise>
                             <p class="text-muted text-center mt-3">등록된 학습 자료가 없습니다.</p>
                         </c:otherwise>
@@ -378,7 +372,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- 🚨 리뷰 신고 모달 -->
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
@@ -430,6 +423,7 @@
 <script>
     const csrfToken = "${_csrf.token}";
 </script>
+
 <script>
     // 로그인 유저 이메일 JSP에서 JS 변수로 넘기기
     const userEmail = "${loggedInUserEmail != null ? loggedInUserEmail : ''}";
@@ -440,6 +434,7 @@
     console.log("강의이름:", lectureName);
     console.log("로그인된 사용자 이메일:", userEmail);
 </script>
+
 <script src="/js/modal.js"></script>
 <script src="/js/lectureContent.js"></script>
 <script src="/js/payment.js"></script>
