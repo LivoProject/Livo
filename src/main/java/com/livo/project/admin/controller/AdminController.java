@@ -10,6 +10,8 @@ import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.service.LectureService;
+import com.livo.project.notice.domain.entity.Notice;
+import com.livo.project.notice.service.NoticeService;
 import com.livo.project.report.domain.Report;
 import com.livo.project.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ public class AdminController {
     private final FaqService faqService;
     private final LectureAdminService lectureAdminService;
     private final ReportService reportService;
+    private final NoticeService noticeService;
 
     @GetMapping("/dashboard")
     public String showAdminPage(Model model){
@@ -44,6 +47,8 @@ public class AdminController {
         model.addAttribute("recentFaqs",recentFaqs);
         List<Report> reports = reportService.getNotApprovedReport();
         model.addAttribute("reports",reports);
+        List<Notice> notices = noticeService.getRecentNotices();
+        model.addAttribute("notices",notices);
         return "admin/dashboard";
     }
     @GetMapping("")

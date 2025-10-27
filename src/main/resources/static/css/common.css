@@ -223,25 +223,25 @@ footer p {
 }
 
 .chat-panel-body {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
     padding: 16px;
-    overflow: auto;
+    overflow-y: auto;
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
 }
 .chat-panel-input {
     flex: 0;
     display: flex;
-    align-items: center;   /* ✅ 세로 중앙 정렬 */
-    justify-content: space-between; /* ✅ 버튼 & 입력창 간 정렬 균형 */
+    align-items: center;
+    justify-content: space-between;
     padding: 8px 12px;
     border-top: 1px solid #ddd;
     background: #fff;
 }
 
 .chat-panel-input input {
-    flex: 1;               /* ✅ 입력창이 가능한 만큼 넓어짐 */
+    flex: 1;
     border: none;
     outline: none;
     font-size: 14px;
@@ -259,7 +259,7 @@ footer p {
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    flex-shrink: 0;        /* ✅ 버튼이 눌리지 않도록 */
+    flex-shrink: 0;
 }
 
 .message {
