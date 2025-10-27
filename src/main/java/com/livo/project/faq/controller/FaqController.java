@@ -12,6 +12,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("faq")
 @Controller
@@ -27,13 +28,27 @@ public class FaqController {
     }
 
     @PostMapping("/ask")
-    public String ask(@ModelAttribute("chatHistory") List<ChatMessage> chatHistory, @RequestParam String question, Model model){
-        double threshold = 0.3;
+    public String ask(@ModelAttribute("chatHistory") List<ChatMessage> chatHistory,
+                      @RequestParam String question, Model model){
+        double threshold = 0.15;
         String answer = faqService.refineAnswerWithLLM(question, threshold, "gpt-4o-mini");
         chatHistory.add(new ChatMessage("user", question));
         chatHistory.add(new ChatMessage("ai", answer));
         model.addAttribute("chatHistory", chatHistory);
         return "faq/faq_ask";
+    }
+    @PostMapping("/ask-ajax")
+    @ResponseBody
+    public Map<String, String> askAjax(@ModelAttribute("chatHistory")List<ChatMessage> chatHistory,
+                                       @RequestParam String question){
+        double threshold = 0.15;
+        String answer = faqService.refineAnswerWithLLM(question, threshold, "gpt-4o-mini");
+        chatHistory.add(new ChatMessage("user", question));
+        chatHistory.add(new ChatMessage("ai", answer));
+        return Map.of(
+                "user", question,
+                "ai", answer
+        );
     }
 
     @GetMapping("/reset")

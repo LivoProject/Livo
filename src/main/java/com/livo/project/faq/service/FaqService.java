@@ -63,14 +63,17 @@ public class FaqService {
 
         List<Document> results = vectorStore.similaritySearch(request);
         log.info("검색 완료 - 결과 수={}", results.size());
-        if (results.isEmpty()) return "results 관련 정보를 찾을 수 없습니다.";
+        if (results.isEmpty()) return "죄송합니다 😅 관련된 정보를 찾을 수 없어요.";
 
         //threshold 필터링
         List<Document> filtered = results.stream()
-                .filter(doc -> doc.getScore() != null && doc.getScore() > threshold)
+                .filter(doc -> {
+                    Double score = doc.getScore();
+                    return score == null || score > threshold; // null이면 통과
+                })
                 .toList();
 
-        if (filtered.isEmpty()) return "filtered 관련 정보를 찾을 수 없습니다.";
+        if (filtered.isEmpty()) return "죄송합니다 😅 관련된 정보를 찾을 수 없어요";
 
         //가장 유사한 문서 하나 또는 상위 n개만 사용
         String topContexts = filtered.stream()
