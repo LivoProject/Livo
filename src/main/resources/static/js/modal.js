@@ -26,7 +26,6 @@ function showCommonModal(title, message, confirmText = "확인", showCancel = fa
     const confirmBtn = modalEl.querySelector(".btn-main");
 
 // ✅ 확인 버튼 클릭 시 페이지 이동
-    confirmBtn.onclick = null; // 기존 클릭 이벤트 제거
     confirmBtn.onclick = () => {
         modal.hide();
 

@@ -36,4 +36,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     Optional<Reservation> findTopByLecture_LectureIdAndUser_EmailOrderByCreatedAtDesc(int lectureId, String email);
     Optional<Reservation> findByLecture_LectureIdAndUser_EmailAndStatus(int lectureId, String email, Reservation.ReservationStatus status);
 
+    // 특정 강좌의 'CONFIRMED' 또는 'PAID' 상태 예약 개수 카운트: 민영 추가!
+    @Query("""
+    SELECT COUNT(r)
+    FROM Reservation r
+    WHERE r.lectureId = :lectureId
+    AND r.status IN ('CONFIRMED', 'PAID')
+    """)
+    int countActiveReservations(@Param("lectureId") int lectureId);
+
 }
