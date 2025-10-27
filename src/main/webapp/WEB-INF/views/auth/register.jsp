@@ -30,7 +30,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 
-<body id="register">
+<body id="loginAndReg">
 <div class="register-container">
     <h2>회원가입</h2>
 
