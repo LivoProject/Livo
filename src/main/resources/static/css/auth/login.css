@@ -20,11 +20,22 @@
 }
 
 /* 기본 구조 */
-body {
-    background: radial-gradient(900px 600px at 110% -10%, var(--bg-accent), transparent 70%),
-    radial-gradient(800px 500px at -10% 120%, rgba(255, 204, 2, .05), transparent 70%),
+* {box-sizing: border-box}
+#loginAndReg {
+    display: grid;
+    place-items: start center;
+    background: radial-gradient(1000px 700px at 110% -10%, var(--bg-accent), transparent 65%),
+    radial-gradient(800px 600px at -10% 120%, rgba(31, 168, 90, .08), transparent 60%),
     var(--bg);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin-top: -80px;
 }
+
 
 /* 제목 */
 h2 {
@@ -81,14 +92,14 @@ form {
     background: #fff;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-md);
+   /* box-shadow: var(--shadow-md);*/
     padding: 30px;
     transition: transform .2s ease, box-shadow .25s ease;
 }
 
 form:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 60px rgba(23, 180, 199, .22);
+    box-shadow: 0 20px 60px rgba(23, 180, 199, .11);
 }
 
 /* 라벨 */
@@ -104,7 +115,7 @@ label {
 input {
     width: 100%;
     height: 46px;
-    padding: 0 40px;
+    padding: 0 36px;
     border: 1px solid #d9e6f6;
     border-radius: var(--radius-input);
     background: #fbfeff;
