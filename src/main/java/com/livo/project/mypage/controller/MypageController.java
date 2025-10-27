@@ -9,6 +9,7 @@ import com.livo.project.mypage.domain.dto.MypageProgressDto;
 import com.livo.project.mypage.domain.dto.MypageReservationDto;
 import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.service.MypageService;
+import com.livo.project.payment.domain.Payment;
 import com.livo.project.review.domain.Review;
 import com.livo.project.utils.AuthUtil;
 import lombok.RequiredArgsConstructor;
@@ -260,7 +261,16 @@ public class MypageController {
 
     // 결제 내역
     @GetMapping("/payment")
-    public String payment(Model model) {
+    public String payment(Model model, Pageable pageable) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
+
+        if (email == null) return "redirect:/auth/login";
+
+        Page<Payment> payments = mypageService.getMyPayments(email, pageable);
+        model.addAttribute("payments", payments.getContent());
+        model.addAttribute("page", payments);
 
 
         model.addAttribute("menu", "payment");
