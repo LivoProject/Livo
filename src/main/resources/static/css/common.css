@@ -227,6 +227,89 @@ footer p {
     padding: 16px;
     overflow: auto;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.chat-panel-input {
+    flex: 0;
+    display: flex;
+    align-items: center;   /* ✅ 세로 중앙 정렬 */
+    justify-content: space-between; /* ✅ 버튼 & 입력창 간 정렬 균형 */
+    padding: 8px 12px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+}
+
+.chat-panel-input input {
+    flex: 1;               /* ✅ 입력창이 가능한 만큼 넓어짐 */
+    border: none;
+    outline: none;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f5f5f5;
+    margin-right: 8px;     /* 버튼과 간격 */
+}
+
+.chat-panel-input button {
+    border: none;
+    background: var(--color-main); /* 형 사이트 메인 컬러 */
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    flex-shrink: 0;        /* ✅ 버튼이 눌리지 않도록 */
+}
+
+.message {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    line-height: 1.5;
+    font-size: 14px;
+    word-break: keep-all;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+.user-message {
+    align-self: flex-end;
+    background-color: #DCF8C6; /* 밝은 민트 */
+    border-bottom-right-radius: 3px;
+}
+
+/* AI/챗봇 말풍선 (왼쪽) */
+.ai-message {
+    align-self: flex-start;
+    background-color: #F1F1F1;
+    border-bottom-left-radius: 3px;
+}
+.loading-message {
+    align-self: flex-start;
+    background-color: #F1F1F1;
+    border-bottom-left-radius: 3px;
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #777;
+    width: fit-content;
+    display: flex;
+    gap: 4px;
+}
+
+/* 점 3개 애니메이션 */
+.loading-dots:after {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    animation: dots 1.4s infinite steps(4, jump-none);
+}
+
+@keyframes dots {
+    0% { content: ""; }
+    25% { content: "."; }
+    50% { content: ".."; }
+    75% { content: "..."; }
 }
 
 .floating-buttons {
