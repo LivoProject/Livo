@@ -21,4 +21,6 @@ public interface NoticeRepository extends JpaRepository<Notice, Integer> {
 
     // (옵션) 메인 상단 5개만 뽑을 때
     List<Notice> findTop5ByIsVisibleTrueOrderByIsPinnedDescCreatedAtDesc();
+
+    List<Notice> findTop5ByOrderByCreatedAtDesc();
 }
