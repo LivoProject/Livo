@@ -1,59 +1,185 @@
-/* 카드 */
-.lv-card {
-    background: #fff;
+/* =========================================================
+   admin/chart.css  —  Dashboard 공통 스타일
+   (카드 · 차트 · 표 · 배지 · 반응형)
+   ========================================================= */
+
+/* ---------- Theme Tokens ---------- */
+:root{
+    --lv-bg: #ffffff;
+    --lv-surface: #ffffff;
+    --lv-heading: #0f172a;
+    --lv-muted: #6b7280;
+    --lv-border: #eef1f4;
+    --lv-shadow: 0 6px 18px rgba(0,0,0,.06);
+
+    --lv-primary: #0ea5e9;
+    --lv-success: #16a34a;
+    --lv-danger:  #e11d48;
+    --lv-warning: #d97706;
+
+    /* default chart height */
+    --lv-chart-h: 420px;
+}
+
+/* ---------- Card ---------- */
+.lv-card{
+    background: var(--lv-surface);
     border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    box-shadow: var(--lv-shadow);
     padding: 16px 18px;
 }
-.lv-card + .lv-card { margin-top: 16px; }
-.lv-card-header { padding-bottom: 8px; border-bottom: 1px solid #f0f2f4; margin-bottom: 12px; }
+.lv-card + .lv-card{ margin-top: 16px; }
 
-/* 필터 카드 */
-.lv-filter { position: sticky; top: 0; z-index: 2; }
-
-/* 차트 영역: 고정 높이 + 상태 레이어 */
-.lv-chart-wrap { position: relative; height: 420px; }
-.lv-chart-wrap canvas { width: 100% !important; height: 100% !important; }
-
-/* 상태 메시지 */
-.lv-loading, .lv-empty, .lv-error {
-    position: absolute; inset: 0; display: grid; place-items: center;
-    font-weight: 600; color: #6c757d; background: #fff8; backdrop-filter: blur(2px);
+.lv-card-header{
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f2f4;
+    margin-bottom: 12px;
 }
-.lv-error { color: #dc3545; }
+.lv-card-header h5,
+.lv-card-header h6{
+    margin: 0;
+    font-weight: 700;
+    color: var(--lv-heading);
+}
 
-/* 표 래퍼: 헤더 고정 + 스크롤 */
-.lv-table-wrap { max-height: 420px; overflow: auto; }
-#topTable thead th { position: sticky; top: 0; background: #f8f9fa; z-index: 1; }
-#topTable td, #topTable th { white-space: nowrap; }
+/* ---------- Filter Card (sticky) ---------- */
+/* 상단 네비가 고정이면 top 값을 8~64px 사이로 조정하세요 */
+.lv-filter{
+    position: sticky;
+    top: 8px;
+    z-index: 2;
+}
 
-/* 숫자 정렬 */
-.text-end { text-align: right; }
+/* ---------- Chart Area ---------- */
+.lv-chart-wrap{
+    position: relative;
+    height: var(--lv-chart-h);
+}
+.lv-chart-wrap canvas{
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
 
-/* 표 가독성 */
-#topTable {
-    --bd: 1px solid #eef1f4;
+/* 상태 오버레이 (loading / empty / error) */
+.lv-loading,
+.lv-empty,
+.lv-error{
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    color: var(--lv-muted);
+    background: #ffffffcc;  /* 살짝 밝은 유리효과 */
+    backdrop-filter: blur(2px);
+}
+.lv-error{ color: #dc3545; }
+
+/* 차트 높이 유틸 (필요한 곳에 추가 클래스로 사용) */
+.lv-h-420{ --lv-chart-h: 420px; }
+.lv-h-360{ --lv-chart-h: 360px; }
+.lv-h-320{ --lv-chart-h: 320px; }
+
+/* ---------- Tables (공통) ---------- */
+.lv-table-wrap{
+    max-height: 420px;
+    overflow: auto;
+}
+
+/* 공통 테이블 스킨: topTable / instructorTable 둘 다 적용 */
+#topTable,
+#instructorTable{
+    --bd: 1px solid var(--lv-border);
     border: var(--bd);
     border-radius: 12px;
     overflow: hidden;
+    background: var(--lv-bg);
     font-size: 14px;
+    border-collapse: separate;
+    border-spacing: 0;
 }
-#topTable thead th {
-    background: #f8fafc;
-    position: sticky; top: 0;
-    z-index: 1;
-}
-#topTable td, #topTable th { vertical-align: middle; }
-#topTable tbody tr:nth-child(even) { background: #fafafa; }
-#topTable .title-cell { font-weight: 600; }
-#topTable .num { text-align: right; white-space: nowrap; }
 
-/* 배지 */
-.badge {
-    display: inline-block; min-width: 2.2em; padding: .15rem .45rem;
-    border-radius: 999px; font-weight: 600;
+#topTable thead th,
+#instructorTable thead th{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #f8fafc;
+    font-weight: 700;
+    color: #111827;
 }
-.badge.ok    { background: rgba(34,197,94,.12);  color: #16a34a; }  /* 확정 */
-.badge.bad   { background: rgba(244,63,94,.12);  color: #e11d48; }  /* 취소 */
-.badge.warn  { background: rgba(245,158,11,.12); color: #d97706; }  /* 대기 */
-.badge.rate  { background: rgba(250,204,21,.12); color: #ca8a04; }  /* 예약률 */
+
+/* 행/셀 */
+#topTable td, #topTable th,
+#instructorTable td, #instructorTable th{
+    vertical-align: middle;
+    white-space: nowrap;
+    padding: .55rem .75rem;
+}
+
+#topTable tbody tr:nth-child(even),
+#instructorTable tbody tr:nth-child(even){
+    background: #fafafa;
+}
+
+/* 숫자 정렬 유틸 */
+.text-end{ text-align: right; }
+
+/* 타이틀 셀, 숫자 셀 헬퍼 */
+.title-cell{ font-weight: 600; }
+.num{ text-align: right; white-space: nowrap; }
+
+/* 긴 텍스트 말줄임 (강사 상세표 등) */
+#instructorTable td{
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------- Badges ---------- */
+.badge{
+    display: inline-block;
+    min-width: 2.2em;
+    padding: .15rem .45rem;
+    border-radius: 999px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.badge.ok    { background: rgba(34,197,94,.12);  color: var(--lv-success); } /* 확정 */
+.badge.bad   { background: rgba(244,63,94,.12);  color: var(--lv-danger); }  /* 취소  */
+.badge.warn  { background: rgba(245,158,11,.12); color: var(--lv-warning);}  /* 대기  */
+.badge.rate  { background: rgba(250,204,21,.12); color: #ca8a04; }           /* 예약률 */
+
+/* ---------- Equal-height helpers for Instructor section ---------- */
+.lv-chart-360{ height: 360px; }
+.lv-table-360{ height: 360px; overflow: auto; }
+
+/* ---------- Subtle Scrollbar ---------- */
+.lv-table-wrap::-webkit-scrollbar,
+.lv-chart-wrap::-webkit-scrollbar{
+    height: 8px; width: 8px;
+}
+.lv-table-wrap::-webkit-scrollbar-thumb,
+.lv-chart-wrap::-webkit-scrollbar-thumb{
+    background: #d1d5db; border-radius: 8px;
+}
+.lv-table-wrap::-webkit-scrollbar-track,
+.lv-chart-wrap::-webkit-scrollbar-track{
+    background: #f3f4f6; border-radius: 8px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1199.98px){ /* lg- */
+    :root{ --lv-chart-h: 360px; }
+    .lv-table-wrap{ max-height: 360px; }
+}
+
+@media (max-width: 767.98px){ /* sm- */
+    :root{ --lv-chart-h: 320px; }
+    .lv-filter{ top: 4px; }
+    .lv-card{ padding: 14px 14px; }
+    #instructorTable td{ max-width: 140px; }
+}

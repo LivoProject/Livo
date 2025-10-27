@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <link rel="stylesheet" href="/css/mypage.css">
@@ -37,7 +39,7 @@
 
                         <!-- 푸터 -->
                         <div class="review-footer d-flex justify-content-between align-items-center">
-                            <small class="text-muted">${review.createdAt}</small>
+                               <fmt:formatDate value="${review.createdAt}" pattern="yyyy-MM-dd" />
                              <!-- <div class="review-actions">
                                 <button class="btn-outline-main btn-sm btn-review-edit" data-review-id="${review.reviewUId}">
                                     수정
@@ -56,30 +58,8 @@
             </c:if>
         </div>
 
-        <!-- 페이지네이션 -->
-        <nav class="pagination-wrap">
-            <c:if test="${page != null and page.totalPages > 0}">
-                <ul class="pagination">
-                    <c:if test="${not page.first}">
-                        <li class="page-item">
-                            <a class="page-link" href="?page=${page.number - 1}">이전</a>
-                        </li>
-                    </c:if>
+        <%@ include file="/WEB-INF/views/common/pagination.jsp" %>
 
-                    <c:forEach var="i" begin="0" end="${page.totalPages - 1}">
-                        <li class="page-item ${page.number == i ? 'active' : ''}">
-                            <a class="page-link" href="?page=${i}">${i + 1}</a>
-                        </li>
-                    </c:forEach>
-
-                    <c:if test="${not page.last}">
-                        <li class="page-item next">
-                            <a class="page-link" href="?page=${page.number + 1}">다음</a>
-                        </li>
-                    </c:if>
-                </ul>
-            </c:if>
-        </nav>
     </main>
 </section>
 

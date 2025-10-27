@@ -17,7 +17,7 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
 
 
     // 내 예약 강좌
-    @Query("SELECT r FROM Reservation r WHERE r.user.email = :email AND r.status = 'CONFIRMED'")
+    @Query("SELECT r FROM Reservation r WHERE r.user.email = :email AND (r.status = 'CONFIRMED' OR r.status = 'PAID')")
     Page<Reservation> findAllByEmailAndProvider(@Param("email") String email, @Param("provider") String provider, Pageable pageable);
 
 

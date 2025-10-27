@@ -187,7 +187,7 @@
     <section id="info">
         <div class="container">
             <div class="board">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex justify-content-between align-items-center">
                     <h3>공지사항</h3>
                     <a href=/notice/content"><i class="bi bi-plus-lg"></i></a>
                 </div>
