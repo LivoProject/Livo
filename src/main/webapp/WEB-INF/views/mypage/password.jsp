@@ -16,16 +16,20 @@
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/form.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
         .valid {
             color: #198754;
             font-size: 0.9rem;
         }
+
         .error {
             color: #dc3545;
             font-size: 0.9rem;
         }
+
         .pw-card {
             background: #fff;
             border-radius: 16px;
@@ -36,10 +40,11 @@
         }
 
         h3 {
-            color: var(--color-main, #17b4c7);
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 28px;
+
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 5rem 0 2rem;
+            position: relative;
         }
 
         label {
@@ -95,11 +100,28 @@
             padding: 10px;
             font-size: 0.9rem;
         }
+        .input-wrap {
+            position: relative;
+        }
+        .input-wrap button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        #mypagePw {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #mypagePw #pwForm {
+            width: 450px;
+        }
     </style>
 </head>
 
 <body>
-<div class="container mt-5" style="max-width: 400px;">
+<div class="container" id="mypagePw">
     <h3 class="mb-4 text-center">비밀번호 변경</h3>
 
     <form id="pwForm" action="/mypage/password" method="post">
@@ -116,29 +138,41 @@
         <!-- 현재 비밀번호 -->
         <div class="mb-3">
             <label class="form-label">현재 비밀번호</label>
-            <input type="password" name="currentPassword" id="currentPassword" class="form-control" required>
-            <button class="password-toggle" type="button" aria-label="비밀번호 표시 토글">보기</button>
+            <div class="input-wrap">
+                <input type="password" name="currentPassword" id="currentPassword" class="form-control pw-input" required>
+                <button class="toggle-password" type="button">
+                    <i class="bi bi-eye"></i>
+                </button>
+            </div>
         </div>
 
         <!-- 새 비밀번호 -->
         <div class="mb-3">
             <label class="form-label">새 비밀번호</label>
-            <input type="password" name="newPassword" id="newPassword" class="form-control" required>
-            <button class="password-toggle" type="button" aria-label="비밀번호 표시 토글">보기</button>
+            <div class="input-wrap">
+                <input type="password" name="newPassword" id="newPassword" class="form-control pw-input" required>
+                <button class="toggle-password" type="button">
+                    <i class="bi bi-eye"></i>
+                </button>
+            </div>
             <small id="pwMsg" class="form-text"></small>
         </div>
 
         <!-- 새 비밀번호 확인 -->
         <div class="mb-3">
             <label class="form-label">새 비밀번호 확인</label>
-            <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required>
-            <button class="password-toggle" type="button" aria-label="비밀번호 표시 토글">보기</button>
+            <div class="input-wrap">
+                <input type="password" name="confirmPassword" id="confirmPassword" class="form-control pw-input" required>
+                <button class="toggle-password" type="button">
+                    <i class="bi bi-eye"></i>
+                </button>
+            </div>
             <small id="confirmMsg" class="form-text"></small>
         </div>
 
         <!-- 버튼 -->
         <div class="d-grid">
-            <button type="submit" id="submitBtn" class="btn btn-primary" disabled>변경</button>
+            <button type="submit" id="submitBtn" class="btn-main" disabled>변경</button>
         </div>
 
         <!-- 돌아가기 -->

@@ -4,10 +4,12 @@
     --color-black: #121212;
     --color-gray: #999;
     --color-light-gray: #f8f9fa;
+    --color-dark-gray: rgb(73, 80, 87);
     --color-main: #17b4c7;
     --color-point: #ffcc02;
     --color-hover: rgba(23, 180, 199, 0.05);
-    --border-black: 1px solid #ddd;
+    --color-light-hover: #e0f7fa;
+    --border-black: 1px solid rgb(233, 236, 239);
     --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -16,6 +18,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
 /* 공통 */
+hr, .card {
+    border-color: rgb(233, 236, 239);
+}
+.card-footer {
+    background-color: transparent;
+    border-color: rgb(233, 236, 239);
+}
 h3 {
     font-size: 2rem;
     font-weight: 700;
@@ -34,8 +43,8 @@ section.sub {
     margin-top: 120px!important;
 }
 section.sub h3 {margin-top:0!important;}
-.modal-body {
-    lin-height:1.5!important;
+.modal-body p{
+    line-height: 1.5!important;
 }
 
 /* 헤더 */
@@ -607,11 +616,6 @@ footer p {
     box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 
-.pagination .page-item.next .page-link {
-    width: auto;
-    padding: 0 16px;
-    font-weight: 600;
-}
 
 .pagination .page-item.disabled .page-link {
     color: var(--color-gray);
