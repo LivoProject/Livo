@@ -21,16 +21,16 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
     // 좋아요한 강좌
     @Query(value = """
     SELECT 
-        l.lecture_id AS lectureId,
+        l.lectureId AS lectureId,
         l.title AS title,
-        l.tutor_name AS tutorName,
-        l.thumbnail_url AS thumbnailUrl,
-        COALESCE(lp.progress_percent, 0) AS progressPercent,
+        l.tutorName AS tutorName,
+        l.thumbnailUrl AS thumbnailUrl,
+        COALESCE(lp.progressPercent, 0) AS progressPercent,
         CASE 
             WHEN EXISTS (
                 SELECT 1
                 FROM reservation r2
-                WHERE r2.lecture_id = l.lecture_id
+                WHERE r2.lectureId = l.lectureId
                   AND r2.email = u.email
                   AND r2.status != 'CANCEL'
             ) THEN TRUE
@@ -38,15 +38,15 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
         END AS reserved
     FROM lecture l
     JOIN lecture_like ll 
-        ON l.lecture_id = ll.lecture_id
-    JOIN user u 
+        ON l.lectureId = ll.lectureId
+    JOIN `user` u 
         ON ll.email = u.email
     LEFT JOIN lecture_progress lp 
-        ON lp.lecture_id = l.lecture_id
+        ON lp.lectureId = l.lectureId
         AND lp.email = u.email
     WHERE u.email = :email
       AND u.provider = :provider
-    ORDER BY ll.created_at DESC
+    ORDER BY ll.createdAt DESC
 """, nativeQuery = true)
     Page<LikedLectureProjection> findLikedLecturesWithProgress(
             @Param("email") String email,

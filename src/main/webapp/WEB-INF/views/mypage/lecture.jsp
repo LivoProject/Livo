@@ -65,30 +65,7 @@
 
         </div>
 
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center mt-4">
-                <c:if test="${!page.first}">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${page.number - 1}">이전</a>
-                    </li>
-                </c:if>
-
-                <%-- totalPages가 0일 때는 forEach 실행 안 함 --%>
-                <c:if test="${page.totalPages > 0}">
-                    <c:forEach var="i" begin="0" end="${page.totalPages - 1}">
-                        <li class="page-item ${page.number == i ? 'active' : ''}">
-                            <a class="page-link" href="?page=${i}">${i + 1}</a>
-                        </li>
-                    </c:forEach>
-                </c:if>
-
-                <c:if test="${!page.last}">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${page.number + 1}">다음</a>
-                    </li>
-                </c:if>
-            </ul>
-        </nav>
+        <%@ include file="/WEB-INF/views/common/pagination.jsp" %>
 
     </main>
 

@@ -35,14 +35,14 @@
                     </a>
                 </div>
                 <div class="recent-lecture">
-                    <div class="play-icon">
+                    <a href="/lecture/view/${recentLecture.lecture.lectureId}" class="play-icon">
                         <i class="bi bi-play-fill"></i>
-                    </div>
+                    </a>
 
                     <c:if test="${recentLecture != null}">
                         <div class="text-wrap">
-                            <h5>${recentLecture.lecture.title}</h5>
-                            <p>진도율: ${recentLecture.progressPercent}%</p>
+                            <a href="/lecture/content/${recentLecture.lecture.lectureId}">${recentLecture.lecture.title}</a>
+                            <span>진도율: ${recentLecture.progressPercent}%</span>
                         </div>
                     </c:if>
                 </div>
@@ -52,7 +52,7 @@
             <div class="card-box summary-card">
                 <h6 class="">학습 통계</h6>
                 <div class="row">
-                    <div class="col">
+                    <div class="col text-center">
                         <div class="stat-item">
                             <div class="fs-4 fw-bold text-primary">
                                 ${totalStudyHours}시간
@@ -60,7 +60,7 @@
                             <small class="text-muted">누적 학습시간</small>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col text-center">
                         <div class="stat-item">
                             <div class="fs-4 fw-bold text-success">
                                 ${completedLectures}개
@@ -68,7 +68,7 @@
                             <small class="text-muted">완강 강좌</small>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col text-center">
                         <div class="stat-item">
                             <div class="fs-4 fw-bold text-warning">
                                 ${studyDays}일
@@ -80,9 +80,9 @@
             </div>
         </div>
         <!-- 알림 / 공지 -->
-        <div class="card-box mb-4">
+        <div class="card-box mb-4 notice-wrap">
             <div class="card-header">
-                <h6>📢 공지사항</h6>
+                <h6>공지사항</h6>
                 <a href="notice/list" class="more-link"
                 >더보기 <i class="bi bi-chevron-right"></i
                 ></a>
@@ -107,7 +107,7 @@
         <!-- 즐겨찾기 -->
         <div class="card-box mb-4">
             <div class="card-header">
-                <h6>⭐ 즐겨찾는 강의</h6>
+                <h6>즐겨찾는 강의</h6>
                 <a href="mypage/like" class="more-link">더보기 <i class="bi bi-chevron-right"></i></a>
             </div>
             <div class="lecture-grid">
