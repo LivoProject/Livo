@@ -28,9 +28,9 @@
                         </tr>
                       </thead>
                       <tbody>
-                          <c:forEach var="faq" items="${faq}">
+                          <c:forEach var="faq" items="${faq}" varStatus="status">
                               <tr>
-                                  <td class="text-center">${faq.id}</td>
+                                  <td class="text-center">${status.index + 1}</td>
                                   <td class="text-center">${faq.question}</td>
                                   <td class="text-center">
                                     <c:choose>

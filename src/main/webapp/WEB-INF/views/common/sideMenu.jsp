@@ -26,7 +26,7 @@
      <li><a href="${pageContext.request.contextPath}/mypage" class="nav-link ${menu eq 'home' ? 'active' : ''}">홈</a></li>
      <li><a href="${pageContext.request.contextPath}/mypage/lecture" class="nav-link ${menu eq 'lecture' ? 'active' : ''}">내 강의실</a></li>
      <li><a href="${pageContext.request.contextPath}/mypage/info" class="nav-link ${menu eq 'info' ? 'active' : ''}">내 정보 관리</a></li>
-     <li><a href="${pageContext.request.contextPath}/mypage/like" class="nav-link ${menu eq 'bookmark' ? 'active' : ''}">즐겨찾는 강의</a></li>
+     <li><a href="${pageContext.request.contextPath}/mypage/like" class="nav-link ${menu eq 'like' ? 'active' : ''}">즐겨찾는 강의</a></li>
      <li><a href="${pageContext.request.contextPath}/mypage/review" class="nav-link ${menu eq 'review' ? 'active' : ''}">수강평 관리</a></li>
      <li><a href="${pageContext.request.contextPath}/mypage/payment" class="nav-link ${menu eq 'payment' ? 'active' : ''}">결제 내역</a></li>
    </ul>

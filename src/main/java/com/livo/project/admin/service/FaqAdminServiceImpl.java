@@ -17,6 +17,17 @@ import java.util.List;
 public class FaqAdminServiceImpl implements FaqAdminService {
     private final FaqRepository faqRepository;
     private final FaqPageRepository faqPageRepository;
+
+    @Override
+    public Faq updateFaq(int id, String question, String answer) {
+        Faq faq = faqRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("FAQ를 찾을 수 없습니다."));
+        faq.setQuestion(question);
+        faq.setAnswer(answer);
+
+        return faqRepository.save(faq);
+    }
+
     @Override
     public List<Faq> getFaqAll() {
         return faqRepository.findAll();
@@ -35,5 +46,11 @@ public class FaqAdminServiceImpl implements FaqAdminService {
     @Override
     public void deleteFaq(long faqId) {
         faqPageRepository.deleteById(faqId);
+    }
+
+    @Override
+    public Faq editFaq(int faqId) {
+        return faqRepository.findById(faqId)
+                .orElseThrow(() -> new IllegalArgumentException("faq를 찾을 수 없습니다."));
     }
 }

@@ -44,7 +44,7 @@ public class FaqService {
         for (int i = 0; i < faqs.size(); i += batchSize) {
             List<Faq> batch = faqs.subList(i, Math.min(i + batchSize, faqs.size()));
             for (Faq faq : batch) {
-                Document doc = new Document(faq.getAnswer(), Map.of("faqId", faq.getId()));
+                Document doc = new Document(buildRagFormat(faq.getQuestion(), faq.getAnswer()), Map.of("faqId", faq.getId()));
                 List<Document> chunks = textSplitter.split(doc);
                 vectorStore.add(chunks);
             }
@@ -102,57 +102,40 @@ public class FaqService {
     }
 
 
-//    public String findSimilarAnswer(String question, double threshold) {
-//        log.info("유사도 검색 요청 - query='{}'", question);
-//        SearchRequest request = SearchRequest.builder()
-//                .query(question)
-//                .topK(10)
-//                .build();
-//
-//        List<Document> results = vectorStore.similaritySearch(request);
-//        log.info("검색 완료 - 결과 수={}", results.size());
-//
-//        // FAQ ID 기준으로 최대 1개 청크만 사용
-//        Map<Object, Document> faqMap = results.stream()
-//                .filter(doc -> doc.getScore() != null && doc.getScore() > threshold)
-//                .collect(Collectors.toMap(
-//                        doc -> doc.getMetadata().get("faqId"),
-//                        doc -> doc,
-//                        (d1, d2) -> d1
-//                ));
-//
-//        if (faqMap.isEmpty()) return "관련된 답변을 찾을 수 없습니다.";
-//
-//        String answer = faqMap.values().stream()
-//                .map(Document::getText)
-//                .distinct()
-//                .collect(Collectors.joining(" "));
-//
-//        log.info("최종 반환 문장:\n{}", answer.substring(0, Math.min(200, answer.length())) + "...");
-//        return answer;
-//    }
-
-
     public void addFaqToVectorStore(Faq faq) {
-        Document doc = new Document(faq.getAnswer(), Map.of("faqId", faq.getId()));
+        String ragText = buildRagFormat(faq.getQuestion(), faq.getAnswer());
+        Document doc = new Document(ragText, Map.of("faqId", faq.getId()));
         List<Document> chunks = textSplitter.split(doc);
         vectorStore.add(chunks);
 
         log.info("새 FAQ 벡터 추가 - faqId={}, 청크 수={}", faq.getId(), chunks.size());
     }
-/*
-    // FAQ 삭제용 메서드
-    public void removeFaqFromVectorStore(Long faqId) {
-        vectorStore.removeIf(doc -> faqId.equals(doc.getMetadata().get("faqId")));
-        log.info("FAQ 벡터 삭제 - faqId={}", faqId);
+
+    public String buildRagFormat(String question, String answer) {
+        return """
+        [제목]: %s
+        [질문]: %s
+        [답변]: %s
+        [핵심키워드]: %s
+        """.formatted(
+            question,
+            question,
+            answer,
+            extractKeywords(answer) // 키워드는 간단 자동 추출
+        );
     }
 
-    // 전체 벡터 재초기화 (주기적 사용 가능)
-    public void refreshVectorStore() {
-        vectorStore = SimpleVectorStore.builder(embeddingService.getEmbeddingModel()).build();
-        initStore();
-        log.info("벡터스토어 전체 재초기화 완료");
+    private String extractKeywords(String text) {
+        String prompt = """
+            다음 문장에서 핵심 키워드만 5~10개 추출해서 콤마로 구분해줘.
+            불필요한 조사/형용사/문장부호 제거.
+            명사/주제어/서비스 용어 중심으로.
+            문장:
+            """ + text;
+        String systemMessage = "너는 텍스트에서 핵심 키워드를 뽑아주는 도우미야. 설명 없이 키워드만 콤마로 구분해서 출력해.";
+        ChatResponse res = chatService.openAiChat(prompt, systemMessage, "gpt-4o-mini");
+        if (res == null || res.getResult() == null) return "";
+        return res.getResult().getOutput().getText().trim();
     }
-    */
 
 }
