@@ -5,6 +5,7 @@ import com.livo.project.lecture.domain.Attachment;
 import com.livo.project.lecture.domain.ChapterList;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
+import com.livo.project.lecture.repository.ReservationRepository;
 import com.livo.project.lecture.service.AttachmentService;
 import com.livo.project.lecture.service.ChapterListService;
 import com.livo.project.lecture.service.LectureService;
@@ -39,6 +40,7 @@ public class LectureContentController {
     private final ReviewService reviewService;
     private final ReservationService reservationService;
     private final ReportService reportService;
+    private final ReservationRepository reservationRepository; // 민영 추가 마지막!!
 
     // 강좌 상세 (강의 목록 + 리뷰 + 첨부파일 조회!!)
     @GetMapping("/content/{lectureId}")
@@ -47,6 +49,10 @@ public class LectureContentController {
                                  Model model) {
 
         Lecture lecture = lectureService.findById(lectureId).orElseThrow();
+
+        // 실시간 예약 인원 수 계산 (CONFIRMED + PAID): 민영 추가!
+        int activeCount = reservationRepository.countActiveReservations(lectureId);
+        lecture.setReservationCount(activeCount);
 
         //강의 목록
         List<ChapterList> chapters = chapterListService.getChaptersByLecture(lectureId);
