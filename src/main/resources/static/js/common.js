@@ -39,12 +39,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // === 푸터 스크롤 탑 버튼 === //
     const toTopBtn = document.getElementById("toTopBtn");
-    toTopBtn.addEventListener("click", () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
+    if (toTopBtn) {
+        toTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
-    });
+    }
+
 
     // ===  URL에 해시(#)가 있으면 자동으로 해당 탭 열기 === //
     const activateTabFromHash = () => {
@@ -69,6 +72,19 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(el => {
         el.addEventListener('shown.bs.tab', e => {
             history.replaceState(null, null, e.target.getAttribute('href'));
+        });
+    });
+
+    // 비밀번호 보기 토글
+    document.querySelectorAll(".toggle-password").forEach(button => {
+        button.addEventListener("click", () => {
+            const input = button.parentElement.querySelector(".pw-input");
+            const icon = button.querySelector("i");
+            const isPassword = input.getAttribute("type") === "password";
+
+            input.setAttribute("type", isPassword ? "text" : "password");
+            icon.classList.toggle("bi-eye");
+            icon.classList.toggle("bi-eye-slash");
         });
     });
 });
