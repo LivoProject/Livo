@@ -19,6 +19,12 @@ public interface LectureService {
     List<Lecture> findByCategoryId(int categoryId);
     List<Lecture> findAllByMainCategory(int mainCategoryId);
 
+    // 페이징 기반 카테고리 검색 추가
+    Page<Lecture> getLecturePageByCategory(int categoryId, Pageable pageable);
+
+    // 페이징 기반 상위 카테고리 검색 추가
+    Page<Lecture> getLecturePageByMainCategory(int mainCategoryId, Pageable pageable);
+
     // 페이지 + 키워드검색
     Page<Lecture> getLecturePage(Pageable pageable);
     Page<Lecture> searchLecturePage(String keyword, Pageable pageable);

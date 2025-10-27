@@ -5,10 +5,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <link rel="stylesheet" href="/css/main.css" />
 
-  <!-- main.css 스타일 적용용 wrapper -->
-  <main id="main">
-
-  <%-- 민영페이지 시작 강좌 목록 --%>
+<main id="main">
   <section id="sub" class="container mt-4">
     <h3>강좌 검색</h3>
 
@@ -52,20 +49,19 @@
             <c:when test="${not empty lectures}">
               <c:forEach var="lecture" items="${lectures}">
                 <a href="/lecture/content/${lecture.lectureId}" class="card popular-card">
-
-            <!-- 썸네일 -->
-            <div class="card-thumb" style="height: 200px; border-radius: 12px 12px 0 0; overflow: hidden;">
-                <img src="${lecture.thumbnailUrl}"
-                     onerror="this.src='/img/common/no-image.png';"
-                     alt="lecture thumbnail"
-                     class="img-fluid rounded shadow-sm border"
-                     style="max-height: 280px; object-fit: cover;">
-            </div>
+                  <!-- 썸네일 -->
+                  <div class="card-thumb" style="height: 200px; border-radius: 12px 12px 0 0; overflow: hidden;">
+                    <img src="${lecture.thumbnailUrl}"
+                         onerror="this.src='/img/common/no-image.png';"
+                         alt="lecture thumbnail"
+                         class="img-fluid rounded shadow-sm border"
+                         style="max-height: 280px; object-fit: cover;">
+                  </div>
 
                   <%-- 강좌정보 --%>
                   <div class="card-body">
                     <h6>${lecture.title}</h6>
-                    <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/></p>
+                    <p>${lecture.tutorName} ∣ <fmt:formatNumber value="${lecture.price}" type="number"/></p>
                     <div class="card-review">
                       <div>
                         <span>⭐ <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" /></span>
@@ -88,12 +84,11 @@
               </div>
             </c:otherwise>
           </c:choose>
-
         </div>
       </div>
     </div>
 
-    <%-- 페이지네이션 --%>
+    <%-- ✅ 서버 기본 페이지네이션 + JS가 이후 덮어쓰기 가능 --%>
     <nav aria-label="Page navigation">
       <ul class="pagination justify-content-center mt-4">
         <c:if test="${!lecturePage.first}">
@@ -102,7 +97,6 @@
           </li>
         </c:if>
 
-        <%-- totalPages가 0일 때는 forEach 실행 안 함 --%>
         <c:if test="${lecturePage.totalPages > 0}">
           <c:forEach var="i" begin="0" end="${lecturePage.totalPages - 1}">
             <li class="page-item ${lecturePage.number == i ? 'active' : ''}">
@@ -118,9 +112,10 @@
         </c:if>
       </ul>
     </nav>
+
   </section>
 
   <script src="/js/lectureList.js"></script>
-  </main>
+</main>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

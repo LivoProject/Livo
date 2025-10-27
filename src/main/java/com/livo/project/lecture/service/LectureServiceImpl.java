@@ -1,6 +1,5 @@
 package com.livo.project.lecture.service;
 
-import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.repository.LectureRepository;
 import com.livo.project.lecture.repository.CategoryRepository;
@@ -38,7 +37,20 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public List<Lecture> findAllByMainCategory(int mainCategoryId) {
-        return lectureRepository.findAllByMainCategory(mainCategoryId);
+        // 리스트 버전 (다른 곳에서 필요할 수도 있음)
+        return lectureRepository.findAllByMainCategory(mainCategoryId, Pageable.unpaged()).getContent();
+    }
+
+    // ✅ 페이징 기반 하위 카테고리 강좌 조회
+    @Override
+    public Page<Lecture> getLecturePageByCategory(int categoryId, Pageable pageable) {
+        return lectureRepository.findByCategory_CategoryId(categoryId, pageable);
+    }
+
+    // ✅ 페이징 기반 상위 카테고리(mainCategory) 조회
+    @Override
+    public Page<Lecture> getLecturePageByMainCategory(int mainCategoryId, Pageable pageable) {
+        return lectureRepository.findAllByMainCategory(mainCategoryId, pageable);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class ReviewDto {
         return new ReviewDto(
                 review.getReviewUId(),
                 review.getReservation().getLecture().getLectureId(),
-                review.getReservation().getUser().getName(),
+                review.getReservation().getUser().getNickname(),
                 review.getReservation().getUser().getEmail(),
                 review.getReviewStar(),
                 review.getReviewContent(),
