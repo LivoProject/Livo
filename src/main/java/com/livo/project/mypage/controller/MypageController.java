@@ -9,6 +9,7 @@ import com.livo.project.mypage.domain.dto.MypageProgressDto;
 import com.livo.project.mypage.domain.dto.MypageReservationDto;
 import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.service.MypageService;
+import com.livo.project.payment.domain.Payment;
 import com.livo.project.review.domain.Review;
 import com.livo.project.utils.AuthUtil;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,8 @@ public class MypageController {
         model.addAttribute("weeklyStudyHours", String.format("%.0f", weeklyStudyHours));
         model.addAttribute("inProgressLectureCount", inProgressLectureCount);
 
+        model.addAttribute("menu", "home");
+
         return "mypage/index";
     }
 
@@ -82,6 +85,9 @@ public class MypageController {
 
         MypageDto mypageDto = mypageService.getUserData(email, provider);
         model.addAttribute("mypage", mypageDto);
+
+        model.addAttribute("menu", "info");
+
         return "mypage/info";
     }
 
@@ -114,6 +120,8 @@ public class MypageController {
         Page<MypageReservationDto> reservations = mypageService.getMyReservations(email, provider, pageable);
         model.addAttribute("reservations", reservations.getContent());
         model.addAttribute("page", reservations);
+
+        model.addAttribute("menu", "lecture");
 
         return "mypage/lecture";
     }
@@ -156,6 +164,9 @@ public class MypageController {
         Page<MypageLikedLectureDto> likedLectures = mypageService.getLikedLecturesWithProgress(email, provider, pageable);
         model.addAttribute("likedLectures", likedLectures.getContent());
         model.addAttribute("page", likedLectures);
+
+        model.addAttribute("menu", "like");
+
         return "mypage/like";
     }
 
@@ -197,6 +208,9 @@ public class MypageController {
         Page<Review> reviews = mypageService.getMyReviews(email, pageable);
         model.addAttribute("reviews", reviews.getContent());
         model.addAttribute("page", reviews);
+
+        model.addAttribute("menu", "review");
+
         return "mypage/review";
     }
 
@@ -247,7 +261,20 @@ public class MypageController {
 
     // 결제 내역
     @GetMapping("/payment")
-    public String payment() {
+    public String payment(Model model, Pageable pageable) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
+
+        if (email == null) return "redirect:/auth/login";
+
+        Page<Payment> payments = mypageService.getMyPayments(email, pageable);
+        model.addAttribute("payments", payments.getContent());
+        model.addAttribute("page", payments);
+
+
+        model.addAttribute("menu", "payment");
+
         return "mypage/payment";
     }
 }

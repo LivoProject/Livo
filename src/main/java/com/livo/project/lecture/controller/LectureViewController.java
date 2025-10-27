@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("lecture")
+@RequestMapping("/lecture")
 @RequiredArgsConstructor
 public class LectureViewController {
     private final LectureAdminService lectureAdminService;

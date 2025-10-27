@@ -14,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/faq")
@@ -63,5 +65,20 @@ public class AdminFaqController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("삭제 실패: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/edit")
+    public String showEditForm(Model model, @RequestParam("id") int id){
+        Faq faq = faqAdminService.editFaq(id);
+        model.addAttribute("faq",faq);
+        return "admin/faqEdit";
+    }
+
+    @PostMapping("/edit")
+    public String editFaq(@RequestParam("id") int id,
+                                     @RequestParam String question,
+                                     @RequestParam String answer){
+        faqAdminService.updateFaq(id, question, answer);
+        return "redirect:/admin/faq";
     }
 }

@@ -1,6 +1,7 @@
 package com.livo.project.lecture.controller;
 
 import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.lecture.repository.ReservationRepository;
 import com.livo.project.lecture.service.LectureService;
 import com.livo.project.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class LectureListController {
 
     private final LectureService lectureService;
     private final ReviewService reviewService;
+    private final ReservationRepository reservationRepository; // 민영 추가 마지막!!
 
     // 전체 강좌 리스트 (페이징 포함)
     @GetMapping("/list")
@@ -41,6 +43,11 @@ public class LectureListController {
         lecturePage.getContent().forEach(lecture -> {
             Double avgStar = reviewService.getAverageStarByLecture(lecture.getLectureId());
             int reviewCount = reviewService.getReviewsByLectureId(lecture.getLectureId()).size();
+
+            // 민영 reservationCount 세팅
+            int activeCount = reservationRepository.countActiveReservations(lecture.getLectureId());
+            lecture.setReservationCount(activeCount);
+
             avgStarMap.put(lecture.getLectureId(), avgStar != null ? avgStar : 0.0);
             reviewCountMap.put(lecture.getLectureId(), reviewCount);
         });
@@ -77,6 +84,11 @@ public class LectureListController {
         lecturePage.getContent().forEach(lecture -> {
             Double avgStar = reviewService.getAverageStarByLecture(lecture.getLectureId());
             int reviewCount = reviewService.getReviewsByLectureId(lecture.getLectureId()).size();
+
+            // 검색 결과 페이지에도 reservationCount 세팅
+            int activeCount = reservationRepository.countActiveReservations(lecture.getLectureId());
+            lecture.setReservationCount(activeCount);
+
             avgStarMap.put(lecture.getLectureId(), avgStar != null ? avgStar : 0.0);
             reviewCountMap.put(lecture.getLectureId(), reviewCount);
         });

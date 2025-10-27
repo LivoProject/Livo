@@ -14,6 +14,7 @@ import com.livo.project.mypage.repository.*;
 import com.livo.project.mypage.repository.projection.LikedLectureProjection;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
+import com.livo.project.payment.domain.Payment;
 import com.livo.project.review.domain.Review;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,7 @@ public class MypageService {
 
 
     private final MypageProgressRepository mypageProgressRepository;
+    private final MypagePaymentRepository mypagePaymentRepository;
 
 
     /**
@@ -97,7 +99,6 @@ public class MypageService {
                     .email(email)
                     .build();
         }
-
         // 3) OAuth2 (Kakao/Naver)
         if (principal instanceof DefaultOAuth2User ou) {
             var attrs = ou.getAttributes();
@@ -409,6 +410,12 @@ public class MypageService {
 
         Double totalSeconds = mypageProgressRepository.sumWeeklyStudySeconds(email, startOfWeek, endOfWeek);
         return totalSeconds != null ? totalSeconds / 3600.0 : 0.0; // 초 → 시간
+    }
+
+    // 내 결제 내역
+    @Transactional
+    public Page<Payment> getMyPayments(String email, Pageable pageable) {
+        return mypagePaymentRepository.findAllByEmail(email, pageable);
     }
 }
 

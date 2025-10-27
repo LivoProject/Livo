@@ -20,4 +20,8 @@ public class NoticeService {
         return noticeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 공지사항 입니다."));
     }
+
+    public List<Notice> getRecentNotices() {
+        return noticeRepository.findTop5ByOrderByCreatedAtDesc();
+    }
 }

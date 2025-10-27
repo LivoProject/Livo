@@ -39,21 +39,24 @@ document.addEventListener("DOMContentLoaded", () => {
         submitBtn.disabled = !valid;
     }
 
-    // 이벤트 리스너 등록
-    pwInput.addEventListener("input", checkForm);
-    confirmInput.addEventListener("input", checkForm);
+    // 비밀번호 입력 감지
+    const pwInputs = document.querySelectorAll(".pw-input");
+    pwInputs.forEach(input => {
+        input.addEventListener("input", checkForm);
+    });
 
-    // 비밀번호 보기 토글 (모든 input마다 개별 작동)
-    document.querySelectorAll('.password-toggle').forEach(button => {
-        button.addEventListener('click', () => {
-            const input = button.previousElementSibling; // 바로 위 input 찾아서
-            if (input && input.type === 'password') {
-                input.type = 'text';
-                button.textContent = '숨기기';
-            } else if (input) {
-                input.type = 'password';
-                button.textContent = '보기';
-            }
+    // 비밀번호 보기 토글 (각 버튼마다 독립 작동)
+    document.querySelectorAll(".toggle-password").forEach(button => {
+        button.addEventListener("click", () => {
+            const input = button.parentElement.querySelector(".pw-input");
+            const icon = button.querySelector("i");
+            const isPassword = input.getAttribute("type") === "password";
+
+            input.setAttribute("type", isPassword ? "text" : "password");
+            icon.classList.toggle("bi-eye");
+            icon.classList.toggle("bi-eye-slash");
         });
     });
 });
+
+

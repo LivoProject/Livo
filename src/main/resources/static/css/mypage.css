@@ -7,18 +7,11 @@
     margin-top: 5rem;
 }
 
-/* 메인/사이드 영역 */
-#mypage .side-menu {
-    width: 25%;
-    padding: 1rem;
-    border-left: var(--border-black);
-    border-right: var(--border-black);
-    background: #f8f9fa;
-}
 
+/* 메인/사이드 영역 */
 #mypage .main-content {
     width: 75%;
-    padding: 1.5rem;
+    padding: 2rem 2.5rem;
 }
 
 /* 제목, 텍스트 기본 스타일 */
@@ -27,12 +20,12 @@
 }
 
 #mypage .main-content h6 {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-dark-gray);
 }
-
-#mypage span {
-    color: var(--color-main);
+#mypage .more-link {
+    font-size: 0.9rem;
+    color: var(--color-gray);
 }
 
 /* ===============================
@@ -42,24 +35,36 @@
     margin-bottom: 2rem;
 }
 
-#mypage .side-menu ul {
-    gap: 1rem;
-}
+/*#mypage .side-menu ul {*/
+/*    gap: 1rem;*/
+/*}*/
 
-#mypage .side-menu .nav-link {
-    color: var(--color-black);
-    transition: all 0.3s;
-}
+/*#mypage .side-menu .nav-link {*/
+/*    color: var(--color-black);*/
+/*    transition: all 0.3s;*/
+/*}*/
 
-#mypage .side-menu .nav-link:hover {
-    color: var(--color-main);
-}
+/*#mypage .side-menu .nav-link:hover {*/
+/*    color: var(--color-main);*/
+/*}*/
 
-#mypage .side-menu .nav-link.active {
-    background-color: var(--color-main);
-    color: var(--color-white);
-    border-radius: 0.3rem;
+/*#mypage .side-menu .nav-link.active {*/
+/*    background-color: var(--color-main);*/
+/*    color: var(--color-white);*/
+/*    border-radius: 0.3rem;*/
+/*}*/
+
+.side-menu {
+    width: 20%;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background: #fafbfc;
 }
+.side-menu .profile { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+.side-menu .nav { gap: 0.5rem; }
+.side-menu .nav-link { color: var(--color-dark-gray); border-radius: 8px; padding: 0.6rem 1rem; display: block; text-decoration: none; transition: 0.2s; }
+.side-menu .nav-link:hover { background: #f3f5f7; }
+.side-menu .nav-link.active { background: var(--color-light-hover); color: var(--color-main); font-weight: 600; }
 
 /* ===============================
    📘 상단 인사 영역
@@ -68,14 +73,15 @@
     display: flex;
     align-items: baseline;
     gap: 1rem;
-    margin-top: 2rem;
     margin-bottom: 1rem;
 }
 
 #mypage .welcome-box > div h3 {
     margin: 0;
 }
-
+#mypage .welcome-box span {
+    color: var(--color-main);
+}
 /* ===============================
    📘 공통 카드 스타일
 =============================== */
@@ -99,10 +105,9 @@
     padding: 1rem;
     border-radius: 0.5rem;
     transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.01);
 }
-#mypage .card-box:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
+
 
 #mypage .card-body h6,
 #mypage .card-body p {
@@ -114,6 +119,9 @@
     color: var(--color-main);
 }
 /* 카드 푸터 버튼 */
+#mypage .card-footer {
+    padding: 0.5rem;
+}
 #mypage .card-footer .button-wrap {
     display: flex;
     justify-content: space-between;
@@ -213,7 +221,7 @@
 /* large grid 형태 */
 #mypage .lecture-grid.large {
     display: grid;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 /* ===============================
@@ -224,15 +232,25 @@
     width: 100%;
 }
 #mypage .recent-lecture {
-    margin-top: 1rem;
     display: flex;
     align-items: center;
     gap: 1rem;
 }
-#mypage .text-wrap {
+#mypage .recent-lecture .text-wrap {
     display: flex;
     flex-direction: column;
+    gap: 0.3rem;
     align-content: center;
+}
+#mypage .recent-lecture .text-wrap a {
+    transition: 0.3s;
+}
+#mypage .recent-lecture .text-wrap a:hover {
+    color: var(--color-main);
+}
+#mypage .recent-lecture .text-wrap span {
+    font-size: 0.8rem;
+    color: var(--color-gray);
 }
 #mypage .play-icon {
     width: 40px;
@@ -242,6 +260,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: 0.3s
+}
+#mypage .play-icon:hover {
+    background-color: #eac341;
 }
 
 #mypage .play-icon i {
@@ -258,13 +280,18 @@
 #mypage .progress-bar {
     background-color: var(--color-point);
 }
+#mypage .summary-card .stat-item small {
+    font-size: 0.8rem;
+    color: var(--color-gray) !important;
+}
 
 /* ===============================
    📘 수강평 카드
 =============================== */
 .review-list {
-    display: flex;
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
 }
 
 .review-card {
@@ -273,7 +300,7 @@
     border: 1px solid #e4e4e4;
     border-radius: 0.6rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    padding: 1.2rem 1.5rem;
+    padding: 1.2rem;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
     cursor: pointer;
 }
@@ -303,7 +330,6 @@
 }
 
 .review-body {
-    background: var(--color-light-gray);
     border-radius: 0.4rem;
     font-size: 0.95rem;
     color: #333;
@@ -318,7 +344,6 @@
     -webkit-box-orient: vertical;
     word-break: break-all;
     margin: 0;
-    background: none;
 }
 
 .review-footer {
@@ -344,7 +369,107 @@
     visibility: visible;
     opacity: 1;
 }
+/* ===============================
+   📘 결제 내역
+=============================== */
+.review-list.large {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+}
+.order-date {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+}
 
+.payment-box {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+.payment-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 6px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* 상태별 색상 */
+.status-PENDING { background: #6c757d; }   /* 회색 */
+.status-SUCCESS { background: #17b4c7; }   /* LiVO 메인컬러 */
+.status-CANCEL  { background: #ff9800; }   /* 주황 */
+.status-FAIL    { background: #dc3545; }   /* 빨강 */
+.status-REFUND  { background: #198754; }   /* 초록 */
+
+.order-info {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.lecture-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-black);
+}
+
+.lecture-sub {
+    font-size: 0.9rem;
+    color: var(--color-dark-gray);
+}
+
+.payment-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+}
+
+.amount {
+    font-weight: 700;
+    color: #0d1b2a;
+    font-size: 1.05rem;
+}
+/* ===============================
+   📘 공지사항 영역
+=============================== */
+#mypage .notice-wrap h6 {
+    margin-bottom: 0;
+}
+#mypage .notice-wrap ul{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#mypage .notice-wrap a {
+    display: flex;
+    justify-content: space-between;
+    transition: 0.3s;
+}
+#mypage .notice-wrap a > * {
+     transition: 0.3s;
+ }
+#mypage .notice-wrap a:hover > * {
+    color: var(--color-main);
+}
 /* ===============================
    📘 반응형
 =============================== */
