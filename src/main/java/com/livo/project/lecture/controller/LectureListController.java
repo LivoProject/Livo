@@ -1,6 +1,8 @@
 package com.livo.project.lecture.controller;
 
+import com.livo.project.lecture.domain.Category;
 import com.livo.project.lecture.domain.Lecture;
+import com.livo.project.lecture.repository.CategoryRepository;
 import com.livo.project.lecture.repository.ReservationRepository;
 import com.livo.project.lecture.service.LectureService;
 import com.livo.project.review.service.ReviewService;
@@ -25,6 +27,7 @@ public class LectureListController {
     private final LectureService lectureService;
     private final ReviewService reviewService;
     private final ReservationRepository reservationRepository; // 민영 추가 마지막!!
+    private final CategoryRepository categoryRepository;
 
     // 전체 강좌 리스트 (페이징 포함)
     @GetMapping("/list")
@@ -102,25 +105,54 @@ public class LectureListController {
         return "lecture/list";
     }
 
-    // 비동기 필터링 (주제/세부분류)
+    // ✅ 비동기 필터링 (주제/세부분류) - 페이징 지원 버전
     @GetMapping("/filter")
     @ResponseBody
-    public ResponseEntity<List<Lecture>> filter(
+    public ResponseEntity<Map<String, Object>> filter(
             @RequestParam(value = "mainCategory", required = false) Integer mainCategory,
-            @RequestParam(value = "subCategory", required = false) Integer subCategory) {
+            @RequestParam(value = "subCategory", required = false) String subCategory,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
 
-        List<Lecture> results;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Lecture> lecturePage;
 
-        if (subCategory != null) {
-            // 세부 카테고리 클릭 시
-            results = lectureService.findByCategoryId(subCategory);
+        if (subCategory != null && !subCategory.isEmpty()) {
+            Category category = categoryRepository.findByCategoryName(subCategory);
+            lecturePage = (category != null)
+                    ? lectureService.getLecturePageByCategory(category.getCategoryId(), pageable)
+                    : Page.empty();
         } else if (mainCategory != null) {
-            // 상위 카테고리 클릭 시, 하위 카테고리 포함 조회
-            results = lectureService.findAllByMainCategory(mainCategory);
+            lecturePage = lectureService.getLecturePageByMainCategory(mainCategory, pageable);
         } else {
-            results = lectureService.findAll();
+            lecturePage = lectureService.getLecturePage(pageable);
         }
 
-        return ResponseEntity.ok(results);
+        // ✅ 프론트에서 JSP와 동일한 데이터 구성
+        List<Map<String, Object>> lectureData = lecturePage.getContent().stream().map(lecture -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("lectureId", lecture.getLectureId());
+            map.put("title", lecture.getTitle());
+            map.put("tutorName", lecture.getTutorName());
+            map.put("price", lecture.getPrice());
+            map.put("thumbnailUrl", lecture.getThumbnailUrl());
+
+            Double avgStar = reviewService.getAverageStarByLecture(lecture.getLectureId());
+            int reviewCount = reviewService.getReviewsByLectureId(lecture.getLectureId()).size();
+            int activeCount = reservationRepository.countActiveReservations(lecture.getLectureId());
+
+            map.put("avgStar", avgStar != null ? avgStar : 0.0);
+            map.put("reviewCount", reviewCount);
+            map.put("reservationCount", activeCount);
+            return map;
+        }).toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("lectures", lectureData);
+        response.put("totalPages", lecturePage.getTotalPages());
+        response.put("currentPage", lecturePage.getNumber());
+
+        return ResponseEntity.ok(response);
     }
 }
+

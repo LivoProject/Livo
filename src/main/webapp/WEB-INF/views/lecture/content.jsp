@@ -114,7 +114,6 @@
         <li class="nav-item"><a class="nav-link" href="#team">강좌운영진</a></li>
         <li class="nav-item"><a class="nav-link" href="#list">강의목록</a></li>
         <li class="nav-item"><a class="nav-link" href="#review">수강후기</a></li>
-        <li class="nav-item"><a class="nav-link" href="#material">학습자료실</a></li>
     </ul>
 
     <!-- 강좌소개 -->
@@ -330,48 +329,6 @@
                 </button>
             </div>
         </c:if>
-
-
-    <!-- 학습자료실 -->
-    <div id="material" class="mt-5">
-        <h3>학습 자료실</h3>
-        <div class="container py-4">
-            <div class="p-5 mb-4 bg-body-tertiary rounded-3 shadow-sm">
-                <div class="container-fluid">
-                    <c:choose>
-                        <c:when test="${not empty attachments}">
-                            <ul class="list-group">
-                                <c:forEach var="file" items="${attachments}">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <strong>${file.fileName}</strong>
-                                        </div>
-
-                                        <!-- ✅ 수강 여부에 따라 버튼 다르게 표시 -->
-                                        <c:choose>
-                                            <c:when test="${isEnrolled}">
-                                                <a href="${file.fileUrl}" class="btn btn-outline-primary btn-sm" download>
-                                                    다운로드
-                                                </a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <button class="btn btn-secondary btn-sm" disabled>
-                                                    수강신청 필요
-                                                </button>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </li>
-                                </c:forEach>
-                            </ul>
-                        </c:when>
-                        <c:otherwise>
-                            <p class="text-muted text-center mt-3">등록된 학습 자료가 없습니다.</p>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- 🚨 리뷰 신고 모달 -->
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">

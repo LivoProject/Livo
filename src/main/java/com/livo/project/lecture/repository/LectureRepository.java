@@ -22,10 +22,11 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
 
     // 카테고리별 검색
     List<Lecture> findByCategory_CategoryId(int categoryId);
+    Page<Lecture> findByCategory_CategoryId(int categoryId, Pageable pageable);
 
-    // 상위 카테고리(mainCategory)에 속한 하위 카테고리 강좌까지 조회
+    // 상위 카테고리(mainCategory)에 속한 하위 카테고리 강좌까지 포함 조회 (페이징 버전)
     @Query("SELECT l FROM LectureEntity l WHERE l.category.categoryId = :mainCategoryId OR l.category.parent.categoryId = :mainCategoryId")
-    List<Lecture> findAllByMainCategory(@Param("mainCategoryId") int mainCategoryId);
+    Page<Lecture> findAllByMainCategory(@Param("mainCategoryId") int mainCategoryId, Pageable pageable);
 
     Optional<Lecture> findByLectureId(int lectureId);
 }
