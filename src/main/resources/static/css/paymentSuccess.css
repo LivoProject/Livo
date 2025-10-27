@@ -1,0 +1,32 @@
+.success-container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.success-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.summary-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 25px;
+    margin: 0 auto 25px;
+    width: 100%;
+    max-width: 450px;
+    background: #fafafa;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.btn-group a {
+    padding: 10px 20px;
+    font-size: 15px;
+}

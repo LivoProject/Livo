@@ -15,7 +15,7 @@ import com.livo.project.mypage.repository.projection.LikedLectureProjection;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
 import com.livo.project.review.domain.Review;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -318,17 +319,20 @@ public class MypageService {
 
 
     // 내 강좌 예약 취소
-    @CacheEvict(cacheNames = { "chartTopLectures", "chartMonthlyRevenue" }, allEntries = true)
     @Transactional
+    @CacheEvict(cacheNames = { "chartTopLectures", "chartMonthlyRevenue" }, allEntries = true)
     public void removeReservationLecture(Integer lectureId, String email) {
         int changed = mypageReservationRepository.cancelByLectureIdAndEmail(lectureId, email);
+        System.out.println("변경된 행 수: " + changed);
+        if (changed == 0) {
+            throw new RuntimeException("해당 예약을 찾을 수 없거나 이미 취소되었습니다.");
+        }
     }
 
 
-
     // 내 리뷰 조회
-    public Page<Review> getMyReviews(String email, String provider, Pageable pageable) {
-        return mypageReviewRepository.findAllByEmail(email, provider, pageable);
+    public Page<Review> getMyReviews(String email, Pageable pageable) {
+        return mypageReviewRepository.findAllByEmail(email, pageable);
     }
 
 
@@ -366,4 +370,45 @@ public class MypageService {
                 progress.getLastWatchedTime()
         )).orElse(null);
     }
+
+    // 최근 학습한 강의
+    @Transactional(readOnly = true)
+    public LectureProgress getRecentLecture(String email) {
+        List<LectureProgress> list = mypageProgressRepository.findTopWithLectureByEmail(email);
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    // 학습 목표
+    public int getTotalStudyHours(String email) {
+        Double totalSeconds = mypageProgressRepository.sumTotalWatchedTime(email);
+        if (totalSeconds == null) return 0;  // ✅ null-safe 처리
+        return (int) (totalSeconds / 3600);
+    }
+
+    public int getCompletedLectureCount(String email) {
+        Integer count = mypageProgressRepository.countByEmailAndProgressPercentGreaterThanEqual(email, 100.0);
+        return (count != null) ? count : 0;
+    }
+
+    public int getStudyDaysThisMonth(String email) {
+        return mypageProgressRepository.countDistinctDaysThisMonth(email);
+    }
+
+    // 진행중인 강의
+    @Transactional(readOnly = true)
+    public long getInProgressLectureCount(String email) {
+        return mypageProgressRepository.countInProgressByEmail(email);
+    }
+
+    // 이번주 진행 시간
+    @Transactional(readOnly = true)
+    public double getWeeklyStudyHours(String email) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfWeek = now.with(DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
+        LocalDateTime endOfWeek = now.with(DayOfWeek.SUNDAY).toLocalDate().atTime(23, 59, 59);
+
+        Double totalSeconds = mypageProgressRepository.sumWeeklyStudySeconds(email, startOfWeek, endOfWeek);
+        return totalSeconds != null ? totalSeconds / 3600.0 : 0.0; // 초 → 시간
+    }
 }
+

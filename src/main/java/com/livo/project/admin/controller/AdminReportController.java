@@ -49,5 +49,11 @@ public class AdminReportController {
         }
     }
 
+//    @PostMapping("/update-status/${reportId}")
+//    @ResponseBody
+//    public ResponseEntity<?>  updateReportStatus(@PathVariable("reportId") int reportId){
+//
+//    }
+
 
 }

@@ -34,7 +34,7 @@ public class Payment {
 
     private LocalDateTime requestedAt;
     private LocalDateTime approvedAt;
-
+    private LocalDateTime canceledAt;
     /** 관계 매핑 **/
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)

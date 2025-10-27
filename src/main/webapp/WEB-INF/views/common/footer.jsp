@@ -37,7 +37,17 @@
 <div id="chat-panel" class="chat-panel" hidden>
     <!-- 원하는 내용 삽입 -->
     <div class="chat-panel-header">LiVO 챗봇</div>
-    <div class="chat-panel-body">무엇을 도와드릴까요?</div>
+    <div id="chat-panel-body" class="chat-panel-body">
+         <c:forEach var="msg" items="${chatHistory}">
+            <div class="message ${msg.role == 'user' ? 'user-message' : 'ai-message'}">
+                ${msg.content}
+            </div>
+        </c:forEach>
+    </div>
+    <form id="chatForm" class="chat-panel-input">
+        <input id="chatInput" type="text" placeholder="질문을 입력하세요" required/>
+        <button type="submit">전송</button>
+    </form>
 </div>
 
 <footer>
@@ -64,8 +74,6 @@
     --%>
 
 </footer>
-
-</body>
-
+<script src="/js/faq.js"></script>
 </body>
 </html>

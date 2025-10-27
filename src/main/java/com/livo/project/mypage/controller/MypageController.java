@@ -7,8 +7,10 @@ import com.livo.project.mypage.domain.dto.MypageDto;
 import com.livo.project.mypage.domain.dto.MypageLikedLectureDto;
 import com.livo.project.mypage.domain.dto.MypageProgressDto;
 import com.livo.project.mypage.domain.dto.MypageReservationDto;
+import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.service.MypageService;
 import com.livo.project.review.domain.Review;
+import com.livo.project.utils.AuthUtil;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -41,74 +43,51 @@ public class MypageController {
 
     private final MypageService mypageService;
 
-
     // 마이페이지 메인
     @GetMapping
-    public String home(Authentication authentication, Model model) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/auth/login";
-        }
+    public String home(Model model) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
 
-        Object principal = authentication.getPrincipal();
-
-        String email = null;
-        String provider = null;
-
-        if (principal instanceof AppUserDetails appUser) {
-            email = appUser.getEmail();
-            provider = appUser.getProvider();
-        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-
-            provider = (String) oAuthUser.getAttribute("provider");
-            email = (String) oAuthUser.getAttribute("email");
-        }
-
-        if (email == null) {
-            return "redirect:/auth/login";
-        }
+        if (email == null) return "redirect:/auth/login";
 
         MypageDto mypageDto = mypageService.getUserData(email, provider);
+        LectureProgress recentProgress = mypageService.getRecentLecture(email);
+        long inProgressLectureCount = mypageService.getInProgressLectureCount(email);
+        double weeklyStudyHours = mypageService.getWeeklyStudyHours(email);
 
         model.addAttribute("mypage", mypageDto);
         model.addAttribute("notices", mypageDto.getNotices());
         model.addAttribute("recommendedLectures", mypageDto.getRecommendedLectures());
         model.addAttribute("top2LikedLectures", mypageService.getTop2LikedLectures(email, provider));
+        model.addAttribute("recentLecture", recentProgress);
+        model.addAttribute("totalStudyHours", mypageService.getTotalStudyHours(email));
+        model.addAttribute("completedLectures", mypageService.getCompletedLectureCount(email));
+        model.addAttribute("studyDays", mypageService.getStudyDaysThisMonth(email));
+        model.addAttribute("weeklyStudyHours", String.format("%.0f", weeklyStudyHours));
+        model.addAttribute("inProgressLectureCount", inProgressLectureCount);
 
         return "mypage/index";
     }
 
     // 내 정보 수정
     @GetMapping("/info")
-    public String info(Authentication authentication, Model model) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/auth/login";
-        }
+    public String info(Model model) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
 
-        Object principal = authentication.getPrincipal();
-        String email = null;
-        String provider = null;
-
-        if (principal instanceof AppUserDetails appUser) {
-            email = appUser.getEmail();
-            provider = appUser.getProvider();
-        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-            email = (String) oAuthUser.getAttribute("email");
-            provider = (String) oAuthUser.getAttribute("provider");
-        }
-
-        if (email == null) {
-            return "redirect:/auth/login";
-        }
+        if (email == null) return "redirect:/auth/login";
 
         MypageDto mypageDto = mypageService.getUserData(email, provider);
         model.addAttribute("mypage", mypageDto);
-
         return "mypage/info";
     }
 
     @ResponseBody
     @PostMapping("/update")
-    public Map<String, Object> updateUser(MypageDto dto, RedirectAttributes redirectAttributes) {
+    public Map<String, Object> updateUser(MypageDto dto) {
         Map<String, Object> result = new HashMap<>();
         try {
             mypageService.updateUserProfile(dto);
@@ -124,66 +103,32 @@ public class MypageController {
 
     // 내 강좌 페이지 이동
     @GetMapping("/lecture")
-    public String lecture(Authentication authentication,
-                          @PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+    public String lecture(@PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                           Model model) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/auth/login";
-        }
-
-        Object principal = authentication.getPrincipal();
-        String email = null;
-        String provider = null;
-
-        if (principal instanceof AppUserDetails appUser) {
-            email = appUser.getEmail();
-            provider = appUser.getProvider();
-        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-            email = (String) oAuthUser.getAttribute("email");
-            provider = (String) oAuthUser.getAttribute("provider");
-        }
-
-        if (email == null) {
-            return "redirect:/auth/login";
-        }
-
+        if (email == null) return "redirect:/auth/login";
 
         Page<MypageReservationDto> reservations = mypageService.getMyReservations(email, provider, pageable);
-
-        model.addAttribute("lectures", reservations.getContent());
         model.addAttribute("reservations", reservations.getContent());
         model.addAttribute("page", reservations);
 
         return "mypage/lecture";
     }
 
-
     //내 강좌 예약 취소
     @ResponseBody
     @PostMapping("/lecture/delete")
-    public Map<String, Object> deleteLecture(Authentication authentication,
-                                             @RequestParam Integer lectureId) {
+    public Map<String, Object> deleteLecture(@RequestParam Integer lectureId) {
         Map<String, Object> response = new HashMap<>();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            response.put("success", false);
-            response.put("message", "로그인이 필요합니다.");
-            return response;
-        }
-
-        Object principal = authentication.getPrincipal();
-        String email = null;
-
-        if (principal instanceof AppUserDetails appUser) {
-            email = appUser.getEmail();
-        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-            email = (String) oAuthUser.getAttribute("email");
-        }
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
 
         if (email == null) {
             response.put("success", false);
-            response.put("message", "이메일 정보를 찾을 수 없습니다.");
+            response.put("message", "로그인이 필요합니다.");
             return response;
         }
 
@@ -201,29 +146,12 @@ public class MypageController {
 
     // 즐겨찾기 페이지 이동
     @GetMapping("/like")
-    public String like(Authentication authentication,
-                       @PageableDefault(size = 6) Pageable pageable,
-                       Model model) {
+    public String like(@PageableDefault(size = 6) Pageable pageable, Model model) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/auth/login";
-        }
-
-        Object principal = authentication.getPrincipal();
-        String email = null;
-        String provider = null;
-
-        if (principal instanceof AppUserDetails appUser) {
-            email = appUser.getEmail();
-            provider = appUser.getProvider();
-        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-            email = (String) oAuthUser.getAttribute("email");
-            provider = (String) oAuthUser.getAttribute("provider");
-        }
-
-        if (email == null) {
-            return "redirect:/auth/login";
-        }
+        if (email == null) return "redirect:/auth/login";
 
         Page<MypageLikedLectureDto> likedLectures = mypageService.getLikedLecturesWithProgress(email, provider, pageable);
         model.addAttribute("likedLectures", likedLectures.getContent());
@@ -231,35 +159,17 @@ public class MypageController {
         return "mypage/like";
     }
 
-    // 좋아요 취소
     @PostMapping("/like/delete")
     @ResponseBody
-    public Map<String, Object> deleteLike(Authentication authentication,
-                                          @RequestParam Integer lectureId) {
-
+    public Map<String, Object> deleteLike(@RequestParam Integer lectureId) {
         Map<String, Object> response = new HashMap<>();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            response.put("success", false);
-            response.put("message", "로그인이 필요합니다.");
-            return response;
-        }
-
-        Object principal = authentication.getPrincipal();
-        String email = null;
-        String provider = null;
-
-        if (principal instanceof AppUserDetails appUser) {
-            email = appUser.getEmail();
-            provider = appUser.getProvider();
-        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-            email = (String) oAuthUser.getAttribute("email");
-            provider = (String) oAuthUser.getAttribute("provider"); // OAuth2User에 provider 속성 매핑 필요
-        }
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
 
         if (email == null) {
             response.put("success", false);
-            response.put("message", "이메일 정보를 찾을 수 없습니다.");
+            response.put("message", "로그인이 필요합니다.");
             return response;
         }
 
@@ -276,40 +186,19 @@ public class MypageController {
 
     // 리뷰 페이지
     @GetMapping("/review")
-    public String review(@RequestParam(required = false) Integer reviewId,
-                         Authentication authentication,
-                         @PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC)
-                         Pageable pageable,
+    public String review(@PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                          Model model) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/auth/login";
-        }
+        if (email == null) return "redirect:/auth/login";
 
-        Object principal = authentication.getPrincipal();
-        String email = null;
-        String provider = null;
-
-        if (principal instanceof AppUserDetails appUser) {
-            email = appUser.getEmail();
-            provider = appUser.getProvider();
-        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-            email = (String) oAuthUser.getAttribute("email");
-            provider = (String) oAuthUser.getAttribute("provider");
-        }
-
-        if (email == null) {
-            return "redirect:/auth/login";
-        }
-
-        Page<Review> reviews = mypageService.getMyReviews(email, provider, pageable);
-
+        Page<Review> reviews = mypageService.getMyReviews(email, pageable);
         model.addAttribute("reviews", reviews.getContent());
         model.addAttribute("page", reviews);
-
         return "mypage/review";
     }
-
 
     // 비밀번호 변경 페이지 이동
     @GetMapping("/password")
@@ -319,11 +208,10 @@ public class MypageController {
 
     // 비밀번호 변경 처리
     @PostMapping("/password")
-    public String updatePassword(
-            @RequestParam String currentPassword,
-            @RequestParam String newPassword,
-            @RequestParam String confirmPassword,
-            Model model) {
+    public String updatePassword(@RequestParam String currentPassword,
+                                 @RequestParam String newPassword,
+                                 @RequestParam String confirmPassword,
+                                 Model model) {
 
         if (!newPassword.equals(confirmPassword)) {
             model.addAttribute("error", "새 비밀번호가 일치하지 않습니다.");
@@ -333,43 +221,33 @@ public class MypageController {
         try {
             mypageService.updateUserPassword(currentPassword, newPassword);
             model.addAttribute("success", "비밀번호가 성공적으로 변경되었습니다.");
-            return "mypage/password";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
-            return "mypage/password";
         }
+        return "mypage/password";
     }
+
 
     // 현재 진행률 저장
     @PostMapping("/save")
     @ResponseBody
-    public ResponseEntity<String> saveProgress(Authentication authentication,
-                                               @RequestBody MypageProgressDto dto) {
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
-        }
-
-        // 이메일 / provider 간단히 구분
-        String email = null;
-        String provider = "local";
-
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof AppUserDetails appUser) {
-            email = appUser.getEmail();
-            provider = appUser.getProvider();
-        } else if (principal instanceof org.springframework.security.oauth2.core.user.DefaultOAuth2User oAuthUser) {
-            email = (String) oAuthUser.getAttribute("email");
-            Object p = oAuthUser.getAttribute("provider");
-            if (p != null) provider = p.toString();
-        }
+    public ResponseEntity<String> saveProgress(@RequestBody MypageProgressDto dto) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
 
         if (email == null) {
-            return ResponseEntity.badRequest().body("이메일을 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
         }
 
         mypageService.saveProgress(email, provider, dto);
         return ResponseEntity.ok("진행률 저장 완료");
     }
 
+
+    // 결제 내역
+    @GetMapping("/payment")
+    public String payment() {
+        return "mypage/payment";
+    }
 }

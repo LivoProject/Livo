@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository("lectureLectureRepository")
 public interface LectureRepository extends JpaRepository<Lecture, Integer> {
@@ -26,4 +27,5 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     @Query("SELECT l FROM LectureEntity l WHERE l.category.categoryId = :mainCategoryId OR l.category.parent.categoryId = :mainCategoryId")
     List<Lecture> findAllByMainCategory(@Param("mainCategoryId") int mainCategoryId);
 
+    Optional<Lecture> findByLectureId(int lectureId);
 }

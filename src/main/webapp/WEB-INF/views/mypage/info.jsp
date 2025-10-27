@@ -141,31 +141,13 @@
         </form>
     </main>
 
-    <!-- 모달 -->
-    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="infoModalLabel">공통 모달 제목</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
-                </div>
-                <div class="modal-body">
-                    이곳은 모달 내용입니다.<br>
-                    설명이나 폼, 알림 메시지 등을 넣을 수 있습니다.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel" data-bs-dismiss="modal">취소</button>
-                    <button type="button" class="btn-main" data-bs-dismiss="modal">확인</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- // 모달 -->
-
 </section>
 <!-- 컨텐츠 끝 -->
 
-<script src="/js/mypage-info.js"></script>
+<!-- 모달 -->
+<%@ include file="/WEB-INF/views/common/modal.jsp" %>
 
+
+<script src="/js/mypage-info.js"></script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 

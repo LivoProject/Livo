@@ -87,14 +87,15 @@
 
 
     <!-- 카테고리 -->
-
     <section id="categories">
         <div class="container text-center">
             <h3>카테고리</h3>
             <div class="category-grid">
 
                 <c:forEach var="category" items="${categories}" varStatus="status">
-                    <a href="#" class="category-box">
+               <a href="/lecture/search?mainCategory=${category.categoryId}" class="category-box">
+
+
                         <i class="
                <c:choose>
                   <c:when test='${status.index == 0}'>bi bi-laptop</c:when>

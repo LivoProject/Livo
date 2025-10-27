@@ -20,35 +20,41 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
 
     // 좋아요한 강좌
     @Query(value = """
-                SELECT 
-                    l.lectureId AS lectureId,
-                    l.title AS title,
-                    l.tutorName AS tutorName,
-                    l.thumbnailUrl AS thumbnailUrl,
-                    COALESCE(lp.progressPercent, 0) AS progressPercent
-                FROM lecture l
-                JOIN lecture_like ll ON l.lectureId = ll.lectureId
-                JOIN user u ON ll.email = u.email
-                LEFT JOIN lecture_progress lp 
-                    ON lp.lectureId = l.lectureId
-                    AND lp.email = u.email
-                WHERE u.email = :email
-                  AND u.provider = :provider
-                ORDER BY ll.createdAt DESC
-            """,
-            countQuery = """
-                        SELECT COUNT(*)
-                        FROM lecture_like ll
-                        JOIN user u ON ll.email = u.email
-                        WHERE u.email = :email
-                          AND u.provider = :provider
-                    """,
-            nativeQuery = true)
+    SELECT 
+        l.lecture_id AS lectureId,
+        l.title AS title,
+        l.tutor_name AS tutorName,
+        l.thumbnail_url AS thumbnailUrl,
+        COALESCE(lp.progress_percent, 0) AS progressPercent,
+        CASE 
+            WHEN EXISTS (
+                SELECT 1
+                FROM reservation r2
+                WHERE r2.lecture_id = l.lecture_id
+                  AND r2.email = u.email
+                  AND r2.status != 'CANCEL'
+            ) THEN TRUE
+            ELSE FALSE
+        END AS reserved
+    FROM lecture l
+    JOIN lecture_like ll 
+        ON l.lecture_id = ll.lecture_id
+    JOIN user u 
+        ON ll.email = u.email
+    LEFT JOIN lecture_progress lp 
+        ON lp.lecture_id = l.lecture_id
+        AND lp.email = u.email
+    WHERE u.email = :email
+      AND u.provider = :provider
+    ORDER BY ll.created_at DESC
+""", nativeQuery = true)
     Page<LikedLectureProjection> findLikedLecturesWithProgress(
             @Param("email") String email,
             @Param("provider") String provider,
             Pageable pageable
     );
+
+
 
     // 좋아요한 강좌 최신 2개
     @Query(value = """

@@ -104,31 +104,3 @@ $('#submitAllBtn').click(function () {
         }
     });
 });
-// // 수정용
-// $("#editChapterBtn").click(function() {
-//     const chapterId = $("#chapterId").val();
-//     const lectureId = $("#lectureId").val();
-//     const chapterName = $(".chapterName").val();
-//     const youtubeUrl = $(".youtubeUrl").val();
-//     const content = $(".content").val();
-//
-//     $.ajax({
-//         url: "/admin/chapter/edit",
-//         type: "PUT",
-//         contentType: "application/json",
-//         data: JSON.stringify({
-//             chapterId,
-//             lectureId,
-//             chapterName,
-//             youtubeUrl,
-//             content
-//         }),
-//         success: function() {
-//             alert("수정 완료!");
-//             window.location.href = "/admin/chapter/list/" + lectureId;
-//         },
-//         error: function() {
-//             alert("수정 중 오류가 발생했습니다.");
-//         }
-//     });
-// });
