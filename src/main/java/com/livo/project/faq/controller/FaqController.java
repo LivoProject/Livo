@@ -30,7 +30,7 @@ public class FaqController {
     @PostMapping("/ask")
     public String ask(@ModelAttribute("chatHistory") List<ChatMessage> chatHistory,
                       @RequestParam String question, Model model){
-        double threshold = 0.3;
+        double threshold = 0.15;
         String answer = faqService.refineAnswerWithLLM(question, threshold, "gpt-4o-mini");
         chatHistory.add(new ChatMessage("user", question));
         chatHistory.add(new ChatMessage("ai", answer));
@@ -41,7 +41,7 @@ public class FaqController {
     @ResponseBody
     public Map<String, String> askAjax(@ModelAttribute("chatHistory")List<ChatMessage> chatHistory,
                                        @RequestParam String question){
-        double threshold = 0.3;
+        double threshold = 0.15;
         String answer = faqService.refineAnswerWithLLM(question, threshold, "gpt-4o-mini");
         chatHistory.add(new ChatMessage("user", question));
         chatHistory.add(new ChatMessage("ai", answer));
