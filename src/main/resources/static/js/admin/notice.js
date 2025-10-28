@@ -1,15 +1,15 @@
 console.log($._data($(document)[0], "events"));
 console.log("📢 notice.js loaded");
-$(document).ajaxSend(function(e, xhr, options) {
+$(document).ajaxSend(function (e, xhr, options) {
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
     if (token && header) xhr.setRequestHeader(header, token);
 });
-$(document).ready(function() {
+$(document).ready(function () {
     loadNotices(0);
 
     // 검색
-    $("form[action*='/admin/notice/list']").on("submit", function(e) {
+    $("form[action*='/admin/notice/list']").on("submit", function (e) {
         e.preventDefault();
         loadNotices(0);
     });
@@ -21,8 +21,8 @@ function loadNotices(page = 0) {
     $.ajax({
         url: "/admin/notice/list/data",
         type: "GET",
-        data: { page: page, size: 10, q: q },
-        success: function(pageData) {
+        data: {page: page, size: 10, q: q},
+        success: function (pageData) {
             const tbody = $("#noticeBody");
             tbody.empty();
 
@@ -34,25 +34,31 @@ function loadNotices(page = 0) {
 
             pageData.content.forEach((n, idx) => {
                 const num = page * pageData.size + idx + 1;
-                const date = n.createdAt ? n.createdAt.substring(0,16).replace('T',' ') : '-';
+                const date = n.createdAt ? n.createdAt.substring(0, 16).replace('T', ' ') : '-';
                 const pinnedBadge = n.pinned ? `<span class="badge bg-success me-1">고정</span>` : '';
                 const visibleText = n.visible ? '' : ' · <span class="text-danger">비노출</span>';
                 const nickName = n.nickname ? n.nickname : '알 수 없음';
                 tbody.append(`
+
                     <tr>
                       <td class="text-center">${num}</td>
+                       <td class="text-start">
+                        ${pinnedBadge}
+                        </td>
                       <td class="text-start">
-                        ${pinnedBadge}${n.title}
-                        <div class="text-muted small mt-1">
-                          ${date} · 작성자 ${n.nickname} · 조회 ${n.viewCount}${visibleText}
-                        </div>
-                      </td>
-                      <td class="text-start">
-                        <div class="text-truncate"
-                             style="-webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; max-width: 520px;">
-                          ${n.content}
-                        </div>
-                      </td>
+                        ${n.title}
+                        </td>
+                        <td class="text-start">
+                            <div class="text-truncate"  style="-webkit-line-clamp: 1; padding: 0.8rem 0; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; max-width: 520px;">
+                                ${n.content}
+                            </div>
+                        </td>
+                        <td class="text-start">
+                             ${date}
+                        </td>  
+                        <td class="text-start">
+                            ${n.viewCount}
+                        </td>
                       <td class="text-center">
                         <a href="/admin/notice/${n.id}/edit" class="btn btn-sm btn-primary me-1">수정</a>
                         <form action="/admin/notice/${n.id}" method="post" style="display:inline-block;"
@@ -62,12 +68,14 @@ function loadNotices(page = 0) {
                         </form>
                       </td>
                     </tr>
+                    
+                 
                 `);
             });
 
             renderPagination(pageData);
         },
-        error: function(err) {
+        error: function (err) {
             console.error("공지 불러오기 실패:", err);
         }
     });
@@ -95,7 +103,7 @@ function renderPagination(pageData) {
         pagination.append(`<li class="page-item"><a class="page-link" href="#" data-page="${currentPage + 1}"><i class="bi bi-chevron-right"></i></a></li>`);
     }
 
-    $(".page-link").off("click").on("click", function(e) {
+    $(".page-link").off("click").on("click", function (e) {
         e.preventDefault();
         const page = parseInt($(this).data("page"));
         loadNotices(page);

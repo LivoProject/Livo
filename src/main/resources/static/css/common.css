@@ -6,7 +6,8 @@
     --color-light-gray: #f8f9fa;
     --color-dark-gray: rgb(73, 80, 87);
     --color-main: #17b4c7;
-    --color-light-main: rgba(23, 180, 199, 0.9);
+    --color-light-main: rgba(23, 180, 199, 0.1);
+    --color-light-main-hover: rgba(23, 180, 199, 0.05);
     --color-point: #ffcc02;
     --color-hover: rgba(23, 180, 199, 0.05);
     --color-light-hover: #e0f7fa;
@@ -84,9 +85,14 @@ section.sub h3 {
 
 /* 텍스트 말줄임 */
 .text-ellipsis {
+    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    word-break: break-word;
+    max-width: 520px;
 }
 
 /* 헤더 */
@@ -718,8 +724,8 @@ thead {
 }
 
 th {
-    padding: 0.9em;
-    border-bottom: 1px solid #e5e5e5;
+    padding: 0.9rem;
+    color: var(--color-dark-gray);
 }
 
 td {
@@ -766,7 +772,20 @@ tbody tr:last-child td {
     background: rgba(150, 150, 150, 0.1);
     color: #555;
 }
+/* 아코디언 */
+.accordion-button {
 
+    padding: 1.5rem 0;
+}
+.accordion-button:not(.collapsed) {
+    background: var(--color-light-main);
+    color: var(--color-dark-gray);
+}
+.accordion-item {
+    border: none;
+    border-bottom: var(--border-black);
+    border-top: var(--border-black);
+}
 /* 반응형 */
 @media (max-width: 768px) {
     th, td {

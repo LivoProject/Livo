@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/css/main.css" />
 
 <main id="main">
-  <section id="sub" class="container mt-4">
+  <section class="container sub">
     <h3>강좌 검색</h3>
 
     <%-- 검색바 --%>
@@ -36,7 +36,7 @@
         <%-- 검색창 --%>
             <input type="search" name="keyword" class="form-control flex-grow-1"
                    placeholder="강좌명 검색" />
-        <button type="submit" class="btn btn-warning px-4 py-2" style="white-space: nowrap;">검색</button>
+        <button type="submit" class="btn btn-warning py-2" style="white-space: nowrap;">검색</button>
       </form>
     </div>
 

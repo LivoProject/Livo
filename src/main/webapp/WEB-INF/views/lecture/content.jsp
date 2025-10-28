@@ -12,7 +12,7 @@
 <!-- 강좌 상세 페이지 시작 -->
 <section id="sub" class="container" style="margin-top: 100px;">
     <!-- 강좌 요약 -->
-    <div class="p-4 bg-body-secondary border rounded-3">
+    <div class="border rounded-3 info-banner">
         <div class="row align-items-center">
             <!-- 왼쪽: 텍스트 -->
             <div class="mb-3">
@@ -20,107 +20,108 @@
                     ← 목록으로
                 </a>
             </div>
+            <div class="d-flex justify-content-between">
+                <div class="col-lg-7">
+                    <h1 class="display-5 fw-bold mb-3">${lecture.title}</h1>
 
-            <div class="col-lg-7 px-4">
-                <h1 class="display-5 fw-bold mb-3">${lecture.title}</h1>
+                    <p class="lead mb-2">강사: <strong>${lecture.tutorName}</strong></p>
+                    <p class="lead mb-2">
+                        신청기간:
+                        <strong>${lecture.reservationStart.toLocalDate()}</strong> ~
+                        <strong>${lecture.reservationEnd.toLocalDate()}</strong>
+                    </p>
+                    <p class="lead mb-2">
+                        강좌기간:
+                        <strong>${lecture.lectureStart}</strong> ~
+                        <strong>${lecture.lectureEnd}</strong>
+                    </p>
+                    <p class="lead mb-2">
+                        신청인원: <strong>${lecture.reservationCount}/${lecture.totalCount}</strong>
+                    </p>
 
-                <p class="lead mb-2">강사: <strong>${lecture.tutorName}</strong></p>
-                <p class="lead mb-2">
-                    신청기간:
-                    <strong>${lecture.reservationStart.toLocalDate()}</strong> ~
-                    <strong>${lecture.reservationEnd.toLocalDate()}</strong>
-                </p>
-                <p class="lead mb-2">
-                    강좌기간:
-                    <strong>${lecture.lectureStart}</strong> ~
-                    <strong>${lecture.lectureEnd}</strong>
-                </p>
-                <p class="lead mb-2">
-                    신청인원: <strong>${lecture.reservationCount}/${lecture.totalCount}</strong>
-                </p>
+                    <h2 class="lecture-price">
+                        수강비: <fmt:formatNumber value="${lecture.price}" pattern="#,###" />원
+                    </h2>
 
-                <h2 class="lecture-price">
-                    수강비: <fmt:formatNumber value="${lecture.price}" pattern="#,###" />원
-                </h2>
+                    <!-- 좋아요 + 결제하기 버튼 -->
+                    <div class="mt-3">
+                        <button id="likeBtn"
+                                type="button"
+                                class="btn btn-outline-danger me-2"
+                                data-lecture-id="${lecture.lectureId}">
+                            🤍
+                        </button>
 
-                <!-- 좋아요 + 결제하기 버튼 -->
-                <div class="mt-3">
-                    <button id="likeBtn"
-                            type="button"
-                            class="btn btn-outline-danger me-2"
-                            data-lecture-id="${lecture.lectureId}">
-                        🤍
-                    </button>
+                        <c:choose>
+                            <%-- 무료 강의 --%>
+                            <c:when test="${lecture.price == 0}">
+                                <c:choose>
+                                    <%-- 이미 수강중 --%>
+                                    <c:when test="${reservationStatus == 'CONFIRMED'}">
+                                        <button type="button" class="btn-cancel" disabled>신청한 강의</button>
+                                    </c:when>
 
-                    <c:choose>
-                        <%-- 무료 강의 --%>
-                        <c:when test="${lecture.price == 0}">
-                            <c:choose>
-                                <%-- 이미 수강중 --%>
-                                <c:when test="${reservationStatus == 'CONFIRMED'}">
-                                    <button type="button" class="btn-cancel" disabled>신청한 강의</button>
-                                </c:when>
+                                    <%-- 무료 수강 가능 --%>
+                                    <c:otherwise>
+                                        <form action="/lecture/enroll/${lecture.lectureId}" method="post" style="display:inline;">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                            <button type="submit" class="btn-point">바로 수강하기</button>
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:when>
 
-                                <%-- 무료 수강 가능 --%>
-                                <c:otherwise>
-                                    <form action="/lecture/enroll/${lecture.lectureId}" method="post" style="display:inline;">
-                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                        <button type="submit" class="btn-point">바로 수강하기</button>
-                                    </form>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:when>
+                            <%-- 유료 강의 --%>
+                            <c:otherwise>
+                                <c:choose>
+                                <%-- 강의 상태에 따른 버튼 --%>
+                                    <c:when test="${lecture.status == 'CLOSED' || lecture.status == 'ENDED'}">
+                                        <button type="button" class="btn-cancel" disabled>
+                                            <c:choose>
+                                                <c:when test="${lecture.status == 'CLOSED'}">예약 마감</c:when>
+                                                <c:when test="${lecture.status == 'ENDED'}">강의 종료</c:when>
+                                            </c:choose>
+                                        </button>
+                                    </c:when>
+                                    <%-- 아직 예약 자체가 없음 (전혀 신청 전) --%>
+                                    <c:when test="${empty reservationStatus}">
+                                        <button id="payButton" class="btn-point" onclick="requestPayment()">결제하기</button>
+                                    </c:when>
 
-                        <%-- 유료 강의 --%>
-                        <c:otherwise>
-                            <c:choose>
-                            <%-- 강의 상태에 따른 버튼 --%>
-                                <c:when test="${lecture.status == 'CLOSED' || lecture.status == 'ENDED'}">
-                                    <button type="button" class="btn-cancel" disabled>
-                                        <c:choose>
-                                            <c:when test="${lecture.status == 'CLOSED'}">예약 마감</c:when>
-                                            <c:when test="${lecture.status == 'ENDED'}">강의 종료</c:when>
-                                        </c:choose>
-                                    </button>
-                                </c:when>
-                                <%-- 아직 예약 자체가 없음 (전혀 신청 전) --%>
-                                <c:when test="${empty reservationStatus}">
-                                    <button id="payButton" class="btn-point" onclick="requestPayment()">결제하기</button>
-                                </c:when>
+                                    <%-- 결제 대기 상태 (위젯닫힘/실패 등) --%>
+                                    <c:when test="${reservationStatus == 'PENDING'}">
+                                        <button class="btn-point" onclick="requestPayment()">결제 다시 시도</button>
+                                    </c:when>
 
-                                <%-- 결제 대기 상태 (위젯닫힘/실패 등) --%>
-                                <c:when test="${reservationStatus == 'PENDING'}">
-                                    <button class="btn-point" onclick="requestPayment()">결제 다시 시도</button>
-                                </c:when>
+                                    <%-- 결제 완료됨 --%>
+                                    <c:when test="${reservationStatus == 'PAID' || reservationStatus == 'CONFIRMED'}">
+                                        <button type="button" class="btn-cancel" disabled>신청한 강의</button>
+                                    </c:when>
 
-                                <%-- 결제 완료됨 --%>
-                                <c:when test="${reservationStatus == 'PAID' || reservationStatus == 'CONFIRMED'}">
-                                    <button type="button" class="btn-cancel" disabled>신청한 강의</button>
-                                </c:when>
-
-                                <%-- 환불됨 (다시 신청 가능) --%>
-                                <c:when test="${reservationStatus == 'CANCEL'}">
-                                    <button id="payButton" class="btn-point" onclick="requestPayment()">환불 후 재결제하기</button>
-                                </c:when>
-                            </c:choose>
-                        </c:otherwise>
-                    </c:choose>
+                                    <%-- 환불됨 (다시 신청 가능) --%>
+                                    <c:when test="${reservationStatus == 'CANCEL'}">
+                                        <button id="payButton" class="btn-point" onclick="requestPayment()">환불 후 재결제하기</button>
+                                    </c:when>
+                                </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
                 </div>
-            </div>
 
-            <!-- 오른쪽: 썸네일 -->
-            <div class="col-lg-5 text-center">
-                <img src="${lecture.thumbnailUrl}"
-                     onerror="this.src='/img/common/no-image.png';"
-                     alt="lecture thumbnail"
-                     class="img-fluid rounded shadow-sm border"
-                     style="max-height: 280px; object-fit: cover;">
+                <!-- 오른쪽: 썸네일 -->
+                <div class="">
+                    <img src="${lecture.thumbnailUrl}"
+                         onerror="this.src='/img/common/no-image.png';"
+                         alt="lecture thumbnail"
+                         class="img-fluid rounded shadow-sm border"
+                         style="max-height: 280px; object-fit: cover;">
+                </div>
             </div>
         </div>
     </div>
 
     <!-- 탭 메뉴 -->
-    <ul class="nav lecture-tab-menu sticky-top bg-white border-bottom py-2 mt-2" id="lectureTab">
+    <ul class="nav lecture-tab-menu sticky-top" id="lectureTab">
         <li class="nav-item"><a class="nav-link active" href="#intro">강좌소개</a></li>
         <li class="nav-item"><a class="nav-link" href="#team">강좌운영진</a></li>
         <li class="nav-item"><a class="nav-link" href="#list">강의목록</a></li>
@@ -128,8 +129,8 @@
     </ul>
 
     <!-- 강좌소개 -->
-    <div id="intro" class="mt-5">
-        <h3>강좌 소개</h3>
+    <div id="intro" class="tab-content">
+        <h4>강좌 소개</h4>
         <ul class="list-group">
             <li class="list-group-item">
                 <strong>카테고리:</strong>
@@ -150,9 +151,9 @@
     </div>
 
     <!-- 강좌운영진 -->
-    <div id="team" class="mt-5">
-        <h3>강좌 운영진</h3>
-        <div class="col-md-6">
+    <div id="team" class="tab-content">
+        <h4>강좌 운영진</h4>
+        <div class="">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
                     <strong class="d-inline-block mb-2 text-primary-emphasis">Livo</strong>
@@ -166,8 +167,8 @@
     </div>
 
     <!-- 강의목록 -->
-    <div id="list" class="mt-5">
-        <h3>강의 목록</h3>
+    <div id="list" class="tab-content">
+        <h4>강의 목록</h4>
         <article class="blog-post">
             <table class="table table-striped">
                 <thead>
@@ -189,8 +190,8 @@
     </div>
 
     <!-- 수강후기 -->
-    <div id="review" class="mt-5">
-        <h3>수강 후기</h3>
+    <div id="review" class="tab-content">
+        <h4>수강 후기</h4>
 
         <!-- 평균 별점 -->
         <div class="container py-4">

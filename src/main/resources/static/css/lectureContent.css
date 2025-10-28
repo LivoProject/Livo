@@ -41,16 +41,15 @@ html {
 
 /* 기존 #lectureTab 수정 */
 #lectureTab {
-    z-index: 1000;
     position: sticky;
-    top: 15px;
+    top: 80px;
     background-color: #fff;
-    padding: 0.5rem 0;
+    padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-bottom: 1px solid #eee;
     display: flex;
     justify-content: space-between; /* 가운데 몰림 방지 */
-    border-radius: 8px;
+    z-index: 1;
 }
 
 /* 각 탭(li)을 4등분 */
@@ -67,7 +66,9 @@ html {
     text-decoration: none;
     padding: 0.7rem 1.2rem;
     border-radius: 6px;
-    transition: 0.2s ease;
+    transition: 0.3s ease;
+    width: 95%;
+    margin: 0 auto;
 }
 
 #lectureTab .nav-link:hover {
@@ -163,4 +164,18 @@ html {
 }
 
 
-
+/* ===============================
+   강좌 정보
+=============================== */
+.info-banner {
+    padding: 1.5rem 3rem;
+    background-color: var(--color-light-gray);
+    border-color: var(--border-black);
+}
+.tab-content {
+    padding: 5rem 1.5rem;
+    border-bottom: var(--border-black);
+}
+.tab-content h4 {
+    margin-top: 0;
+}

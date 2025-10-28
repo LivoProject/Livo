@@ -11,6 +11,11 @@
         <div class="write-info">
             <h4><c:out value="${notice.title}"/></h4>
             <div class="write-info-small">
+
+                <p class="text-muted">
+                    <c:out value="${nickname}"/>
+
+                </p>
                 <p>
                     <c:choose>
                         <c:when test="${not empty notice.createdAtAsDate}">
@@ -24,10 +29,6 @@
                     </c:choose>
 
                 </p>
-                <p class="text-muted">
-                   <c:out value="${nickname}"/>
-
-                </p>
             </div>
         </div>
 
@@ -38,7 +39,7 @@
     </div>
 
     <div class="mt-4 text-end">
-        <a href="/notice/list" class="btb-main">목록으로</a>
+        <a href="/notice/list" class="btn-main">목록으로</a>
     </div>
 </section>
 
