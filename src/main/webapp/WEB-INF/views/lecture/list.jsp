@@ -10,22 +10,22 @@
     <h3>강좌 검색</h3>
 
     <%-- 검색바 --%>
-    <div class="p-3 text-bg-dark rounded-3 mb-4">
-      <form action="/lecture/search" method="get"
-            class="d-flex flex-nowrap align-items-center justify-content-center gap-2">
+      <div class="p-3 rounded-3 mb-4" style="background: var(--color-main);">
+          <form action="/lecture/search" method="get"
+                class="d-flex flex-nowrap align-items-center justify-content-between gap-2 w-100">
 
-        <%-- 주제 선택 --%>
-        <select id="mainCategory" name="mainCategory" class="form-select w-auto">
-          <option value="">주제</option>
-          <option value="1">IT</option>
-          <option value="2">자기계발</option>
-          <option value="3">문화여가</option>
-          <option value="4">건강</option>
-          <option value="5">언어</option>
-          <option value="6">인문사회</option>
-          <option value="7">자격증</option>
-          <option value="8">경제</option>
-        </select>
+          <%-- 주제 선택 --%>
+          <select id="mainCategory" name="mainCategory" class="form-select w-auto">
+              <option value="">주제</option>
+              <option value="1" <c:if test="${param.mainCategory == '1'}">selected</c:if>>IT</option>
+              <option value="2" <c:if test="${param.mainCategory == '2'}">selected</c:if>>자기계발</option>
+              <option value="3" <c:if test="${param.mainCategory == '3'}">selected</c:if>>문화여가</option>
+              <option value="4" <c:if test="${param.mainCategory == '4'}">selected</c:if>>건강</option>
+              <option value="5" <c:if test="${param.mainCategory == '5'}">selected</c:if>>언어</option>
+              <option value="6" <c:if test="${param.mainCategory == '6'}">selected</c:if>>인문사회</option>
+              <option value="7" <c:if test="${param.mainCategory == '7'}">selected</c:if>>자격증</option>
+              <option value="8" <c:if test="${param.mainCategory == '8'}">selected</c:if>>경제</option>
+          </select>
 
         <%-- 세부분류 --%>
         <select id="subCategory" name="subCategory" class="form-select w-auto">
@@ -33,7 +33,8 @@
         </select>
 
         <%-- 검색창 --%>
-        <input type="search" name="keyword" class="form-control w-25" placeholder="강좌명 검색" />
+            <input type="search" name="keyword" class="form-control flex-grow-1"
+                   placeholder="강좌명 검색" />
         <button type="submit" class="btn btn-warning px-4 py-2" style="white-space: nowrap;">검색</button>
       </form>
     </div>
@@ -41,7 +42,7 @@
     <%-- 강좌 리스트 --%>
     <div id="recommend">
       <div class="container">
-        <h3>전체 강좌</h3>
+
         <div class="recommend-grid">
 
           <c:choose>

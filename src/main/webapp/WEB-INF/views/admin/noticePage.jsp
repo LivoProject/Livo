@@ -48,12 +48,93 @@
                 <th style="width: 180px;">관리</th>
               </tr>
             </thead>
-            <tbody id="noticeBody">
+            <tbody>
+              <!-- 비었을 때 -->
+              <c:if test="${empty page || empty page.content}">
+                <tr>
+                  <td colspan="4" class="text-center py-4">등록된 공지사항이 없습니다.</td>
+                </tr>
+              </c:if>
 
+              <!-- 목록 렌더링 -->
+              <c:forEach var="n" items="${page.content}" varStatus="s">
+                <tr>
+                  <td class="text-center">
+                    <c:out value="${(page.number * page.size) + s.index + 1}" />
+                  </td>
+
+                  <td class="text-start">
+                    <c:if test="${n.pinned}">
+                      <span class="badge bg-success me-1">고정</span>
+                    </c:if>
+                    <c:out value="${n.title}" />
+                    <div class="text-muted small mt-1">
+                      <c:choose>
+                        <c:when test="${not empty n.createdAtAsDate}">
+                          <fmt:formatDate value="${n.createdAtAsDate}" pattern="yyyy-MM-dd HH:mm"/>
+                        </c:when>
+                        <c:otherwise>-</c:otherwise>
+                      </c:choose>
+                         <!-- 작성자 표시 수정 -->
+                      · 작성자
+                      <c:out value="${empty n.nickname ? '알수없음' : n.nickname}" />
+                      · 조회 <c:out value="${n.viewCount}" />
+                      <c:if test="${!n.visible}">
+                        · <span class="text-danger">비노출</span>
+                      </c:if>
+                    </div>
+                  </td>
+
+                  <td class="text-start">
+                    <div class="text-truncate"
+                         style="-webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; max-width: 520px;">
+                      ${n.content}
+                    </div>
+                  </td>
+
+                  <td class="text-center">
+                    <!-- noticeId -> id 로 변경 -->
+                    <a href="<c:url value='/admin/notice/${n.id}/edit'/>"
+                       class="btn btn-sm btn-primary me-1">수정</a>
+
+                    <form action="<c:url value='/admin/notice/${n.id}'/>"
+                          method="post"
+                          style="display:inline-block;"
+                          onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                      <input type="hidden" name="_method" value="DELETE" />
+                      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                      <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+                    </form>
+                  </td>
+                </tr>
+              </c:forEach>
             </tbody>
           </table>
-            <ul class="pagination justify-content-center mt-3" id="pagination"></ul>
         </div>
+
+        <!-- 페이징 -->
+        <c:if test="${!empty page && page.totalPages > 1}">
+          <nav class="mt-3" aria-label="Page navigation">
+            <ul class="pagination justify-content-center mb-0">
+              <li class="page-item ${page.first ? 'disabled' : ''}">
+                <a class="page-link"
+                   href="<c:url value='/admin/notice/list?page=${page.number - 1}&size=${page.size}&q=${q}'/>">이전</a>
+              </li>
+
+              <c:forEach begin="0" end="${page.totalPages - 1}" var="i">
+                <li class="page-item ${i == page.number ? 'active' : ''}">
+                  <a class="page-link"
+                     href="<c:url value='/admin/notice/list?page=${i}&size=${page.size}&q=${q}'/>">${i + 1}</a>
+                </li>
+              </c:forEach>
+
+              <li class="page-item ${page.last ? 'disabled' : ''}">
+                <a class="page-link"
+                   href="<c:url value='/admin/notice/list?page=${page.number + 1}&size=${page.size}&q=${q}'/>">다음</a>
+              </li>
+            </ul>
+          </nav>
+        </c:if>
       </div>
     </div>
   </div>

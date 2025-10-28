@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import jakarta.persistence.Table;
 
+@Access(AccessType.FIELD)
 @Entity
 @Table(name = "notice")
 @Getter

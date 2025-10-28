@@ -149,5 +149,18 @@ html {
     padding: 2rem;
 }
 
+/* ===============================
+   💰 강좌 수강비 스타일
+=============================== */
+.lecture-price {
+    font-size: 2rem;                /* 글씨 크기 확대 */
+    font-weight: 700;               /* 두껍게 */
+    color: var(--color-black);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-align: left;               /* 필요시 center로 변경 가능 */
+    letter-spacing: -0.02em;
+}
+
 
 

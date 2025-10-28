@@ -1,22 +1,38 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>
 
-<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <link rel="stylesheet" href="/css/notice.css">
 
 <section id="notice" class="container sub">
     <h3>공지사항</h3>
+
     <div class="card">
         <div class="card-header">
-            <h4>${notice.title}</h4>
+            <h4><c:out value="${notice.title}"/></h4>
         </div>
+
         <div class="card-body">
             <p class="text-muted">
-                작성자: ${notice.writer} | 작성일: <fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
+                작성자: <c:out value="${nickname}"/> |
+                작성일:
+                <c:choose>
+                    <c:when test="${not empty notice.createdAtAsDate}">
+                        <fmt:formatDate value="${notice.createdAtAsDate}" pattern="yyyy-MM-dd HH:mm"/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:out value="${notice.createdAt}"/>
+                    </c:otherwise>
+                </c:choose>
             </p>
+
             <hr/>
+
             <div class="mt-3" style="min-height:200px; white-space:pre-line;">
-                ${notice.content}
+                <!-- HTML 주입 방지: 필요시 escapeXml=false 로 변경 -->
+                <c:out value="${notice.content}" />
             </div>
         </div>
     </div>
@@ -26,5 +42,4 @@
     </div>
 </section>
 
-
-<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+<jsp:include page="/WEB-INF/views/common/footer.jsp" />
