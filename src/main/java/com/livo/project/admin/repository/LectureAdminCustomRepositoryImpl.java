@@ -8,15 +8,20 @@ import com.livo.project.lecture.repository.CategoryRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class LectureAdminCustomRepositoryImpl implements LectureAdminCustomRepository {
@@ -56,20 +61,38 @@ public class LectureAdminCustomRepositoryImpl implements LectureAdminCustomRepos
             builder.and(lecture.price.gt(0));
         }
         //상태
-        if(search.getStatus()!= null && !search.getStatus().isBlank()){
-            builder.and(lecture.status.eq(search.getStatus()));
+        if (search.getStatus() != null && !search.getStatus().isBlank()) {
+            Lecture.LectureStatus statusEnum = null;
+            String status = search.getStatus().trim();
+
+            switch (status) {
+                case "예약중":
+                    statusEnum = Lecture.LectureStatus.OPEN;
+                    break;
+                case "예약마감":
+                    statusEnum = Lecture.LectureStatus.CLOSED;
+                    break;
+                case "강의종료":
+                    statusEnum = Lecture.LectureStatus.ENDED;
+                    break;
+            }
+
+            if (statusEnum != null) {
+                builder.and(lecture.status.eq(statusEnum));
+            }
         }
         //기간
         if(search.getLectureStartDate() != null && search.getLectureEndDate() != null){
-            Date start = search.getLectureStartDate();
-            Date end = new Date(search.getLectureEndDate().getTime() + (24 * 60 * 60 * 1000) - 1);
-            builder.and(lecture.lectureStart.between(start, end));
+            LocalDate start = search.getLectureStartDate();
+            LocalDate end = search.getLectureEndDate();
+            builder.and(lecture.lectureStart.between(start, end.plusDays(1)));
         }
         if(search.getReservationStartDate() != null && search.getReservationEndDate() != null){
-            Date start = search.getReservationStartDate();
-            Date end = new Date(search.getReservationEndDate().getTime() +(24*60*60*1000)-1);
-            builder.and(
-                    lecture.reservationStart.between(start, end));
+            LocalDateTime start = search.getReservationStartDate();
+            LocalDateTime end = search.getReservationEndDate()
+                    .plusDays(1)
+                    .minusSeconds(1);
+            builder.and(lecture.reservationStart.between(start, end));
         }
 
         long total = queryFactory
