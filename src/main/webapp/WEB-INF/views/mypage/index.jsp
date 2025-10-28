@@ -65,42 +65,42 @@
             </div>
         </div>
 
-          <!-- 진행중인 강의 -->
-       <!-- 진행중인 강의 (예약 완료된 최근 2개 강의) -->
-<div class="card-box mb-4">
-  <div class="card-header">
-    <h6>진행중인 강의</h6>
-    <a href="/mypage/lecture" class="more-link">더보기 <i class="bi bi-chevron-right"></i></a>
-  </div>
+        <!-- 진행중인 강의 -->
+        <!-- 진행중인 강의 (예약 완료된 최근 2개 강의) -->
+        <div class="card-box mb-4">
+            <div class="card-header">
+                <h6>진행중인 강의</h6>
+                <a href="/mypage/lecture" class="more-link">더보기 <i class="bi bi-chevron-right"></i></a>
+            </div>
 
-  <div class="lecture-grid">
-    <c:if test="${not empty recentConfirmedLectures}">
-      <c:forEach var="lecture" items="${recentConfirmedLectures}">
-        <div class="card">
-          <div class="card-img-wrap">
-            <a href="/lecture/view/${lecture.lectureId}">
-              <img src="${lecture.thumbnailUrl}" class="card-img-top" alt="${lecture.title}">
-              <button class="play-btn"><i class="bi bi-play-fill"></i></button>
-            </a>
-          </div>
-          <div class="card-body">
-            <a href="/lecture/content/${lecture.lectureId}">
-              <h6 class="card-title">${lecture.title}</h6>
-              <div class="progress" style="height: 8px;">
-                <div class="progress-bar bg-success" style="width: ${lecture.progressPercent}%;"></div>
-              </div>
-              <small class="text-muted">${lecture.progressPercent}%</small>
-            </a>
-          </div>
+            <div class="lecture-grid">
+                <c:if test="${not empty recentConfirmedLectures}">
+                    <c:forEach var="lecture" items="${recentConfirmedLectures}">
+                        <div class="card">
+                            <div class="card-img-wrap">
+                                <a href="/lecture/view/${lecture.lectureId}">
+                                    <img src="${lecture.thumbnailUrl}" class="card-img-top" alt="${lecture.title}">
+                                    <button class="play-btn"><i class="bi bi-play-fill"></i></button>
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="/lecture/content/${lecture.lectureId}">
+                                    <h6 class="card-title">${lecture.title}</h6>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar bg-success"
+                                             style="width: ${lecture.progressPercent}%;"></div>
+                                    </div>
+                                    <small class="text-muted">${lecture.progressPercent}%</small>
+                                </a>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty recentConfirmedLectures}">
+                    <p class="text-muted">진행 중인 강의가 없습니다.</p>
+                </c:if>
+            </div>
         </div>
-      </c:forEach>
-    </c:if>
-    <c:if test="${empty recentConfirmedLectures}">
-      <p class="text-muted">진행 중인 강의가 없습니다.</p>
-    </c:if>
-  </div>
-</div>
-
 
 
         <!-- 즐겨찾기 -->

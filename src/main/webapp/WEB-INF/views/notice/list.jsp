@@ -20,7 +20,7 @@
         </thead>
         <tbody>
         <c:forEach var="notice" items="${notices}" varStatus="s">
-            <tr onclick="location.href='/notice/content?id=${notice.id}'" style="cursor:pointer;">
+            <tr onclick="location.href='/notice/content?id=${notice.id}'">
                 <!-- 최신글이 위 → 최신글이 1번 -->
                 <td class="text-center">${s.index + 1}</td>
                 <td class="text-start">${notice.title}</td>
