@@ -43,7 +43,7 @@ html {
 #lectureTab {
     z-index: 1000;
     position: sticky;
-    top: 0;
+    top: 15px;
     background-color: #fff;
     padding: 0.5rem 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
