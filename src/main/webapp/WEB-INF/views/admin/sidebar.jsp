@@ -16,8 +16,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/reset.css" />
     <link rel="stylesheet" href="/css/common.css" />
-    <link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="/css/sub.css" />
+    <!--<link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/sub.css" /> -->
     <link rel="stylesheet" href="/css/admin/dashboard.css" />
     <!-- chart -->
     <link rel="stylesheet" href="/css/admin/chart.css"/>
@@ -32,8 +32,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom js -->
     <script src="/js/common.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/sub.js"></script>
+    <!--<script src="/js/main.js"></script>
+    <script src="/js/sub.js"></script>-->
     <script src="/js/admin/sidebar.js"></script>
 </head>
 <body>
