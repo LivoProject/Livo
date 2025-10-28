@@ -68,7 +68,7 @@
 
             <!-- 비밀번호 (LOCAL 로그인만 표시) -->
             <c:if test="${mypage.provider == 'LOCAL'}">
-                <div class="field">
+                <div class="field password-field">
                     <label for="password" class="form-label"><span class="required-mark">*</span> 비밀번호</label>
                     <a href="/mypage/password" class="btn-outline-main">비밀번호 바꾸기</a>
                 </div>

@@ -223,7 +223,7 @@
    📘 강의 카드 썸네일 + 재생 버튼
 =============================== */
 #mypage .card-img-wrap {
-    height: 150px;
+    height: 200px;
     position: relative;
     overflow: hidden;
 }
@@ -236,15 +236,18 @@
 
 #mypage .card-img-wrap img {
     transition: 0.3s;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    object-fit: none;
 }
 
 #mypage .card-img-wrap:hover img {
-    transform: translateY(-5px);
-    transform: scale(1.1);
+    transform: translateY(-50%) scale(1.1);
     box-shadow: rgba(0, 0, 0, 0.04) 0px 17px 17px -7px, rgba(0, 0, 0, 0.05) 0px 36px 28px -7px, rgba(0, 0, 0, 0.05) 0px 1px 3px 0px;
 }
 
-#mypage .card-img-top {
+#mypage .notice-box {
     width: 100%;
     height: 100%;
     object-fit: none;
@@ -301,9 +304,9 @@
    📘 학습 진행 / 통계 / 최근 학습
 =============================== */
 .stat-grid {
-    width: calc(60% - 0.5rem);
+    width: calc(60% - 0.4rem);
     display: flex;
-    gap: 1rem;
+    gap: 0.8rem;
 }
 
 .stat-card {
@@ -344,7 +347,7 @@
 }
 
 #mypage .recent-card {
-    width: calc(40% - 0.5rem);
+    width: calc(40% - 0.4rem);
 }
 
 #mypage .recent-lecture {
@@ -406,6 +409,14 @@
 #mypage .summary-card .stat-item small {
     font-size: 0.8rem;
     color: var(--color-gray) !important;
+}
+.field.password-field {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+.field.password-field .btn-outline-main {
+    margin: 0;
 }
 
 /* ===============================
@@ -617,7 +628,7 @@
 }
 
 .pay-noti-box .payment-list {
-    gap: 0.5rem;
+    gap: 0.8rem;
 }
 
 .pay-noti-box .payment-header {
@@ -644,7 +655,7 @@
 .notice-list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.8rem;
 }
 
 .notice-wrap .more-link {
@@ -663,14 +674,6 @@
     border-radius: 10px;
     transition: 0.3s;
     background-color: var(--color-white);
-}
-
-.notice-list a:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(23, 180, 199, .15);
-}
-
-.notice-list a {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -679,6 +682,12 @@
     width: 100%;
     text-decoration: none;
 }
+
+.notice-list a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(23, 180, 199, .15);
+}
+
 
 .notice-list a span {
     font-size: 0.9rem;

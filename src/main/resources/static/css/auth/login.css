@@ -113,7 +113,6 @@ button[type="submit"] {
     min-width: 500px;
     height: 54px;
     border-radius: 20px;
-    font-weight: 500;
     border: 0;
     cursor: pointer;
     font-size: 17px;
@@ -163,9 +162,9 @@ hr {
 }
 .login-footer a {
     color: var(--color-main);
-    font-weight: 500;
     text-decoration: none;
     transition: 0.3s;
+    font-weight: 500;
 }
 .login-footer a:hover {
     color: var(--color-point);

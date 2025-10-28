@@ -31,6 +31,7 @@
 
 /* 제목 */
 .register-container h2 {
+    width: max-content;
     text-align: center;
     font-size: 1.6rem;
     font-weight: 700;
@@ -179,7 +180,6 @@
 .register-container p a {
     color: var(--primary);
     text-decoration: none;
-    font-weight: 600;
     transition: 0.2s;
 }
 
@@ -188,7 +188,6 @@
 }
 
 .error {
-    display: none;
     font-size: 0.8rem;
     color: #c81010;
     margin-top: 0.3rem;
