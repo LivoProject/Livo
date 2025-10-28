@@ -30,10 +30,11 @@
 
                                 </tbody>
                             </table>
-                            <ul id="pagination" class="pagination justify-content-center"></ul>
+
                         </div>
                     </div>
                 </div>
+                <ul id="pagination" class="pagination justify-content-center"></ul>
             </div>
         </div>
     </div>

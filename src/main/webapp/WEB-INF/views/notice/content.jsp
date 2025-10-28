@@ -32,7 +32,7 @@
 
             <div class="mt-3" style="min-height:200px; white-space:pre-line;">
                 <!-- HTML 주입 방지: 필요시 escapeXml=false 로 변경 -->
-                <c:out value="${notice.content}" />
+                <c:out value="${notice.content}" escapeXml="false"/>
             </div>
         </div>
     </div>

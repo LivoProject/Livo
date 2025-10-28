@@ -54,8 +54,8 @@ function loadNotices(page = 0) {
                         </div>
                       </td>
                       <td class="text-center">
-                        <a href="/admin/notice/${n.id}/edit" class="btn btn-sm btn-primary me-1">수정</a>
-                        <form action="/admin/notice/${n.id}" method="post" style="display:inline-block;"
+                        <a href="/admin/notice/${n.nickname}/edit" class="btn btn-sm btn-primary me-1">수정</a>
+                        <form action="/admin/notice/${n.nickname}" method="post" style="display:inline-block;"
                               onsubmit="return confirm('정말 삭제하시겠습니까?');">
                           <input type="hidden" name="_method" value="DELETE">
                           <button type="submit" class="btn btn-sm btn-danger">삭제</button>
