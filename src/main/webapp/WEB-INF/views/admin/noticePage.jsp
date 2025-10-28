@@ -75,6 +75,9 @@
                         </c:when>
                         <c:otherwise>-</c:otherwise>
                       </c:choose>
+                         <!-- 작성자 표시 수정 -->
+                      · 작성자
+                      <c:out value="${empty n.nickname ? '알수없음' : n.nickname}" />
                       · 조회 <c:out value="${n.viewCount}" />
                       <c:if test="${!n.visible}">
                         · <span class="text-danger">비노출</span>
