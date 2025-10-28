@@ -34,8 +34,8 @@
                                   <td class="text-center">${faq.question}</td>
                                   <td class="text-center">
                                     <c:choose>
-                                        <c:when test="${fn:length(faq.answer) > 100}">
-                                          ${fn:substring(faq.answer, 0, 100)}...
+                                        <c:when test="${fn:length(faq.answer) > 70}">
+                                          ${fn:substring(faq.answer, 0, 70)}...
                                         </c:when>
                                         <c:otherwise>
                                           ${faq.answer}

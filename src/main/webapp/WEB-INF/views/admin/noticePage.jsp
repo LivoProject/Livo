@@ -60,7 +60,7 @@
               <c:forEach var="n" items="${page.content}" varStatus="s">
                 <tr>
                   <td class="text-center">
-                    <c:out value="${page.totalElements - (page.number * page.size) - s.index}" />
+                    <c:out value="${(page.number * page.size) + s.index + 1}" />
                   </td>
 
                   <td class="text-start">
@@ -88,7 +88,7 @@
                   <td class="text-start">
                     <div class="text-truncate"
                          style="-webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; max-width: 520px;">
-                      <c:out value="${n.content}" />
+                      ${n.content}
                     </div>
                   </td>
 
