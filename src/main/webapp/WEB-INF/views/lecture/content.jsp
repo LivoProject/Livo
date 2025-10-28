@@ -109,7 +109,7 @@
     </div>
 
     <!-- 탭 메뉴 -->
-    <ul class="nav nav-underline justify-content-between sticky-top bg-white py-2 border-bottom" id="lectureTab">
+    <ul class="nav lecture-tab-menu sticky-top bg-white border-bottom py-2" id="lectureTab">
         <li class="nav-item"><a class="nav-link active" href="#intro">강좌소개</a></li>
         <li class="nav-item"><a class="nav-link" href="#team">강좌운영진</a></li>
         <li class="nav-item"><a class="nav-link" href="#list">강의목록</a></li>
@@ -131,8 +131,6 @@
                     </c:otherwise>
                 </c:choose>
             </li>
-            <li class="list-group-item">학습단계: 입문</li>
-            <li class="list-group-item">수준: 초급</li>
             <li class="list-group-item">별점⭐:
                 <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" />
             </li>
@@ -185,13 +183,13 @@
 
         <!-- 평균 별점 -->
         <div class="container py-4">
-            <div class="p-5 mb-4 bg-body-tertiary rounded-3">
-                <div class="container-fluid py-5 text-center">
+            <div class="avg-box text-center">
+                <div class="avg-box-inner">
                     <h1 class="display-5 fw-bold">
                         평균
                         <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" /> ⭐
                     </h1>
-                    <p class="col-md-8 fs-4 mx-auto">${reviewCountMap[lecture.lectureId]}개의 수강평</p>
+                    <p class="fs-4 mb-0">${reviewCountMap[lecture.lectureId]}개의 수강평</p>
                 </div>
             </div>
         </div>
@@ -199,12 +197,13 @@
         <!-- 후기 등록 (CONFIRMED or PAID) -->
         <c:choose>
             <c:when test="${reservationStatus == 'CONFIRMED' || reservationStatus == 'PAID'}">
-                <div class="col-md-12 mt-4">
+                <div class="col-md-12 my-5">
                     <form id="reviewForm" action="/lecture/content/${lecture.lectureId}/review" method="post">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <input type="hidden" id="reviewUId" value="">
 
-                        <div class="h-100 p-5 bg-body-secondary border rounded-3">
+                        <div class="h-100 p-5 border rounded-3"
+                             style="background-color: var(--color-light-gray); border: var(--border-black); box-shadow: var(--shadow-default);">
                             <!-- 별점 버튼 -->
                             <div class="star-wrap mb-3">
                                 <button type="button" class="bi bi-star-fill" data-value="1"></button>
@@ -221,7 +220,10 @@
                                           placeholder="수강 후기를 입력하세요"></textarea>
                             </div>
 
-                            <button class="btn btn-primary btn-lg" type="submit">등록</button>
+                            <div class="text-center mt-3">
+                            <button class="btn-main" type="submit">등록</button>
+                            </div>
+
                         </div>
                     </form>
                 </div>
@@ -232,8 +234,7 @@
         <div id="reviewList">
             <c:forEach var="review" items="${reviews}">
                 <div class="col-md-12 mb-3">
-                    <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm"
-                         data-review-id="${review.reviewUId}">
+                    <div class="h-100 review-box" data-review-id="${review.reviewUId}">
                         <h4>${review.userName}</h4>
                         <h5>
                             ${review.createdAt}
@@ -322,7 +323,8 @@
         <c:if test="${reviewCount > 5}">
             <div class="text-center mt-4">
                 <button id="loadMoreBtn"
-                        class="btn btn-outline-primary"
+                        type="button"
+                        class="btn-main"
                         data-page="1"
                         data-lecture-id="${lecture.lectureId}">
                     더보기 ▼
