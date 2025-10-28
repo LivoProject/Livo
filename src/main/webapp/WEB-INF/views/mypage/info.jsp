@@ -45,7 +45,7 @@
             <div class="alert alert-danger">${errorMessage}</div>
         </c:if>
 
-        <form id="signupForm" method="post" action="update" novalidate>
+        <form class="info-form" method="post" action="update" novalidate>
 
             <!-- CSRF -->
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

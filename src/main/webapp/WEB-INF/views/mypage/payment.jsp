@@ -18,7 +18,7 @@
         <h3>결제 내역</h3>
 
 
-        <div class="review-list large">
+        <div class="payment-list">
 
             <c:if test="${not empty payments}">
                 <c:forEach var="payment" items="${payments}">

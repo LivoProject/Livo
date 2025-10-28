@@ -16,6 +16,8 @@ import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
 import com.livo.project.payment.domain.Payment;
 import com.livo.project.review.domain.Review;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 
 
 /**
@@ -161,7 +164,7 @@ public class MypageService {
 
 
         // 공지사항
-        List<Notice> notices = mypageNoticeRepository.findTop5ByOrderByCreatedAtDesc();
+        List<Notice> notices = mypageNoticeRepository.findTop3ByOrderByCreatedAtDesc();
         List<NoticeDto> noticeDtos = notices.stream().map(NoticeDto::fromEntity).toList();
 
         // 추천 강좌
@@ -401,6 +404,8 @@ public class MypageService {
         return mypageProgressRepository.countInProgressByEmail(email);
     }
 
+
+
     // 이번주 진행 시간
     @Transactional(readOnly = true)
     public double getWeeklyStudyHours(String email) {
@@ -417,5 +422,34 @@ public class MypageService {
     public Page<Payment> getMyPayments(String email, Pageable pageable) {
         return mypagePaymentRepository.findAllByEmail(email, pageable);
     }
+    public List<Payment> getRecentPayments(String email, int limit) {
+        return mypagePaymentRepository.findTop3ByUserEmailOrderByApprovedAtDesc(email);
+    }
+
+
+    // 예약완료된 2개 강의
+    @Transactional(readOnly = true)
+    public List<MypageReservationDto> getRecentConfirmedLectures(String email, String provider) {
+        Pageable limit = PageRequest.of(0, 2);
+        List<Reservation> reservations =
+                mypageReservationRepository.findTop2ConfirmedByEmailAndProvider(email, provider, limit);
+
+        return reservations.stream()
+                .map(r -> {
+                    Lecture lecture = r.getLecture();
+
+                    // ✅ LectureProgress에서 해당 강의의 진도율 조회
+                    double progress = mypageProgressRepository.findByLectureAndUser(lecture, email, provider)
+                            .map(LectureProgress::getProgressPercent)
+                            .orElse(0.0);
+
+                    // ✅ 정적 팩토리 메서드 of() 사용
+                    return MypageReservationDto.of(r, lecture, progress);
+                })
+                .collect(Collectors.toList());
+    }
+
+
+
 }
 
