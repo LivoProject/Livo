@@ -6,7 +6,9 @@
     min-height: 100vh;
     margin-top: 5rem;
 }
-
+#mypage h3 {
+    margin-top: 0;
+}
 
 /* 메인/사이드 영역 */
 #mypage .main-content {
@@ -14,18 +16,19 @@
     padding: 2rem 2.5rem;
 }
 
-/* 제목, 텍스트 기본 스타일 */
-#mypage h3 {
-    margin-top: 0;
-}
-
 #mypage .main-content h6 {
     margin-bottom: 1rem;
     color: var(--color-dark-gray);
 }
+
 #mypage .more-link {
     font-size: 0.9rem;
     color: var(--color-gray);
+    transition: 0.3s;
+}
+
+#mypage .more-link:hover {
+    color: var(--color-main);
 }
 
 /* ===============================
@@ -60,28 +63,87 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     background: #fafbfc;
 }
-.side-menu .profile { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-.side-menu .nav { gap: 0.5rem; }
-.side-menu .nav-link { color: var(--color-dark-gray); border-radius: 8px; padding: 0.6rem 1rem; display: block; text-decoration: none; transition: 0.2s; }
-.side-menu .nav-link:hover { background: #f3f5f7; }
-.side-menu .nav-link.active { background: var(--color-light-hover); color: var(--color-main); font-weight: 600; }
+
+.side-menu .profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.side-menu .nav {
+    gap: 0.5rem;
+}
+
+.side-menu .nav-link {
+    color: var(--color-dark-gray);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    display: block;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.side-menu .nav-link:hover {
+    background: #f3f5f7;
+}
+
+.side-menu .nav-link.active {
+    background: var(--color-light-hover);
+    color: var(--color-main);
+    font-weight: 600;
+}
 
 /* ===============================
    📘 상단 인사 영역
 =============================== */
-#mypage .welcome-box > div {
+/*#mypage .welcome-box > div {*/
+/*    display: flex;*/
+/*    align-items: baseline;*/
+/*    gap: 1rem;*/
+/*    margin-bottom: 1rem;*/
+/*}*/
+
+/*#mypage .welcome-box > div h3 {*/
+/*    margin: 0;*/
+/*}*/
+/*#mypage .welcome-box span {*/
+/*    color: var(--color-main);*/
+/*}*/
+
+.welcome-box {
     display: flex;
-    align-items: baseline;
+    justify-content: space-between;
+    /*background: linear-gradient(135deg, rgba(23, 180, 199, .1), rgba(255, 255, 255, .7));
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;*/
+    /*padding: 1.6rem 2rem;*/
+    /*box-shadow: 0 4px 18px rgba(23,180,199,.1);*/
+    flex-direction: column;
     gap: 1rem;
-    margin-bottom: 1rem;
 }
 
-#mypage .welcome-box > div h3 {
+.welcome-text {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+}
+
+.welcome-box h3 {
+    font-weight: 700;
+    color: var(--text);
     margin: 0;
 }
-#mypage .welcome-box span {
-    color: var(--color-main);
+
+.welcome-box p {
+    color: var(--muted);
+    font-size: 0.95rem;
 }
+
+.welcome-box span {
+    color: var(--color-dark-gray);
+}
+
 /* ===============================
    📘 공통 카드 스타일
 =============================== */
@@ -90,18 +152,21 @@
     position: relative;
     transition: all 0.3s ease;
 }
+
 #mypage .card-header {
     display: flex;
     justify-content: space-between;
 }
+
 #mypage .card-box-wrap {
     display: flex;
     gap: 1rem;
     justify-content: space-between;
 }
+
 #mypage .card-box {
     background: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border);
     padding: 1rem;
     border-radius: 0.5rem;
     transition: 0.3s;
@@ -118,17 +183,23 @@
 #mypage .card-body:hover p {
     color: var(--color-main);
 }
+
 /* 카드 푸터 버튼 */
 #mypage .card-footer {
     padding: 0.5rem;
 }
+
 #mypage .card-footer .button-wrap {
     display: flex;
     justify-content: space-between;
+    gap: 0.5rem;
 }
 
+#mypage .card-footer .button-wrap button,
 #mypage .card-footer .button-wrap a {
     display: block;
+    width: calc(50% - 0.25rem);
+    text-align: center;
 }
 
 /* 소형 버튼 */
@@ -154,27 +225,34 @@
    📘 강의 카드 썸네일 + 재생 버튼
 =============================== */
 #mypage .card-img-wrap {
-    height: 150px;
+    height: 200px;
     position: relative;
     overflow: hidden;
 }
+
 #mypage .card-img-wrap > a {
     width: 100%;
     height: 100%;
     display: block;
 }
+
 #mypage .card-img-wrap img {
     transition: 0.3s;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    object-fit: none;
 }
-#mypage .card-img-wrap:hover img{
-    transform: translateY(-5px);
-    transform: scale(1.1);
+
+#mypage .card-img-wrap:hover img {
+    transform: translateY(-50%) scale(1.1);
     box-shadow: rgba(0, 0, 0, 0.04) 0px 17px 17px -7px, rgba(0, 0, 0, 0.05) 0px 36px 28px -7px, rgba(0, 0, 0, 0.05) 0px 1px 3px 0px;
 }
-#mypage .card-img-top {
+
+#mypage .notice-box {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: none;
 }
 
 /* 재생 버튼 */
@@ -227,31 +305,79 @@
 /* ===============================
    📘 학습 진행 / 통계 / 최근 학습
 =============================== */
-#mypage .recent-card,
-#mypage .summary-card {
-    width: 100%;
+.stat-grid {
+    width: calc(60% - 0.4rem);
+    display: flex;
+    gap: 0.8rem;
 }
+
+.stat-card {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    /*box-shadow: 0 2px 12px rgba(0,0,0,.05);*/
+    transition: .2s ease;
+    flex-direction: column;
+}
+
+/*
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(23,180,199,.15);
+}
+*/
+.stat-card i {
+    font-size: 1.4rem;
+    color: var(--color-gray) !important;
+}
+
+.stat-card b {
+    display: block;
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--color-dark-gray);
+}
+
+.stat-card span {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+#mypage .recent-card {
+    width: calc(40% - 0.4rem);
+}
+
 #mypage .recent-lecture {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
+
 #mypage .recent-lecture .text-wrap {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
     align-content: center;
 }
+
 #mypage .recent-lecture .text-wrap a {
     transition: 0.3s;
 }
+
 #mypage .recent-lecture .text-wrap a:hover {
     color: var(--color-main);
 }
+
 #mypage .recent-lecture .text-wrap span {
     font-size: 0.8rem;
     color: var(--color-gray);
 }
+
 #mypage .play-icon {
     width: 40px;
     height: 40px;
@@ -262,6 +388,7 @@
     justify-content: center;
     transition: 0.3s
 }
+
 #mypage .play-icon:hover {
     background-color: #eac341;
 }
@@ -280,9 +407,18 @@
 #mypage .progress-bar {
     background-color: var(--color-point);
 }
+
 #mypage .summary-card .stat-item small {
     font-size: 0.8rem;
     color: var(--color-gray) !important;
+}
+.field.password-field {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+.field.password-field .btn-outline-main {
+    margin: 0;
 }
 
 /* ===============================
@@ -369,13 +505,17 @@
     visibility: visible;
     opacity: 1;
 }
+
 /* ===============================
    📘 결제 내역
 =============================== */
-.review-list.large {
+.payment-list {
     grid-template-columns: repeat(1, 1fr);
-    gap: 2rem;
+    gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
+
 .order-date {
     font-weight: 500;
     font-size: 0.95rem;
@@ -391,8 +531,10 @@
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    transition: 0.3s;
 }
+
 .payment-header {
     display: flex;
     align-items: center;
@@ -402,7 +544,7 @@
 .badge {
     display: inline-block;
     padding: 0.35rem 0.65rem;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 600;
     border-radius: 6px;
     color: #fff;
@@ -411,11 +553,31 @@
 }
 
 /* 상태별 색상 */
-.status-PENDING { background: #6c757d; }   /* 회색 */
-.status-SUCCESS { background: #17b4c7; }   /* LiVO 메인컬러 */
-.status-CANCEL  { background: #ff9800; }   /* 주황 */
-.status-FAIL    { background: #dc3545; }   /* 빨강 */
-.status-REFUND  { background: #198754; }   /* 초록 */
+.status-PENDING {
+    background: #6c757d;
+}
+
+/* 회색 */
+.status-SUCCESS {
+    background: #17b4c7;
+}
+
+/* LiVO 메인컬러 */
+.status-CANCEL {
+    background: #ff9800;
+}
+
+/* 주황 */
+.status-FAIL {
+    background: #dc3545;
+}
+
+/* 빨강 */
+.status-REFUND {
+    background: #198754;
+}
+
+/* 초록 */
 
 .order-info {
     font-size: 0.9rem;
@@ -446,29 +608,114 @@
     color: #0d1b2a;
     font-size: 1.05rem;
 }
+
 /* ===============================
    📘 공지사항 영역
 =============================== */
-#mypage .notice-wrap h6 {
-    margin-bottom: 0;
-}
-#mypage .notice-wrap ul{
-    margin-top: 2rem;
+.pay-noti-box {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     gap: 1rem;
 }
 
-#mypage .notice-wrap a {
+.pay-noti-box .payment-box {
+    padding: 0 1rem;
+    height: 46px;
+    display: block;
+}
+
+.pay-noti-box .payment-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(23, 180, 199, .15);
+}
+
+.pay-noti-box .payment-list {
+    gap: 0.8rem;
+}
+
+.pay-noti-box .payment-header {
+    justify-content: space-between;
+    height: 46px;
+}
+
+.pay-noti-box .badge {
+    margin-right: 0.5rem;
+}
+
+.pay-noti-box .amount {
+    font-size: 0.9rem;
+}
+
+.payment-wrap {
+    width: 100%;
+}
+
+.notice-wrap {
+    width: 100%;
+}
+
+.notice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.notice-wrap .more-link {
+    font-size: 0.85rem;
+    color: #6b7b8a;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.notice-wrap .more-link:hover {
+    color: #17b4c7;
+}
+
+.notice-list a {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    transition: 0.3s;
+    background-color: var(--color-white);
     display: flex;
     justify-content: space-between;
-    transition: 0.3s;
+    align-items: center;
+    height: 46px;
+    padding: 0 1rem;
+    width: 100%;
+    text-decoration: none;
 }
-#mypage .notice-wrap a > * {
-     transition: 0.3s;
- }
-#mypage .notice-wrap a:hover > * {
-    color: var(--color-main);
+
+.notice-list a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(23, 180, 199, .15);
+}
+
+
+.notice-list a span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 75%;
+}
+
+.notice-list a small {
+    font-size: 0.8rem;
+    color: #7a8895;
+    white-space: nowrap;
+}
+
+.notice-list .text-muted {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #a0a9b2;
+}
+.info-form [type=submit],
+.info-form .btn-outline-main{
+    width: max-content;
+    margin: 0 auto;
 }
 /* ===============================
    📘 반응형
@@ -489,13 +736,16 @@
     #mypage {
         display: block;
     }
+
     #mypage .side-menu {
         width: 100%;
         border-bottom: var(--border-black);
     }
+
     #mypage .main-content {
         width: 100%;
     }
+
     #mypage .lecture-card {
         margin-bottom: 1rem;
     }

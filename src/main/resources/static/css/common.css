@@ -11,6 +11,22 @@
     --color-light-hover: #e0f7fa;
     --border-black: 1px solid rgb(233, 236, 239);
     --shadow-default: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    /* 로그인/회원가입 */
+    --bg: #f6f9fa;
+    --bg-accent: rgba(23, 180, 199, .05);
+    --card: #ffffff;
+    --text: #1d252c;
+    --muted: #6c7a87;
+    --primary: #17b4c7;
+    --primary-strong: #0da3b9;
+    --point: #ffcc02;
+    --border: #e5eef7;
+    --ring: rgba(23, 180, 199, .2);
+    --shadow-sm: 0 3px 12px rgba(0, 0, 0, .04);
+    --shadow-md: 0 12px 36px rgba(23, 180, 199, .15);
+    --radius: 22px;
+    --radius-input: 12px;
 }
 
 /* 폰트 */
@@ -24,6 +40,14 @@ hr, .card {
 .card-footer {
     background-color: transparent;
     border-color: rgb(233, 236, 239);
+}
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background-color: transparent;
 }
 h3 {
     font-size: 2rem;
@@ -46,7 +70,12 @@ section.sub h3 {margin-top:0!important;}
 .modal-body p{
     line-height: 1.5!important;
 }
-
+/* 텍스트 말줄임 */
+.text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 /* 헤더 */
 header {
     width: 100%;
@@ -72,7 +101,7 @@ header .nav-link {
 }
 header .nav-link:hover,
 header .nav-link.active,
-header .header-actions button:hover,
+header .header-actions >*:hover,
 header .header-actions .logout-button:hover{
     color: var(--color-main);
 }
@@ -97,8 +126,7 @@ header .header-actions {
     align-items: center;
 }
 
-header .header-actions a,
-header .header-actions button {
+header .header-actions > * {
     transition: color 0.3s ease;
 }
 header .header-actions .logout-button {
@@ -122,8 +150,7 @@ header .header-actions span:nth-of-type(1)::after {
     display: block;
 }
 
-header .header-actions a i,
-header .header-actions button i {
+header .header-actions i {
     margin-right: 0.25rem;
 }
 

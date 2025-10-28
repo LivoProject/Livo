@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface MypageNoticeRepository extends JpaRepository<Notice, Long> {
 
-    List<Notice> findTop5ByOrderByCreatedAtDesc();
+    List<Notice> findTop3ByOrderByCreatedAtDesc();
 }

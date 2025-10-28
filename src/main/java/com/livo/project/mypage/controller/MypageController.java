@@ -29,10 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.*;
 /**
  * 마이페이지 컨트롤러
  * - 회원 정보 조회, 수정, 비밀번호 변경 요청 처리
@@ -57,6 +54,11 @@ public class MypageController {
         LectureProgress recentProgress = mypageService.getRecentLecture(email);
         long inProgressLectureCount = mypageService.getInProgressLectureCount(email);
         double weeklyStudyHours = mypageService.getWeeklyStudyHours(email);
+        List<Payment> payments = mypageService.getRecentPayments(email, 3);
+        List<MypageReservationDto> recentConfirmedLectures =
+                mypageService.getRecentConfirmedLectures(email, provider);
+
+        model.addAttribute("recentConfirmedLectures", recentConfirmedLectures);
 
         model.addAttribute("mypage", mypageDto);
         model.addAttribute("notices", mypageDto.getNotices());
@@ -68,6 +70,7 @@ public class MypageController {
         model.addAttribute("studyDays", mypageService.getStudyDaysThisMonth(email));
         model.addAttribute("weeklyStudyHours", String.format("%.0f", weeklyStudyHours));
         model.addAttribute("inProgressLectureCount", inProgressLectureCount);
+        model.addAttribute("payments", payments);
 
         model.addAttribute("menu", "home");
 

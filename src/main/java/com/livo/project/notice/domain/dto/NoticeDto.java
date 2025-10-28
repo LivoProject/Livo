@@ -15,11 +15,13 @@ public class NoticeDto {
     private String createdAt;
 
     public static NoticeDto fromEntity(Notice notice) {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         return NoticeDto.builder()
                 .id(notice.getId())
                 .title(notice.getTitle())
                 .content(notice.getContent())
-                .createdAt(notice.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .createdAt(notice.getCreatedAt().format(fmt))
                 .build();
     }
 }

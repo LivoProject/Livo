@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 비밀번호 보기 토글
-    document.querySelectorAll(".toggle-password").forEach(button => {
+    document.querySelectorAll(".password-toggle").forEach(button => {
         button.addEventListener("click", () => {
             const input = button.parentElement.querySelector(".pw-input");
             const icon = button.querySelector("i");

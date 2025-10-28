@@ -45,7 +45,7 @@
             <div class="alert alert-danger">${errorMessage}</div>
         </c:if>
 
-        <form id="signupForm" method="post" action="update" novalidate>
+        <form id="infoUpdateForm" class="info-form" method="post" action="update" novalidate>
 
             <!-- CSRF -->
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -68,7 +68,7 @@
 
             <!-- 비밀번호 (LOCAL 로그인만 표시) -->
             <c:if test="${mypage.provider == 'LOCAL'}">
-                <div class="field">
+                <div class="field password-field">
                     <label for="password" class="form-label"><span class="required-mark">*</span> 비밀번호</label>
                     <a href="/mypage/password" class="btn-outline-main">비밀번호 바꾸기</a>
                 </div>
@@ -149,5 +149,6 @@
 
 
 <script src="/js/mypage-info.js"></script>
+<script src="/js/mypage.js"></script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 
