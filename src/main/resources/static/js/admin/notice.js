@@ -37,14 +37,14 @@ function loadNotices(page = 0) {
                 const date = n.createdAt ? n.createdAt.substring(0,16).replace('T',' ') : '-';
                 const pinnedBadge = n.pinned ? `<span class="badge bg-success me-1">고정</span>` : '';
                 const visibleText = n.visible ? '' : ' · <span class="text-danger">비노출</span>';
-
+                const nickName = n.nickname ? n.nickname : '알 수 없음';
                 tbody.append(`
                     <tr>
                       <td class="text-center">${num}</td>
                       <td class="text-start">
                         ${pinnedBadge}${n.title}
                         <div class="text-muted small mt-1">
-                          ${date} · 조회 ${n.viewCount}${visibleText}
+                          ${date} · 작성자 ${n.nickname} · 조회 ${n.viewCount}${visibleText}
                         </div>
                       </td>
                       <td class="text-start">
@@ -54,8 +54,8 @@ function loadNotices(page = 0) {
                         </div>
                       </td>
                       <td class="text-center">
-                        <a href="/admin/notice/${n.nickname}/edit" class="btn btn-sm btn-primary me-1">수정</a>
-                        <form action="/admin/notice/${n.nickname}" method="post" style="display:inline-block;"
+                        <a href="/admin/notice/${n.id}/edit" class="btn btn-sm btn-primary me-1">수정</a>
+                        <form action="/admin/notice/${n.id}" method="post" style="display:inline-block;"
                               onsubmit="return confirm('정말 삭제하시겠습니까?');">
                           <input type="hidden" name="_method" value="DELETE">
                           <button type="submit" class="btn btn-sm btn-danger">삭제</button>
