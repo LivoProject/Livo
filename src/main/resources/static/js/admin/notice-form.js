@@ -3,7 +3,7 @@
     const form           = document.getElementById("noticeForm");
     const titleEl        = document.getElementById("title");
     const titleCountEl   = document.getElementById("titleCount");
-    const contentEl      = document.getElementById("content");
+    const contentEl      = document.getElementById("summernote");
     const pinnedEl       = document.getElementById("pinned");
     const visibleEl      = document.getElementById("visible"); // 있을 수도, 없을 수도
 
@@ -17,6 +17,23 @@
 
     if (!form || !titleEl || !contentEl) return;
 
+    // Bootstrap 5 dropdown 충돌 방지
+    $.fn.dropdown = function () { return this; };
+    //썸머노트 초기화
+    $(document).ready(function() {
+        if ($('#summernote').length) {
+            $('#summernote').summernote({
+                height: 350,
+                placeholder: '공지 내용을 입력하세요.',
+                lang: 'ko-KR',
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['fontsize', 'color']],
+                    ['para', ['ul', 'ol', 'paragraph']]
+                ]
+            });
+        }
+    });
     /** 유틸: HTML escape */
     function escapeHTML(str) {
         return (str || "")
@@ -144,4 +161,14 @@
             }
         });
     }
+})();
+
+// 제목 글자수 초기화(수정 모드에서 서버 값 기준)
+(function(){
+    var t = document.getElementById('title');
+    if (!t) return;
+    var c = document.getElementById('titleCount');
+    var update = function(){ c.textContent = (t.value || '').length; };
+    t.addEventListener('input', update);
+    update();
 })();
