@@ -1,4 +1,3 @@
-// ✅ 세부분류 목록 (주제별)
 const subCategories = {
     1: ["프론트엔드", "백엔드", "데이터베이스", "인공지능(AI)", "클라우드 / DevOps", "모바일 앱개발"],
     2: ["시간관리", "리더십", "생산성 향상", "자기소개서 / 면접"],
@@ -13,7 +12,7 @@ const subCategories = {
 const mainSelect = document.getElementById("mainCategory");
 const subSelect = document.getElementById("subCategory");
 const gridContainer = document.querySelector(".recommend-grid");
-const paginationContainer = document.querySelector(".pagination");
+const paginationContainer = document.querySelector(".pagination-wrap"); // ✅ nav 요소 선택으로 변경
 
 // ✅ 세부분류 옵션 변경
 mainSelect.addEventListener("change", function () {
@@ -96,43 +95,53 @@ function renderLectures(lectures) {
     });
 }
 
-// ✅ 페이지네이션 렌더링
+// ✅ 페이지네이션 렌더링 (pagination.jsp 스타일 그대로 복제)
 function renderPagination(totalPages, currentPage, mainCategory, subCategory) {
     paginationContainer.innerHTML = "";
 
     if (totalPages <= 1) return;
 
-    const ul = document.createElement("ul");
-    ul.className = "pagination justify-content-center mt-4";
+    const nav = document.createElement("nav");
+    nav.className = "pagination-wrap mt-4";
 
-    // 이전
+    const ul = document.createElement("ul");
+    ul.className = "pagination justify-content-center";
+
+    // ⬅ 이전 버튼
     if (currentPage > 0) {
         const prevLi = document.createElement("li");
         prevLi.className = "page-item";
-        prevLi.innerHTML = `<a class="page-link" href="#">이전</a>`;
+        prevLi.innerHTML = `
+            <a class="page-link" href="#">
+                <i class="bi bi-chevron-left"></i>
+            </a>`;
         prevLi.onclick = () => fetchLectures(mainCategory, subCategory, currentPage - 1);
         ul.appendChild(prevLi);
     }
 
-    // 페이지 번호
+    // 🔢 페이지 번호
     for (let i = 0; i < totalPages; i++) {
         const li = document.createElement("li");
-        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        li.className = `page-item ${i === currentPage ? "active" : ""}`;
         li.innerHTML = `<a class="page-link" href="#">${i + 1}</a>`;
         li.onclick = () => fetchLectures(mainCategory, subCategory, i);
         ul.appendChild(li);
     }
 
-    // 다음
+    // ➡ 다음 버튼
     if (currentPage < totalPages - 1) {
         const nextLi = document.createElement("li");
-        nextLi.className = "page-item";
-        nextLi.innerHTML = `<a class="page-link" href="#">다음</a>`;
+        nextLi.className = "page-item next";
+        nextLi.innerHTML = `
+            <a class="page-link" href="#">
+                <i class="bi bi-chevron-right"></i>
+            </a>`;
         nextLi.onclick = () => fetchLectures(mainCategory, subCategory, currentPage + 1);
         ul.appendChild(nextLi);
     }
 
-    paginationContainer.appendChild(ul);
+    nav.appendChild(ul);
+    paginationContainer.appendChild(nav);
 }
 
 // ✅ 페이지 로드시 mainCategory 파라미터가 있으면 자동으로 로드
@@ -159,4 +168,3 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchLectures(mainCategory, null, 0);
     }
 });
-

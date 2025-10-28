@@ -12,7 +12,7 @@
 <!-- 강좌 상세 페이지 시작 -->
 <section id="sub" class="container" style="margin-top: 100px;">
     <!-- 강좌 요약 -->
-    <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+    <div class="p-4 bg-body-secondary border rounded-3">
         <div class="row align-items-center">
             <!-- 왼쪽: 텍스트 -->
             <div class="mb-3">
@@ -111,7 +111,7 @@
     </div>
 
     <!-- 탭 메뉴 -->
-    <ul class="nav lecture-tab-menu sticky-top bg-white border-bottom py-2" id="lectureTab">
+    <ul class="nav lecture-tab-menu sticky-top bg-white border-bottom py-2 mt-2" id="lectureTab">
         <li class="nav-item"><a class="nav-link active" href="#intro">강좌소개</a></li>
         <li class="nav-item"><a class="nav-link" href="#team">강좌운영진</a></li>
         <li class="nav-item"><a class="nav-link" href="#list">강의목록</a></li>
@@ -204,8 +204,7 @@
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <input type="hidden" id="reviewUId" value="">
 
-                        <div class="h-100 p-5 border rounded-3"
-                             style="background-color: var(--color-light-gray); border: var(--border-black); box-shadow: var(--shadow-default);">
+                        <div class="p-4 bg-body-secondary border rounded-3">
                             <!-- 별점 버튼 -->
                             <div class="star-wrap mb-3">
                                 <button type="button" class="bi bi-star-fill" data-value="1"></button>
@@ -217,13 +216,11 @@
                             <input type="hidden" name="reviewStar" id="selectedStar" value="0">
 
                             <h4>내용입력</h4>
-                            <div class="mb-3">
-                                <textarea class="form-control" id="reviewContent" name="reviewContent" rows="5"
-                                          placeholder="수강 후기를 입력하세요"></textarea>
-                            </div>
+                            <textarea class="form-control mb-3" id="reviewContent" name="reviewContent" rows="4"
+                                      placeholder="수강 후기를 입력하세요"></textarea>
 
-                            <div class="text-center mt-3">
-                            <button class="btn-main" type="submit">등록</button>
+                            <div class="d-flex justify-content-center gap-2">
+                                <button type="submit" class="btn-main">등록</button>
                             </div>
 
                         </div>
@@ -350,7 +347,7 @@
 
                     <!-- 모달 본문 (공용 구조 유지) -->
                     <div class="modal-body">
-                        <p>신고 사유를 선택해주세요.</p>
+                        <p class="mb-3">신고 사유를 선택해주세요.</p>
                         <div class="form-check mb-2">
                             <input class="form-check-input" type="radio" name="reportReason" id="abuse" value="부적절한 언어 사용" required>
                             <label class="form-check-label" for="abuse">부적절한 언어 사용</label>
