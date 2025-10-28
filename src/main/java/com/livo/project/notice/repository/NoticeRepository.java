@@ -1,26 +1,73 @@
+// src/main/java/com/livo/project/notice/repository/NoticeRepository.java
 package com.livo.project.notice.repository;
 
+import com.livo.project.admin.domain.dto.NoticeListDto;
 import com.livo.project.notice.domain.entity.Notice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface NoticeRepository extends JpaRepository<Notice, Integer> {
 
-    // [기존 사용처 호환] 최신순
     List<Notice> findAllByOrderByCreatedAtDesc();
-
-    // [신규 권장] 상단 고정 우선 + 최신순
     List<Notice> findAllByOrderByIsPinnedDescCreatedAtDesc();
-
-    // [관리자 검색용] 제목/내용 LIKE, 페이징
-    Page<Notice> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(
-            String title, String content, Pageable pageable);
-
-    // (옵션) 메인 상단 5개만 뽑을 때
+    Page<Notice> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(String title, String content, Pageable pageable);
     List<Notice> findTop5ByIsVisibleTrueOrderByIsPinnedDescCreatedAtDesc();
-
     List<Notice> findTop5ByOrderByCreatedAtDesc();
+
+    //  일반 사용자용: 공개글만, "오래된 순(asc)"
+    @Query("""
+    select new com.livo.project.admin.domain.dto.NoticeListDto(
+        n.id,
+        n.title,
+        coalesce(u.nickname, n.writer),
+        n.createdAt,
+        n.isPinned,
+        n.isVisible,
+        n.viewCount,
+        n.content
+    )
+    from Notice n
+    left join com.livo.project.auth.domain.entity.User u
+           on u.email = n.writer
+    where n.isVisible = true
+    order by n.createdAt desc
+""")
+    List<NoticeListDto> findNoticeListWithNickname();
+
+    // 관리자용: 검색 + 페이징(정렬은 기존처럼 최신순 유지)
+    @Query("""
+        select new com.livo.project.admin.domain.dto.NoticeListDto(
+            n.id,
+            n.title,
+            coalesce(u.nickname, n.writer),
+            n.createdAt,
+            n.isPinned,
+            n.isVisible,
+            n.viewCount,
+            n.content
+        )
+        from Notice n
+        left join com.livo.project.auth.domain.entity.User u
+               on u.email = n.writer
+        where (:q is null or :q = ''
+            or lower(n.title)   like lower(concat('%', :q, '%'))
+            or lower(n.content) like lower(concat('%', :q, '%')))
+        order by n.isPinned desc, n.createdAt desc
+    """)
+    Page<NoticeListDto> findAdminList(@Param("q") String q, Pageable pageable);
+
+    //  상세 페이지용: id로 작성자 닉네임만 얻기
+    @Query("""
+        select coalesce(u.nickname, n.writer)
+        from Notice n
+        left join com.livo.project.auth.domain.entity.User u
+               on u.email = n.writer
+        where n.id = :id
+    """)
+    String findAuthorNameById(@Param("id") int id);
 }

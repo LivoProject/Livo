@@ -1,9 +1,10 @@
 // src/main/java/com/livo/project/admin/service/NoticeServiceImpl.java
 package com.livo.project.admin.service;
 
+import com.livo.project.admin.domain.dto.NoticeListDto;
 import com.livo.project.admin.domain.dto.NoticeReq;
-import com.livo.project.notice.repository.NoticeRepository;   //  공용 레포 사용
 import com.livo.project.notice.domain.entity.Notice;
+import com.livo.project.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository repo;
 
-    /** 공지 목록: isPinned 우선 + 최신순, q가 있으면 제목/내용 검색 */
+    /** 엔티티 Page 반환 (기존 호환용) */
     @Override
     @Transactional(readOnly = true)
     public Page<Notice> list(String q, int page, int size) {
@@ -30,6 +31,18 @@ public class NoticeServiceImpl implements NoticeService {
             return repo.findAll(pageable);
         }
         return repo.findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(q, q, pageable);
+    }
+
+    /** 관리자용: 닉네임 포함 DTO Page 반환 */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<NoticeListDto> adminList(String q, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                Math.max(page, 0),
+                Math.max(size, 1),
+                Sort.by(Sort.Order.desc("isPinned"), Sort.Order.desc("createdAt"))
+        );
+        return repo.findAdminList(q, pageable); // 반드시 Repository에 존재해야 함
     }
 
     /** 공지 생성 */
@@ -78,12 +91,14 @@ public class NoticeServiceImpl implements NoticeService {
         n.setViewCount(n.getViewCount() + 1);
     }
 
+    /** 공개 토글 */
     @Override
     public void toggleVisible(int id) {
         Notice n = get(id);
         n.setVisible(!n.isVisible());
     }
 
+    /** 상단 고정 토글 */
     @Override
     public void togglePin(int id) {
         Notice n = get(id);
