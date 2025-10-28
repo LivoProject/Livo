@@ -701,7 +701,8 @@
     text-align: center;
     color: #a0a9b2;
 }
-.info-form [type=submit] {
+.info-form [type=submit],
+.info-form .btn-outline-main{
     width: max-content;
     margin: 0 auto;
 }

@@ -23,7 +23,7 @@
                 <td>${notice.title}</td>
                 <td class="text-center">${notice.writer}</td>
                 <td class="text-center">
-                    <fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd"/>
+                      ${notice.createdAt.toLocalDate()}
                 </td>
             </tr>
         </c:forEach>
