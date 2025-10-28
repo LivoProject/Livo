@@ -12,13 +12,16 @@
                     <div class="card-header">
                         <ul class="nav nav-pills card-header-pills" id="statsTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tab1-tab" data-bs-toggle="pill" data-bs-target="#tab1" type="button" role="tab">월별 가입자 수</button>
+                                <button class="nav-link active" id="tab1-tab" data-bs-toggle="pill" data-bs-target="#tab1" type="button" role="tab">인기 강좌 Top5</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab2-tab" data-bs-toggle="pill" data-bs-target="#tab2" type="button" role="tab">월별 강의 예약 수</button>
+                                <button class="nav-link" id="tab2-tab" data-bs-toggle="pill" data-bs-target="#tab2" type="button" role="tab">월별 매출</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab3-tab" data-bs-toggle="pill" data-bs-target="#tab3" type="button" role="tab">강의별 예약 수</button>
+                                <button class="nav-link" id="tab3-tab" data-bs-toggle="pill" data-bs-target="#tab3" type="button" role="tab">강사별 운영 현황</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab4-tab" data-bs-toggle="pill" data-bs-target="#tab4" type="button" role="tab">월별 가입자 수</button>
                             </li>
                         </ul>
                     </div>
@@ -32,6 +35,9 @@
                             </div>
                             <div class="tab-pane fade" id="tab3" role="tabpanel">
                                 <canvas id="chart3"></canvas>
+                            </div>
+                            <div class="tab-pane fade" id="tab4" role="tabpanel">
+                                <canvas id="chart4"></canvas>
                             </div>
                         </div>
                     </div>
@@ -254,6 +260,7 @@
 </main>
 </div>
 <script src="/js/admin/dashboard.js"></script>
+<script src="/js/admin/dashboard-chart.js"></script>
 </body>
 
 </html>
