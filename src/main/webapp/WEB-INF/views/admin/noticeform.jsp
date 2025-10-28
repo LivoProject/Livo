@@ -1,13 +1,11 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8"/>
-    <title><c:out value="${empty n ? '공지사항 등록' : '공지사항 수정'}"/></title>
-    <link rel="stylesheet" href="<c:url value='/css/admin/notice-form.css?v=1'/>">
-</head>
-<body>
+<%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
+
+<link rel="stylesheet" href="/css/admin/notice-form.css" />
+
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
+    <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
 <div class="admin-wrap">
     <div class="toolbar">
         <div class="left">
@@ -53,8 +51,7 @@
                         <div class="form-row">
                             <label for="content">내용</label>
                             <div class="field">
-                                <textarea id="content" name="content" rows="14"
-                                          placeholder="공지 내용을 입력하세요" required><c:out value="${n.content}"/></textarea>
+                                <textarea id="summernote" name="content" required><c:out value="${n.content}"/></textarea>
                             </div>
                         </div>
 
@@ -109,7 +106,7 @@
                         <div class="form-row">
                             <label for="content">내용</label>
                             <div class="field">
-                                <textarea id="content" name="content" rows="14"
+                                <textarea id="summernote" name="content" rows="14"
                                           placeholder="공지 내용을 입력하세요" required></textarea>
                             </div>
                         </div>
@@ -165,17 +162,10 @@
         </div>
     </div>
 </div>
-<script>
-    // 제목 글자수 초기화(수정 모드에서 서버 값 기준)
-    (function(){
-        var t = document.getElementById('title');
-        if (!t) return;
-        var c = document.getElementById('titleCount');
-        var update = function(){ c.textContent = (t.value || '').length; };
-        t.addEventListener('input', update);
-        update();
-    })();
-</script>
-<script src="<c:url value='/js/admin/notice-form.js?v=1'/>"></script>
+</main>
+</div>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+<script src="/js/admin/notice-form.js"></script>
 </body>
 </html>

@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(`/lecture/like/check/${lectureId}`, { credentials: "include" })
         .then(res => res.json())
         .then(isLiked => {
-            likeBtn.innerText = isLiked ? "❤️좋아요" : "🤍좋아요";
+            likeBtn.innerText = isLiked ? "❤️" : "🤍";
             likeBtn.classList.toggle("active", isLiked);
         })
         .catch(err => console.error("좋아요 상태 확인 오류:", err));
@@ -48,10 +48,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     alert("로그인이 필요합니다.");
                     window.location.href = "/auth/login";
                 } else if (status === "liked") {
-                    likeBtn.innerText = "❤️좋아요";
+                    likeBtn.innerText = "❤️";
                     likeBtn.classList.add("active");   // ✅ 추가
                 } else if (status === "unliked") {
-                    likeBtn.innerText = "🤍좋아요";
+                    likeBtn.innerText = "🤍";
                     likeBtn.classList.remove("active"); // ✅ 추가
                 } else {
                     console.warn("예상치 못한 응답:", status);
@@ -231,8 +231,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         // ✅ 후기 HTML 구성
                         const item = `
-                        <div class="col-md-12 mb-3 fade-in-up">
-                            <div class="h-100 p-5 bg-body-tertiary border rounded-3 shadow-sm" data-review-id="${r.reviewUId}">
+                            <div class="col-md-12 mb-3 fade-in-up">
+                                <div class="h-100 review-box" data-review-id="${r.reviewUId}">
                                 <h4>${r.userName}</h4>
                                 <h5>${r.createdAt}${r.isEdited ? ' <span class="text-muted small">(수정)</span>' : ''}</h5>
                                 <h4>${stars}</h4>

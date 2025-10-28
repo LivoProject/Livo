@@ -2,17 +2,6 @@
    ⭐ 리뷰 별점 스타일 (Review Star Rating)
    ========================================== */
 
-:root {
-    --color-light-gray: #ccc;
-    --color-point: #f1c40f;
-    --color-main: #0d6efd;
-    --color-white: #ffffff;
-    --color-black: #000000;
-    --color-white-dark: #f9f9f9;
-    --color-main-dark: #0b5ed7;
-    --border-black: 1px solid #000;
-}
-
 .star-wrap {
     margin: 1.5rem 0;
     display: flex;
@@ -44,18 +33,134 @@
 }
 
 /* ==========================================
-   탭 이동형 (앵커 스크롤)
+   📌 앵커 스크롤 (탭 메뉴)
    ========================================== */
-
 html {
     scroll-behavior: smooth;
 }
 
+/* 기존 #lectureTab 수정 */
 #lectureTab {
     z-index: 1000;
-    background-color: #fff; /* 스크롤 시 배경색 유지 */
     position: sticky;
-    top: 0; /* 상단에 고정 위치 명시 */
+    top: 0;
+    background-color: #fff;
+    padding: 0.5rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between; /* 가운데 몰림 방지 */
+    border-radius: 8px;
 }
+
+/* 각 탭(li)을 4등분 */
+#lectureTab .nav-item {
+    flex: 1;                /* 각 항목이 균등 비율로 차지 */
+    text-align: center;     /* 가운데 정렬 */
+}
+
+/* 링크 스타일 그대로 유지 */
+#lectureTab .nav-link {
+    display: block;          /* 넓이 전체 클릭 가능 */
+    color: var(--color-dark-gray);
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 6px;
+    transition: 0.2s ease;
+}
+
+#lectureTab .nav-link:hover {
+    background: #f3f5f7;
+    color: var(--color-main);
+}
+
+#lectureTab .nav-link.active {
+    background: var(--color-light-hover);
+    color: var(--color-main);
+    font-weight: 600;
+}
+
+/* 반응형 (모바일일 때 2x2 구조) */
+@media (max-width: 768px) {
+    #lectureTab {
+        flex-wrap: wrap;
+    }
+
+    #lectureTab .nav-item {
+        flex: 1 1 50%; /* 두 개씩 한 줄에 */
+    }
+
+    #lectureTab .nav-link {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.8rem;
+    }
+}
+
+
+/* ===============================
+   📘 평균 별점 박스
+=============================== */
+.avg-box {
+    background: #fff; /* 흰색 배경 */
+    border: 1px solid #e5e7eb; /* 결제내역 카드와 동일한 테두리 */
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avg-box-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.avg-box h1 {
+    font-weight: 700;
+    color: #0d1b2a; /* 결제내역의 금액 텍스트톤과 맞춤 */
+}
+
+.avg-box p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .avg-box {
+        padding: 1.5rem;
+    }
+    .avg-box h1 {
+        font-size: 2rem;
+    }
+}
+
+/* ===============================
+   📘 리뷰 목록 박스
+=============================== */
+.review-box {
+    background-color: var(--color-light-gray);
+    border: var(--border-black);
+    border-radius: 10px;
+    box-shadow: var(--shadow-default);
+    padding: 2rem;
+}
+
+/* ===============================
+   💰 강좌 수강비 스타일
+=============================== */
+.lecture-price {
+    font-size: 2rem;                /* 글씨 크기 확대 */
+    font-weight: 700;               /* 두껍게 */
+    color: var(--color-black);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-align: left;               /* 필요시 center로 변경 가능 */
+    letter-spacing: -0.02em;
+}
+
 
 
