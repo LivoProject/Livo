@@ -17,7 +17,7 @@
             <!-- 왼쪽: 텍스트 -->
             <div class="mb-3">
                 <a href="/lecture/list" class="btn-main">
-                    ← 강좌 목록으로
+                    ← 목록으로
                 </a>
             </div>
 
@@ -39,7 +39,9 @@
                     신청인원: <strong>${lecture.reservationCount}/${lecture.totalCount}</strong>
                 </p>
 
-                <h2 class="mt-4 text-primary fw-bold">수강비: ${lecture.price}원</h2>
+                <h2 class="lecture-price">
+                    수강비: <fmt:formatNumber value="${lecture.price}" pattern="#,###" />원
+                </h2>
 
                 <!-- 좋아요 + 결제하기 버튼 -->
                 <div class="mt-3">
@@ -47,7 +49,7 @@
                             type="button"
                             class="btn btn-outline-danger me-2"
                             data-lecture-id="${lecture.lectureId}">
-                        🤍좋아요
+                        🤍
                     </button>
 
                     <c:choose>
@@ -56,14 +58,14 @@
                             <c:choose>
                                 <%-- 이미 수강중 --%>
                                 <c:when test="${reservationStatus == 'CONFIRMED'}">
-                                    <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
+                                    <button type="button" class="btn-cancel" disabled>신청한 강의</button>
                                 </c:when>
 
                                 <%-- 무료 수강 가능 --%>
                                 <c:otherwise>
                                     <form action="/lecture/enroll/${lecture.lectureId}" method="post" style="display:inline;">
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                        <button type="submit" class="btn btn-success text-white">바로 수강하기</button>
+                                        <button type="submit" class="btn-point">바로 수강하기</button>
                                     </form>
                                 </c:otherwise>
                             </c:choose>
@@ -74,22 +76,22 @@
                             <c:choose>
                                 <%-- 아직 예약 자체가 없음 (전혀 신청 전) --%>
                                 <c:when test="${empty reservationStatus}">
-                                    <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">결제하기</button>
+                                    <button id="payButton" class="btn-point" onclick="requestPayment()">결제하기</button>
                                 </c:when>
 
                                 <%-- 결제 대기 상태 (위젯닫힘/실패 등) --%>
                                 <c:when test="${reservationStatus == 'PENDING'}">
-                                    <button class="btn btn-warning text-white" onclick="requestPayment()">결제 다시 시도</button>
+                                    <button class="btn-point" onclick="requestPayment()">결제 다시 시도</button>
                                 </c:when>
 
                                 <%-- 결제 완료됨 --%>
                                 <c:when test="${reservationStatus == 'PAID' || reservationStatus == 'CONFIRMED'}">
-                                    <button type="button" class="btn btn-secondary" disabled>신청한 강의</button>
+                                    <button type="button" class="btn-cancel" disabled>신청한 강의</button>
                                 </c:when>
 
                                 <%-- 환불됨 (다시 신청 가능) --%>
                                 <c:when test="${reservationStatus == 'CANCEL'}">
-                                    <button id="payButton" class="btn btn-warning text-white" onclick="requestPayment()">환불 후 재결제하기</button>
+                                    <button id="payButton" class="btn-point" onclick="requestPayment()">환불 후 재결제하기</button>
                                 </c:when>
                             </c:choose>
                         </c:otherwise>
@@ -161,8 +163,8 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>주차</th>
-                        <th>학습내용</th>
+                        <th><strong>주차</strong></th>
+                        <th><strong>학습내용</strong></th>
                     </tr>
                 </thead>
                 <tbody>

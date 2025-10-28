@@ -1,13 +1,13 @@
 // ✅ 세부분류 목록 (주제별)
 const subCategories = {
-    1: ["프론트엔드", "백엔드", "데이터베이스", "인공지능(AI)", "클라우드/DevOps", "모바일 앱개발"],
-    2: ["시간관리", "리더십", "생산성 향상", "자기소개서/면접"],
-    3: ["사진/영상편집", "음악/작곡", "그림/디자인"],
-    4: ["요리/베이킹", "피트니스", "요가/명상"],
+    1: ["프론트엔드", "백엔드", "데이터베이스", "인공지능(AI)", "클라우드 / DevOps", "모바일 앱개발"],
+    2: ["시간관리", "리더십", "생산성 향상", "자기소개서 / 면접"],
+    3: ["사진 / 영상편집", "음악 / 작곡", "그림 / 디자인"],
+    4: ["요리 / 베이킹", "피트니스", "요가 / 명상"],
     5: ["영어회화", "일본어", "중국어", "한국어"],
-    6: ["심리학", "철학/역사", "정치/사회"],
-    7: ["정보처리기사", "SQLD/ADsP", "토익/토플", "컴퓨터활용능력"],
-    8: ["주식/투자", "부동산", "회계/재무관리"]
+    6: ["심리학", "철학 / 역사", "정치 / 사회"],
+    7: ["정보처리기사", "SQLD / ADsP", "토익 / 토플", "컴퓨터활용능력"],
+    8: ["주식 / 투자", "부동산", "회계 / 재무관리"]
 };
 
 const mainSelect = document.getElementById("mainCategory");
@@ -134,3 +134,29 @@ function renderPagination(totalPages, currentPage, mainCategory, subCategory) {
 
     paginationContainer.appendChild(ul);
 }
+
+// ✅ 페이지 로드시 mainCategory 파라미터가 있으면 자동으로 로드
+document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    const mainCategory = params.get("mainCategory");
+
+    if (mainCategory) {
+        // 1️⃣ select 박스 값 설정
+        mainSelect.value = mainCategory;
+
+        // 2️⃣ 세부 카테고리 목록 생성
+        subSelect.innerHTML = '<option value="">세부분류</option>';
+        if (subCategories[mainCategory]) {
+            subCategories[mainCategory].forEach(sub => {
+                const opt = document.createElement("option");
+                opt.value = sub;
+                opt.textContent = sub;
+                subSelect.appendChild(opt);
+            });
+        }
+
+        // 3️⃣ 강좌 리스트 비동기 로드
+        fetchLectures(mainCategory, null, 0);
+    }
+});
+
