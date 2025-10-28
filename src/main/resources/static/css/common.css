@@ -6,6 +6,7 @@
     --color-light-gray: #f8f9fa;
     --color-dark-gray: rgb(73, 80, 87);
     --color-main: #17b4c7;
+    --color-light-main: rgba(23, 180, 199, 0.9);
     --color-point: #ffcc02;
     --color-hover: rgba(23, 180, 199, 0.05);
     --color-light-hover: #e0f7fa;
@@ -37,10 +38,12 @@
 hr, .card {
     border-color: rgb(233, 236, 239);
 }
+
 .card-footer {
     background-color: transparent;
     border-color: rgb(233, 236, 239);
 }
+
 .password-toggle {
     position: absolute;
     right: 10px;
@@ -49,33 +52,43 @@ hr, .card {
     border: none;
     background-color: transparent;
 }
+
 h3 {
     font-size: 2rem;
     font-weight: 700;
     margin: 2rem 0;
     position: relative;
 }
+
 h4 {
     font-size: 1.3rem;
     font-weight: 700;
     margin: 1rem 0;
 }
+
 section {
     min-height: 100vh;
 }
+
 section.sub {
-    margin-top: 120px!important;
+    margin-top: 120px !important;
 }
-section.sub h3 {margin-top:0!important;}
-.modal-body p{
-    line-height: 1.5!important;
+
+section.sub h3 {
+    margin-top: 0 !important;
 }
+
+.modal-body p {
+    line-height: 1.5 !important;
+}
+
 /* 텍스트 말줄임 */
 .text-ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 /* 헤더 */
 header {
     width: 100%;
@@ -88,21 +101,25 @@ header {
     border-bottom: var(--border-black);
     z-index: 10;
 }
+
 header .logo {
     width: 5rem;
     margin-right: 2rem;
 }
+
 header .logo img {
     width: 100%;
 }
+
 header .nav-link {
     color: var(--color-black);
     transition: color 0.3s ease;
 }
+
 header .nav-link:hover,
 header .nav-link.active,
-header .header-actions >*:hover,
-header .header-actions .logout-button:hover{
+header .header-actions > *:hover,
+header .header-actions .logout-button:hover {
     color: var(--color-main);
 }
 
@@ -129,9 +146,11 @@ header .header-actions {
 header .header-actions > * {
     transition: color 0.3s ease;
 }
+
 header .header-actions .logout-button {
     transition: 0.3s;
 }
+
 header .header-actions a:nth-of-type(1),
 header .header-actions span {
     position: relative;
@@ -228,7 +247,7 @@ footer p {
 
 /* 챗봇 */
 .chat-fab {
-    background-color: var(--color-main)!important;
+    background-color: var(--color-main) !important;
     color: #fff;
     box-shadow: 0 10px 20px rgba(13, 110, 253, .35);
 }
@@ -236,6 +255,7 @@ footer p {
 .chat-fab img {
     width: 80%;
 }
+
 .chat-panel {
     position: fixed;
     right: 100px;
@@ -266,6 +286,7 @@ footer p {
     overflow-y: auto;
     flex: 1;
 }
+
 .chat-panel-input {
     flex: 0;
     display: flex;
@@ -284,7 +305,7 @@ footer p {
     padding: 10px;
     border-radius: 8px;
     background: #f5f5f5;
-    margin-right: 8px;     /* 버튼과 간격 */
+    margin-right: 8px; /* 버튼과 간격 */
 }
 
 .chat-panel-input button {
@@ -308,6 +329,7 @@ footer p {
     word-break: keep-all;
     white-space: pre-wrap; /* 줄바꿈 유지 */
 }
+
 .user-message {
     align-self: flex-end;
     background-color: #DCF8C6; /* 밝은 민트 */
@@ -320,6 +342,7 @@ footer p {
     background-color: #F1F1F1;
     border-bottom-left-radius: 3px;
 }
+
 .loading-message {
     align-self: flex-start;
     background-color: #F1F1F1;
@@ -342,10 +365,18 @@ footer p {
 }
 
 @keyframes dots {
-    0% { content: ""; }
-    25% { content: "."; }
-    50% { content: ".."; }
-    75% { content: "..."; }
+    0% {
+        content: "";
+    }
+    25% {
+        content: ".";
+    }
+    50% {
+        content: "..";
+    }
+    75% {
+        content: "...";
+    }
 }
 
 .floating-buttons {
@@ -437,6 +468,7 @@ footer p {
     animation: pulse 1.2s infinite alternate;
     border: 1px solid #ffcc00 !important;
 }
+
 .btn-main,
 .btn-cancel,
 .btn-point,
@@ -447,15 +479,17 @@ footer p {
     transition: 0.3s;
     display: inline-block;
 }
+
 .btn-main {
     background-color: var(--color-main);
     color: var(--color-white);
 }
+
 .btn-main:hover,
 .btn-main:hover:active {
     background-color: #14a7b9;
     color: var(--color-white);
-    box-shadow: 0 2px 5px rgba(23,180,199,0.25);
+    box-shadow: 0 2px 5px rgba(23, 180, 199, 0.25);
 }
 
 .btn-cancel {
@@ -463,34 +497,39 @@ footer p {
     color: #2f2f2f;
     border: none;
 }
-.btn-cancel:hover{
+
+.btn-cancel:hover {
     background-color: #cfd5d8;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .btn-cancel:active {
     background-color: #cfd5d8;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05) ;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+
 .btn-point {
     background-color: var(--color-point);
     color: var(--color-black);
     border: none;
 }
+
 .btn-point:hover,
 .btn-point:hover:active {
     background-color: #eac341;
-    box-shadow: 0 2px 5px rgba(255,216,77,0.25);
+    box-shadow: 0 2px 5px rgba(255, 216, 77, 0.25);
 }
+
 .btn-outline-main {
     background-color: var(--color-white);
     color: var(--color-main);
     border: 1px solid #17b4c7;
 }
+
 .btn-outline-main:hover {
     background-color: var(--color-main);
     color: var(--color-white);
-    box-shadow: 0 2px 5px rgba(23,180,199,0.1);
+    box-shadow: 0 2px 5px rgba(23, 180, 199, 0.1);
 }
 
 @keyframes pulse {
@@ -651,6 +690,7 @@ footer p {
     pointer-events: none;
     opacity: 0.6;
 }
+
 /* === LiVO 기본 테이블 스타일 === */
 .table-wrap {
     width: 100%;
@@ -672,13 +712,18 @@ table {
 
 /* 헤더 */
 thead {
-    background: var(--color-main);
+    background: var(--color-light-main);
     color: var(--color-white);
     font-weight: 600;
 }
 
-th, td {
-    padding: 0.9rem 1rem;
+th {
+    padding: 0.9em;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+td {
+    padding: 1.5rem;
     border-bottom: 1px solid #e5e5e5;
 }
 

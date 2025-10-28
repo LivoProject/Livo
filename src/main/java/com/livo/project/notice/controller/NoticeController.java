@@ -6,6 +6,10 @@ import com.livo.project.auth.repository.UserRepository;
 import com.livo.project.notice.domain.entity.Notice;
 import com.livo.project.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +28,11 @@ public class NoticeController {
 
     // 공지사항 목록
     @GetMapping("/list")
-    public String noticeList(Model model) {
-        List<NoticeListDto> notices = noticeService.findAllNoticeDtos();
-        model.addAttribute("notices", notices);
+    public String noticeList(Model model, @PageableDefault(size = 10) Pageable pageable) {
+        Page<NoticeListDto> notices = noticeService.findAllNoticeDtos(pageable);
+
+        model.addAttribute("notices", notices.getContent());
+        model.addAttribute("page", notices);
         return "notice/list";
     }
 

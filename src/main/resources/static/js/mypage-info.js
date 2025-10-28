@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(res => res.json())
             .then(data => {
                 // ✅ 모달 세팅
-                modalTitle.textContent = data.success ? "";
+                modalTitle.textContent = "";
                 modalBody.innerHTML = data.message || "정보 수정 중 오류가 발생했습니다.";
                 btnMain.textContent = "확인";
                 btnCancel.style.display = "none";
