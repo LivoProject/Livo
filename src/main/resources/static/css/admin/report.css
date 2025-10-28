@@ -1,0 +1,33 @@
+.badge {
+    display: inline-block;
+    padding: 4px 10px;        /* 여백 적당하게 */
+    font-size: 0.75rem;       /* 가독성 좋은 사이즈 */
+    font-weight: 600;         /* 약간 굵게 */
+    border-radius: 9999px;    /* pill 형태 유지 */
+    white-space: nowrap;
+    vertical-align: middle;
+    line-height: 1.2;         /* 위아래 여백 안정화 */
+}
+#approveBtn{
+    background-color: var(--color-main);
+    color: var(--color-white);
+    border-color: #14a7b9;
+}
+#approveBtn:hover,
+#approveBtn:active{
+    background-color: #14a7b9;
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.25);
+    border-color: #14a7b9;
+}
+#rejectBtn{
+    background-color: var(--color-white);
+    color: var(--color-main);
+    border: 1px solid #17b4c7;
+}
+#rejectBtn:hover{
+    background-color: var(--color-main);
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23,180,199,0.1);
+    border-color: #14a7b9;
+}

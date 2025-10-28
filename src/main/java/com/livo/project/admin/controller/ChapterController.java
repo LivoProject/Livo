@@ -22,7 +22,7 @@ public class ChapterController {
     /*챕터 등록*/
     @GetMapping("/form")
     public String chapterForm(){
-        return "chapterEdit";
+        return "admin/chapterForm";
     }
 
     @PostMapping("/save")

@@ -33,11 +33,8 @@ $(document).on('click', '.editBtn', function() {
         case 'lecture':
             url = `/admin/lecture/edit?lectureId=${id}`;
             break;
-        case 'notice':
-            url = `/admin/notice/edit?noticeId=${id}`;
-            break;
         case 'faq':
-            url = `/admin/faq/edit?faqId=${id}`;
+            url = `/admin/faq/edit?id=${id}`;
             break;
         default:
             console.error('Unknown type: ',type)

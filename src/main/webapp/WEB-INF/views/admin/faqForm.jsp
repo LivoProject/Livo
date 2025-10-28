@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
+<link rel="stylesheet" href="css/admin/faq.css"/>
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
         <!-- 메인 콘텐츠 -->
@@ -19,8 +20,8 @@
                         <textarea class="form-control" id="answer" name="answer" rows="5" required></textarea>
                     </div>
                     <div class="btn-group">
-                        <button type="submit" class="btn btn-primary w-sm-100" style="max-width: 200px;">등록하기</button>
-                        <button type="reset" class="btn btn-primary w-sm-100" style="max-width: 200px;">초기화</button>
+                        <button type="submit" class="btn btn-primary w-sm-100">등록하기</button>
+                        <button type="reset" class="btn btn-primary w-sm-100">초기화</button>
                     </div>
                 </form>
             </div>

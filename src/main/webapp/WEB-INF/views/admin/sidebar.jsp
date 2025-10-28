@@ -11,30 +11,34 @@
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Swiper -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/reset.css" />
-    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/reset.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/admin/dashboard.css"/>
+    <link rel="stylesheet" href="/css/admin/sidebar.css"/>
     <!--<link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/sub.css" /> -->
-    <link rel="stylesheet" href="/css/admin/dashboard.css" />
     <!-- chart -->
     <link rel="stylesheet" href="/css/admin/chart.css"/>
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js"></script>
-    <!-- JS -->
+    <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Summernote -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
     <!-- Custom js -->
     <script src="/js/common.js"></script>
+    <script src="/js/admin/sidebar.js"></script>
     <!--<script src="/js/main.js"></script>
     <script src="/js/sub.js"></script>-->
-    <script src="/js/admin/sidebar.js"></script>
 </head>
 <body>
 <div class="g-sidenav-show bg-gray-200">
@@ -54,12 +58,9 @@
                 <li><a href="/admin/chart" class="nav-link"><i class="bi bi-bar-chart me-2"></i>통계</a></li>
                 <li><a href="/admin/lecture" class="nav-link"><i class="bi bi-people me-2"></i>강의 관리</a></li>
                 <li><a href="/admin/report" class="nav-link"><i class="bi bi-people me-2"></i>신고 처리</a></li>
-                <li><a href="/admin/notice/list" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
+                <li><a href="/admin/notice" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
                 <li><a href="/admin/faq" class="nav-link"><i class="bi bi-gear me-2"></i>FAQ 관리</a></li>
             </ul>
-        </div>
-        <div class="ps__rail-y" style="top: 0px; height: 972px; right: 0px;">
-            <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 717px;"></div>
         </div>
     </aside>
     <!-- Mobile Sidebar (Offcanvas) -->
@@ -75,7 +76,7 @@
                 <li><a href="/admin/chart" class="nav-link"><i class="bi bi-bar-chart me-2"></i>통계</a></li>
                 <li><a href="/admin/lecture" class="nav-link"><i class="bi bi-people me-2"></i>강의 관리</a></li>
                 <li><a href="/admin/report" class="nav-link"><i class="bi bi-people me-2"></i>신고 처리</a></li>
-                <li><a href="/admin/notice/list" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
+                <li><a href="/admin/notice" class="nav-link"><i class="bi bi-gear me-2"></i>공지사항 관리</a></li>
                 <li><a href="/admin/faq" class="nav-link"><i class="bi bi-gear me-2"></i>FAQ 관리</a></li>
             </ul>
 

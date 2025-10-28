@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
+<link rel="stylesheet" href="/css/admin/report.css"/>
+
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
     <!-- 메인 콘텐츠 -->
@@ -38,13 +40,7 @@
 </main>
 </div>
 </div>
-<script src="/js/modal.js"></script>
 <script src="/js/admin/report.js"></script>
-<script>
-    $(document).ready(function() {
-        loadReports(); // 페이지 로드시 신고 목록 로드
-    });
-</script>
 </body>
 </html>
 
