@@ -35,7 +35,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    object-fit: cover;
+    object-fit: none;
 }
 
 #mainSlide .carousel-img p {
@@ -165,10 +165,11 @@
     line-height: 1.5;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-#noticeRolling .swiper-slide:hover {
-    transform: scale(1.01);
-    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+#noticeRolling .swiper-slide a > *{
+    transition: 0.3s;
+}
+#noticeRolling .swiper-slide:hover a > *{
+    color: var(--color-main);
 }
 
 #noticeRolling .notice-text {
@@ -238,8 +239,8 @@
 
 #main .popular-card img {
     width: 100%;
-    height: 150px;
-    object-fit: cover;
+    height: 200px;
+    object-fit: none;
 }
 
 #main .popular-card .play-btn,
@@ -268,10 +269,9 @@
 }
 
 #main .popular-card .card-body {
-    height: 150px;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 #main .popular-card .card-review {
@@ -670,3 +670,43 @@
     }
 }
 
+.notice-board {
+    padding: 3rem;
+}
+.notice-board .card-header {
+    display: flex;
+    justify-content: space-between;
+    /* background: red; */
+    align-items: center;
+}
+.notice-board .card-header h3 {
+    margin-top: 0;
+}
+.notice-board .notice-list {
+    padding: 1rem 0rem 1rem 1.5rem;
+    border-bottom: var(--border-black);
+}
+.notice-board .notice-list:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+.notice-board .notice-list a {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    transition: 0.3s;
+}
+.notice-board .notice-list a:hover {
+    color: var(--color-main);
+}
+.notice-board .notice-list a:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -1rem;
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-main);
+}

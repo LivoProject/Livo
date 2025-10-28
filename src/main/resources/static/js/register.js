@@ -121,7 +121,7 @@
         if (!email) { setMsg('email', false, '이메일을 입력해 주세요.'); emailInput.focus(); return; }
 
         disable(btnSendCode, true);
-        btnSendCode.textContent = '전송 중...';
+        btnSendCode.textContent = '전송 중';
 
         try {
             const res = await fetch(URL_SEND_CODE, {
@@ -295,9 +295,21 @@
     });
 
     // 비밀번호 보기 토글
-    document.querySelector('.password-toggle')?.addEventListener('click', () => {
-        const pw = $('#password');
-        if (!pw) return;
-        pw.type = pw.type === 'password' ? 'text' : 'password';
+    //document.querySelector('.password-toggle')?.addEventListener('click', () => {
+    //    const pw = $('#password');
+    //    if (!pw) return;
+    //    pw.type = pw.type === 'password' ? 'text' : 'password';
+    //});
+    // 비밀번호 보기 토글 (각 버튼마다 독립 작동)
+    document.querySelectorAll(".password-toggle").forEach(button => {
+        button.addEventListener("click", () => {
+            const input = button.parentElement.querySelector(".pw-input");
+            const icon = button.querySelector("i");
+            const isPassword = input.getAttribute("type") === "password";
+
+            input.setAttribute("type", isPassword ? "text" : "password");
+            icon.classList.toggle("bi-eye");
+            icon.classList.toggle("bi-eye-slash");
+        });
     });
 })();

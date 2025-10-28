@@ -43,8 +43,8 @@
                         <div class="card-footer">
 
                             <div class="button-wrap">
-                                <a href="/lecture/view/${reservations.lectureId}" class="btn-main">이어보기</a>
-                                <button class="btn-unreserve btn-cancel"
+<%--                                <a href="/lecture/view/${reservations.lectureId}" class="btn-main">이어보기</a>--%>
+                                <button class="btn-unreserve btn-main"
                                         data-lecture-id="${reservations.lectureId}"
                                         data-bs-toggle="modal"
                                         data-bs-target="#reserveModal">

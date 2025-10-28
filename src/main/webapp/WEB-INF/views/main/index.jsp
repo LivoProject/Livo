@@ -93,7 +93,7 @@
             <div class="category-grid">
 
                 <c:forEach var="category" items="${categories}" varStatus="status">
-               <a href="/lecture/search?mainCategory=${category.categoryId}" class="category-box">
+                    <a href="/lecture/search?mainCategory=${category.categoryId}" class="category-box">
 
 
                         <i class="
@@ -129,7 +129,7 @@
                     <c:forEach var="lectureP" items="${popularLectures}">
                         <!-- -->
                         <div class="swiper-slide">
-                             <a href="/lecture/content/${lectureP.lectureId}" class="card popular-card">
+                            <a href="/lecture/content/${lectureP.lectureId}" class="card popular-card">
                                 <div>
                                     <img src="${lectureP.thumbnailUrl}">
                                 </div>
@@ -186,21 +186,19 @@
 
     <section id="info">
         <div class="container">
-            <div class="board">
-                <div class="d-flex justify-content-between align-items-center">
+            <div class="board notice-board">
+                <div class="card-header">
                     <h3>공지사항</h3>
                     <a href=/notice/content"><i class="bi bi-plus-lg"></i></a>
                 </div>
-                <ul class="list-unstyled">
-                    <c:forEach var="notice" items="${notices}">
-                        <li>
-                            <a href="/notice/content?id=${notice.id}">
-                                <span>${notice.title}</span>
-                                <small>${notice.createdAt}</small>
-                            </a>
-                        </li>
-                    </c:forEach>
-                </ul>
+                <c:forEach var="notice" items="${notices}">
+                    <div class="notice-list">
+                        <a href="/notice/content?id=${notice.id}">
+                            <span>${notice.title}</span>
+                            <small>${notice.createdAt}</small>
+                        </a>
+                    </div>
+                </c:forEach>
             </div>
         </div>
     </section>

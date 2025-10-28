@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const csrf = document.querySelector('meta[name="_csrf"]')?.content || '';
     const csrfH = document.querySelector('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
-    const form = $('#signupForm');
+    const form = document.getElementById("infoUpdateForm");
     const btnSubmit = form?.querySelector('.btn-submit');
 
     // ────────────────────── helper ──────────────────────
@@ -115,27 +115,24 @@ document.addEventListener("DOMContentLoaded", function () {
             alert('입력값을 다시 확인해주세요.');
         }
     });
+    // =====================================================
+// 💾 회원정보 수정 - 공통 모달 사용
+// =====================================================
+    if (!form) return;
 
+    // === 공통 모달 === //
+    const modal = document.getElementById("exampleModal");
+    const bsModal = new bootstrap.Modal(modal);
+    const modalTitle = modal.querySelector(".modal-title");
+    const modalBody = modal.querySelector(".modal-body");
+    const btnMain = modal.querySelector(".btn-main");
+    const btnCancel = modal.querySelector(".btn-cancel");
 
-    // 정보 수정했을때 확인 모달
-    // ✅ 공통 모달 제어 함수
-    function showInfoModal(title, message) {
-        const modalTitle = document.getElementById("infoModalLabel");
-        const modalBody = document.querySelector("#infoModal .modal-body");
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-        if (modalTitle) modalTitle.textContent = title;
-        if (modalBody) modalBody.textContent = message;
-
-        // Bootstrap 모달 객체 생성
-        const modalElement = document.getElementById("infoModal");
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
-    }
-
-    document.querySelector("#signupForm").addEventListener("submit", function (e) {
-        e.preventDefault(); // 폼 기본 동작 막기
-
-        const formData = new FormData(this);
+        const formData = new FormData(form);
+        console.log("폼 찾음:", form)
 
         fetch("/mypage/update", {
             method: "POST",
@@ -143,16 +140,32 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(res => res.json())
             .then(data => {
-                if (data.success) {
-                    showInfoModal("✅ 수정 완료", data.message);
-                } else {
-                    showInfoModal("⚠️ 수정 실패", data.message || "정보 수정 중 오류가 발생했습니다.");
-                }
+                // ✅ 모달 세팅
+                modalTitle.textContent = "";
+                modalBody.innerHTML = data.message || "정보 수정 중 오류가 발생했습니다.";
+                btnMain.textContent = "확인";
+                btnCancel.style.display = "none";
+                bsModal.show();
+
+                // ✅ 확인 클릭 시 새로고침
+                btnMain.onclick = () => {
+                    bsModal.hide();
+                    if (data.success) window.location.reload();
+                };
             })
             .catch(err => {
-                showInfoModal("❌ 서버 오류", "서버와의 통신 중 문제가 발생했습니다.");
-                console.error(err);
+                modalTitle.textContent = "❌ 서버 오류";
+                modalBody.innerHTML = "서버 통신 중 문제가 발생했습니다.<br>잠시 후 다시 시도해주세요.";
+                btnMain.textContent = "닫기";
+                btnCancel.style.display = "none";
+                bsModal.show();
             });
     });
+
+    // 모달 닫힐 때 초기화
+    modal.addEventListener("hidden.bs.modal", () => {
+        btnMain.onclick = null;
+    });
+
 
 });

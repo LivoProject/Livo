@@ -11,9 +11,11 @@
 
     <!-- 스타일 -->
     <link rel="stylesheet" href="/css/auth/reset.css"/>
+    <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/auth/login.css"/>
     <!-- Bootstrap Icons CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <script src="/js/common.js"></script>
 
     <!-- (AJAX 사용 시) CSRF 메타 -->
@@ -56,7 +58,7 @@
             <i class="bi bi-lock"></i>
 
             <input id="password" class="pw-input" type="password" name="password" placeholder="비밀번호 입력" required/>
-            <button class="toggle-password" type="button">
+            <button class="password-toggle" type="button">
                 <i class="bi bi-eye"></i>
             </button>
         </div>

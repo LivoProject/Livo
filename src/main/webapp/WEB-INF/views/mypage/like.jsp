@@ -53,7 +53,7 @@
                                                 data-bs-target="#likeModal">
                                             삭제하기
                                         </button>
-                                        <a href="/lecture/view/${lecture.lectureId}" class="btn-cancel">이어보기</a>
+<%--                                        <a href="/lecture/view/${lecture.lectureId}" class="btn-cancel">이어보기</a>--%>
 
                                         <a href="/lecture/content/${lecture.lectureId}#review" class="btn-cancel">수강평
                                             작성</a>
