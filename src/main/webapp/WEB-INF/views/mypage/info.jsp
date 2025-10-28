@@ -45,7 +45,7 @@
             <div class="alert alert-danger">${errorMessage}</div>
         </c:if>
 
-        <form class="info-form" method="post" action="update" novalidate>
+        <form id="infoUpdateForm" class="info-form" method="post" action="update" novalidate>
 
             <!-- CSRF -->
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -149,5 +149,6 @@
 
 
 <script src="/js/mypage-info.js"></script>
+<script src="/js/mypage.js"></script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 
