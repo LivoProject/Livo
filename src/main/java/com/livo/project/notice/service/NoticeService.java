@@ -4,6 +4,8 @@ import com.livo.project.admin.domain.dto.NoticeListDto;
 import com.livo.project.notice.domain.entity.Notice;
 import com.livo.project.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +15,8 @@ import java.util.List;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
 
-    public List<NoticeListDto> findAllNoticeDtos() {
-        return noticeRepository.findNoticeListWithNickname();
+    public Page<NoticeListDto> findAllNoticeDtos(Pageable pageable) {
+        return noticeRepository.findNoticeListWithNickname(pageable);
     }
 
     public Notice findNoticeById(int id){

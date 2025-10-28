@@ -37,7 +37,8 @@ public interface NoticeRepository extends JpaRepository<Notice, Integer> {
     where n.isVisible = true
     order by n.createdAt desc
 """)
-    List<NoticeListDto> findNoticeListWithNickname();
+    Page<NoticeListDto> findNoticeListWithNickname(Pageable pageable);
+
 
     // 관리자용: 검색 + 페이징(정렬은 기존처럼 최신순 유지)
     @Query("""

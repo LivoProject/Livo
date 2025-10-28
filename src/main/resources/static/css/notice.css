@@ -1,53 +1,22 @@
-/* 전체 섹션 */
+/* ==============================
+   📢 Notice Detail (공지사항 상세)
+   ============================== */
 
-
-/* 테이블 기본 */
-.table {
-    border-radius: 0.3rem;
-    overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+#noticeDetail > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
-
-/* 테이블 헤더 */
-.table thead.table-primary {
-    background-color: #e8f8fa !important;
-    color: #0a6d7e;
-    font-weight: 600;
-    border-bottom: 2px solid #bce3e7;
+.write-info-small {
+    display: flex;
+    gap: 1rem;
+    color: var(--color-gray);
+    position: relative;
 }
-
-/* 행 hover 효과 */
-.table-hover tbody tr:hover {
-    background-color: #eee !important;
-    transition: 0.2s ease;
+.write-info {
+    border-top: var(--border-black);
+    border-bottom: var(--border-black);
 }
-
-/* 셀 정렬 & 여백 */
-.table th, .table td {
-    vertical-align: middle;
-    padding: 12px 16px !important;
-    color: #333;
-}
-
-/* 제목 열: 클릭 가능 느낌 */
-.table td:nth-child(2) {
-    font-weight: 500;
-    color: #222;
-}
-
-/* 클릭 커서 */
-.table tbody tr {
-    cursor: pointer;
-}
-
-/* 글 없을 때 문구 */
-.text-muted {
-    color: #777 !important;
-}
-
-.card {
-    border-radius: 0.3rem!important;
-}
-.card-header {
-    background-color: #e8f8fa;
+.content-area{
+    padding: 5rem 0;
 }

@@ -36,6 +36,9 @@
     <c:if test="${empty notices}">
         <p class="text-center text-muted mt-4">등록된 공지사항이 없습니다.</p>
     </c:if>
+
+    <jsp:include page="/WEB-INF/views/common/pagination.jsp"/>
 </section>
+
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
