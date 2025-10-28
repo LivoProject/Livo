@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
+<link rel="stylesheet" href="css/admin/lecture.css"/>
+
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
     <!-- 메인 콘텐츠 -->
@@ -92,16 +94,13 @@
                     <textarea id="summernote" name="content"></textarea>
                 </div>
 
-                <button id="nextStepBtn" class="btn btn-primary w-sm-100" style="max-width: 200px;">다음 단계</button>
+                <button id="nextStepBtn" class="btn btn-primary w-sm-100">다음 단계</button>
             </form>
         </div>
     </div>
 </main>
 </div>
 </div>
-<!-- Summernote -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
 <script src="/js/admin/lecture.js"></script>
 <script src="/js/admin/lectureForm.js"></script>
 </body>

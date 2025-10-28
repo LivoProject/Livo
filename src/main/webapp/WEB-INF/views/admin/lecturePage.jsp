@@ -3,6 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
+<link rel="stylesheet" href="css/admin/lecture.css"/>
+
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
     <!-- 메인 콘텐츠 -->
@@ -136,11 +138,5 @@
 </div>
 </div>
 <script src="/js/admin/lectureSearch.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        searchLectures(0);
-    });
-</script>
 </body>
-
 </html>

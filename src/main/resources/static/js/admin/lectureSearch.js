@@ -1,8 +1,3 @@
-// $(document).ajaxSend(function(e, xhr, options) {
-//     const token = $("meta[name='_csrf']").attr("content");
-//     const header = $("meta[name='_csrf_header']").attr("content");
-//     if (token && header) xhr.setRequestHeader(header, token);
-// });
 document.addEventListener("DOMContentLoaded", () =>{
     let selectedCategoryId = null;
     let currentPage = 0;
@@ -53,23 +48,48 @@ document.addEventListener("DOMContentLoaded", () =>{
         const pagination = $("#pagination");
         pagination.empty();
 
-        if(totalPages <= 1) return;
+        if (totalPages <= 1) return;
 
-        for (let i = 0; i < totalPages; i++) {
+        // 이전 버튼
+        if (currentPageIndex > 0) {
+            pagination.append(`
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${currentPageIndex - 1}"><i class="bi bi-chevron-left"></i></a>
+            </li>
+        `);
+        }
+
+        // 페이지 숫자 (최대 5개만 보이게)
+        const maxVisible = 5;
+        const startPage = Math.max(0, currentPageIndex - Math.floor(maxVisible / 2));
+        const endPage = Math.min(totalPages, startPage + maxVisible);
+
+        for (let i = startPage; i < endPage; i++) {
             const active = (i === currentPageIndex) ? "active" : "";
-            const pageItem = `
+            pagination.append(`
             <li class="page-item ${active}">
                 <a class="page-link" href="#" data-page="${i}">${i + 1}</a>
-            </li>`;
-            pagination.append(pageItem);
+            </li>
+        `);
         }
-        //중복 방지 후 이벤트 등록
+
+        // 다음 버튼
+        if (currentPageIndex < totalPages - 1) {
+            pagination.append(`
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${currentPageIndex + 1}"><i class="bi bi-chevron-right"></i></a>
+            </li>
+        `);
+        }
+
+        // 이벤트 등록 (중복 방지)
         $(".page-link").off("click").on("click", function (e) {
             e.preventDefault();
             const page = parseInt($(this).data("page"));
             searchLectures(page);
         });
     }
+
 
     // AJAX 검색 함수
     window.searchLectures = function (page=0) {
@@ -147,4 +167,5 @@ document.addEventListener("DOMContentLoaded", () =>{
             }
         });
     };
+    searchLectures(0);
 });

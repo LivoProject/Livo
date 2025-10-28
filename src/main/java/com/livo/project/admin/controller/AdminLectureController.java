@@ -27,10 +27,7 @@ public class AdminLectureController {
     private final CategoryRepository categoryRepository;
     private final FileService fileService;
 
-//    @GetMapping("")
-//    public String showLecturePage(){
-//        return "admin/lecturePage";
-//    }
+
     @GetMapping("/insert")
     public String showLectureForm(Model model){
         List<Category> parents = categoryRepository.findByParentIsNull();
@@ -38,12 +35,6 @@ public class AdminLectureController {
         return "admin/lectureForm";
     }
 
-//    @PostMapping("/save")
-//    @ResponseBody
-//    public ResponseEntity<?> saveLecture(@RequestParam("categoryId")int categoryId, @ModelAttribute Lecture lecture){
-//        Lecture saved = lectureAdminService.saveLecture(lecture, categoryId);
-//        return ResponseEntity.ok(Map.of("lectureId", saved.getLectureId()));
-//    }
 
     @PostMapping(value = "/save", consumes = "multipart/form-data")
     @ResponseBody
