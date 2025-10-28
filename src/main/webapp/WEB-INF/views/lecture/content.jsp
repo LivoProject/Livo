@@ -27,13 +27,13 @@
                 <p class="lead mb-2">강사: <strong>${lecture.tutorName}</strong></p>
                 <p class="lead mb-2">
                     신청기간:
-                    <strong><fmt:formatDate value="${lecture.reservationStart}" pattern="yyyy-MM-dd" /></strong> ~
-                    <strong><fmt:formatDate value="${lecture.reservationEnd}" pattern="yyyy-MM-dd" /></strong>
+                    <strong>${lecture.reservationStart.toLocalDate()}</strong> ~
+                    <strong>${lecture.reservationEnd.toLocalDate()}</strong>
                 </p>
                 <p class="lead mb-2">
                     강좌기간:
-                    <strong><fmt:formatDate value="${lecture.lectureStart}" pattern="yyyy-MM-dd" /></strong> ~
-                    <strong><fmt:formatDate value="${lecture.lectureEnd}" pattern="yyyy-MM-dd" /></strong>
+                    <strong>${lecture.lectureStart}</strong> ~
+                    <strong>${lecture.lectureEnd}</strong>
                 </p>
                 <p class="lead mb-2">
                     신청인원: <strong>${lecture.reservationCount}/${lecture.totalCount}</strong>
@@ -74,6 +74,15 @@
                         <%-- 유료 강의 --%>
                         <c:otherwise>
                             <c:choose>
+                            <%-- 강의 상태에 따른 버튼 --%>
+                                <c:when test="${lecture.status == 'CLOSED' || lecture.status == 'ENDED'}">
+                                    <button type="button" class="btn-cancel" disabled>
+                                        <c:choose>
+                                            <c:when test="${lecture.status == 'CLOSED'}">예약 마감</c:when>
+                                            <c:when test="${lecture.status == 'ENDED'}">강의 종료</c:when>
+                                        </c:choose>
+                                    </button>
+                                </c:when>
                                 <%-- 아직 예약 자체가 없음 (전혀 신청 전) --%>
                                 <c:when test="${empty reservationStatus}">
                                     <button id="payButton" class="btn-point" onclick="requestPayment()">결제하기</button>

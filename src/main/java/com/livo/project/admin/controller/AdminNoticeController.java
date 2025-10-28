@@ -52,7 +52,7 @@ public class AdminNoticeController {
     public String editForm(@PathVariable int id, Model model) {
         Notice n = service.get(id);
         model.addAttribute("n", n);
-        return "noticeForm";
+        return "admin/noticeForm";
     }
 
     /** 공지 수정 */

@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -31,21 +33,24 @@ public class Lecture {
 
     @Lob
     private String tutorInfo;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date reservationStart;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private Date reservationEnd;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date lectureStart;
+    private LocalDateTime reservationStart;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date lectureEnd;
+    private LocalDateTime reservationEnd;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate lectureStart;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate lectureEnd;
 
     private int totalCount;
     private int reservationCount = 0;
     private int price;
 
     private Boolean isFree = false;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private LectureStatus status = LectureStatus.OPEN;  // 기본 OPEN
+
     private String thumbnailUrl;
     private boolean customThumbnail;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -59,5 +64,9 @@ public class Lecture {
     @OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Payment> payments;
+
+    public enum LectureStatus  {
+        OPEN,CLOSED,ENDED
+    }
 
 }

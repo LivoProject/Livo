@@ -14,11 +14,11 @@ public class LectureSearch {
     private String priceType;
     private String status;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date reservationStartDate;
+    private LocalDateTime reservationStartDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date reservationEndDate;
+    private LocalDateTime reservationEndDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date lectureStartDate;
+    private LocalDate lectureStartDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date lectureEndDate;
+    private LocalDate lectureEndDate;
 }
