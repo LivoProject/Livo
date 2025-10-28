@@ -27,135 +27,48 @@
             </div>
         </div>
 
-        <!-- =========================
-             회원 성장 추이 (월별 가입자 수)
-        ========================== -->
-        <div class="row g-4 mt-1">
-            <div class="col-12">
-                <div class="lv-card">
-                    <div class="lv-card-header d-flex align-items-center justify-content-between">
-                        <h5 class="mb-0">회원 성장 추이 (월별 가입자 수)</h5>
-                    </div>
-                    <div class="lv-chart-wrap">
-                        <canvas id="signupChart" height="110"></canvas>
-                        <div class="lv-empty"  id="signup-empty"  hidden>데이터가 없습니다.</div>
-                        <div class="lv-loading" id="signup-loading" hidden>불러오는 중…</div>
-                        <div class="lv-error"  id="signup-error"  hidden>오류가 발생했습니다.</div>
-                    </div>
+        <!-- ============ 탭 헤더 ============ -->
+        <div class="lv-card lv-filter mt-3">
+            <div class="lv-tabs">
+                <button class="lv-tab is-active" data-tab="members">월별 가입자 수</button>
+                <button class="lv-tab" data-tab="revenue">매출/결제(월별)</button>
+                <button class="lv-tab" data-tab="instructors">강사 Top5</button>
+                <button class="lv-tab" data-tab="lectures">인기 강좌 Top5</button>
+
+                <div class="lv-tabs-right">
+                    <button id="applyFilter" class="btn btn-primary">불러오기</button>
                 </div>
             </div>
         </div>
 
-        <!-- =========================
-             매출/결제 현황 (월별)
-        ========================== -->
-        <div class="row g-4 mt-1">
-            <div class="col-12">
-                <div class="lv-card">
-                    <div class="lv-card-header d-flex align-items-center justify-content-between">
-                        <h5 class="mb-0">매출/결제 현황 (월별)</h5>
-                    </div>
-                    <div class="lv-chart-wrap">
-                        <canvas id="revenueChart" height="110"></canvas>
-                        <div class="lv-empty"  id="revenue-empty"  hidden>데이터가 없습니다.</div>
-                        <div class="lv-loading" id="revenue-loading" hidden>불러오는 중…</div>
-                        <div class="lv-error"  id="revenue-error"  hidden>오류가 발생했습니다.</div>
-                    </div>
-                </div>
+
+        <!-- ============ 공용 차트 패널 ============ -->
+        <div class="lv-card mt-3">
+            <div class="lv-card-header d-flex align-items-center justify-content-between">
+                <h5 id="panel-title" class="mb-0">회원 성장 추이 (월별 가입자 수)</h5>
+            </div>
+
+            <div class="lv-chart-wrap">
+                <canvas id="mainChart" height="140"></canvas>
+                <div class="lv-empty"  id="panel-empty"  hidden>데이터가 없습니다.</div>
+                <div class="lv-loading" id="panel-loading" hidden>불러오는 중…</div>
+                <div class="lv-error"  id="panel-error"  hidden>오류가 발생했습니다.</div>
             </div>
         </div>
 
-        <!-- =========================
-             강사별 강의 운영 현황 (Top5)
-             - 좌: 차트 / 우: 상세표
-        ========================== -->
-        <div class="row g-3 mt-1 mb-4">
-            <!-- 좌측: 강사 차트 -->
-            <div class="col-lg-8">
-                <div class="lv-card">
-                    <div class="lv-card-header">
-                        <h6 class="mb-0">강사별 강의 운영 현황 (Top5)</h6>
-                    </div>
-                    <div class="lv-chart-wrap">
-                        <canvas id="instructorOpsChart" height="140"></canvas>
-                        <div id="instructor-empty" class="lv-empty" hidden>데이터가 없습니다.</div>
-                        <div id="instructor-loading" class="lv-loading" hidden>불러오는 중...</div>
-                        <div id="instructor-error" class="lv-error" hidden>오류가 발생했습니다.</div>
-                    </div>
-                </div>
+        <!-- ============ (랭킹 탭 전용) 우측 표 ============ -->
+        <div id="side-table-card" class="lv-card mt-3" hidden>
+            <div class="lv-card-header">
+                <h6 id="side-title" class="mb-0">상세</h6>
             </div>
-
-            <!-- 우측: 강사 상세표 -->
-            <div class="col-lg-4">
-                <div class="lv-card">
-                    <div class="lv-card-header">
-                        <h6 class="mb-0">강사 Top5 (상세)</h6>
-                    </div>
-                    <div class="lv-table-wrap">
-                        <table id="instructorTable" class="table table-sm align-middle">
-                            <thead>
-                            <tr>
-                                <th>강사</th>
-                                <th class="text-end text-success">확정</th>
-                                <th class="text-end text-warning">대기</th>
-                                <th class="text-end text-danger">취소</th>
-                                <th class="text-end">매출</th>
-                                <th class="text-end">확정률</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <div id="instructor-table-empty" class="lv-empty" hidden>표시할 데이터가 없습니다.</div>
-                    </div>
-                </div>
+            <div class="lv-table-wrap">
+                <table id="sideTable" class="table table-sm align-middle">
+                    <thead id="sideThead"></thead>
+                    <tbody id="sideTbody"></tbody>
+                </table>
+                <div id="side-empty" class="lv-empty" hidden>표시할 데이터가 없습니다.</div>
             </div>
         </div>
-
-        <!-- =========================
-             인기 강좌 Top5 (차트 + 표)
-        ========================== -->
-        <div class="row g-4">
-            <!-- 좌: 차트 -->
-            <div class="col-lg-8">
-                <div class="lv-card">
-                    <div class="lv-card-header">
-                        <h5 class="mb-0">인기 강좌 Top5</h5>
-                    </div>
-                    <div class="lv-chart-wrap">
-                        <canvas id="topLectures"></canvas>
-                        <div class="lv-empty" id="chart-empty" hidden>데이터가 없습니다.</div>
-                        <div class="lv-loading" id="chart-loading" hidden>불러오는 중…</div>
-                        <div class="lv-error" id="chart-error" hidden>오류가 발생했습니다.</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 우: 상세 테이블 -->
-            <div class="col-lg-4">
-                <div class="lv-card">
-                    <div class="lv-card-header">
-                        <h6 class="mb-0">인기 강좌(Top5)</h6>
-                    </div>
-                    <div class="lv-table-wrap">
-                        <table id="topTable" class="table table-sm table-hover align-middle">
-                            <thead>
-                            <tr>
-                                <th>강좌</th>
-                                <th class="text-end">전체</th>
-                                <th class="text-end text-success">확정</th>
-                                <th class="text-end text-danger">취소</th>
-                                <th class="text-end text-warning">대기</th>
-                                <th class="text-end">예약률</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <div class="lv-empty" id="table-empty" hidden>표시할 데이터가 없습니다.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <!-- Chart.js -->
