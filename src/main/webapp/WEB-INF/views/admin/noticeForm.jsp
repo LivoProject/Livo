@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="right">
-            <a class="btn btn-ghost" href="<c:url value='/admin/notice/list'/>">목록</a>
+            <a class="btn btn-ghost" href="<c:url value='/admin/notice'/>">목록</a>
         </div>
     </div>
 

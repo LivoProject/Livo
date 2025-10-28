@@ -1,14 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
+<link rel="stylesheet" href="/css/admin/chapter.css"/>
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
 
     <div class="container-fluid py-4 px-5">
         <div class="form-section">
             <h5 class="mb-4 fw-bold">2단계: 챕터 등록</h5>
-
-<%--            <input type="hidden" id="lectureId" value="${lectureId}" />--%>
 
             <div id="chapterContainer" class="sortable">
                 <div class="chapter border rounded p-3 mb-3">
@@ -36,5 +35,5 @@
     </div>
 </main>
 </div>
-</body>
 <script src="/js/admin/chapterForm.js"></script>
+</body>

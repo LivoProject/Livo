@@ -18,7 +18,7 @@
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item d-flex align-items-center">
                     <!--  로그아웃: 반드시 POST + CSRF -->
-                    <form action="${pageContext.request.contextPath}/auth/logout" method="post" style="margin:0;">
+                    <form action="${pageContext.request.contextPath}/auth/logout" method="post">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <button type="submit" class="btn btn-outline-danger btn-sm px-3">
                             <i class="fa fa-sign-out me-sm-1"></i>

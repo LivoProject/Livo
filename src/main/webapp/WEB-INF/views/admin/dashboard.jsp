@@ -51,12 +51,12 @@
                     <div class="card-body px-4">
                         <div class="row">
                             <div class="col">
-                                <div class="card-title fs-4 fw-semibold">강의 관리</div>
+                                <div class="card-title fs-4 fw-semibold">최근 등록된 강의</div>
                                 <div class="card-subtitle text-body-secondary mb-4"></div>
                             </div>
                         </div>
                         <div class="table-responsive small">
-                            <table class="table table-striped table-sm">
+                            <table class="table table-sm">
                                 <thead>
                                 <tr>
                                     <th class="text-center">#</th>
@@ -98,13 +98,13 @@
                     <div class="card-body px-4">
                         <div class="row">
                             <div class="col">
-                                <div class="card-title fs-4 fw-semibold">신고 관리</div>
+                                <div class="card-title fs-4 fw-semibold">미처리된 신고</div>
                                 <div class="card-subtitle text-body-secondary mb-4"></div>
                             </div>
                         </div>
 
                         <div class="table-responsive small">
-                            <table class="table table-striped table-sm">
+                            <table class="table table-sm">
                                 <thead>
                                 <tr>
                                     <th class="text-center">#</th>
@@ -163,7 +163,7 @@
                             </div>
                         </div>
                         <div class="table-responsive small">
-                            <table class="table table-striped table-sm">
+                            <table class="table table-sm">
                                 <thead>
                                 <tr>
                                     <th class="text-center">#</th>
@@ -219,7 +219,7 @@
                             </div>
                         </div>
                         <div class="table-responsive small">
-                            <table class="table table-striped table-sm">
+                            <table class="table table-sm">
                                 <thead>
                                 <tr>
                                     <th class="text-center">#</th>

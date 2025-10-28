@@ -17,8 +17,6 @@
 
     if (!form || !titleEl || !contentEl) return;
 
-    // Bootstrap 5 dropdown 충돌 방지
-    $.fn.dropdown = function () { return this; };
     //썸머노트 초기화
     $(document).ready(function() {
         if ($('#summernote').length) {

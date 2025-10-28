@@ -44,7 +44,7 @@
                                   </td>
                                   <td class="text-center">
                                       <a href="/admin/faq/edit?id=${faq.id}" class="btn btn-sm btn-primary">수정</a>
-                                      <form action="/admin/faq/delete" method="post" style="display:inline;">
+                                      <form action="/admin/faq/delete" method="post">
                                           <input type="hidden" name="id" value="${faq.id}">
                                           <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
                                       </form>

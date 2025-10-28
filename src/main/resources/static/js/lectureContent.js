@@ -326,9 +326,9 @@ function editReview(reviewUId) {
                     <div class="star-wrap mb-3">${starsHTML}</div>
                     <input type="hidden" id="editStar-${reviewUId}" value="${data.reviewStar}">
                     <textarea class="form-control mb-3" id="editContent-${reviewUId}" rows="4">${data.reviewContent}</textarea>
-                    <div class="d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-secondary btn-sm cancelEditBtn">취소</button>
-                        <button type="button" class="btn btn-primary btn-sm saveEditBtn">수정 완료</button>
+                    <div class="d-flex justify-content-center gap-2">
+                        <button type="button" class="btn-cancel cancelEditBtn" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn-main saveEditBtn">수정 완료</button>
                     </div>
                 </form>
             `;
@@ -383,4 +383,6 @@ function editReview(reviewUId) {
         })
         .catch(err => console.error("리뷰 수정 모드 전환 실패:", err));
 }
+
+
 

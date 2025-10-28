@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
+<link rel="stylesheet" href="css/admin/lecture.css"/>
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
@@ -20,8 +21,7 @@
                         <img id="lectureThumbnailPreview"
                              src="${lecture.thumbnailUrl}"
                              alt="thumbnail"
-                             class="img-thumbnail"
-                             style="width: 180px; height: 100px; object-fit: cover;">
+                             class="img-thumbnail">
 
                         <div class="d-flex flex-column gap-2">
                             <input type="file" id="thumbnailFile" class="form-control" accept="image/*">
@@ -124,7 +124,7 @@
                     <textarea id="summernote" name="content">${lecture.content}</textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-sm-100" style="max-width: 200px;">저장 후 챕터 수정</button>
+                <button type="submit" class="btn btn-primary w-sm-100">저장 후 챕터 수정</button>
             </form>
         </div>
     </div>

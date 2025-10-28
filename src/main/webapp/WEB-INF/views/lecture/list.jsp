@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
+
 <link rel="stylesheet" href="/css/main.css" />
 
 <main id="main">
@@ -88,32 +89,9 @@
         </div>
       </div>
     </div>
-
-    <%-- ✅ 서버 기본 페이지네이션 + JS가 이후 덮어쓰기 가능 --%>
-    <nav aria-label="Page navigation">
-      <ul class="pagination justify-content-center mt-4">
-        <c:if test="${!lecturePage.first}">
-          <li class="page-item">
-            <a class="page-link" href="?page=${lecturePage.number - 1}&keyword=${keyword}">이전</a>
-          </li>
-        </c:if>
-
-        <c:if test="${lecturePage.totalPages > 0}">
-          <c:forEach var="i" begin="0" end="${lecturePage.totalPages - 1}">
-            <li class="page-item ${lecturePage.number == i ? 'active' : ''}">
-              <a class="page-link" href="?page=${i}&keyword=${keyword}">${i + 1}</a>
-            </li>
-          </c:forEach>
-        </c:if>
-
-        <c:if test="${!lecturePage.last}">
-          <li class="page-item">
-            <a class="page-link" href="?page=${lecturePage.number + 1}&keyword=${keyword}">다음</a>
-          </li>
-        </c:if>
-      </ul>
-    </nav>
-
+    
+<c:set var="page" value="${lecturePage}" />
+      <%@ include file="/WEB-INF/views/common/pagination.jsp" %>
   </section>
 
   <script src="/js/lectureList.js"></script>
