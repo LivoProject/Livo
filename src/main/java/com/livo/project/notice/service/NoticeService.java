@@ -1,5 +1,6 @@
 package com.livo.project.notice.service;
 
+import com.livo.project.admin.domain.dto.NoticeListDto;
 import com.livo.project.notice.domain.entity.Notice;
 import com.livo.project.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +13,8 @@ import java.util.List;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
 
-    public List<Notice> findAllNotices(){
-        return noticeRepository.findAllByOrderByCreatedAtDesc();
+    public List<NoticeListDto> findAllNoticeDtos() {
+        return noticeRepository.findNoticeListWithNickname();
     }
 
     public Notice findNoticeById(int id){
