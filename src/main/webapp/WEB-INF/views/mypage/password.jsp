@@ -140,7 +140,7 @@
             <label class="form-label">현재 비밀번호</label>
             <div class="input-wrap">
                 <input type="password" name="currentPassword" id="currentPassword" class="form-control pw-input" required>
-                <button class="toggle-password" type="button">
+                <button class="password-toggle" type="button">
                     <i class="bi bi-eye"></i>
                 </button>
             </div>
@@ -151,7 +151,7 @@
             <label class="form-label">새 비밀번호</label>
             <div class="input-wrap">
                 <input type="password" name="newPassword" id="newPassword" class="form-control pw-input" required>
-                <button class="toggle-password" type="button">
+                <button class="password-toggle" type="button">
                     <i class="bi bi-eye"></i>
                 </button>
             </div>
@@ -163,7 +163,7 @@
             <label class="form-label">새 비밀번호 확인</label>
             <div class="input-wrap">
                 <input type="password" name="confirmPassword" id="confirmPassword" class="form-control pw-input" required>
-                <button class="toggle-password" type="button">
+                <button class="password-toggle" type="button">
                     <i class="bi bi-eye"></i>
                 </button>
             </div>

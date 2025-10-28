@@ -25,6 +25,14 @@ hr, .card {
     background-color: transparent;
     border-color: rgb(233, 236, 239);
 }
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background-color: transparent;
+}
 h3 {
     font-size: 2rem;
     font-weight: 700;

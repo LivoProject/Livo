@@ -52,8 +52,7 @@ h2 img {
 }
 
 .input-wrap .bi-lock,
-.input-wrap .bi-person,
-.toggle-password {
+.input-wrap .bi-person{
     position: absolute;
     right: 10px;
     top: 50%;
@@ -65,12 +64,6 @@ h2 img {
     right: auto;
     left: 10px;
 }
-
-.toggle-password {
-    border: none;
-    background-color: transparent;
-}
-
 
 /* 안내/에러 메시지 */
 body > div[style] {
@@ -140,20 +133,19 @@ button[type="submit"] {
     min-width: 500px;
     height: 54px;
     border-radius: 20px;
+    font-weight: 500;
     border: 0;
     cursor: pointer;
     font-size: 17px;
-    font-weight: 700;
     letter-spacing: .2px;
     color: #fff;
     background: linear-gradient(180deg, var(--primary), var(--primary-strong));
-    box-shadow: 0 10px 24px rgba(23, 180, 199, .35);
     transition: all .2s ease;
 }
 
 button[type="submit"]:hover {
     filter: brightness(1.1);
-    box-shadow: 0 10px 28px rgba(23, 180, 199, .3);
+    /*box-shadow: 0 10px 24px rgba(23, 180, 199, .35);*/
 }
 
 button[type="submit"]:active {
@@ -179,7 +171,6 @@ hr {
 a {
     color: var(--primary);
     text-decoration: none;
-    font-weight: 700;
 }
 
 /* 하단 섹션 */
@@ -196,7 +187,13 @@ a {
     color: var(--muted);
     font-weight: 500;
 }
-
+.login-footer a {
+    font-weight: 500;
+    transition: 0.3s;
+}
+.login-footer a:hover {
+    text-decoration: underline;
+}
 .login-footer .links {
     display: flex;
     justify-content: center;
@@ -249,10 +246,10 @@ a {
     justify-content: center;
     gap: 10px;
     text-decoration: none;
-    font-weight: 800;
     border: 1px solid #e9eef4;
     background: #fff;
     color: #1f2937;
+    font-weight: 500;
     transition: all .2s ease;
 }
 
