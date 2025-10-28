@@ -121,7 +121,7 @@
         if (!email) { setMsg('email', false, '이메일을 입력해 주세요.'); emailInput.focus(); return; }
 
         disable(btnSendCode, true);
-        btnSendCode.textContent = '전송 중...';
+        btnSendCode.textContent = '전송 중';
 
         try {
             const res = await fetch(URL_SEND_CODE, {

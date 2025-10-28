@@ -54,16 +54,21 @@
         <%--        </div>--%>
 
         <div class="email-field field">
-            <label class="form-label" for="email">이메일</label>
 
-            <div class="email-input-group">
-                <form:input path="email" id="email" name="email" class="form-control" placeholder="name@example.com" type="text" />
-                <button type="button" id="btnSendCode" class="btn-outline-main">인증코드 전송</button>
+            <div class="position-relative">
+                <label class="form-label" for="email">이메일</label>
+
+                <div class="email-input-group">
+                    <form:input path="email" id="email" name="email" class="form-control" placeholder="name@example.com"
+                                type="text"/>
+                    <button type="button" id="btnSendCode" class="btn-outline-main">인증 코드</button>
+                </div>
             </div>
 
             <small id="verifyInfo" class="text-success"></small>
             <span data-msg="email" class="error">올바른 이메일 주소를 입력해주세요.</span>
         </div>
+
 
         <!-- 인증 코드 -->
         <div id="codeBlock" class="field" style="display:none;">
@@ -79,12 +84,13 @@
         <div class="field">
             <label class="form-label">비밀번호</label>
             <div class="position-relative">
-                <form:input type="password" path="password" class="form-control pw-input" placeholder="영문·숫자·특수문자 8~20자" id="password"/>
-                <span data-msg="password"></span>
+                <form:input type="password" path="password" class="form-control pw-input" placeholder="영문·숫자·특수문자 8~20자"
+                            id="password"/>
                 <button class="password-toggle" type="button">
                     <i class="bi bi-eye"></i>
                 </button>
             </div>
+            <span data-msg="password"></span>
         </div>
 
         <!-- 닉네임 -->
@@ -143,6 +149,11 @@
         urlLogin: "${urlLogin}"
 
     };
+    document.addEventListener("input", e => {
+        if (e.target.type === "date") {
+            e.target.classList.toggle("empty", !e.target.value);
+        }
+    });
 </script>
 <script src="/js/register.js"></script>
 </body>

@@ -1,216 +1,137 @@
-:root {
-    --bg: #f6f9fa;
-    --bg-accent: rgba(23, 180, 199, .05);
-    --card: #ffffff;
-    --text: #1d252c;
-    --muted: #6c7a87;
-    --primary: #17b4c7;
-    --primary-strong: #0da3b9;
-    --point: #ffcc02;
-    --border: #e5eef7;
-    --ring: rgba(23, 180, 199, .2);
-    --shadow-sm: 0 3px 12px rgba(0, 0, 0, .04);
-    --shadow-md: 0 12px 36px rgba(23, 180, 199, .15);
-    --radius: 22px;
-    --radius-input: 12px;
-}
 
+/* 배경 공통 */
 #loginAndReg {
-    display: grid;
-    place-items: start center;
-    background: radial-gradient(1000px 700px at 110% -10%, var(--bg-accent), transparent 65%),
-    radial-gradient(800px 600px at -10% 120%, rgba(31, 168, 90, .08), transparent 60%),
-    var(--bg);
-    margin: 0;
-    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: radial-gradient(1000px 700px at 110% -10%, var(--bg-accent), transparent 65%),
+    radial-gradient(800px 600px at -10% 120%, rgba(31, 168, 90, .08), transparent 60%),
+    var(--bg);
     height: 100vh;
-    margin-top: -80px;
-    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
 }
-#signupForm {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-.error{color:#d32f2f;display:block;margin-top:4px}
-.valid{color:#2e7d32;display:block;margin-top:4px}
 
+/* 카드 */
 .register-container {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 60px rgba(23, 180, 199, .08);
     width: 560px;
-    padding: 2rem 2.5rem;
-    text-align: left;
+    padding: 2.2rem 2.6rem;
+    transition: box-shadow .25s ease, transform .2s ease;
 }
 
+.register-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 24px 72px rgba(23, 180, 199, .12);
+}
+
+/* 제목 */
 .register-container h2 {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    color: var(--color-main, #17b4c7);
-    margin-bottom: 2rem;
+    color: var(--primary);
+    margin-bottom: 1.8rem;
 }
 
-.register-container button[type="submit"] {
-    width: 100%;
-    background: var(--color-main, #17b4c7);
-    border: none;
-    color: #fff;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.7rem;
-    border-radius: 0.5rem;
-    transition: 0.3s;
-}
-
-.register-container button[type="submit"]:hover {
-    background: var(--color-point, #ffcc02);
-    color: #000;
-}
-
-.register-container p {
-    text-align: center;
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-}
-
-.register-container p a {
-    color: var(--color-main, #17b4c7);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.register-container p a:hover {
-    color: var(--color-point, #ffcc02);
-}
-
-.field label {
-    font-size: 0.85rem;
-    color: #333;
-    font-weight: 500;
-}
-
-.email-input-group {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.email-input-group input {
-    flex: 1;
-    font-size: 0.95rem;
-    padding: 6px 8px;
-}
-
-.email-input-group button {
-    position: absolute;
-    right: 10px;
-    font-size: 0.8rem;
-    padding: 0.3rem;
-    border-radius: 0.2rem;
-}
-
-.email-field .error {
-    color: #d33;
-    font-size: 0.8rem;
-    margin-top: 2px;
-}
-
+/* 폼 필드 */
 .field {
     display: flex;
     flex-direction: column;
+    margin-bottom: 0.8rem;
 }
 
-.field button {
-    margin: 0 auto;
-}
-
-/* 🔹 아래부터 #signupForm 제거된 공용 스타일 */
-.signupForm-label {
-    width: 100px;
+.field label {
+    font-size: 0.8rem;
+    color: var(--muted);
     font-weight: 600;
-    margin: 0;
-    color: var(--color-black);
+    margin-bottom: 0.3rem;
 }
 
-.position-relative {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: end;
-}
-
-.field div {
+/* input 스타일 (로그인과 동일) */
+.field input,
+.field select {
     width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    border: 1px solid #d9e6f6;
+    border-radius: var(--radius-input);
+    background: #fbfeff;
+    color: var(--text);
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
 }
 
-.field div span {
-    color: var(--color-black);
+.field input:focus {
+    border-color: var(--primary);
+    background: #fefeff;
+    box-shadow: 0 0 0 6px var(--ring);
 }
 
 .field input::placeholder {
-    color: var(--color-gray);
+    color: #9aa9b8;
 }
 
-input[type="date"]::-webkit-datetime-edit,
-input[type="date"]::-webkit-datetime-edit-text,
-input[type="date"]::-webkit-datetime-edit-year-field,
-input[type="date"]::-webkit-datetime-edit-month-field,
-input[type="date"]::-webkit-datetime-edit-day-field {
-    color: var(--border-black);
-}
-
-input[type="date"]:invalid::-webkit-datetime-edit,
-input[type="date"]:invalid::-webkit-datetime-edit-text,
-input[type="date"]:invalid::-webkit-datetime-edit-year-field,
-input[type="date"]:invalid::-webkit-datetime-edit-month-field,
-input[type="date"]:invalid::-webkit-datetime-edit-day-field {
-    color: #999;
-}
-
-.form-control {
-    margin: 0;
-}
-
-.gender-group {
-    gap: 1rem;
+/* 이메일 전송 그룹 */
+.email-input-group {
     display: flex;
-    margin-top: 0.5rem;
+    align-items: center;
+    gap: 6px;
 }
 
-.signupForm-control {
-    background: #f9fafb;
-    border: var(--border-black);
+.email-input-group button {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--primary);
     border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 0.95rem;
-    color: var(--color-black);
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    word-break: keep-all;
 }
 
-.signupForm-control:focus {
-    background: #fff;
-    border-color: var(--color-main);
-    box-shadow: 0 0 0 3px rgba(23, 180, 199, 0.15);
+.email-input-group button:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* 인증 코드 */
+#codeBlock {
+    margin-top: -0.2rem;
+}
+
+#codeBlock .form-text {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+/* 라디오 그룹 */
+.gender-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.4rem;
 }
 
 .gender-radio {
-    position: relative;
     display: flex;
     align-items: center;
     gap: 6px;
     cursor: pointer;
     font-weight: 500;
-    color: var(--color-black);
+    color: var(--text);
 }
 
 .gender-radio input[type="radio"] {
+    padding: 0;
     appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border: 2px solid #ccc;
     border-radius: 50%;
     position: relative;
@@ -219,24 +140,77 @@ input[type="date"]:invalid::-webkit-datetime-edit-day-field {
 }
 
 .gender-radio input[type="radio"]:checked {
-    border-color: var(--color-main);
-    background: radial-gradient(var(--color-main) 45%, transparent 46%);
+    border-color: var(--primary);
+    background: radial-gradient(var(--primary) 45%, transparent 46%);
 }
 
+/* 가입 버튼 */
 .btn-submit {
-    width: 7rem;
-    background: var(--color-main);
+    width: 100%;
+    height: 50px;
+    margin-top: 8px;
     border: none;
-    margin: 0 auto;
-    color: var(--color-white);
-    font-weight: 600;
+    border-radius: 20px;
+    font-weight: 500;
     font-size: 1rem;
-    padding: 0.6rem;
-    border-radius: 0.4rem;
-    transition: 0.3s;
+    color: #fff;
+    background: linear-gradient(180deg, var(--primary), var(--primary-strong));
+    cursor: pointer;
+    transition: all .2s ease;
 }
 
 .btn-submit:hover {
-    background: var(--color-point);
-    color: var(--color-black);
+    filter: brightness(1.1);
+}
+
+.btn-submit:active {
+    transform: translateY(1px);
+    box-shadow: 0 6px 14px rgba(23, 180, 199, .28);
+}
+
+/* 하단 링크 */
+.register-container p {
+    text-align: center;
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.register-container p a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.register-container p a:hover {
+    color: var(--point);
+}
+
+.error {
+    display: none;
+    font-size: 0.8rem;
+    color: #c81010;
+    margin-top: 0.3rem;
+}
+
+/* 기본 텍스트 컬러 */
+input[type="date"].empty::-webkit-datetime-edit { color: #aaa; }
+input[type="date"]::-webkit-datetime-edit { color: #1d252c; }
+
+/* 달력 아이콘 색/가시성 조정(선택) */
+input[type="date"]::-webkit-calendar-picker-indicator{
+    opacity:.8;
+}
+
+/* 반응형 */
+@media (max-width: 620px) {
+    body {
+        padding: 30px 14px;
+    }
+
+    .register-container {
+        width: 100%;
+        padding: 1.8rem;
+    }
 }
