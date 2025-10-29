@@ -2,6 +2,7 @@ package com.livo.project.admin.controller;
 
 import com.livo.project.admin.domain.dto.LectureRequest;
 import com.livo.project.admin.domain.dto.LectureSearch;
+import com.livo.project.admin.domain.dto.LectureUpdateRequest;
 import com.livo.project.admin.service.FileService;
 import com.livo.project.admin.service.LectureAdminService;
 import com.livo.project.lecture.domain.Category;
@@ -110,9 +111,9 @@ public class AdminLectureController {
 
     @PostMapping("/edit")
     @ResponseBody
-    public ResponseEntity<?> editLecture(@RequestParam("categoryId") int categoryId, @ModelAttribute Lecture lecture){
+    public ResponseEntity<?> editLecture(@RequestParam("categoryId") int categoryId, @ModelAttribute LectureUpdateRequest ureq){
         try{
-            Lecture edited =  lectureAdminService.updateLecture(lecture, categoryId);
+            Lecture edited =  lectureAdminService.updateLecture(ureq, categoryId);
             return ResponseEntity.ok(Map.of("success",true, "lectureId", edited.getLectureId()));
         }catch (Exception e){
             e.printStackTrace();

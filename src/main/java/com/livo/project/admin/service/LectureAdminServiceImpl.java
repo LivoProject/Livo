@@ -2,6 +2,7 @@ package com.livo.project.admin.service;
 
 import com.livo.project.admin.domain.dto.LectureRequest;
 import com.livo.project.admin.domain.dto.LectureSearch;
+import com.livo.project.admin.domain.dto.LectureUpdateRequest;
 import com.livo.project.admin.repository.LectureAdminCustomRepositoryImpl;
 import com.livo.project.admin.repository.LectureAdminRepository;
 import com.livo.project.lecture.domain.Category;
@@ -57,26 +58,36 @@ public class LectureAdminServiceImpl implements LectureAdminService {
     }
 
     @Override
-    public Lecture updateLecture(Lecture updateLecture, int categoryId) {
-        Lecture existingLecture =  lectureRepository.findById(updateLecture.getLectureId())
+    public Lecture updateLecture(LectureUpdateRequest ureq, int categoryId) {
+        Lecture existing =  lectureRepository.findById(ureq.getLectureId())
                 .orElseThrow(()-> new IllegalArgumentException("강의를 찾을 수 없습니다."));
-        existingLecture.setTitle(updateLecture.getTitle());
-        existingLecture.setTutorName(updateLecture.getTutorName());
-        existingLecture.setTutorName(updateLecture.getTutorInfo());
-        existingLecture.setContent(updateLecture.getContent());
-        existingLecture.setTotalCount(updateLecture.getTotalCount());
-        existingLecture.setLectureStart(updateLecture.getLectureStart());
-        existingLecture.setLectureEnd(updateLecture.getLectureEnd());
-        existingLecture.setReservationStart(updateLecture.getReservationStart());
-        existingLecture.setReservationEnd(updateLecture.getReservationEnd());
-        existingLecture.setIsFree(updateLecture.getIsFree());
-        existingLecture.setPrice(updateLecture.getIsFree() ? 0 : updateLecture.getPrice());
+        existing.setTitle(ureq.getTitle());
+        existing.setTutorName(ureq.getTutorName());
+        existing.setTutorInfo(ureq.getTutorInfo());
+        existing.setContent(ureq.getContent());
 
+        if (Boolean.TRUE.equals(ureq.getIsFree())) {
+            existing.setIsFree(true);
+            existing.setPrice(0);
+            existing.setTotalCount(null);
+            existing.setLectureStart(null);
+            existing.setLectureEnd(null);
+            existing.setReservationStart(null);
+            existing.setReservationEnd(null);
+        } else {
+            existing.setIsFree(false);
+            existing.setPrice(ureq.getPrice());
+            existing.setTotalCount(ureq.getTotalCount());
+            existing.setLectureStart(ureq.getLectureStart());
+            existing.setLectureEnd(ureq.getLectureEnd());
+            existing.setReservationStart(ureq.getReservationStart());
+            existing.setReservationEnd(ureq.getReservationEnd());
+        }
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 카테고리 입니다."));
-        existingLecture.setCategory(category);
+        existing.setCategory(category);
 
-        return lectureRepository.save(existingLecture);
+        return lectureRepository.save(existing);
     }
 
     @Override
