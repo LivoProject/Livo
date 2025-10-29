@@ -35,3 +35,13 @@ label {
     height: 100px;
     object-fit: cover;
 }
+.badge {
+    display: inline-block;
+    padding: 4px 10px;        /* 여백 적당하게 */
+    font-size: 0.75rem;       /* 가독성 좋은 사이즈 */
+    font-weight: 600;         /* 약간 굵게 */
+    border-radius: 9999px;    /* pill 형태 유지 */
+    white-space: nowrap;
+    vertical-align: middle;
+    line-height: 1.2;         /* 위아래 여백 안정화 */
+}

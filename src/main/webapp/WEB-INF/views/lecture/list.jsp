@@ -18,7 +18,7 @@
           <select id="mainCategory" name="mainCategory" class="form-select w-auto">
               <option value="">주제</option>
               <option value="1" <c:if test="${param.mainCategory == '1'}">selected</c:if>>IT</option>
-              <option value="2" <c:if test="${param.mainCategory == '2'}">selected</c:if>>자기계발</option>
+              <option value="2" <c:if test="${param.mainCategory == '2'}">selected</c:if>>자기개발</option>
               <option value="3" <c:if test="${param.mainCategory == '3'}">selected</c:if>>문화여가</option>
               <option value="4" <c:if test="${param.mainCategory == '4'}">selected</c:if>>건강</option>
               <option value="5" <c:if test="${param.mainCategory == '5'}">selected</c:if>>언어</option>

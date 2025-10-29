@@ -50,7 +50,7 @@
 }
 
 .table tbody tr {
-    background-color: #f8f9fa;
+    background-color: #ffff;
 }
 
 /*관리자 버튼 모음*/
@@ -107,4 +107,13 @@
     color: var(--color-white);
     box-shadow: 0 2px 5px rgba(23,180,199,0.1);
     border-color: #14a7b9;
+}
+
+.text-truncate{
+    -webkit-line-clamp: 1;
+    padding: 0.8rem 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 520px;
 }
