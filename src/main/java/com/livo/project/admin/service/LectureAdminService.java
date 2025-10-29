@@ -24,6 +24,6 @@ public interface LectureAdminService {
 
     List<Lecture> getRecentLectures();
 
-    Lecture saveOrUpdateLecture(LectureRequest request, int categoryId);
+    Lecture saveLectureAjax(LectureRequest request, int categoryId);
 
 }
