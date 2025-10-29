@@ -39,7 +39,7 @@
 .nav-pills:hover{
     color: #14a7b9!important;
 }
-.nav-link:hover{
+.nav-link.active:hover{
     color: #14a7b9;
     background-color: var(--color-light-main);
 }

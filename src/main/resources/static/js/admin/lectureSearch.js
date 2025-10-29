@@ -29,12 +29,19 @@ document.addEventListener("DOMContentLoaded", () =>{
             const reservationPeriod = isFree ? "무제한" : `${formatDate(lec.reservationStart)} ~ ${formatDate(lec.reservationEnd)}`;
             const lecturePeriod = isFree ? "무제한" : `${formatDate(lec.lectureStart)} ~ ${formatDate(lec.lectureEnd)}`;
             const totalCount = isFree ? "무제한" : `${lec.reservationCount}/${lec.totalCount}`;
+            const statusLabelMap = {OPEN:"예약중", CLOSED:"예약마감", ENDED:"강의종료"};
+            const statusColorMap={OPEN:"bg-success", CLOSED: "bg-secondary", ENDED: "bg-danger"};
             const row = `
                 <tr class="text-center">
                     <td>${i + 1 + page * pageSize}</td>
                     <td>${lec.title}</td>
                     <td>${lec.tutorName}</td>
                     <td>${reservationPeriod}</td>
+                    <td>
+                        <span class="badge ${statusColorMap[lec.status]}">
+                            ${statusLabelMap[lec.status]}
+                        </span>
+                    </td>
                     <td>${lecturePeriod}</td>
                     <td>${totalCount}</td>
                     <td>${price}</td>
