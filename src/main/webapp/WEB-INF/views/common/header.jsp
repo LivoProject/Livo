@@ -127,9 +127,9 @@
                         <!-- ★ 일반 로그인 -->
                         <sec:authorize
                                 access="!(principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User))">
-                          <span>
+                          <a href="/mypage">
                             <sec:authentication property="principal.nickname"/>
-                          </span>
+                          </a>
                         </sec:authorize>
 
                         <!-- 로그아웃 -->

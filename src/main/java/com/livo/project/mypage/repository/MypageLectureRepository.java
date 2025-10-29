@@ -25,6 +25,7 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
             l.lectureId AS lectureId,
             l.title AS title,
             l.tutorName AS tutorName,
+            l.price AS price,                         -- ★ 추가
             l.thumbnailUrl AS thumbnailUrl,
             COALESCE(lp.progressPercent, 0) AS progressPercent,
             CASE
@@ -68,34 +69,33 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
     );
 
 
-
-
-
-    // 좋아요한 강좌 최신 2개
+    // 좋아요한 강좌 2개
     @Query(value = """
-            SELECT 
-                l.lectureId AS lectureId,
-                l.title AS title,
-                l.tutorName AS tutorName,
-                l.thumbnailUrl AS thumbnailUrl,
-                COALESCE(lp.progressPercent, 0) AS progressPercent
-            FROM lecture l
-            JOIN lecture_like ll 
-                ON l.lectureId = ll.lectureId
-            LEFT JOIN lecture_progress lp 
-                ON lp.lectureId = l.lectureId AND lp.email = :email
-            WHERE ll.email = :email
-            ORDER BY ll.createdAt DESC
-            LIMIT 2
-            """,
-            countQuery = """
-                    SELECT COUNT(*) 
-                    FROM lecture_like ll 
-                    WHERE ll.email = :email
-                    LIMIT 2
-                    """,
+    SELECT 
+        l.lectureId        AS lectureId,
+        l.title            AS title,
+        l.tutorName        AS tutorName,
+        l.price            AS price,            -- ★ 추가
+        l.thumbnailUrl     AS thumbnailUrl,
+        COALESCE(lp.progressPercent, 0) AS progressPercent
+    FROM lecture_like ll
+    JOIN lecture l 
+      ON l.lectureId = ll.lectureId
+    JOIN `user` u
+      ON u.email = ll.email
+    LEFT JOIN lecture_progress lp 
+      ON lp.lectureId = l.lectureId 
+     AND lp.email = u.email
+    WHERE u.email = :email
+      AND u.provider = :provider              -- ★ provider 사용
+    ORDER BY ll.createdAt DESC
+    LIMIT 2
+    """,
             nativeQuery = true)
-    List<LikedLectureProjection> findTop2LikedLecturesByEmailWithProgress(@Param("email") String email, @Param("provider") String provider);
+    List<LikedLectureProjection> findTop2LikedLecturesByEmailWithProgress(
+            @Param("email") String email,
+            @Param("provider") String provider
+    );
 
     // 좋아요 해제
     @Modifying

@@ -28,9 +28,14 @@ public class NoticeController {
     private final com.livo.project.admin.service.NoticeService noticeAdminService;
     // 공지사항 목록
     @GetMapping("/list")
-    public String noticeList(Model model, @PageableDefault(size = 10) Pageable pageable) {
+    public String noticeList(Model model,
+                             @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC)
+                             Pageable pageable){
         Page<NoticeListDto> notices = noticeService.findAllNoticeDtos(pageable);
 
+        List<NoticeListDto> pinnedNotices = noticeService.findPinnedNotices();
+
+        model.addAttribute("pinnedNotices", pinnedNotices);
         model.addAttribute("notices", notices.getContent());
         model.addAttribute("page", notices);
         return "notice/list";

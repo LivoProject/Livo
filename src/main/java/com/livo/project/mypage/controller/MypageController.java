@@ -71,7 +71,6 @@ public class MypageController {
         model.addAttribute("weeklyStudyHours", String.format("%.0f", weeklyStudyHours));
         model.addAttribute("inProgressLectureCount", inProgressLectureCount);
         model.addAttribute("payments", payments);
-
         model.addAttribute("menu", "home");
 
         return "mypage/index";
@@ -120,10 +119,13 @@ public class MypageController {
 
         if (email == null) return "redirect:/auth/login";
 
+
+        MypageDto mypageDto = mypageService.getUserData(email, provider);
         Page<MypageReservationDto> reservations = mypageService.getMyReservations(email, provider, pageable);
+
+        model.addAttribute("mypage", mypageDto);
         model.addAttribute("reservations", reservations.getContent());
         model.addAttribute("page", reservations);
-
         model.addAttribute("menu", "lecture");
 
         return "mypage/lecture";
@@ -165,9 +167,11 @@ public class MypageController {
         if (email == null) return "redirect:/auth/login";
 
         Page<MypageLikedLectureDto> likedLectures = mypageService.getLikedLecturesWithProgress(email, provider, pageable);
+        MypageDto mypageDto = mypageService.getUserData(email, provider);
+
+        model.addAttribute("mypage", mypageDto);
         model.addAttribute("likedLectures", likedLectures.getContent());
         model.addAttribute("page", likedLectures);
-
         model.addAttribute("menu", "like");
 
         return "mypage/like";
@@ -209,9 +213,11 @@ public class MypageController {
         if (email == null) return "redirect:/auth/login";
 
         Page<Review> reviews = mypageService.getMyReviews(email, pageable);
+        MypageDto mypageDto = mypageService.getUserData(email, provider);
+
+        model.addAttribute("mypage", mypageDto);
         model.addAttribute("reviews", reviews.getContent());
         model.addAttribute("page", reviews);
-
         model.addAttribute("menu", "review");
 
         return "mypage/review";
@@ -271,11 +277,12 @@ public class MypageController {
 
         if (email == null) return "redirect:/auth/login";
 
+        MypageDto mypageDto = mypageService.getUserData(email, provider);
         Page<Payment> payments = mypageService.getMyPayments(email, pageable);
+
+        model.addAttribute("mypage", mypageDto);
         model.addAttribute("payments", payments.getContent());
         model.addAttribute("page", payments);
-
-
         model.addAttribute("menu", "payment");
 
         return "mypage/payment";

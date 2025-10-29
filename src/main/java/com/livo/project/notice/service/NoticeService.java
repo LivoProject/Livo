@@ -3,6 +3,7 @@ package com.livo.project.notice.service;
 import com.livo.project.admin.domain.dto.NoticeListDto;
 import com.livo.project.notice.domain.entity.Notice;
 import com.livo.project.notice.repository.NoticeRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +16,15 @@ import java.util.List;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
 
+    // 사용자 공지 전체
     public Page<NoticeListDto> findAllNoticeDtos(Pageable pageable) {
         return noticeRepository.findNoticeListWithNickname(pageable);
+    }
+
+    // 사용자 핀 고정
+    @Transactional
+    public List<NoticeListDto> findPinnedNotices() {
+        return noticeRepository.findPinnedNotices();
     }
 
     public Notice findNoticeById(int id){
@@ -27,4 +35,8 @@ public class NoticeService {
     public List<Notice> getRecentNotices() {
         return noticeRepository.findTop5ByOrderByCreatedAtDesc();
     }
+
+
+
+
 }

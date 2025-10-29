@@ -59,7 +59,7 @@
 
 .side-menu {
     width: 20%;
-    padding: 1rem;
+    padding: 2rem 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     background: #fafbfc;
 }
@@ -540,7 +540,10 @@
     align-items: center;
     gap: 0.6rem;
 }
-
+.payment-header .title-wrap {
+    display: flex;
+    align-items: center;
+}
 .badge {
     display: inline-block;
     padding: 0.35rem 0.65rem;
@@ -626,7 +629,8 @@
 
 .pay-noti-box .payment-box:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(23, 180, 199, .15);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 6px 18px rgba(23, 180, 199, .15);*/
 }
 
 .pay-noti-box .payment-list {
@@ -686,8 +690,9 @@
 }
 
 .notice-list a:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(23, 180, 199, .15);
+    transform: translateY(-3px);/*
+    box-shadow: 0 6px 18px rgba(23, 180, 199, .15);*/
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
 
