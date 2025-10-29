@@ -27,13 +27,28 @@
                     <p class="lead mb-2">강사: <strong>${lecture.tutorName}</strong></p>
                     <p class="lead mb-2">
                         신청기간:
-                        <strong>${lecture.reservationStart.toLocalDate()}</strong> ~
-                        <strong>${lecture.reservationEnd.toLocalDate()}</strong>
+                        <c:choose>
+                            <c:when test="${lecture.price == 0}">
+                                <strong>무제한</strong>
+                            </c:when>
+                            <c:otherwise>
+                                <strong>${lecture.reservationStart.toLocalDate()}</strong> ~
+                                <strong>${lecture.reservationEnd.toLocalDate()}</strong>
+                            </c:otherwise>
+                        </c:choose>
                     </p>
+
                     <p class="lead mb-2">
                         강좌기간:
-                        <strong>${lecture.lectureStart}</strong> ~
-                        <strong>${lecture.lectureEnd}</strong>
+                        <c:choose>
+                            <c:when test="${lecture.price == 0}">
+                                <strong>무제한</strong>
+                            </c:when>
+                            <c:otherwise>
+                                <strong>${lecture.lectureStart}</strong> ~
+                                <strong>${lecture.lectureEnd}</strong>
+                            </c:otherwise>
+                        </c:choose>
                     </p>
                     <p class="lead mb-2">
                         신청인원: <strong>${lecture.reservationCount}/${lecture.totalCount}</strong>
@@ -244,7 +259,10 @@
             <c:forEach var="review" items="${reviews}">
                 <div class="col-md-12 mb-3">
                     <div class="h-100 review-box" data-review-id="${review.reviewUId}">
-                        <h4>${review.userName}</h4>
+                        <h4 class="review-username">
+                            <img src="/img/common/favicon.ico" alt="user icon" class="user-icon">
+                            ${review.userName}
+                        </h4>
                         <h5>
                             ${review.createdAt}
                             <c:if test="${review.edited}">

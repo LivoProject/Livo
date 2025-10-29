@@ -225,20 +225,22 @@ document.addEventListener("DOMContentLoaded", function () {
                         `;
                         }
 
-                        // ✅ 후기 HTML 구성
                         const item = `
                             <div class="col-md-12 mb-3 fade-in-up">
                                 <div class="h-100 review-box" data-review-id="${r.reviewUId}">
-                                <h4>${r.userName}</h4>
-                                <h5>${r.createdAt}${r.isEdited ? ' <span class="text-muted small">(수정)</span>' : ''}</h5>
-                                <h4>${stars}</h4>
-                                <h4>
-                                <strong>${reviewContentHtml}</strong>
-                                </h4>
-                                ${actionBtns}
+                                    <h4 class="review-username">
+                                        <img src="/img/common/favicon.ico" alt="user icon" class="user-icon">
+                                        ${r.userName}
+                                    </h4>
+                                    <h5>
+                                        ${r.createdAt}${r.isEdited ? ' <span class="text-muted small">(수정)</span>' : ''}
+                                    </h5>
+                                    <h4>${stars}</h4>
+                                    <h4><strong>${reviewContentHtml}</strong></h4>
+                                    ${actionBtns}
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
                         container.insertAdjacentHTML("beforeend", item);
                     });
 
