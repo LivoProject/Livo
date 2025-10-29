@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <!-- 필터 영역 -->
-                        <div class="row g-3 mt-2 align-items-center">
+                        <div class="row g-3 mt-2 align-items-center filter-area">
                             <div class="col-6">
                                 <div class="col-auto d-flex align-items-center">
                                     <label class="me-4 col-form-label fw-semibold">예약 상태</label>

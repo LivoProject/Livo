@@ -23,8 +23,8 @@ public class LectureStatusScheduler {
      * - 강의 종료일이 지나면 ENDED
      * - 그 외는 OPEN
      */
-//    @Scheduled(cron = "0 0 * * * *") //매시간 정각
-    @Scheduled(cron = "0 * * * * *") // 1분마다
+    @Scheduled(cron = "0 0 * * * *") //매시간 정각
+    //@Scheduled(cron = "0 * * * * *") // 1분마다
     @Transactional
     public void updateLectureStatuses() {
         LocalDateTime now = LocalDateTime.now();
