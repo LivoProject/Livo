@@ -48,7 +48,7 @@ function loadNotices(page = 0) {
                         ${n.title}
                         </td>
                         <td class="text-start">
-                            <div class="text-truncate"  style="-webkit-line-clamp: 1; padding: 0.8rem 0; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; max-width: 520px;">
+                            <div class="text-truncate">
                                 ${n.content}
                             </div>
                         </td>

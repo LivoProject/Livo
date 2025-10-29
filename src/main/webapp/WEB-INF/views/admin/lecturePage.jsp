@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
-<link rel="stylesheet" href="css/admin/lecture.css"/>
+<link rel="stylesheet" href="/css/admin/lecture.css"/>
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
@@ -113,6 +113,7 @@
                                     <th>강의명</th>
                                     <th>강사명</th>
                                     <th>예약 기간</th>
+                                    <th>예약상태</th>
                                     <th>강의 기간</th>
                                     <th>신청 인원</th>
                                     <th>수강비</th>

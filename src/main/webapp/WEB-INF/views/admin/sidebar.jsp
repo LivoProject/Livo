@@ -22,7 +22,7 @@
     <!--<link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/sub.css" /> -->
     <!-- chart -->
-    <link rel="stylesheet" href="/css/admin/chart.css"/>
+<%--    <link rel="stylesheet" href="/css/admin/chart.css"/>--%>
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <!-- Chart.js -->
