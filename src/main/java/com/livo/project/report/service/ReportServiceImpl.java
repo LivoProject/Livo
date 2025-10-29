@@ -1,5 +1,6 @@
 package com.livo.project.report.service;
 
+import com.livo.project.admin.domain.dto.ReportResponse;
 import com.livo.project.report.domain.Report;
 import com.livo.project.report.repository.ReportRepository;
 import com.livo.project.review.domain.Review;
@@ -67,8 +68,9 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Page<Report> getReport(Pageable pageable) {
-        return reportRepository.findAll(pageable);
+    public Page<ReportResponse> getReport(Pageable pageable) {
+        return reportRepository.findAll(pageable)
+                .map(ReportResponse::new);
     }
 
     @Override
