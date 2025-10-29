@@ -29,6 +29,12 @@ public interface LectureService {
     Page<Lecture> getLecturePage(Pageable pageable);
     Page<Lecture> searchLecturePage(String keyword, Pageable pageable);
 
+    // 민영 추가 (세부분류 + 키워드)
+    Page<Lecture> searchByCategoryAndKeyword(int categoryId, String keyword, Pageable pageable);
+
+    // 민영 추가 (상위카테고리 + 키워드)
+    Page<Lecture> searchByMainCategoryAndKeyword(int mainCategoryId, String keyword, Pageable pageable);
+
 
 }
 
