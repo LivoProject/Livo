@@ -51,7 +51,15 @@
                         </c:choose>
                     </p>
                     <p class="lead mb-2">
-                        신청인원: <strong>${lecture.reservationCount}/${lecture.totalCount}</strong>
+                        신청인원:
+                        <c:choose>
+                            <c:when test="${lecture.price == 0}">
+                                <strong>무제한</strong>
+                            </c:when>
+                            <c:otherwise>
+                                <strong>${lecture.reservationCount}/${lecture.totalCount}</strong>
+                            </c:otherwise>
+                        </c:choose>
                     </p>
 
                     <h2 class="lecture-price">
