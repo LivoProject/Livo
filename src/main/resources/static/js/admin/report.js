@@ -18,7 +18,7 @@ function loadReports(page = 0) {
                     <tr class="text-center">
                         <td>${page * 10 + idx + 1}</td>
                         <td>
-                            <div title="${r.reviewContent}">${r.reviewContent}</div>
+                            <div class="text-truncate-one" title="${r.reviewContent}" style="max-width: 100px">${r.reviewContent}</div>
                         </td>
                         <td>${r.reportReason}</td>
                         <td>${r.email}</td>
@@ -123,7 +123,6 @@ $(document).on("click", ".update-status", function () {
         }
     });
 });
-
 $(document).ready(function () {
     loadReports();
 });

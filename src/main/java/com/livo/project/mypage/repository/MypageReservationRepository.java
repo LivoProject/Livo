@@ -30,7 +30,7 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
     // 좋아요한 강좌가 예약된 강좌인지 확인
     boolean existsByLecture_LectureIdAndUser_Email(Integer lectureId, String email);
 
-    // 예약완료된 최근 2개 강의
+    // 예약완료된 최근 3개 강의
     @Query("""
     SELECT r 
     FROM Reservation r
@@ -41,7 +41,7 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
       AND r.status = 'CONFIRMED'
     ORDER BY r.createdAt DESC
 """)
-    List<Reservation> findTop2ConfirmedByEmailAndProvider(@Param("email") String email,
+    List<Reservation> findTop3ConfirmedByEmailAndProvider(@Param("email") String email,
                                                           @Param("provider") String provider,
                                                           Pageable pageable);
 

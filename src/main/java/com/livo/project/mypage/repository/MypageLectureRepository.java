@@ -13,10 +13,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MypageLectureRepository extends JpaRepository<Lecture, Integer> {
-
-    // 추천 강좌
-    @Query(value = "SELECT * FROM lecture ORDER BY RAND() LIMIT 3", nativeQuery = true)
-    List<Lecture> findRandomLectures();
+//
+//    // 추천 강좌
+//    @Query(value = "SELECT * FROM lecture ORDER BY RAND() LIMIT 3", nativeQuery = true)
+//    List<Lecture> findRandomLectures();
 
     // 좋아요한 강좌
     @Query(
@@ -69,13 +69,13 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
     );
 
 
-    // 좋아요한 강좌 2개
+    // 좋아요한 강좌 3개
     @Query(value = """
     SELECT 
         l.lectureId        AS lectureId,
         l.title            AS title,
         l.tutorName        AS tutorName,
-        l.price            AS price,            -- ★ 추가
+        l.price            AS price,           
         l.thumbnailUrl     AS thumbnailUrl,
         COALESCE(lp.progressPercent, 0) AS progressPercent
     FROM lecture_like ll
@@ -87,9 +87,9 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
       ON lp.lectureId = l.lectureId 
      AND lp.email = u.email
     WHERE u.email = :email
-      AND u.provider = :provider              -- ★ provider 사용
+      AND u.provider = :provider             
     ORDER BY ll.createdAt DESC
-    LIMIT 2
+    LIMIT 3
     """,
             nativeQuery = true)
     List<LikedLectureProjection> findTop2LikedLecturesByEmailWithProgress(
