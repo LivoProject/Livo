@@ -34,7 +34,6 @@ public class MypageReservationDto {
 
     // 변환 메서드
     public static MypageReservationDto of(Reservation r, Lecture l, double progressPercent) {
-
         LocalDateTime createdAt = null;
         Date createdAtDate = r.getCreatedAt();
         if (createdAtDate != null) {
@@ -46,13 +45,14 @@ public class MypageReservationDto {
         return MypageReservationDto.builder()
                 .reservationId(r.getReservationId())
                 .email(r.getUser().getEmail())
-                .lectureId(r.getLectureId())
+                .lectureId(l.getLectureId())   // ✅ Lecture에서 가져오기
                 .createdAt(createdAt)
                 .status(r.getStatus().name())
-                .title(l.getTitle())
+                .title(l.getTitle())           // ✅ Lecture에서 가져오기
                 .tutorName(l.getTutorName())
                 .thumbnailUrl(l.getThumbnailUrl())
                 .progressPercent(progressPercent)
                 .build();
     }
+
 }

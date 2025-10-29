@@ -72,7 +72,7 @@
                 <a href="/mypage/lecture" class="more-link">더보기 <i class="bi bi-chevron-right"></i></a>
             </div>
 
-             <div class="lecture-grid ${fn:length(recentConfirmedLectures) >= 3 ? 'dis-none' : ''}">
+            <div class="lecture-grid ${fn:length(recentConfirmedLectures) >= 3 ? 'dis-none' : ''}">
                 <c:if test="${not empty recentConfirmedLectures}">
                     <c:forEach var="lecture" items="${recentConfirmedLectures}">
                         <div class="card">
@@ -84,13 +84,27 @@
                             </div>
                             <div class="card-body">
                                 <a href="/lecture/content/${lecture.lectureId}">
-                                    <h6 class="card-title">${lecture.title}</h6>
+                                    <h6 class="card-title lecture-title">${lecture.title}</h6>
                                     <div class="progress" style="height: 8px;">
                                         <div class="progress-bar bg-success"
                                              style="width: ${lecture.progressPercent}%;"></div>
                                     </div>
                                     <small class="text-muted">${lecture.progressPercent}%</small>
                                 </a>
+                            </div>
+                            <div class="card-footer">
+
+                                <div class="button-wrap">
+                                    <button class="btn-unreserve btn-main"
+                                            data-lecture-id="${lecture.lectureId}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#reserveModal">
+                                        예약 취소
+                                    </button>
+                                    <a href="/lecture/content/${lecture.lectureId}#review" class="btn-cancel">
+                                        수강평 작성
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </c:forEach>
@@ -125,7 +139,7 @@
                             </div>
                             <div class="card-body">
                                 <a href="/lecture/content/${lecture.lectureId}">
-                                    <h6 class="card-title fw-bold mb-2 text-ellipsis-2">${lecture.title}</h6>
+                                    <h6 class="card-title fw-bold text-ellipsis-2 lecture-title">${lecture.title}</h6>
                                     <p class="text-muted mb-3">${lecture.tutorName}</p>
                                     <span><fmt:formatNumber value="${lecture.price}" type="number"/>원</span>
                                     <div class="progress" style="height: 8px;">
@@ -138,10 +152,29 @@
                             </div>
 
                             <div class="card-footer">
-                                <div>
-                                    <button class="btn-unlike btn-main" data-lecture-id="${lecture.lectureId}"
-                                            data-bs-toggle="modal" data-bs-target="#likeModal">해제
-                                    </button>
+                                <div class="button-wrap">
+                                    <c:choose>
+                                        <c:when test="${lecture.reserved == true}">
+                                            <button class="btn-unlike btn-main"
+                                                    data-lecture-id="${lecture.lectureId}"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#likeModal">
+                                                삭제하기
+                                            </button>
+                                            <a href="/lecture/content/${lecture.lectureId}#review" class="btn-cancel">수강평
+                                                작성</a>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                            <button class="btn-unlike btn-main"
+                                                    data-lecture-id="${lecture.lectureId}"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#likeModal">
+                                                삭제하기
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
+
                                 </div>
                             </div>
                         </div>
@@ -184,6 +217,9 @@
                                 </a>
                             </div>
                         </c:forEach>
+                        <c:if test="${empty payments}">
+                            <p class="text-muted">결제 내역이 없습니다.</p>
+                        </c:if>
                     </div>
                 </div>
 
