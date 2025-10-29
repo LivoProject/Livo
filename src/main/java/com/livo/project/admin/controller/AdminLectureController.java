@@ -39,7 +39,7 @@ public class AdminLectureController {
 
     @PostMapping(value = "/save", consumes = "multipart/form-data")
     @ResponseBody
-    public ResponseEntity<?> saveOrUpdateLecture(@RequestPart("lecture") Lecture lecture,
+    public ResponseEntity<?> saveLecture(@RequestPart("lecture") Lecture lecture,
                                                  @RequestPart("chapters") List<ChapterList> chapters,
                                                  @RequestParam("categoryId") int categoryId){
         LectureRequest request = new LectureRequest();

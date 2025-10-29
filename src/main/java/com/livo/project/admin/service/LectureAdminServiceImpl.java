@@ -45,11 +45,9 @@ public class LectureAdminServiceImpl implements LectureAdminService {
 
     @Override
     public void deleteLecture(int lectureId) {
-        // 1. 관련 챕터 먼저 삭제 (외래키 제약 방지)
-        chapterListRepository.deleteByLecture_LectureId(lectureId);
-
-        // 2. 강의 삭제
-        lectureRepository.deleteById(lectureId);
+        Lecture lecture = lectureRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("강의 없음"));
+        lecture.setVisibility(Lecture.LectureVisibility.DELETED);
     }
 
     @Override

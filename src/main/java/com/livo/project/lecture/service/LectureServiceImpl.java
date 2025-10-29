@@ -30,10 +30,6 @@ public class LectureServiceImpl implements LectureService {
         return lectureRepository.findById(lectureId);
     }
 
-    @Override
-    public List<Lecture> findByCategoryId(int categoryId) {
-        return lectureRepository.findByCategory_CategoryId(categoryId);
-    }
 
     @Override
     public List<Lecture> findAllByMainCategory(int mainCategoryId) {
@@ -44,7 +40,7 @@ public class LectureServiceImpl implements LectureService {
     // 페이징 기반 하위 카테고리 강좌 조회
     @Override
     public Page<Lecture> getLecturePageByCategory(int categoryId, Pageable pageable) {
-        return lectureRepository.findByCategory_CategoryId(categoryId, pageable);
+        return lectureRepository.findByVisibilityAndCategory_CategoryId(Lecture.LectureVisibility.ACTIVE, categoryId, pageable);
     }
 
     // 페이징 기반 상위 카테고리(mainCategory) 조회
@@ -55,12 +51,12 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public Page<Lecture> getLecturePage(Pageable pageable) {
-        return lectureRepository.findAll(pageable);
+        return lectureRepository.findByVisibility(Lecture.LectureVisibility.ACTIVE, pageable);
     }
 
     @Override
     public Page<Lecture> searchLecturePage(String keyword, Pageable pageable) {
-        return lectureRepository.findByTitleContaining(keyword, pageable);
+        return lectureRepository.findByVisibilityAndTitleContaining(Lecture.LectureVisibility.ACTIVE, keyword, pageable);
     }
 
     @Override

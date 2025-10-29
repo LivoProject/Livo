@@ -17,10 +17,10 @@ function loadReports(page = 0) {
                 tbody.append(`
                     <tr class="text-center">
                         <td>${page * 10 + idx + 1}</td>
-                        <td>
+                        <td class="text-start">
                             <div class="text-truncate-one" title="${r.reviewContent}" style="max-width: 100px">${r.reviewContent}</div>
                         </td>
-                        <td>${r.reportReason}</td>
+                        <td class="text-start">${r.reportReason}</td>
                         <td>${r.email}</td>
                         <td>${r.reportTime}</td>
                         <td>

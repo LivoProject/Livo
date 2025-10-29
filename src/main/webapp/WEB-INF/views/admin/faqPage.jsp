@@ -31,8 +31,8 @@
                           <c:forEach var="faq" items="${faq}" varStatus="status">
                               <tr>
                                   <td class="text-center">${status.index + 1}</td>
-                                  <td class="text-center">${faq.question}</td>
-                                  <td class="text-center">
+                                  <td class="text-start">${faq.question}</td>
+                                  <td class="text-start">
                                     <c:choose>
                                         <c:when test="${fn:length(faq.answer) > 70}">
                                           ${fn:substring(faq.answer, 0, 70)}...

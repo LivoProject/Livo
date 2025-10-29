@@ -51,6 +51,10 @@ public class Lecture {
     @Enumerated(EnumType.STRING)
     private LectureStatus status = LectureStatus.OPEN;  // 기본 OPEN
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LectureVisibility visibility;
+
     private String thumbnailUrl;
     private boolean customThumbnail;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -67,6 +71,10 @@ public class Lecture {
 
     public enum LectureStatus  {
         OPEN,CLOSED,ENDED
+    }
+
+    public enum LectureVisibility{
+        ACTIVE, DELETED
     }
 
 }
