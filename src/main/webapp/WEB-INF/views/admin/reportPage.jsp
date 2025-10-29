@@ -9,12 +9,12 @@
     <div class="container-fluid py-4 px-5">
         <div class="row">
             <div class="col-12">
-                <div class="card mb-4">
+                <div class="card mb-4 vertical-scroll-wrap">
                     <div class="card-header pb-0">
                         <h5>신고 리스트</h5>
                     </div>
-                    <div class="card-body px-0 pt-0 pb-2">
-                        <div class="table-responsive p-0">
+                    <div class="card-body px-0 pt-0 pb-2 vertical-scroll">
+                        <div class=" p-0">
                             <table id="reportTable" class="table align-middle align-items-center mb-0">
                                 <thead class="table-light text-center">
                                 <tr>

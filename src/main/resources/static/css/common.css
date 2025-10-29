@@ -96,6 +96,17 @@ section.sub h3 {
     -webkit-line-clamp: 2;
     overflow: hidden;
 }
+/* 가로스크롤 */
+.vertical-scroll-wrap {
+    overflow-x: auto;
+}
+.vertical-scroll {
+    min-width: 90rem;
+}
+#categoryGroup.btn-graop {
+    flex-wrap: wrap;
+}
+
 /* 헤더 */
 header {
     width: 100%;
