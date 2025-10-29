@@ -96,7 +96,7 @@ public class LectureAdminServiceImpl implements LectureAdminService {
     }
 
     @Override
-    public Lecture saveOrUpdateLecture(LectureRequest request, int categoryId) {
+    public Lecture saveLectureAjax(LectureRequest request, int categoryId) {
         Lecture lecture = request.getLecture();
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다."));
@@ -104,6 +104,11 @@ public class LectureAdminServiceImpl implements LectureAdminService {
         // 무료 강의 처리
         if (lecture.getIsFree()) {
             lecture.setPrice(0);
+            lecture.setTotalCount(0);
+            lecture.setReservationStart(null);
+            lecture.setReservationEnd(null);
+            lecture.setLectureStart(null);
+            lecture.setLectureEnd(null);
         }
 
         // 저장 (등록 or 수정)

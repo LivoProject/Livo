@@ -24,15 +24,19 @@ document.addEventListener("DOMContentLoaded", () =>{
         }
 
         data.forEach((lec, i) => {
-            const price = lec.price === 0 ? "무료" : lec.price;
+            const isFree = lec.isFree === true || lec.isFree === 1 || lec.price === 0;
+            const price = isFree ? "무료" : lec.price;
+            const reservationPeriod = isFree ? "무제한" : `${formatDate(lec.reservationStart)} ~ ${formatDate(lec.reservationEnd)}`;
+            const lecturePeriod = isFree ? "무제한" : `${formatDate(lec.lectureStart)} ~ ${formatDate(lec.lectureEnd)}`;
+            const totalCount = isFree ? "무제한" : `${lec.reservationCount}/${lec.totalCount}`;
             const row = `
                 <tr class="text-center">
                     <td>${i + 1 + page * pageSize}</td>
                     <td>${lec.title}</td>
                     <td>${lec.tutorName}</td>
-                    <td>${formatDate(lec.reservationStart)} ~ ${formatDate(lec.reservationEnd)}</td>
-                    <td>${formatDate(lec.lectureStart)} ~ ${formatDate(lec.lectureEnd)}</td>
-                    <td>${lec.reservationCount}/${lec.totalCount}</td>
+                    <td>${reservationPeriod}</td>
+                    <td>${lecturePeriod}</td>
+                    <td>${totalCount}</td>
                     <td>${price}</td>
                     <td>
                         <a href="/admin/lecture/edit?lectureId=${lec.lectureId}" class="btn btn-sm btn-primary">수정</a>

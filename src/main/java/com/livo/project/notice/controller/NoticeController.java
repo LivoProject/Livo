@@ -25,7 +25,7 @@ public class NoticeController {
 
     private final NoticeService noticeService;
     private final UserRepository userRepository;
-
+    private final com.livo.project.admin.service.NoticeService noticeAdminService;
     // 공지사항 목록
     @GetMapping("/list")
     public String noticeList(Model model, @PageableDefault(size = 10) Pageable pageable) {
@@ -40,7 +40,7 @@ public class NoticeController {
     @GetMapping("/content")
     public String noticeContent(@RequestParam("id") int id, Model model) {
         Notice notice = noticeService.findNoticeById(id);
-
+        noticeAdminService.increaseView(id);
         //  이메일 기반으로 닉네임 조회
         String nickname = userRepository.findByEmail(notice.getWriter())
                 .map(User::getNickname)

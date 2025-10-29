@@ -3,21 +3,35 @@ document.addEventListener("DOMContentLoaded", () => {
     // 무료강의 체크박스
     const priceInput = document.getElementById("price");
     const freeCheck = document.getElementById("isFree");
+    const totalCount = document.getElementById("totalCount");
+    const reservationStart = document.getElementById("reservationStart");
+    const reservationEnd = document.getElementById("reservationEnd");
+    const lectureStart = document.getElementById("lectureStart");
+    const lectureEnd = document.getElementById("lectureEnd");
 
-    if (freeCheck && priceInput) {
-        if (freeCheck.checked) {
-            priceInput.value = 0;
-            priceInput.disabled = true;
-        }
+    const disableTargets = [priceInput, totalCount, reservationStart, reservationEnd, lectureStart, lectureEnd];
+
+    if (freeCheck) {
+        toggleFreeInputs(freeCheck.checked);
 
         freeCheck.addEventListener("change", () => {
-            if (freeCheck.checked) {
-                priceInput.value = 0;
-                priceInput.disabled = true;
-            } else {
-                priceInput.disabled = false;
-            }
+            toggleFreeInputs(freeCheck.checked);
         });
+    }
+
+    function toggleFreeInputs(isFree){
+        disableTargets.forEach(input => {
+            if(!input) return;
+            if(isFree){
+                input.value="";
+                input.disabled = true;
+            }else{
+                input.disabled = false;
+            }
+        })
+    }
+    if(priceInput){
+        priceInput.value = isFree ? 0 : "";
     }
 
     // 상위 카테고리 → 하위 카테고리 AJAX 로드

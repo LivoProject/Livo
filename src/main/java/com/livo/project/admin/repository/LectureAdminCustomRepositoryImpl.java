@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,10 +89,8 @@ public class LectureAdminCustomRepositoryImpl implements LectureAdminCustomRepos
             builder.and(lecture.lectureStart.between(start, end.plusDays(1)));
         }
         if(search.getReservationStartDate() != null && search.getReservationEndDate() != null){
-            LocalDateTime start = search.getReservationStartDate();
-            LocalDateTime end = search.getReservationEndDate()
-                    .plusDays(1)
-                    .minusSeconds(1);
+            LocalDateTime start = search.getReservationStartDate().atStartOfDay();
+            LocalDateTime end = search.getReservationEndDate().atTime(LocalTime.MAX);
             builder.and(lecture.reservationStart.between(start, end));
         }
 
