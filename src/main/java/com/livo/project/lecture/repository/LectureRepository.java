@@ -14,19 +14,36 @@ import java.util.Optional;
 @Repository("lectureLectureRepository")
 public interface LectureRepository extends JpaRepository<Lecture, Integer> {
 
-    // 전체 강좌 조회 (페이징 포함)
+    // 기존 것들 그대로 유지
     Page<Lecture> findAll(Pageable pageable);
-
-    // 키워드 검색
     Page<Lecture> findByTitleContaining(String keyword, Pageable pageable);
-
-    // 카테고리별 검색
     List<Lecture> findByCategory_CategoryId(int categoryId);
     Page<Lecture> findByCategory_CategoryId(int categoryId, Pageable pageable);
 
-    // 상위 카테고리(mainCategory)에 속한 하위 카테고리 강좌까지 포함 조회 (페이징 버전)
     @Query("SELECT l FROM LectureEntity l WHERE l.category.categoryId = :mainCategoryId OR l.category.parent.categoryId = :mainCategoryId")
     Page<Lecture> findAllByMainCategory(@Param("mainCategoryId") int mainCategoryId, Pageable pageable);
 
     Optional<Lecture> findByLectureId(int lectureId);
+
+    // 민영 추가
+    @Query("""
+        SELECT l 
+        FROM LectureEntity l 
+        WHERE l.category.categoryId = :categoryId
+          AND (l.title LIKE %:keyword% OR l.tutorName LIKE %:keyword%)
+    """)
+    Page<Lecture> findByCategoryAndKeyword(@Param("categoryId") int categoryId,
+                                           @Param("keyword") String keyword,
+                                           Pageable pageable);
+
+    @Query("""
+        SELECT l 
+        FROM LectureEntity l 
+        WHERE (l.category.categoryId = :mainCategoryId 
+               OR l.category.parent.categoryId = :mainCategoryId)
+          AND (l.title LIKE %:keyword% OR l.tutorName LIKE %:keyword%)
+    """)
+    Page<Lecture> findByMainCategoryAndKeyword(@Param("mainCategoryId") int mainCategoryId,
+                                               @Param("keyword") String keyword,
+                                               Pageable pageable);
 }
