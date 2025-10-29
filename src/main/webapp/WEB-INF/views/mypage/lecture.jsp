@@ -13,11 +13,31 @@
 
     <!-- 강의 -->
     <main class="main-content">
-        <h3>내 강의실</h3>
-        <div class="lecture-grid large">
+        <h3 class="mt-0 mb-0">내 강의실</h3>
+
+        <div class="d-flex flex-column mb-4 justify-content-end align-items-end">
+
+            <!-- 검색폼 -->
+            <form id="lectureSearchForm" class="input-group mb-2 w-50">
+                <input type="text" name="keyword" id="keyword"
+                       class="form-control" placeholder="강좌명, 강사명 입력">
+                <button type="submit" id="searchLectureBtn" class="btn btn-main">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+
+            <!-- 정렬 선택 -->
+            <select class="form-select w-25">
+                <option selected>최신순</option>
+                <option value="old">오래된순</option>
+                <option value="popular">인기순</option>
+            </select>
+        </div>
+
+        <!-- 강의 카드 목록 (Ajax 결과도 여기에 덮어씀) -->
+        <div id="lectureContainer" class="lecture-grid large">
             <c:if test="${not empty reservations}">
                 <c:forEach var="reservations" items="${reservations}">
-
                     <div class="card">
                         <div class="card-img-wrap">
                             <a href="/lecture/view/${reservations.lectureId}">
@@ -28,10 +48,8 @@
                             </a>
                         </div>
                         <div class="card-body">
-
                             <a href="/lecture/content/${reservations.lectureId}">
-
-                                <h6 class="fw-bold mb-2 text-ellipsis-2">${reservations.title}</h6>
+                                <h6 class="fw-bold text-ellipsis-2 lecture-title">${reservations.title}</h6>
                                 <p class="text-muted">${reservations.tutorName}</p>
                                 <div class="progress" style="height: 8px;">
                                     <div class="progress-bar bg-success"
@@ -40,11 +58,8 @@
                                 <small class="text-muted">${reservations.progressPercent}%</small>
                             </a>
                         </div>
-
                         <div class="card-footer">
-
                             <div class="button-wrap">
-<%--                                <a href="/lecture/view/${reservations.lectureId}" class="btn-main">이어보기</a>--%>
                                 <button class="btn-unreserve btn-main"
                                         data-lecture-id="${reservations.lectureId}"
                                         data-bs-toggle="modal"
@@ -63,7 +78,6 @@
             <c:if test="${empty reservations}">
                 <p class="text-muted">예약한 강의가 없습니다.</p>
             </c:if>
-
         </div>
 
         <%@ include file="/WEB-INF/views/common/pagination.jsp" %>
@@ -71,7 +85,85 @@
     </main>
 
 </section>
+
 <!-- 컨텐츠 끝 -->
+<script>
+    $("#searchLectureBtn").on("click", function (e) {
+        e.preventDefault();
+
+        const keyword = $("#keyword").val().trim();
+        if (!keyword) return alert("검색어를 입력하세요.");
+
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+        const container = document.getElementById("lectureContainer");
+
+        $.ajax({
+            url: "/mypage/lecture/search",
+            type: "POST",
+            data: {keyword},
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function (res) {
+                const list = res.data || [];
+                if (!list.length) {
+                    container.innerHTML = "<p class='text-muted'>검색 결과가 없습니다.</p>";
+                    return;
+                }
+
+                let html = "";
+                list.forEach((r) => {
+                    html += `
+ <div class="card">
+                <!-- 썸네일 영역 -->
+                <div class="card-img-wrap">
+                    <a href="/lecture/view/\${r.lectureId}">
+                        <img src="\${r.thumbnailUrl}" class="card-img-top" alt="\${r.title}">
+                        <button class="play-btn">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+                    </a>
+                </div>
+
+                <!-- 본문 -->
+                <div class="card-body">
+                    <a href="/lecture/content/\${r.lectureId}">
+                        <h6 class="fw-bold text-ellipsis-2">\${r.title}</h6>
+                        <p class="text-muted">\${r.tutorName}</p>
+                        <div class="progress" style="height:8px;">
+                            <div class="progress-bar bg-success" style="width:\${r.progressPercent}%;"></div>
+                        </div>
+                        <small class="text-muted">\${r.progressPercent}%</small>
+                    </a>
+                </div>
+
+                <!-- 푸터 (버튼 영역) -->
+                <div class="card-footer">
+                    <div class="button-wrap">
+                        <button class="btn-unreserve btn-main"
+                                data-lecture-id="\${r.lectureId}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#reserveModal">
+                            예약 취소
+                        </button>
+                        <a href="/lecture/content/\${r.lectureId}#review" class="btn-cancel">
+                            수강평 작성
+                        </a>
+                    </div>
+                </div>
+            </div>
+                    `;
+                });
+                container.innerHTML = html;
+            },
+            error: function (xhr) {
+                console.error(xhr);
+                alert("검색 중 오류가 발생했습니다.");
+            },
+        });
+    });
+</script>
 
 
 <!-- 모달 -->

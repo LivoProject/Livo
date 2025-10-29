@@ -320,7 +320,7 @@ public class MypageService {
 
     // 내 강좌 예약 취소
     @Transactional
-    @CacheEvict(cacheNames = { "chartTopLectures", "chartMonthlyRevenue" }, allEntries = true)
+    @CacheEvict(cacheNames = {"chartTopLectures", "chartMonthlyRevenue"}, allEntries = true)
     public void removeReservationLecture(Integer lectureId, String email) {
         int changed = mypageReservationRepository.cancelByLectureIdAndEmail(lectureId, email);
         System.out.println("변경된 행 수: " + changed);
@@ -401,7 +401,6 @@ public class MypageService {
     }
 
 
-
     // 이번주 진행 시간
     @Transactional(readOnly = true)
     public double getWeeklyStudyHours(String email) {
@@ -418,6 +417,7 @@ public class MypageService {
     public Page<Payment> getMyPayments(String email, Pageable pageable) {
         return mypagePaymentRepository.findAllByEmail(email, pageable);
     }
+
     public List<Payment> getRecentPayments(String email, int limit) {
         return mypagePaymentRepository.findTop3ByUserEmailOrderByApprovedAtDesc(email);
     }
@@ -426,7 +426,7 @@ public class MypageService {
     // 예약완료된 2개 강의
     @Transactional(readOnly = true)
     public List<MypageReservationDto> getRecentConfirmedLectures(String email, String provider) {
-        Pageable limit = PageRequest.of(0, 2);
+        Pageable limit = PageRequest.of(0, 3);
         List<Reservation> reservations =
                 mypageReservationRepository.findTop3ConfirmedByEmailAndProvider(email, provider, limit);
 
@@ -434,17 +434,32 @@ public class MypageService {
                 .map(r -> {
                     Lecture lecture = r.getLecture();
 
-                    // ✅ LectureProgress에서 해당 강의의 진도율 조회
+
                     double progress = mypageProgressRepository.findByLectureAndUser(lecture, email, provider)
                             .map(LectureProgress::getProgressPercent)
                             .orElse(0.0);
 
-                    // ✅ 정적 팩토리 메서드 of() 사용
                     return MypageReservationDto.of(r, lecture, progress);
                 })
                 .collect(Collectors.toList());
     }
 
+    // 내 강좌 검색
+    @Transactional(readOnly = true)
+    public Page<MypageReservationDto> searchMyReservations(String email, String provider, String keyword, Pageable pageable) {
+
+        return mypageReservationRepository.searchByKeyword(email, provider, keyword, pageable)
+                .map(r -> {
+                    Lecture lecture = r.getLecture();
+
+                    // 이메일 기준으로 진도율 조회
+                    double progress = mypageProgressRepository
+                            .findProgressPercentByLectureAndEmail(lecture.getLectureId(), email)
+                            .orElse(0.0);
+
+                    return MypageReservationDto.of(r, lecture, progress);
+                });
+    }
 
 
 }

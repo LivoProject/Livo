@@ -2,6 +2,7 @@ package com.livo.project.mypage.repository;
 
 import com.livo.project.lecture.domain.Reservation;
 import jakarta.transaction.Transactional;
+import org.eclipse.tags.shaded.org.apache.regexp.RE;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,18 +33,37 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
 
     // 예약완료된 최근 3개 강의
     @Query("""
-    SELECT r 
-    FROM Reservation r
-    JOIN FETCH r.lecture l
-    JOIN FETCH r.user u
-    WHERE u.email = :email
-      AND u.provider = :provider
-      AND r.status = 'CONFIRMED'
-    ORDER BY r.createdAt DESC
-""")
+                SELECT r 
+                FROM Reservation r
+                JOIN FETCH r.lecture l
+                JOIN FETCH r.user u
+                WHERE u.email = :email
+                  AND u.provider = :provider
+                  AND r.status = 'CONFIRMED'
+                ORDER BY r.createdAt DESC
+            """)
     List<Reservation> findTop3ConfirmedByEmailAndProvider(@Param("email") String email,
                                                           @Param("provider") String provider,
                                                           Pageable pageable);
 
+
+    //내 강좌 검색
+    @Query("""
+    SELECT r
+    FROM Reservation r
+    JOIN r.lecture l
+    JOIN r.user u
+    WHERE u.email = :email
+      AND u.provider = :provider
+      AND r.status = 'CONFIRMED'
+      AND (
+          LOWER(l.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+          OR LOWER(l.tutorName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+      )
+""")
+    Page<Reservation> searchByKeyword(@Param("email") String email,
+                                      @Param("provider") String provider,
+                                      @Param("keyword") String keyword,
+                                      Pageable pageable);
 
 }

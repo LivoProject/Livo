@@ -226,12 +226,13 @@
    📘 강의 카드 썸네일 + 재생 버튼
 =============================== */
 #mypage .card-img-wrap {
-    height: 200px;
+    height: 180px;
     position: relative;
     overflow: hidden;
 }
 
 #mypage .card-img-wrap > a {
+    background-color: #000;
     width: 100%;
     height: 100%;
     display: block;
@@ -242,7 +243,6 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    object-fit: none;
 }
 
 #mypage .card-img-wrap:hover img {
@@ -594,6 +594,7 @@
 }
 
 .lecture-title {
+    height: auto;
     font-weight: 600;
     font-size: 1rem;
     margin-bottom: 0.5rem;

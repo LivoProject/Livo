@@ -73,4 +73,15 @@ public interface MypageProgressRepository extends JpaRepository<LectureProgress,
                                  @Param("endOfWeek") LocalDateTime endOfWeek);
 
 
+
+    // 내부 검색
+    @Query("""
+           SELECT lp.progressPercent
+           FROM LectureProgress lp
+           WHERE lp.lecture.lectureId = :lectureId
+             AND lp.email = :email
+           """)
+    Optional<Double> findProgressPercentByLectureAndEmail(@Param("lectureId") Integer lectureId,
+                                                          @Param("email") String email);
+
 }

@@ -19,15 +19,9 @@
                 <p>
                     <c:choose>
                         <c:when test="${not empty notice.createdAtAsDate}">
-                            <fmt:formatDate value="${notice.createdAtAsDate}" pattern="yyyy-MM-dd HH:mm"/>
+                            <fmt:formatDate value="${notice.createdAtAsDate}" pattern="yyyy-MM-dd"/>
                         </c:when>
-                        <c:otherwise>
-                            <c:out value="${notice.createdAt}"/>
-                        </c:otherwise>
-
-
                     </c:choose>
-
                 </p>
             </div>
         </div>

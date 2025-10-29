@@ -1,5 +1,6 @@
 package com.livo.project.mypage.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.lecture.domain.Lecture;
 
@@ -12,6 +13,7 @@ import com.livo.project.mypage.service.MypageService;
 import com.livo.project.payment.domain.Payment;
 import com.livo.project.review.domain.Review;
 import com.livo.project.utils.AuthUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -29,6 +31,9 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 /**
  * 마이페이지 컨트롤러
@@ -287,4 +292,30 @@ public class MypageController {
 
         return "mypage/payment";
     }
+
+    // 검색
+    @PostMapping("/lecture/search")
+    @ResponseBody
+    public Map<String, Object> searchLecturesAjax(@RequestParam("keyword") String keyword,
+                                                  Pageable pageable) {
+
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
+
+        if (email == null) {
+            return Map.of("success", false, "error", "UNAUTHORIZED");
+        }
+
+        Page<MypageReservationDto> reservations = mypageService.searchMyReservations(email, provider, keyword, pageable);
+
+        // JSON 구조로 반환
+        return Map.of(
+                "success", true,
+                "data", reservations.getContent()
+        );
+    }
+
+
+
 }

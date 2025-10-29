@@ -63,8 +63,9 @@
                             <i class="bi bi-play-fill"></i>
                         </button>
                         <div class="card-body">
-                            <h6>${lecture.title}</h6>
-                            <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}" type="number"/></p>
+                            <h6 class="fw-bold text-ellipsis-2 lecture-title">${lecture.title}</h6>
+                            <p class="text-muted mb-3">${lecture.tutorName}</p>
+                            <span><fmt:formatNumber value="${lecture.price}" type="number"/>원</span>
                             <div class="card-review">
                                 <div>
                                     <span>⭐4.8</span>
@@ -118,7 +119,6 @@
 
 
     <!-- 인기 강좌 -->
-
     <section id="popular">
         <div class="container">
             <div class="swiper mySwiper">
@@ -136,9 +136,9 @@
                                 </button>
                                 <div class="card-body">
                                     <span class="badge bg-danger">HOT</span>
-                                    <h6>${lectureP.title}</h6>
-                                    <p>${lectureP.tutorName}∣<fmt:formatNumber value="${lectureP.price}"
-                                                                               type="number"/></p>
+                                    <h6 class="fw-bold text-ellipsis-2 lecture-title">${lectureP.title}</h6>
+                                    <p class="text-muted mb-3">${lectureP.tutorName}</p>
+                                    <span><fmt:formatNumber value="${lectureP.price}" type="number"/>원</span>
                                     <div class="card-review">
                                         <div>
                                             <span>⭐4.8</span>
@@ -146,7 +146,7 @@
                                         </div>
                                         <div>
                                             <i class="bi bi-person-fill"></i>
-                                            <span>${lecture.reservationCount}</span>
+                                            <span>${lectureP.reservationCount}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +170,6 @@
 
 
     <!-- 중간 배너 -->
-
     <section id="midBanner">
         <div class="banner-content">
             <h2 class="fw-bold mb-3">무엇을 배워볼까 고민 중이라면? </h2>
@@ -181,7 +180,6 @@
 
 
     <!-- 공지사항 -->
-
     <section id="info">
         <div class="container">
             <div class="board notice-board">
