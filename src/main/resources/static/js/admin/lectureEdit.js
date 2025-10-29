@@ -4,21 +4,27 @@ $(document).ajaxSend(function (e, xhr, options) {
     if (token && header) xhr.setRequestHeader(header, token);
 });
 $(document).ready(function() {
-    //무료 강의 처리
-    const $price = $('#price');
-    const $isFree = $('#isFree');
 
+    const $isFree = $("#isFree");
+    const $price = $("#price");
+    const $totalCount = $("#totalCount");
+    const $reservationStart = $("#reservationStart");
+    const $reservationEnd = $("#reservationEnd");
+    const $lectureStart = $("#lectureStart");
+    const $lectureEnd = $("#lectureEnd");
+    const disableTargets =[
+        $price, $totalCount, $reservationStart, $reservationEnd, $lectureStart, $lectureEnd
+    ];
     function applyPriceState() {
         if ($isFree.is(':checked')) {
-            $price.val(0).prop('disabled', true);
+            disableTargets.forEach($el => $el.val("").prop("disabled", true));
         } else {
-            $price.prop('disabled', false);
+            disableTargets.forEach($el => $el.prop("disabled", false));
         }
     }
-
-    $isFree.on('change', applyPriceState);
     applyPriceState();
 
+    $isFree.on('change', applyPriceState);
 
     //카테고리 연동 처리
     const selectedParentId = $('#selectedParentId').val();

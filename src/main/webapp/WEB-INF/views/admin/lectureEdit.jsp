@@ -79,15 +79,16 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">모집 인원</label>
-                        <input type="number" name="totalCount" class="form-control" min="1" value="${lecture.totalCount}">
+                        <input type="number" id="totalCount" name="totalCount" class="form-control" min="1"
+                        value="${lecture.totalCount}" <c:if test="${lecture.isFree}">disabled</c:if>>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강의비</label>
                         <div class="input-group">
-                            <input type="number" name="price" class="form-control" value="${lecture.price}" <c:if test="${lecture.isFree}">disabled</c:if>>
+                            <input type="number" id="price" name="price" class="form-control" value="${lecture.price}" <c:if test="${lecture.isFree}">disabled</c:if>>
                             <div class="input-group-text">
-                                <input type="checkbox" id="freeCheck" name="isFree">
-                                <label for="freeCheck" class="ms-1 mb-0">무료강의</label>
+                                <input type="checkbox" id="isFree" name="isFree" <c:if test="${lecture.isFree}">checked</c:if>>
+                                <label for="isFree" class="ms-1 mb-0">무료강의</label>
                             </div>
                         </div>
                     </div>
@@ -97,24 +98,21 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">예약 시작일</label>
-                        <input type="datetime-local" name="reservationStart" class="form-control" value="${lecture.reservationStart}">
+                        <input type="datetime-local" id="reservationStart" name="reservationStart" class="form-control" value="${lecture.reservationStart}" <c:if test="${lecture.isFree}">disabled</c:if>>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">예약 종료일</label>
-                        <input type="datetime-local" name="reservationEnd" class="form-control" value="${lecture.reservationEnd}">
+                        <input type="datetime-local" id="reservationEnd" name="reservationEnd" class="form-control" value="${lecture.reservationEnd}" <c:if test="${lecture.isFree}">disabled</c:if>>
                     </div>
                 </div>
-
-                <fmt:formatDate value="${lecture.lectureStart}" pattern="yyyy-MM-dd" var="formattedLectureStart" />
-                <fmt:formatDate value="${lecture.lectureEnd}" pattern="yyyy-MM-dd" var="formattedLectureEnd" />
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">강의 시작일</label>
-                        <input type="date" name="lectureStart" class="form-control" value="${formattedLectureStart}" >
+                        <input type="date" id="lectureStart" name="lectureStart" class="form-control" value="${lecture.lectureStart}" <c:if test="${lecture.isFree}">disabled</c:if>>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강의 종료일</label>
-                        <input type="date" name="lectureEnd" class="form-control" value="${formattedLectureEnd}" >
+                        <input type="date" id="lectureEnd" name="lectureEnd" class="form-control" value="${lecture.lectureEnd}" <c:if test="${lecture.isFree}">disabled</c:if>>
                     </div>
                 </div>
 
