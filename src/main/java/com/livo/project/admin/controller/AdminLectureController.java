@@ -45,7 +45,7 @@ public class AdminLectureController {
         request.setLecture(lecture);
         request.setChapters(chapters);
         try{
-            Lecture saved = lectureAdminService.saveOrUpdateLecture(request, categoryId);
+            Lecture saved = lectureAdminService.saveLectureAjax(request, categoryId);
             return ResponseEntity.ok(Map.of("success", true, "lectureId", saved.getLectureId()));
         }catch (Exception e){
             e.printStackTrace();

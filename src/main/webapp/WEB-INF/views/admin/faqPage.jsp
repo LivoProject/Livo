@@ -12,11 +12,11 @@
               <div class="text-end mb-3">
                   <a href="faq/insert" class="btn btn-success">새 FAQ 등록</a>
               </div>
-              <div class="card mb-4">
+              <div class="card mb-4 vertical-scroll-wrap">
                 <div class="card-header pb-0">
                   <h5>FAQ</h5>
                 </div>
-                <div class="card-body px-0 pt-0 pb-2">
+                <div class="card-body px-0 pt-0 pb-2 vertical-scroll">
                   <div class="table-responsive p-0">
                     <table class="table align-items-center mb-0">
                       <thead class="table-light text-center">
@@ -42,7 +42,7 @@
                                         </c:otherwise>
                                       </c:choose>
                                   </td>
-                                  <td class="text-center">
+                                  <td class="text-center d-flex">
                                       <a href="/admin/faq/edit?id=${faq.id}" class="btn btn-sm btn-primary">수정</a>
                                       <form action="/admin/faq/delete" method="post">
                                           <input type="hidden" name="id" value="${faq.id}">

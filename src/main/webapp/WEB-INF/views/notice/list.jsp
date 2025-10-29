@@ -19,6 +19,23 @@
         </tr>
         </thead>
         <tbody>
+
+        <c:if test="${not empty pinnedNotices}">
+            <c:forEach var="notice" items="${pinnedNotices}">
+                <tr class="table-warning">
+                <tr onclick="location.href='/notice/content?id=${notice.id}'">
+                    <!-- 최신글이 위 → 최신글이 1번 -->
+                    <td class="text-center">📌</td>
+                    <td class="text-start">${notice.title}</td>
+                    <td class="text-center">${notice.nickname}</td>
+                    <td class="text-center">
+                        <fmt:formatDate value="${notice.createdAtAsDate}" pattern="yyyy-MM-dd"/>
+                    </td>
+                </tr>
+            </c:forEach>
+        </c:if>
+
+
         <c:forEach var="notice" items="${notices}" varStatus="s">
             <tr onclick="location.href='/notice/content?id=${notice.id}'">
                 <!-- 최신글이 위 → 최신글이 1번 -->
@@ -37,7 +54,30 @@
         <p class="text-center text-muted mt-4">등록된 공지사항이 없습니다.</p>
     </c:if>
 
-    <jsp:include page="/WEB-INF/views/common/pagination.jsp"/>
+    <nav class="pagination-wrap">
+        <c:if test="${page != null and page.totalPages > 0}">
+            <ul class="pagination">
+                <c:if test="${not page.first}">
+                    <li class="page-item">
+                        <a class="page-link" href="?page=${page.number - 1}"> <i class="bi bi-chevron-left"></i></a>
+                    </li>
+                </c:if>
+
+                <c:forEach var="i" begin="0" end="${page.totalPages - 1}">
+                    <li class="page-item ${page.number == i ? 'active' : ''}">
+                        <a class="page-link" href="?page=${i}">${i + 1}</a>
+                    </li>
+                </c:forEach>
+
+                <c:if test="${not page.last}">
+                    <li class="page-item next">
+                        <a class="page-link" href="?page=${page.number + 1}"> <i class="bi bi-chevron-right"></i></a>
+                    </li>
+                </c:if>
+            </ul>
+        </c:if>
+    </nav>
+
 </section>
 
 

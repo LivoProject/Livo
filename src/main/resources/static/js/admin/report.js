@@ -17,9 +17,12 @@ function loadReports(page = 0) {
                 tbody.append(`
                     <tr class="text-center">
                         <td>${page * 10 + idx + 1}</td>
-                        <td>${r.email}</td>
+                        <td>
+                            <div class="text-truncate-one" title="${r.reviewContent}">${r.reviewContent}</div>
+                        </td>
                         <td>${r.reportReason}</td>
-                        <td>${r.reportTime ? r.reportTime.replace('T',' ') : ''}</td>
+                        <td>${r.email}</td>
+                        <td>${r.reportTime}</td>
                         <td>
                             <span class="badge ${r.status === 'PROCESSING' ? 'bg-warning' : r.status === 'COMPLETED' ? 'bg-success' : 'bg-danger'}">
                                 ${r.status}

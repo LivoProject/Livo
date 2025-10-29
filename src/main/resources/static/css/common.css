@@ -85,14 +85,26 @@ section.sub h3 {
 
 /* 텍스트 말줄임 */
 .text-ellipsis {
-    white-space: nowrap;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
-    word-break: break-word;
-    max-width: 520px;
+}
+/* 텍스트 말줄임 2줄 */
+.text-ellipsis-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+/* 가로스크롤 */
+.vertical-scroll-wrap {
+    overflow-x: auto;
+}
+.vertical-scroll {
+    min-width: 90rem;
+}
+#categoryGroup.btn-graop {
+    flex-wrap: wrap;
 }
 
 /* 헤더 */
@@ -127,6 +139,7 @@ header .nav-link.active,
 header .header-actions > *:hover,
 header .header-actions .logout-button:hover {
     color: var(--color-main);
+    cursor: pointer;
 }
 
 header nav {
@@ -175,6 +188,9 @@ header .header-actions span:nth-of-type(1)::after {
     display: block;
 }
 
+header .header-actions .logout-button:after {
+    display: none!important;
+}
 header .header-actions i {
     margin-right: 0.25rem;
 }
@@ -774,9 +790,13 @@ tbody tr:last-child td {
 }
 /* 아코디언 */
 .accordion-button {
-
-    padding: 1.5rem 0;
+    padding: 1.5rem;
 }
+.accordion-body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
 .accordion-button:not(.collapsed) {
     background: var(--color-light-main);
     color: var(--color-dark-gray);

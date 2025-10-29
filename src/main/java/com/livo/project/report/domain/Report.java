@@ -35,8 +35,6 @@ public class Report {
     private Status status = Status.PROCESSING;
 
     private String email;   // FK (user)
-//    @Column(name = "reviewUId", insertable = false, updatable = false)
-//    private int reviewUId;  // FK (review)
 
     // Review 연결
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)

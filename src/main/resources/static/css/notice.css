@@ -24,11 +24,11 @@
 }
 #noticeDetail .content-area {
     border-bottom: var(--border-black);
-    padding: 5rem 0;
+    padding: 5rem 1.5rem;
 }
 #notice td {
     cursor: pointer;
 }
-#notice td:last-child {
-    border: 1px solid #e5e5e5;
+#notice tr:last-child {
+    border-bottom: 1px solid #e5e5e5;
 }

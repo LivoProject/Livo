@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <!-- 필터 영역 -->
-                        <div class="row g-3 mt-2 align-items-center">
+                        <div class="row g-3 mt-2 align-items-center filter-area">
                             <div class="col-6">
                                 <div class="col-auto d-flex align-items-center">
                                     <label class="me-4 col-form-label fw-semibold">예약 상태</label>
@@ -100,11 +100,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="card mb-4">
+                <div class="card mb-4 vertical-scroll-wrap">
                     <div class="card-header pb-0">
                         <h5>강의 관리</h5>
                     </div>
-                    <div class="card-body px-0 pt-0 pb-2">
+                    <div class="card-body px-0 pt-0 pb-2 vertical-scroll">
                         <div class="table-responsive p-0">
                             <table class="table align-items-center mb-0">
                                 <thead class="table-light text-center">

@@ -28,6 +28,7 @@
     overflow-y: auto;
     padding: 0;
     box-shadow: none;
+    z-index: 1;
 }
 .nav-pills,
 .nav-link {
@@ -35,9 +36,16 @@
     margin-left: 16px;
     margin-right: 16px;
 }
-.nav-pills,
+.nav-pills:hover{
+    color: #14a7b9!important;
+}
 .nav-link:hover{
     color: #14a7b9;
+    background-color: var(--color-light-main);
+}
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+    background-color: #14a7b9!important;
 }
 
 .sidenav-header {

@@ -31,3 +31,10 @@
     box-shadow: 0 2px 5px rgba(23,180,199,0.1);
     border-color: #14a7b9;
 }
+.text-truncate-one {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 600px;
+}

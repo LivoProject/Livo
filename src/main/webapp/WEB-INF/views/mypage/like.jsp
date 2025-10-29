@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
@@ -29,12 +30,9 @@
 
                         <div class="card-body">
                             <a href="/lecture/content/${lecture.lectureId}">
-                                <h6 class="fw-bold mb-1">${lecture.title}</h6>
-                                <p class="text-muted mb-2">
-                                        ${lecture.tutorName} ∣
-                                                ${lecture.reserved}
-                                    <fmt:formatNumber value="${lecture.price}" type="number"/> 원
-                                </p>
+                                <h6 class="fw-bold mb-2 text-ellipsis-2">${lecture.title}</h6>
+                                <p class="text-muted mb-3">${lecture.tutorName}</p>
+                                <span><fmt:formatNumber value="${lecture.price}" type="number"/>원</span>
                                 <div class="progress" style="height: 8px;">
                                     <div class="progress-bar bg-success"
                                          style="width: ${lecture.progressPercent}%;"></div>
@@ -53,7 +51,7 @@
                                                 data-bs-target="#likeModal">
                                             삭제하기
                                         </button>
-<%--                                        <a href="/lecture/view/${lecture.lectureId}" class="btn-cancel">이어보기</a>--%>
+                                        <%--                                        <a href="/lecture/view/${lecture.lectureId}" class="btn-cancel">이어보기</a>--%>
 
                                         <a href="/lecture/content/${lecture.lectureId}#review" class="btn-cancel">수강평
                                             작성</a>

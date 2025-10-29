@@ -32,12 +32,12 @@
         </div>
 
         <!-- 목록 카드 -->
-        <div class="card mb-4">
+        <div class="card mb-4 vertical-scroll-wrap">
             <div class="card-header pb-0">
                 <h5 class="mb-0">공지사항</h5>
             </div>
 
-            <div class="card-body px-0 pt-0 pb-2">
+            <div class="card-body px-0 pt-0 pb-2 vertical-scroll">
                 <div class="table-responsive p-0">
                     <table class="table align-items-center mb-0">
                         <thead class="table-light text-center">
@@ -45,7 +45,7 @@
                             <th>번호</th>
                             <th>고정</th>
                             <th>제목</th>
-                            <th>내</th>
+                            <th>내용</th>
                             <th>작성일</th>
                             <th>조회수</th>
                             <th>관리</th>

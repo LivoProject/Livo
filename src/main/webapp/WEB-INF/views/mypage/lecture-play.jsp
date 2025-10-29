@@ -87,8 +87,8 @@
       <div class="lecture-close-button">
           <a href="/mypage/lecture" class="btn-point">닫기</a>
       </div>
-    <h3 class="fw-bold mb-1">${lecture.title}</h3>
-    <h6 class="text-secondary mb-4">${lecture.tutorName}</h6>
+    <h3 class="fw-bold mb-4">${lecture.title}</h3>
+    <h6 class="text-secondary">${lecture.tutorName}</h6>
 
     <div class="progress-wrap mb-4">
       <div class="progress" style="height: 8px;">
@@ -116,8 +116,8 @@
                aria-labelledby="heading${status.index}"
                data-bs-parent="#curriculumAccordion">
             <div class="accordion-body">
-              <p class="mb-2">${chapter.content}</p>
-              <button class="btn btn-sm btn-outline-primary play-chapter"
+              <p>${chapter.content}</p>
+              <button class="btn-outline-main play-chapter"
                       data-url="${chapter.youtubeUrl}">
                 ▶ 재생
               </button>
