@@ -162,7 +162,6 @@ public class MypageService {
         User user = userRepository.findByEmailIgnoreCaseAndProvider(email, provider)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-
         // 공지사항
         List<Notice> notices = mypageNoticeRepository.findTop3ByOrderByCreatedAtDesc();
         List<NoticeDto> noticeDtos = notices.stream().map(NoticeDto::fromEntity).toList();
@@ -261,19 +260,16 @@ public class MypageService {
         return results.map(row -> {
             Integer lectureId = row.getLectureId();
 
-            // ✅ 여기에서 isReserved 선언 (map 내부)
             boolean isReserved = mypageReservationRepository.existsByLecture_LectureIdAndUser_Email(lectureId, email);
 
             return MypageLikedLectureDto.builder()
                     .lectureId(lectureId)
                     .title(row.getTitle())
                     .tutorName(row.getTutorName())
-                    .price(row.getPrice() != null
-                            ? Integer.parseInt(row.getPrice())
-                            : 0)
+                    .price(row.getPrice() == null ? 0 : row.getPrice())
                     .thumbnailUrl(row.getThumbnailUrl())
                     .progressPercent(row.getProgressPercent() != null ? row.getProgressPercent() : 0.0)
-                    .reserved(isReserved) // ✅ 예약 여부 표시
+                    .reserved(isReserved) //
                     .build();
         });
     }

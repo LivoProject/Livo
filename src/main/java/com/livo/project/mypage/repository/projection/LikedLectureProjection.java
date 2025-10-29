@@ -4,7 +4,7 @@ public interface LikedLectureProjection {
     Integer getLectureId();
     String getTitle();
     String getTutorName();
-    String getPrice();
+    Integer getPrice();
     String getThumbnailUrl();
     Double getProgressPercent();
     Boolean getReserved();

@@ -105,22 +105,35 @@ html {
   height: 100vh;
 }
 #lecture .accordion-body {
-  padding: 1.5rem;
+  padding: 1rem;
 }
 #lecture .accordion-button {
-    background-color: #dafbff;
-    color: var(--color-black);
+    background-color:var(--color-light-main);
+    color: var(--color-dark-gray);
     transition: 0.3s;
+    padding: 1rem;
 }
 #lecture .accordion-button:hover {
-    background-color: #cdeff3;
+    background-color: var( --color-light-main-hover);
 }
 #lecture .accordion-button.collapsed {
-    background-color: #f1f3f5;
+    background-color:var(--color-light-main)
 }
 #lecture .accordion-button.collapsed:hover {
-    background-color: #ededed;
+    background-color: var( --color-light-main-hover);
 }
+.btn-outline-main {
+    background-color: var(--color-white);
+    color: var(--color-main);
+    border: 1px solid #17b4c7;
+}
+
+.btn-outline-main:hover {
+    background-color: var(--color-main);
+    color: var(--color-white);
+    box-shadow: 0 2px 5px rgba(23, 180, 199, 0.1);
+}
+
 @media (max-width: 991.98px) {
   #lecture {
     flex-direction: column;

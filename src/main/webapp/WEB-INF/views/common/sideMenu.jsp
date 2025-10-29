@@ -11,11 +11,10 @@
           height="32"
           class="rounded-circle"
         />
-        <strong>수빈</strong>
+        <strong>${mypage.nickname}</strong>
       </a>
 
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">프로필 변경</a></li>
         <li><button class="dropdown-item" onclick="document.getElementById('logoutForm').submit();">로그아웃</button></li>
       </ul>
     </div>

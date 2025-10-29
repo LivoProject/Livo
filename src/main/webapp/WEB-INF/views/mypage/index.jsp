@@ -17,7 +17,7 @@
         <!-- 프로필 / 환영 -->
         <div class="welcome-box mb-4">
             <div class="welcome-text">
-                <h3>${mypage.username} 님, 반가워요!</h3>
+                <h3>${mypage.nickname} 님, 반가워요!</h3>
                 <p>🌱 <span>${mypage.joinDays}</span>일 째 성장 중</p>
             </div>
             <p>
@@ -126,10 +126,9 @@
                             </div>
                             <div class="card-body">
                                 <a href="/lecture/content/${lecture.lectureId}">
-                                    <h6 class="card-title">${lecture.title}</h6>
-                                    <p>${lecture.tutorName}∣<fmt:formatNumber value="${lecture.price}"
-                                                                              type="number"/>
-                                        원</p>
+                                    <h6 class="card-title fw-bold mb-2 text-ellipsis-2">${lecture.title}</h6>
+                                    <p class="text-muted mb-3">${lecture.tutorName}</p>
+                                    <span><fmt:formatNumber value="${lecture.price}" type="number"/>원</span>
                                     <div class="progress" style="height: 8px;">
                                         <div class="progress-bar bg-success"
                                              style="width: ${lecture.progressPercent}%;"></div>
@@ -175,9 +174,9 @@
                             <div class="payment-box">
                                 <a href="/mypage/payment">
                                     <div class="payment-header">
-                                        <div>
+                                        <div class="title-wrap">
                                             <span class="badge status-${payment.status}">${payment.status}</span>
-                                            <span class="order-info">${payment.orderName}</span>
+                                            <span class="order-info .text-ellipsis">${payment.orderName}</span>
                                         </div>
                                         <span class="amount">
                                     ₩<fmt:formatNumber value="${payment.amount}" pattern="#,###"/>
