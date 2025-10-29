@@ -1,5 +1,3 @@
-console.log($._data($(document)[0], "events"));
-console.log("📢 notice.js loaded");
 $(document).ajaxSend(function (e, xhr, options) {
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
@@ -38,6 +36,7 @@ function loadNotices(page = 0) {
                 const pinnedBadge = n.pinned ? `<span class="badge bg-success me-1">고정</span>` : '';
                 const visibleText = n.visible ? '' : ' · <span class="text-danger">비노출</span>';
                 const nickName = n.nickname ? n.nickname : '알 수 없음';
+                const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
                 tbody.append(`
 
                     <tr>
@@ -59,11 +58,12 @@ function loadNotices(page = 0) {
                         <td class="text-start">
                             ${n.viewCount}
                         </td>
-                      <td class="text-center">
+                      <td>
                         <a href="/admin/notice/${n.id}/edit" class="btn btn-sm btn-primary me-1">수정</a>
                         <form action="/admin/notice/${n.id}" method="post" style="display:inline-block;"
                               onsubmit="return confirm('정말 삭제하시겠습니까?');">
                           <input type="hidden" name="_method" value="DELETE">
+                          <input type="hidden" name="_csrf" value="${csrfToken}">
                           <button type="submit" class="btn btn-sm btn-danger">삭제</button>
                         </form>
                       </td>

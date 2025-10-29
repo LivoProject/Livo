@@ -1,5 +1,6 @@
 package com.livo.project.report.service;
 
+import com.livo.project.admin.domain.dto.ReportResponse;
 import com.livo.project.report.domain.Report;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,7 @@ public interface ReportService {
 
     void rejectReport(int reportId);
 
-    Page<Report> getReport(Pageable pageable);
+    Page<ReportResponse> getReport(Pageable pageable);
 
     List<Report> getNotApprovedReport();
 
