@@ -41,13 +41,13 @@ public class LectureServiceImpl implements LectureService {
         return lectureRepository.findAllByMainCategory(mainCategoryId, Pageable.unpaged()).getContent();
     }
 
-    // ✅ 페이징 기반 하위 카테고리 강좌 조회
+    // 페이징 기반 하위 카테고리 강좌 조회
     @Override
     public Page<Lecture> getLecturePageByCategory(int categoryId, Pageable pageable) {
         return lectureRepository.findByCategory_CategoryId(categoryId, pageable);
     }
 
-    // ✅ 페이징 기반 상위 카테고리(mainCategory) 조회
+    // 페이징 기반 상위 카테고리(mainCategory) 조회
     @Override
     public Page<Lecture> getLecturePageByMainCategory(int mainCategoryId, Pageable pageable) {
         return lectureRepository.findAllByMainCategory(mainCategoryId, pageable);
@@ -61,5 +61,15 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public Page<Lecture> searchLecturePage(String keyword, Pageable pageable) {
         return lectureRepository.findByTitleContaining(keyword, pageable);
+    }
+
+    @Override
+    public Page<Lecture> searchByCategoryAndKeyword(int categoryId, String keyword, Pageable pageable) {
+        return lectureRepository.findByCategoryAndKeyword(categoryId, keyword, pageable);
+    }
+
+    @Override
+    public Page<Lecture> searchByMainCategoryAndKeyword(int mainCategoryId, String keyword, Pageable pageable) {
+        return lectureRepository.findByMainCategoryAndKeyword(mainCategoryId, keyword, pageable);
     }
 }

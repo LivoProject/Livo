@@ -153,7 +153,7 @@
 <!-- 헤더 검색창 -->
 <div id="headerSearch">
     <h4>배우고 싶은 강좌를 찾아보세요.</h4>
-    <form action="${pageContext.request.contextPath}/lecture/search" method="get" class="input-group">
+    <form action="${pageContext.request.contextPath}/lecture/list" method="get" class="input-group">
         <input
                 type="text"
                 name="keyword"

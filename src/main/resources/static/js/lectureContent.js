@@ -144,14 +144,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (response.ok) {
                 if (reviewUId) {
-                    showCommonModal("리뷰 수정 완료", "리뷰가 성공적으로 수정되었습니다.", "확인", false);
                     window.location.href = window.location.pathname + "?reviewUpdated=success";
                 } else {
-                    showCommonModal("리뷰 등록 완료", "후기가 성공적으로 등록되었습니다.", "확인", false);
                     window.location.href = window.location.pathname + "?reviewed=success";
                 }
-            } else {
-                showCommonModal("오류 발생", "리뷰 저장 중 문제가 발생했습니다.", "확인", false);
             }
         });
     }

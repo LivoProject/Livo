@@ -12,8 +12,7 @@
 
     <%-- 검색바 --%>
       <div class="p-3 rounded-3 mb-4" style="background: var(--color-main);">
-          <form action="/lecture/search" method="get"
-                class="d-flex flex-nowrap align-items-center justify-content-between gap-2 w-100">
+          <form id="searchForm" class="d-flex flex-nowrap align-items-center justify-content-between gap-2 w-100">
 
           <%-- 주제 선택 --%>
           <select id="mainCategory" name="mainCategory" class="form-select w-auto">
@@ -62,8 +61,9 @@
 
                   <%-- 강좌정보 --%>
                   <div class="card-body">
-                    <h6>${lecture.title}</h6>
-                    <p>${lecture.tutorName} ∣ <fmt:formatNumber value="${lecture.price}" type="number"/></p>
+                    <h6 class="fw-bold mb-2 text-ellipsis-2">${lecture.title}</h6>
+                    <p class="text-muted mb-3">${lecture.tutorName}</p>
+                     <span><fmt:formatNumber value="${lecture.price}" type="number"/>원</span>
                     <div class="card-review">
                       <div>
                         <span>⭐ <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" /></span>
@@ -91,7 +91,7 @@
     </div>
     
 <c:set var="page" value="${lecturePage}" />
-      <%@ include file="/WEB-INF/views/common/pagination.jsp" %>
+<%@ include file="/WEB-INF/views/common/pagination.jsp" %>
   </section>
 
   <script src="/js/lectureList.js"></script>
