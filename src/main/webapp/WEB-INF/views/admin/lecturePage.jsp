@@ -46,9 +46,9 @@
                                     <label class="me-4 col-form-label fw-semibold">예약 상태</label>
                                     <select id="statusSelect" class="form-select">
                                         <option value="">전체</option>
-                                        <option value="OPEN">예약 중</option>
-                                        <option value="CLOSED">예약 마감</option>
-                                        <option value="ENDED">종료</option>
+                                        <option value="OPEN">예약중</option>
+                                        <option value="CLOSED">예약마감</option>
+                                        <option value="ENDED">강의종료</option>
                                     </select>
                                 </div>
                             </div>

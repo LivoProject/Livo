@@ -42,7 +42,7 @@ public class Lecture {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate lectureEnd;
 
-    private int totalCount;
+    private Integer totalCount;
     private int reservationCount = 0;
     private int price;
 
