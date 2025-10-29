@@ -84,7 +84,12 @@
                             </div>
                             <div class="card-body">
                                 <a href="/lecture/content/${lecture.lectureId}">
-                                    <h6 class="card-title lecture-title">${lecture.title}</h6>
+                                    <h6 class="card-title lecture-title">
+                                        ${lecture.title}
+                                        <c:if test="${lecture.visibility eq 'DELETED'}">
+                                            <span class="badge bg-secondary ms-1">판매 종료</span>
+                                        </c:if>
+                                    </h6>
                                     <div class="progress" style="height: 8px;">
                                         <div class="progress-bar bg-success"
                                              style="width: ${lecture.progressPercent}%;"></div>

@@ -48,6 +48,8 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
             AND lp.email = u.email
         WHERE u.email = :email
           AND u.provider = :provider
+          AND l.visibility = 'ACTIVE'
+          AND l.status = 'OPEN'
         ORDER BY ll.createdAt DESC
     """,
             countQuery = """
@@ -59,6 +61,8 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
             ON ll.email = u.email
         WHERE u.email = :email
           AND u.provider = :provider
+          AND l.visibility = 'ACTIVE'
+          AND l.status = 'OPEN'
     """,
             nativeQuery = true
     )
@@ -87,7 +91,9 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
       ON lp.lectureId = l.lectureId 
      AND lp.email = u.email
     WHERE u.email = :email
-      AND u.provider = :provider             
+      AND u.provider = :provider 
+      AND l.visibility = 'ACTIVE'
+      AND l.status = 'OPEN'
     ORDER BY ll.createdAt DESC
     LIMIT 3
     """,

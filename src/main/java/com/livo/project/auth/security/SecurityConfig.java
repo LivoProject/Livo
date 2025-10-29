@@ -205,7 +205,7 @@ public class SecurityConfig {
                                 //  정적 리소스 (CSS/JS/이미지 등)
                                 "/css/**", "/js/**", "/img/**", "/images/**", "/webjars/**"
                         ).permitAll()
-                                .requestMatchers("/mypage/**", "/settings/**").authenticated()  // 보호
+                                .requestMatchers("/mypage/**", "/settings/**" , "/payment/**").authenticated()  // 보호
                                 .requestMatchers("/admin/**").hasRole("ADMIN")          //  추가
                                 .requestMatchers("/manager/**").hasAnyRole("ADMIN","MANAGER") // 추가
 
