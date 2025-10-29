@@ -1,5 +1,6 @@
 package com.livo.project.admin.controller;
 
+import com.livo.project.admin.domain.dto.ReportResponse;
 import com.livo.project.report.domain.Report;
 import com.livo.project.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,13 @@ public class AdminReportController {
 
     @GetMapping("/list")
     @ResponseBody
-    public Page<Report> getReportList(@RequestParam(defaultValue = "0")int page,
-                                      @RequestParam(defaultValue = "10")int pageSize){
+    public Page<ReportResponse> getReportList(@RequestParam(defaultValue = "0")int page,
+                                              @RequestParam(defaultValue = "10")int pageSize){
         Pageable pageable = PageRequest.of(page,pageSize, Sort.by(Sort.Direction.DESC,"reportTime"));
         return reportService.getReport(pageable);
     }
     @PostMapping("/approve/{reportId}")
-    public ResponseEntity<?> apprveReport(@PathVariable("reportId") int reportId){
+    public ResponseEntity<?> approveReport(@PathVariable("reportId") int reportId){
         try{
             reportService.approveReport(reportId);
             return ResponseEntity.ok("신고 승인 완료(해당 리뷰 삭제됨)");
@@ -49,11 +50,6 @@ public class AdminReportController {
         }
     }
 
-//    @PostMapping("/update-status/${reportId}")
-//    @ResponseBody
-//    public ResponseEntity<?>  updateReportStatus(@PathVariable("reportId") int reportId){
-//
-//    }
 
 
 }
