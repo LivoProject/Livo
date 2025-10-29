@@ -52,14 +52,14 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">모집 인원</label>
-                        <input type="number" name="totalCount" class="form-control" min="1" value="10">
+                        <input type="number" id="totalCount" name="totalCount" class="form-control" min="1" value="10">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강의비</label>
                         <div class="input-group">
-                            <input type="number" name="price" class="form-control" value="0">
+                            <input type="number" id="price" name="price" class="form-control" value="0">
                             <div class="input-group-text">
-                                <input type="checkbox" id="freeCheck" name="isFree" value="true">
+                                <input type="checkbox" id="isFree" name="isFree" value="true">
                                 <label for="freeCheck" class="ms-1 mb-0">무료강의</label>
                             </div>
                         </div>
@@ -70,22 +70,22 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">예약 시작일</label>
-                        <input type="datetime-local" name="reservationStart" class="form-control">
+                        <input type="datetime-local" id="reservationStart" name="reservationStart" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">예약 종료일</label>
-                        <input type="datetime-local" name="reservationEnd" class="form-control">
+                        <input type="datetime-local" id="reservationEnd" name="reservationEnd" class="form-control">
                     </div>
                 </div>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">강의 시작일</label>
-                        <input type="date" name="lectureStart" class="form-control">
+                        <input type="date" id="lectureStart" name="lectureStart" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">강의 종료일</label>
-                        <input type="date" name="lectureEnd" class="form-control">
+                        <input type="date" id="lectureEnd" name="lectureEnd" class="form-control">
                     </div>
                 </div>
                 <!-- 강의 내용 -->
