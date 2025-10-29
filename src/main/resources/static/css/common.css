@@ -101,7 +101,7 @@ section.sub h3 {
     overflow-x: auto;
 }
 .vertical-scroll {
-    min-width: 90rem;
+    min-width: 80rem;
 }
 #categoryGroup.btn-group {
     flex-wrap: wrap;
