@@ -61,25 +61,14 @@ public class LectureAdminCustomRepositoryImpl implements LectureAdminCustomRepos
         } else if ("paid".equals(search.getPriceType())) {
             builder.and(lecture.price.gt(0));
         }
+        System.out.println("[DEBUG] 검색 상태 값: " + search.getStatus());
         //상태
         if (search.getStatus() != null && !search.getStatus().isBlank()) {
-            Lecture.LectureStatus statusEnum = null;
-            String status = search.getStatus().trim();
+            try{
+                Lecture.LectureStatus status = Lecture.LectureStatus.valueOf(search.getStatus().trim());
+                builder.and(lecture.status.eq(status));
+            }catch (IllegalArgumentException e){
 
-            switch (status) {
-                case "예약중":
-                    statusEnum = Lecture.LectureStatus.OPEN;
-                    break;
-                case "예약마감":
-                    statusEnum = Lecture.LectureStatus.CLOSED;
-                    break;
-                case "강의종료":
-                    statusEnum = Lecture.LectureStatus.ENDED;
-                    break;
-            }
-
-            if (statusEnum != null) {
-                builder.and(lecture.status.eq(statusEnum));
             }
         }
         //기간

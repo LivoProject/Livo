@@ -104,7 +104,7 @@ public class LectureAdminServiceImpl implements LectureAdminService {
         // 무료 강의 처리
         if (lecture.getIsFree()) {
             lecture.setPrice(0);
-            lecture.setTotalCount(0);
+            lecture.setTotalCount(null);
             lecture.setReservationStart(null);
             lecture.setReservationEnd(null);
             lecture.setLectureStart(null);
