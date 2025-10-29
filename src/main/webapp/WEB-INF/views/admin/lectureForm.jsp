@@ -60,7 +60,7 @@
                             <input type="number" id="price" name="price" class="form-control" value="0">
                             <div class="input-group-text">
                                 <input type="checkbox" id="isFree" name="isFree" value="true">
-                                <label for="freeCheck" class="ms-1 mb-0">무료강의</label>
+                                <label for="isFree" class="ms-1 mb-0">무료강의</label>
                             </div>
                         </div>
                     </div>
