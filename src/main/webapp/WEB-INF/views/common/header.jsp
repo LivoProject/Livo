@@ -17,7 +17,7 @@
     <!-- 파비콘 (브라우저 탭 아이콘) -->
     <link rel="shortcut icon" href="/img/common/favicon.ico" type="image/x-icon"/>
     <!-- Bootstrap -->
-    <link  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
     <!-- Swiper -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
@@ -111,25 +111,36 @@
                             <sec:authentication var="gEmail" property="principal.attributes['email']"/>
                             <sec:authentication var="gPic" property="principal.attributes['picture']"/>
 
-                            <span class="me-2">
-                                <c:choose>
-                                    <c:when test="${not empty gName}">${gName}</c:when>
-                                    <c:otherwise>${gEmail}</c:otherwise>
-                                </c:choose>
-                              </span>
+                            <a href="/mypage" class="d-flex align-items-center" style="gap: 0.4rem">
+                                <P>
+                                    <c:choose>
+                                        <c:when test="${not empty gName}">${gName}</c:when>
+                                        <c:otherwise>${gEmail}</c:otherwise>
+                                    </c:choose>
+                                </P>
+                                <c:if test="${not empty gPic}">
+                                    <img src="${gPic}" alt="profile"
+                                         style="width:35px;height:35px;border-radius:50%;vertical-align:middle;margin-right:6px;">
+                                </c:if>
+                            </a>
 
-                            <c:if test="${not empty gPic}">
-                                <img src="${gPic}" alt="profile"
-                                     style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:6px;">
-                            </c:if>
                         </sec:authorize>
 
                         <!-- ★ 일반 로그인 -->
                         <sec:authorize
                                 access="!(principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User))">
-                          <a href="/mypage">
-                            <sec:authentication property="principal.nickname"/>
-                          </a>
+                            <a href="/mypage" class="d-flex align-items-center" style="gap: 0.4rem">
+                                <P>
+                                    <sec:authentication property="principal.nickname"/>
+                                </P>
+                                <img
+                                        src="/img/common/profile-icon.svg"
+                                        alt=""
+                                        width="35"
+                                        height="35"
+                                        class="rounded-circle"
+                                />
+                            </a>
                         </sec:authorize>
 
                         <!-- 로그아웃 -->
@@ -138,7 +149,7 @@
                         </form>
 
                         <span class="logout-button"
-                                onclick="document.getElementById('logoutForm').submit();">
+                              onclick="document.getElementById('logoutForm').submit();">
                             <i class="bi bi-box-arrow-right"></i> 로그아웃
                         </span>
                     </sec:authorize>

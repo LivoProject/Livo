@@ -109,8 +109,8 @@ input:focus {
 
 /* 메인 버튼 */
 button[type="submit"] {
+    width: 100%;
     margin-top: 20px;
-    min-width: 500px;
     height: 54px;
     border-radius: 20px;
     border: 0;

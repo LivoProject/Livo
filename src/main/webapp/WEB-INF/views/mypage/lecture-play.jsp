@@ -117,7 +117,7 @@
                data-bs-parent="#curriculumAccordion">
             <div class="accordion-body">
               <p>${chapter.content}</p>
-              <button class="btn-outline-main play-chapter"
+              <button class="btn-outline-main play-chapter mt-4"
                       data-url="${chapter.youtubeUrl}">
                 ▶ 재생
               </button>
