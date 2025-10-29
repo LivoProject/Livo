@@ -66,14 +66,13 @@
         </div>
 
         <!-- 진행중인 강의 -->
-        <!-- 진행중인 강의 (예약 완료된 최근 2개 강의) -->
         <div class="card-box mb-4">
             <div class="card-header">
                 <h6>진행중인 강의</h6>
                 <a href="/mypage/lecture" class="more-link">더보기 <i class="bi bi-chevron-right"></i></a>
             </div>
 
-            <div class="lecture-grid">
+             <div class="lecture-grid ${fn:length(recentConfirmedLectures) >= 3 ? 'dis-none' : ''}">
                 <c:if test="${not empty recentConfirmedLectures}">
                     <c:forEach var="lecture" items="${recentConfirmedLectures}">
                         <div class="card">
@@ -109,7 +108,7 @@
                 <h6>즐겨찾는 강의</h6>
                 <a href="mypage/like" class="more-link">더보기 <i class="bi bi-chevron-right"></i></a>
             </div>
-            <div class="lecture-grid">
+            <div class="lecture-grid ${fn:length(top2LikedLectures) >= 3 ? 'dis-none' : ''}">
                 <c:if test="${not empty top2LikedLectures}">
                     <c:forEach var="lecture" items="${top2LikedLectures}">
                         <div class="card">
@@ -176,7 +175,7 @@
                                     <div class="payment-header">
                                         <div class="title-wrap">
                                             <span class="badge status-${payment.status}">${payment.status}</span>
-                                            <span class="order-info .text-ellipsis">${payment.orderName}</span>
+                                            <span class="order-info text-ellipsis">${payment.orderName}</span>
                                         </div>
                                         <span class="amount">
                                     ₩<fmt:formatNumber value="${payment.amount}" pattern="#,###"/>
