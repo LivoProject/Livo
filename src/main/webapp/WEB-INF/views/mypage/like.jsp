@@ -14,6 +14,11 @@
     <!-- 강의 -->
     <main class="main-content">
         <h3>즐겨찾는 강의</h3>
+        <select class="form-select" aria-label="Default select example">
+            <option selected>최신순</option>
+            <option value="2">오래된순</option>
+            <option value="3">인기순</option>
+        </select>
         <div class="lecture-grid large">
             <!-- 카드 1 -->
             <c:if test="${not empty likedLectures}">
@@ -30,7 +35,7 @@
 
                         <div class="card-body">
                             <a href="/lecture/content/${lecture.lectureId}">
-                                <h6 class="fw-bold mb-2 text-ellipsis-2">${lecture.title}</h6>
+                                <h6 class="fw-bold text-ellipsis-2 lecture-title">${lecture.title}</h6>
                                 <p class="text-muted mb-3">${lecture.tutorName}</p>
                                 <span><fmt:formatNumber value="${lecture.price}" type="number"/>원</span>
                                 <div class="progress" style="height: 8px;">
@@ -51,9 +56,7 @@
                                                 data-bs-target="#likeModal">
                                             삭제하기
                                         </button>
-                                        <%--                                        <a href="/lecture/view/${lecture.lectureId}" class="btn-cancel">이어보기</a>--%>
-
-                                        <a href="/lecture/content/${lecture.lectureId}#review" class="btn-cancel">수강평
+                                       <a href="/lecture/content/${lecture.lectureId}#review" class="btn-cancel">수강평
                                             작성</a>
                                     </c:when>
 
