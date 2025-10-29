@@ -1,3 +1,8 @@
+$(document).ajaxSend(function (e, xhr, options) {
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+    if (token && header) xhr.setRequestHeader(header, token);
+});
 document.addEventListener("DOMContentLoaded", () =>{
     let selectedCategoryId = null;
     let currentPage = 0;
@@ -31,10 +36,16 @@ document.addEventListener("DOMContentLoaded", () =>{
             const totalCount = isFree ? "무제한" : `${lec.reservationCount}/${lec.totalCount}`;
             const statusLabelMap = {OPEN:"예약중", CLOSED:"예약마감", ENDED:"강의종료"};
             const statusColorMap={OPEN:"bg-success", CLOSED: "bg-secondary", ENDED: "bg-danger"};
+            const deletedBadge = (lec.visibility === 'DELETED')
+                ? `<span class="badge bg-secondary ms-2">삭제됨</span>`
+                : '';
             const row = `
                 <tr class="text-center">
                     <td>${i + 1 + page * pageSize}</td>
-                    <td>${lec.title}</td>
+                    <td class="text-start">
+                        ${lec.title}
+                        ${deletedBadge}
+                    </td>
                     <td>${lec.tutorName}</td>
                     <td>${reservationPeriod}</td>
                     <td>
@@ -154,12 +165,6 @@ document.addEventListener("DOMContentLoaded", () =>{
         $.ajax({
             url: `/admin/lecture/delete/${lectureId}`,
             type: "POST",
-            beforeSend: function(xhr) {
-                // CSRF 토큰 설정 (Spring Security 적용 시)
-                const token = $("meta[name='_csrf']").attr("content");
-                const header = $("meta[name='_csrf_header']").attr("content");
-                if (token && header) xhr.setRequestHeader(header, token);
-            },
             success: function (res) {
                 if (res.success) {
                     alert("강의가 삭제되었습니다.");
@@ -179,4 +184,6 @@ document.addEventListener("DOMContentLoaded", () =>{
         });
     };
     searchLectures(0);
+
 });
+

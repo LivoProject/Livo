@@ -16,7 +16,6 @@ public interface LectureService {
     Optional<Lecture> findById(int lectureId);
 
     // 카테고리별 검색
-    List<Lecture> findByCategoryId(int categoryId);
     List<Lecture> findAllByMainCategory(int mainCategoryId);
 
     // 페이징 기반 카테고리 검색 추가

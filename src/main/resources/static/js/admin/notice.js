@@ -41,7 +41,7 @@ function loadNotices(page = 0) {
 
                     <tr>
                       <td class="text-center">${num}</td>
-                       <td class="text-start">
+                       <td class="text-center">
                         ${pinnedBadge}
                         </td>
                       <td class="text-start">
@@ -52,10 +52,10 @@ function loadNotices(page = 0) {
                                 ${n.content}
                             </div>
                         </td>
-                        <td class="text-start">
+                        <td class="text-center">
                              ${date}
                         </td>  
-                        <td class="text-start">
+                        <td class="text-center">
                             ${n.viewCount}
                         </td>
                       <td>

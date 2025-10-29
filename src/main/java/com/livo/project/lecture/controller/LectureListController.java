@@ -92,7 +92,7 @@ public class LectureListController {
         return "lecture/list";
     }
 
-    // ✅ 비동기 필터링 (주제 / 세부분류 / 키워드)
+    //  비동기 필터링 (주제 / 세부분류 / 키워드)
     @GetMapping("/filter")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> filter(
@@ -105,7 +105,7 @@ public class LectureListController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Lecture> lecturePage;
 
-        // ✅ 1️⃣ 세부분류 선택 시
+        //  세부분류 선택 시
         if (subCategory != null && !subCategory.isEmpty()) {
             Category category = categoryRepository.findByCategoryName(subCategory);
             if (category != null) {
@@ -116,22 +116,22 @@ public class LectureListController {
                 lecturePage = Page.empty();
             }
 
-            // ✅ 2️⃣ mainCategory 선택 시
+            //  mainCategory 선택 시
         } else if (mainCategory != null) {
             lecturePage = (keyword != null && !keyword.isBlank())
                     ? lectureService.searchByMainCategoryAndKeyword(mainCategory, keyword, pageable)
                     : lectureService.getLecturePageByMainCategory(mainCategory, pageable);
 
-            // ✅ 3️⃣ keyword만 있을 경우
+            //  keyword만 있을 경우
         } else if (keyword != null && !keyword.isBlank()) {
             lecturePage = lectureService.searchLecturePage(keyword, pageable);
 
-            // ✅ 4️⃣ 아무 조건도 없을 경우
+            //  아무 조건도 없을 경우
         } else {
             lecturePage = lectureService.getLecturePage(pageable);
         }
 
-        // ✅ JSON 응답
+        //  JSON 응답
         List<Map<String, Object>> lectureData = lecturePage.getContent().stream().map(lecture -> {
             Map<String, Object> map = new HashMap<>();
             map.put("lectureId", lecture.getLectureId());

@@ -79,11 +79,8 @@ $(document).ready(function() {
             contentType: false,
             dateType: "json",
             success: function(res) {
-                console.log("응답 도착:", res);
-                console.log("success 값:", res.success);
                 if (res.success) {
                     alert("강의 정보가 수정되었습니다. 챕터 수정 페이지로 이동합니다.");
-                    console.log("이동 시도:", `/admin/chapter/edit?lectureId=${res.lectureId}`);
                     setTimeout(() => {
                         window.location.href = `/admin/chapter/edit?lectureId=${res.lectureId}`;
                     }, 200);
