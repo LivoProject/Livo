@@ -101,9 +101,9 @@ section.sub h3 {
     overflow-x: auto;
 }
 .vertical-scroll {
-    min-width: 90rem;
+    min-width: 80rem;
 }
-#categoryGroup.btn-graop {
+#categoryGroup.btn-group {
     flex-wrap: wrap;
 }
 
@@ -729,7 +729,6 @@ table {
     border-collapse: collapse;
     text-align: center;
     font-size: 0.95rem;
-    min-width: 800px;
 }
 
 /* 헤더 */
@@ -796,7 +795,9 @@ tbody tr:last-child td {
     padding-left: 2rem;
     padding-right: 2rem;
 }
-
+.lv-tab {
+    font-weight: 500;
+}
 .accordion-button:not(.collapsed) {
     background: var(--color-light-main);
     color: var(--color-dark-gray);
@@ -811,5 +812,26 @@ tbody tr:last-child td {
     th, td {
         font-size: 0.85rem;
         padding: 0.7rem;
+    }
+    #reservationStart,
+    #reservationEnd,
+    #lectureStart,
+    #lectureEnd {
+        width: 100%;
+        margin: 0!important;
+    }
+
+    .filter-area {
+        flex-wrap: wrap;
+    }
+    .filter-area .col-6 {
+        width: 100% !important;
+    }
+    .filter-area .col-6 > lable {
+        width: 80px;
+        margin-right: 0!important;
+    }
+    h3 {
+        font-size: 1.6rem;
     }
 }

@@ -167,7 +167,7 @@ public class MypageService {
         List<NoticeDto> noticeDtos = notices.stream().map(NoticeDto::fromEntity).toList();
 
         // 추천 강좌
-        List<Lecture> recommended = mypageLectureRepository.findRandomLectures();
+//        List<Lecture> recommended = mypageLectureRepository.findRandomLectures();
 
         long joinDays = 1;
         if (user.getCreatedAt() != null) {
@@ -188,7 +188,7 @@ public class MypageService {
                 .gender(user.getGender() != null ? user.getGender().toString() : null)
                 .joinDays(joinDays)
                 .notices(noticeDtos)
-                .recommendedLectures(recommended)
+                //.recommendedLectures(recommended)
                 .provider(user.getProvider())
                 .providerId(user.getProviderId())
                 .build();
@@ -428,7 +428,7 @@ public class MypageService {
     public List<MypageReservationDto> getRecentConfirmedLectures(String email, String provider) {
         Pageable limit = PageRequest.of(0, 2);
         List<Reservation> reservations =
-                mypageReservationRepository.findTop2ConfirmedByEmailAndProvider(email, provider, limit);
+                mypageReservationRepository.findTop3ConfirmedByEmailAndProvider(email, provider, limit);
 
         return reservations.stream()
                 .map(r -> {
