@@ -259,7 +259,10 @@
             <c:forEach var="review" items="${reviews}">
                 <div class="col-md-12 mb-3">
                     <div class="h-100 review-box" data-review-id="${review.reviewUId}">
-                        <h4>${review.userName}</h4>
+                        <h4 class="review-username">
+                            <img src="/img/common/favicon.ico" alt="user icon" class="user-icon">
+                            ${review.userName}
+                        </h4>
                         <h5>
                             ${review.createdAt}
                             <c:if test="${review.edited}">
