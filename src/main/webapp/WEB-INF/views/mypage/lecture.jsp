@@ -40,16 +40,33 @@
                 <c:forEach var="reservations" items="${reservations}">
                     <div class="card">
                         <div class="card-img-wrap">
-                            <a href="/lecture/view/${reservations.lectureId}">
-                                <img src="${reservations.thumbnailUrl}" class="card-img-top" alt="강의 썸네일"/>
-                                <button class="play-btn">
-                                    <i class="bi bi-play-fill"></i>
-                                </button>
-                            </a>
+                            <c:choose>
+                                <c:when test="${reservations.lectureStatus eq 'ENDED'}">
+                                    <a href="javascript:void(0);" onclick="alert('수강 기간이 종료된 강의입니다. 다시 수강을 원하시면 재결제 후 이용해주세요.'); return false;">
+                                        <img src="${reservations.thumbnailUrl}" class="card-img-top" style="opacity:0.6; filter:grayscale(40%);" alt="강의 썸네일"/>
+                                        <button class="play-btn" style="pointer-events:none; opacity:0.5;">
+                                            <i class="bi bi-play-fill"></i>
+                                        </button>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="/lecture/view/${reservations.lectureId}">
+                                        <img src="${reservations.thumbnailUrl}" class="card-img-top" alt="강의 썸네일"/>
+                                        <button class="play-btn">
+                                            <i class="bi bi-play-fill"></i>
+                                        </button>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         <div class="card-body">
                             <a href="/lecture/content/${reservations.lectureId}">
-                                <h6 class="fw-bold text-ellipsis-2 lecture-title">${reservations.title}</h6>
+                                <h6 class="fw-bold text-ellipsis-2 lecture-title">
+                                    ${reservations.title}
+                                    <c:if test="${reservations.visibility eq 'DELETED'}">
+                                        <span class="badge bg-secondary ms-1">판매 종료</span>
+                                    </c:if>
+                                </h6>
                                 <p class="text-muted">${reservations.tutorName}</p>
                                 <div class="progress" style="height: 8px;">
                                     <div class="progress-bar bg-success"
@@ -60,12 +77,19 @@
                         </div>
                         <div class="card-footer">
                             <div class="button-wrap">
-                                <button class="btn-unreserve btn-main"
-                                        data-lecture-id="${reservations.lectureId}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#reserveModal">
-                                    예약 취소
-                                </button>
+                                <c:choose>
+                                    <c:when test="${reservations.lectureStatus eq 'ENDED'}">
+                                        <button class="btn btn-sm btn-secondary" disabled>수강 종료</button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button class="btn-unreserve btn-main"
+                                                data-lecture-id="${reservations.lectureId}"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#reserveModal">
+                                            예약 취소
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
                                 <a href="/lecture/content/${reservations.lectureId}#review" class="btn-cancel">
                                     수강평 작성
                                 </a>
@@ -107,6 +131,7 @@
             },
             success: function (res) {
                 const list = res.data || [];
+                window.lastSearchList = list;
                 if (!list.length) {
                     container.innerHTML = "<p class='text-muted'>검색 결과가 없습니다.</p>";
                     return;
@@ -114,13 +139,27 @@
 
                 let html = "";
                 list.forEach((r) => {
+                    const isSaleClosed = r.visibility === 'DELETED'; //판매종료
+                    const isLectureFinished = r.lectureStatus === 'ENDED'; //수강기간종료
+                    const badgeHTML = isSaleClosed
+                        ? `<span class="badge bg-secondary ms-1">판매 종료</span>`
+                        : "";
+                    const playButtonDisabled = isLectureFinished
+                        ? 'style="pointer-events:none; opacity:0.5;"'
+                        : "";
+                    const buttonHTML = isLectureFinished
+                        ? `<button class="btn btn-sm btn-secondary" disabled>수강 종료됨</button>`
+                        : `<button class="btn-unreserve btn-main" data-lecture-id="\${r.lectureId}" data-bs-toggle="modal" data-bs-target="#reserveModal">예약 취소</button>`;
+                    const viewLinkStart = isLectureFinished
+                        ? `<a href="javascript:void(0);" onclick="alert('수강 기간이 종료된 강의입니다. 다시 수강을 원하시면 재결제 후 이용해주세요.'); return false;">`
+                        : `<a href="/lecture/view/\${r.lectureId}">`;
                     html += `
  <div class="card">
                 <!-- 썸네일 영역 -->
                 <div class="card-img-wrap">
-                    <a href="/lecture/view/\${r.lectureId}">
+                    \${viewLinkStart}
                         <img src="\${r.thumbnailUrl}" class="card-img-top" alt="\${r.title}">
-                        <button class="play-btn">
+                        <button class="play-btn" \${playButtonDisabled}>
                             <i class="bi bi-play-fill"></i>
                         </button>
                     </a>
@@ -129,7 +168,7 @@
                 <!-- 본문 -->
                 <div class="card-body">
                     <a href="/lecture/content/\${r.lectureId}">
-                        <h6 class="fw-bold text-ellipsis-2">\${r.title}</h6>
+                        <h6 class="fw-bold text-ellipsis-2">\${r.title} \${badgeHTML}</h6>
                         <p class="text-muted">\${r.tutorName}</p>
                         <div class="progress" style="height:8px;">
                             <div class="progress-bar bg-success" style="width:\${r.progressPercent}%;"></div>
@@ -141,12 +180,7 @@
                 <!-- 푸터 (버튼 영역) -->
                 <div class="card-footer">
                     <div class="button-wrap">
-                        <button class="btn-unreserve btn-main"
-                                data-lecture-id="\${r.lectureId}"
-                                data-bs-toggle="modal"
-                                data-bs-target="#reserveModal">
-                            예약 취소
-                        </button>
+                        \${buttonHTML}
                         <a href="/lecture/content/\${r.lectureId}#review" class="btn-cancel">
                             수강평 작성
                         </a>

@@ -6,8 +6,6 @@ const customerKey = "user_" + new Date().getTime();
 const tossPayments  = TossPayments(clientKey);
 //회원결제
 const payment = tossPayments.payment({customerKey});
-// 결제수단 선택 영역 렌더링
-// paymentWidget.renderPaymentMethods("#payment-method", { value: 1000 });
 //현재 로그인 유저의 이메일
 async function requestPayment() {
     try {

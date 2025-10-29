@@ -28,7 +28,8 @@ public class MypageReservationDto {
     private String title;
     private String tutorName;
     private String thumbnailUrl;
-
+    private String visibility;
+    private String lectureStatus;
     // 수강률 추가
     private double progressPercent;
 
@@ -48,6 +49,8 @@ public class MypageReservationDto {
                 .lectureId(l.getLectureId())   // ✅ Lecture에서 가져오기
                 .createdAt(createdAt)
                 .status(r.getStatus().name())
+                .visibility(l.getVisibility() != null ? l.getVisibility().name() : "ACTIVE")
+                .lectureStatus(l.getStatus() != null ? l.getStatus().name() : "OPEN")
                 .title(l.getTitle())           // ✅ Lecture에서 가져오기
                 .tutorName(l.getTutorName())
                 .thumbnailUrl(l.getThumbnailUrl())
