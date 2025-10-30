@@ -1,6 +1,7 @@
 package com.livo.project.mypage.repository;
 
 import com.livo.project.lecture.domain.Reservation;
+import com.livo.project.mypage.domain.dto.MypageReservationDto;
 import jakarta.transaction.Transactional;
 import org.eclipse.tags.shaded.org.apache.regexp.RE;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,7 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
                 JOIN FETCH r.user u
                 WHERE u.email = :email
                   AND u.provider = :provider
+                  AND l.status != 'ENDED'
                   AND r.status = 'CONFIRMED'
                 ORDER BY r.createdAt DESC
             """)
@@ -49,21 +51,86 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
 
     //내 강좌 검색
     @Query("""
-    SELECT r
-    FROM Reservation r
-    JOIN r.lecture l
-    JOIN r.user u
-    WHERE u.email = :email
-      AND u.provider = :provider
-      AND r.status = 'CONFIRMED'
-      AND (
-          LOWER(l.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
-          OR LOWER(l.tutorName) LIKE LOWER(CONCAT('%', :keyword, '%'))
-      )
-""")
+                SELECT r
+                FROM Reservation r
+                JOIN r.lecture l
+                JOIN r.user u
+                WHERE u.email = :email
+                  AND u.provider = :provider
+                  AND r.status = 'CONFIRMED'
+                  AND (
+                      LOWER(l.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                      OR LOWER(l.tutorName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                  )
+            """)
     Page<Reservation> searchByKeyword(@Param("email") String email,
                                       @Param("provider") String provider,
                                       @Param("keyword") String keyword,
                                       Pageable pageable);
+
+
+    // 최신순 + 오래된순
+    @Query("""
+            SELECT new com.livo.project.mypage.domain.dto.MypageReservationDto(
+                r.reservationId,
+                l.lectureId,
+                l.title,
+                l.tutorName,
+                l.thumbnailUrl,
+                COALESCE(lp.progressPercent, 0),
+                0L /* likeCount 기본값 */
+            )
+            FROM Reservation r
+            JOIN r.user u
+            JOIN r.lecture l
+            LEFT JOIN LectureProgress lp
+                ON lp.lecture = l AND lp.email = u.email
+            WHERE u.email = :email
+              AND u.provider = :provider
+              AND (:keyword IS NULL
+                   OR l.title LIKE CONCAT('%', :keyword, '%')
+                   OR l.tutorName LIKE CONCAT('%', :keyword, '%'))
+            """)
+    Page<MypageReservationDto> findMyReservationsForList(
+            @Param("email") String email,
+            @Param("provider") String provider,
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
+
+
+    // 인기순
+    // Repository
+    @Query("""
+            SELECT new com.livo.project.mypage.domain.dto.MypageReservationDto(
+                r.reservationId,
+                l.lectureId,
+                l.title,
+                l.tutorName,
+                l.thumbnailUrl,
+                COALESCE(lp.progressPercent, 0),
+                COUNT(DISTINCT ll.likeId)
+            )
+            FROM Reservation r
+            JOIN r.user u
+            JOIN r.lecture l
+            LEFT JOIN LectureProgress lp
+                ON lp.lecture = l AND lp.email = u.email
+            LEFT JOIN LectureLike ll
+                ON ll.lecture = l
+            WHERE u.email = :email
+              AND u.provider = :provider
+              AND (:keyword IS NULL
+                   OR l.title LIKE CONCAT('%', :keyword, '%')
+                   OR l.tutorName LIKE CONCAT('%', :keyword, '%'))
+            GROUP BY r.reservationId, l.lectureId, l.title, l.tutorName, l.thumbnailUrl, lp.progressPercent
+            ORDER BY COUNT(DISTINCT ll.likeId) DESC, MAX(r.createdAt) DESC
+            """)
+    Page<MypageReservationDto> findMyReservationsOrderByLikes(
+            @Param("email") String email,
+            @Param("provider") String provider,
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
 
 }

@@ -32,6 +32,9 @@ public class MypageReservationDto {
     private String lectureStatus;
     // 수강률 추가
     private double progressPercent;
+    private Long likeCount;
+
+
 
     // 변환 메서드
     public static MypageReservationDto of(Reservation r, Lecture l, double progressPercent) {
@@ -56,6 +59,26 @@ public class MypageReservationDto {
                 .thumbnailUrl(l.getThumbnailUrl())
                 .progressPercent(progressPercent)
                 .build();
+    }
+
+
+    // JPA의 JPQL new() 구문이 사용하는 생성자
+    public MypageReservationDto(
+            Integer reservationId,
+            Integer lectureId,
+            String title,
+            String tutorName,
+            String thumbnailUrl,
+            Double progressPercent,
+            Long likeCount
+    ) {
+        this.reservationId = reservationId;
+        this.lectureId = lectureId;
+        this.title = title;
+        this.tutorName = tutorName;
+        this.thumbnailUrl = thumbnailUrl;
+        this.progressPercent = progressPercent;
+        this.likeCount = likeCount;
     }
 
 }
