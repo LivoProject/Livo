@@ -15,7 +15,7 @@
     <main class="main-content">
         <h3 class="mt-0 mb-0">내 강의실</h3>
 
-        <div class="d-flex flex-column mb-4 justify-content-end align-items-end">
+        <div class="d-flex flex-column mb-3 justify-content-end align-items-end">
 
             <!-- 검색폼 -->
             <form id="lectureSearchForm" class="input-group mb-2 w-50">

@@ -111,12 +111,18 @@
 
 /* 공지사항 롤링 */
 #noticeRolling {
+    background-color: #f9fafc!important;
+    padding: 0!important;
+}
+#noticeRolling > div {
     height: 68px;
     padding: 0 !important;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: -30px auto 0;
+    margin:0 auto;
+    position: relative;
+    top: -30px;
     background-color: transparent !important;
     max-width: 960px;
 }
@@ -222,7 +228,7 @@
 
 
 /* 인기강좌 */
-#recommend {
+#main .recommend {
     background-color: #f9fafc;
     padding: 4rem 0;
 }
@@ -595,9 +601,6 @@
 }
 
 /* 섹션 배경색 구분 */
-#recommend {
-    background-color: #f9fafc;
-}
 
 #categories {
     background: linear-gradient(180deg, #fff 0%, #f7fbfd 100%);
