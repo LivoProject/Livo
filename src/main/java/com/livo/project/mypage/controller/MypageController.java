@@ -132,7 +132,7 @@ public class MypageController {
         model.addAttribute("reservations", reservations.getContent());
         model.addAttribute("page", reservations);
         model.addAttribute("menu", "lecture");
-
+        model.addAttribute("today", java.time.LocalDate.now());
         return "mypage/lecture";
     }
 

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -28,8 +29,11 @@ public class MypageReservationDto {
     private String title;
     private String tutorName;
     private String thumbnailUrl;
+    private LocalDate lectureStart;
+    private LocalDate lectureEnd;
     private String visibility;
     private String lectureStatus;
+    private int price;
     // 수강률 추가
     private double progressPercent;
 
@@ -46,12 +50,15 @@ public class MypageReservationDto {
         return MypageReservationDto.builder()
                 .reservationId(r.getReservationId())
                 .email(r.getUser().getEmail())
-                .lectureId(l.getLectureId())   // ✅ Lecture에서 가져오기
+                .lectureId(l.getLectureId())   //  Lecture에서 가져오기
                 .createdAt(createdAt)
                 .status(r.getStatus().name())
+                .lectureStart(l.getLectureStart())
+                .lectureEnd(l.getLectureEnd())
                 .visibility(l.getVisibility() != null ? l.getVisibility().name() : "ACTIVE")
                 .lectureStatus(l.getStatus() != null ? l.getStatus().name() : "OPEN")
-                .title(l.getTitle())           // ✅ Lecture에서 가져오기
+                .price(l.getPrice())
+                .title(l.getTitle())           //  Lecture에서 가져오기
                 .tutorName(l.getTutorName())
                 .thumbnailUrl(l.getThumbnailUrl())
                 .progressPercent(progressPercent)

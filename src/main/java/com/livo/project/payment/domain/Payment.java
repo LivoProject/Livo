@@ -45,7 +45,7 @@ public class Payment {
     @JoinColumn(name = "lectureId", nullable = false)
     private Lecture lecture;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservationId", nullable = false)
     @JsonIgnore
     private Reservation reservation;

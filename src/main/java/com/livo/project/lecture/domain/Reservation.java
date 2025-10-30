@@ -12,7 +12,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -51,9 +53,9 @@ public class Reservation {
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private User user;
 
-    @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY)
     @JsonIgnore
-    private Payment payment;
+    private List<Payment> payments = new ArrayList<>();
 
     public enum ReservationStatus {
         PENDING, PAID, CANCEL, CONFIRMED, EXPIRED

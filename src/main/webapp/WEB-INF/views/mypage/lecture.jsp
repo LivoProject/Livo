@@ -49,6 +49,14 @@
                                         </button>
                                     </a>
                                 </c:when>
+                                <c:when test="${reservations.lectureStart gt today}">
+                                    <a href="javascript:void(0);" onclick="alert('수강 시작일 이후부터 시청할 수 있습니다.'); return false;">
+                                        <img src="${reservations.thumbnailUrl}" class="card-img-top" style="opacity:0.5;" alt="강의 썸네일"/>
+                                        <button class="play-btn" style="pointer-events:none; opacity:0.5;">
+                                            <i class="bi bi-play-fill"></i>
+                                        </button>
+                                    </a>
+                                </c:when>
                                 <c:otherwise>
                                     <a href="/lecture/view/${reservations.lectureId}">
                                         <img src="${reservations.thumbnailUrl}" class="card-img-top" alt="강의 썸네일"/>
@@ -66,6 +74,9 @@
                                     <c:if test="${reservations.visibility eq 'DELETED'}">
                                         <span class="badge bg-secondary ms-1">판매 종료</span>
                                     </c:if>
+                                    <c:if test="${reservations.lectureStart gt today}">
+                                        <span class="badge bg-warning ms-1">수강 대기</span>
+                                    </c:if>
                                 </h6>
                                 <p class="text-muted">${reservations.tutorName}</p>
                                 <div class="progress" style="height: 8px;">
@@ -81,9 +92,13 @@
                                     <c:when test="${reservations.lectureStatus eq 'ENDED'}">
                                         <button class="btn btn-sm btn-secondary" disabled>수강 종료</button>
                                     </c:when>
+                                    <c:when test="${reservations.lectureStart le today and reservations.lectureEnd ge today}">
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>예약 취소</button>
+                                    </c:when>
                                     <c:otherwise>
                                         <button class="btn-unreserve btn-main"
                                                 data-lecture-id="${reservations.lectureId}"
+                                                data-price="${reservations.price}"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#reserveModal">
                                             예약 취소
@@ -141,18 +156,40 @@
                 list.forEach((r) => {
                     const isSaleClosed = r.visibility === 'DELETED'; //판매종료
                     const isLectureFinished = r.lectureStatus === 'ENDED'; //수강기간종료
+                    const isBeforeStart = new Date(r.lectureStart) > new Date(); // 수강기간전
+                    const isInProgress = new Date(r.lectureStart) <= new Date() && new Date() <= new Date(r.lectureEnd); // 수강중
+                    //뱃지
                     const badgeHTML = isSaleClosed
                         ? `<span class="badge bg-secondary ms-1">판매 종료</span>`
-                        : "";
-                    const playButtonDisabled = isLectureFinished
+                        : (isBeforeStart
+                            ?`<span class="badge bg-warning ms-1">수강 대기</span>`
+                            :"");
+                    //재생버튼
+                    const playButtonDisabled = (!isInProgress)
                         ? 'style="pointer-events:none; opacity:0.5;"'
                         : "";
-                    const buttonHTML = isLectureFinished
+                    // 예약취소 버튼 제어
+                    /*const buttonHTML = isLectureFinished
                         ? `<button class="btn btn-sm btn-secondary" disabled>수강 종료됨</button>`
-                        : `<button class="btn-unreserve btn-main" data-lecture-id="\${r.lectureId}" data-bs-toggle="modal" data-bs-target="#reserveModal">예약 취소</button>`;
-                    const viewLinkStart = isLectureFinished
-                        ? `<a href="javascript:void(0);" onclick="alert('수강 기간이 종료된 강의입니다. 다시 수강을 원하시면 재결제 후 이용해주세요.'); return false;">`
+                        : `<button class="btn-unreserve btn-main" data-lecture-id="\${r.lectureId}" data-bs-toggle="modal" data-bs-target="#reserveModal">예약 취소</button>`;*/
+                    const viewLinkStart = (!isInProgress)
+                        ? `<a href="javascript:void(0);" onclick="alert('현재 시점에는 수강이 불가능합니다.'); return false;">`
                         : `<a href="/lecture/view/\${r.lectureId}">`;
+                    // 예약취소 버튼 제어
+                    let buttonHTML = "";
+                    if (isLectureFinished) {
+                        buttonHTML = `<button class="btn btn-sm btn-secondary" disabled>강의 종료</button>`;
+                    } else if (isInProgress) {
+                        buttonHTML = `<button class="btn btn-sm btn-outline-secondary" disabled>예약 취소</button>`;
+                    } else {
+                        buttonHTML = `
+                            <button class="btn-unreserve btn-main"
+                                data-lecture-id="\${r.lectureId}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#reserveModal">
+                                예약 취소
+                            </button>`;
+                    }
                     html += `
  <div class="card">
                 <!-- 썸네일 영역 -->
