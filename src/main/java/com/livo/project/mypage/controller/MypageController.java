@@ -10,6 +10,7 @@ import com.livo.project.mypage.domain.dto.MypageProgressDto;
 import com.livo.project.mypage.domain.dto.MypageReservationDto;
 import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.repository.MypageReservationRepository;
+import com.livo.project.mypage.repository.projection.LikedLectureProjection;
 import com.livo.project.mypage.service.MypageService;
 import com.livo.project.payment.domain.Payment;
 import com.livo.project.review.domain.Review;
@@ -316,6 +317,31 @@ public class MypageController {
                 mypageService.searchMyReservations(email, provider, keyword, sort, pageable);
 
         return Map.of("success", true, "data", reservations.getContent());
+
+    }
+
+    // 좋아요한 강좌 정렬
+    @PostMapping("/like/sort")
+    @ResponseBody
+    public Map<String, Object> sortLikedLecturesAjax(
+            @RequestParam("sort") String sort
+    ) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
+
+        if (email == null) {
+            return Map.of("success", false, "error", "UNAUTHORIZED");
+        }
+        // 서비스 호출
+        List<LikedLectureProjection> likedLectures =
+                mypageService.getLikedLectures(email, provider, sort);
+
+        // 바로 리스트를 JSON으로 반환
+        return Map.of(
+                "success", true,
+                "data", likedLectures
+        );
 
     }
 

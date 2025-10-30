@@ -79,9 +79,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/mypage">마이페이지</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/common/ui-guide">UI가이드</a>
-                    </li>
+<%--                    <li class="nav-item">--%>
+<%--                        <a class="nav-link" href="${pageContext.request.contextPath}/common/ui-guide">UI가이드</a>--%>
+<%--                    </li>--%>
                     <li>
                         <button id="searchToggle" class="nav-link">
                             <i class="bi bi-search"></i>
