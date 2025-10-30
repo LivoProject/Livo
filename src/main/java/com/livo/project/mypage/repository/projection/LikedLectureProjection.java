@@ -7,5 +7,5 @@ public interface LikedLectureProjection {
     Integer getPrice();
     String getThumbnailUrl();
     Double getProgressPercent();
-    Boolean getReserved();
+    Integer getReserved();
 }

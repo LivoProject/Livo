@@ -495,14 +495,14 @@ footer p {
 .btn-main,
 .btn-cancel,
 .btn-point,
-.btn-outline-main {
+.btn-outline-main,
+.btn-secondary {
     padding: 0.7rem 0.9rem;
     border-radius: 0.3rem;
     font-size: 0.9rem;
     transition: 0.3s;
     display: inline-block;
 }
-
 .btn-main {
     background-color: var(--color-main);
     color: var(--color-white);

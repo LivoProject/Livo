@@ -269,7 +269,7 @@ public class MypageService {
                     .price(row.getPrice() == null ? 0 : row.getPrice())
                     .thumbnailUrl(row.getThumbnailUrl())
                     .progressPercent(row.getProgressPercent() != null ? row.getProgressPercent() : 0.0)
-                    .reserved(isReserved) //
+                    .reserved(row.getReserved() != null && row.getReserved() == 1)
                     .build();
         });
     }
@@ -464,6 +464,14 @@ public class MypageService {
         return mypageReservationRepository.findMyReservationsForList(email, provider, keyword, sortedPageable);
     }
 
+    // 좋아요 한 강좌 정렬
+    public List<LikedLectureProjection> getLikedLectures(
+            String email,
+            String provider,
+            String sort
+    ) {
+        return mypageLectureRepository.findLikedLecturesDynamicSortSimple(email, provider, sort);
+    }
 
 }
 
