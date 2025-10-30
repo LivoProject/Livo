@@ -22,8 +22,8 @@ public interface MainLectureRepository extends JpaRepository<Lecture, Integer> {
         ORDER BY likeCount DESC
         LIMIT 10
     ) AS topLiked ON l.lectureId = topLiked.lectureId
-    WHERE l.visibility = 'ACTIVE'
-    AND l.status != 'ENDED'
+         WHERE l.visibility = 'ACTIVE'
+            AND l.status != 'ENDED'
     ORDER BY topLiked.likeCount DESC
     """, nativeQuery = true)
     List<Lecture> findTop10LecturesByLikes();

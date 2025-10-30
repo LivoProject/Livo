@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <link rel="stylesheet" href="/css/mypage.css">
-<script src="/js/mypage.js"></script>
+<script src="/js/mypage-modal.js"></script>
 
 
 <!-- 컨텐츠-->
@@ -21,17 +21,18 @@
             <form id="lectureSearchForm" class="input-group mb-2 w-50">
                 <input type="text" name="keyword" id="keyword"
                        class="form-control" placeholder="강좌명, 강사명 입력">
-                <button type="submit" id="searchLectureBtn" class="btn btn-main">
+                <button type="button" id="searchLectureBtn" class="btn btn-main">
                     <i class="bi bi-search"></i>
                 </button>
             </form>
 
             <!-- 정렬 선택 -->
-            <select class="form-select w-25">
-                <option selected>최신순</option>
+            <select id="sortSelect" class="form-select w-25">
+                <option value="latest" selected>최신순</option>
                 <option value="old">오래된순</option>
                 <option value="popular">인기순</option>
             </select>
+
         </div>
 
         <!-- 강의 카드 목록 (Ajax 결과도 여기에 덮어씀) -->
@@ -235,6 +236,7 @@
         });
     });
 </script>
+<script src="/js/mypage-filter.js"></script>
 
 
 <!-- 모달 -->

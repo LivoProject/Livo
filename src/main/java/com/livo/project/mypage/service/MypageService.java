@@ -456,20 +456,23 @@ public class MypageService {
     }
 
     // 내 강좌 검색
+    // Service
     @Transactional(readOnly = true)
-    public Page<MypageReservationDto> searchMyReservations(String email, String provider, String keyword, Pageable pageable) {
+    public Page<MypageReservationDto> searchMyReservations(
+            String email, String provider, String keyword, String sort, Pageable pageable
+    ) {
+        if ("popular".equals(sort)) {
+            // 인기순은 아래 별도 메서드 사용 (쿼리 내부 ORDER BY)
+            Pageable unSorted = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+            return mypageReservationRepository.findMyReservationsOrderByLikes(email, provider, keyword, unSorted);
+        }
 
-        return mypageReservationRepository.searchByKeyword(email, provider, keyword, pageable)
-                .map(r -> {
-                    Lecture lecture = r.getLecture();
+        // 최신/오래된 — Pageable 정렬로 처리 (결제일)
+        Sort.Direction dir = "old".equals(sort) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                Sort.by(dir, "r.createdAt")); // JPA가 alias를 인식 못하면 "createdAt"만 써도 됨
 
-                    // 이메일 기준으로 진도율 조회
-                    double progress = mypageProgressRepository
-                            .findProgressPercentByLectureAndEmail(lecture.getLectureId(), email)
-                            .orElse(0.0);
-
-                    return MypageReservationDto.of(r, lecture, progress);
-                });
+        return mypageReservationRepository.findMyReservationsForList(email, provider, keyword, sortedPageable);
     }
 
 
