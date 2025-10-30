@@ -51,6 +51,7 @@
                                             <i class="bi bi-stop-fill"></i>
                                         </button>
                                     </a>
+                                </div>
                                 </c:when>
                                 <c:when test="${reservations.lectureStart gt today}">
                                     <a href="javascript:void(0);" onclick="alert('수강 시작일 이후부터 시청할 수 있습니다.'); return false;">
