@@ -282,21 +282,25 @@
 =============================== */
 #mypage .lecture-grid {
     display: flex;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
     gap: 20px;
 }
 
-/* 카드가 여러 개일 때 */
+/* 카드 기본 (3개 이상일 때 자동 분배) */
 .lecture-grid .card {
-    flex: 1 1 calc(50% - 10px);
+    flex: 1 1 calc(33.333% - 20px);
     box-sizing: border-box;
 }
 
-/* 카드가 1개일 때 고정 크기 */
+/* 카드가 1개일 때 */
 .lecture-grid:has(.card:only-child) .card {
-    flex: 0 0 400px !important;
+    flex: 0 0 278px !important;
 }
 
+/* 카드가 2개일 때도 고정 */
+.lecture-grid:has(.card:nth-child(2):last-child) .card {
+    flex: 0 0 278px !important;
+}
 /* large grid 형태 */
 #mypage .lecture-grid.large {
     display: grid;

@@ -25,7 +25,7 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
             l.lectureId AS lectureId,
             l.title AS title,
             l.tutorName AS tutorName,
-            l.price AS price,                         -- ★ 추가
+            l.price AS price,                        
             l.thumbnailUrl AS thumbnailUrl,
             COALESCE(lp.progressPercent, 0) AS progressPercent,
             CASE
@@ -49,7 +49,7 @@ public interface MypageLectureRepository extends JpaRepository<Lecture, Integer>
         WHERE u.email = :email
           AND u.provider = :provider
           AND l.visibility = 'ACTIVE'
-          AND l.status = 'OPEN'
+          AND l.status = 'OPEN'  -- 모두 담을건지 확인해보기
         ORDER BY ll.createdAt DESC
     """,
             countQuery = """

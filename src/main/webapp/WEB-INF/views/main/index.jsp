@@ -23,33 +23,35 @@
 
     <!-- 공지사항 롤링 -->
     <section id="noticeRolling">
-        <div class="notice-container swiper mySwiper">
-            <div class="notice-icon">
-                <i class="bi bi-megaphone-fill"></i>
-                <span class="notice-title">공지사항</span>
-            </div>
+        <div>
+            <div class="notice-container swiper mySwiper">
+                <div class="notice-icon">
+                    <i class="bi bi-megaphone-fill"></i>
+                    <span class="notice-title">공지사항</span>
+                </div>
 
-            <div class="swiper-wrapper">
-                <c:forEach var="notice" items="${notices}">
-                    <div class="swiper-slide">
-                        <a href="/notice/content?id=${notice.id}">
-                            <span class="notice-text">${notice.title}</span>
-                            <small class="notice-date">${notice.createdAt}</small>
-                        </a>
-                    </div>
-                </c:forEach>
-            </div>
+                <div class="swiper-wrapper">
+                    <c:forEach var="notice" items="${notices}">
+                        <div class="swiper-slide">
+                            <a href="/notice/content?id=${notice.id}">
+                                <span class="notice-text">${notice.title}</span>
+                                <small class="notice-date">${notice.createdAt}</small>
+                            </a>
+                        </div>
+                    </c:forEach>
+                </div>
 
-            <div class="custom_btn_wrap">
-                <button id="swiperPrev" class="btn-swiper"><i class="bi bi-chevron-up"></i></button>
-                <button id="swiperNext" class="btn-swiper"><i class="bi bi-chevron-down"></i></button>
-                <button id="swiperToggle" class="btn-swiper"><i class="bi bi-pause-fill"></i></button>
+                <div class="custom_btn_wrap">
+                    <button id="swiperPrev" class="btn-swiper"><i class="bi bi-chevron-up"></i></button>
+                    <button id="swiperNext" class="btn-swiper"><i class="bi bi-chevron-down"></i></button>
+                    <button id="swiperToggle" class="btn-swiper"><i class="bi bi-pause-fill"></i></button>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- 추천 강좌 -->
-    <section id="recommend">
+    <section id="recommend" class="recommend">
         <div class="container">
             <h3>추천 강좌</h3>
             <div class="recommend-grid">
