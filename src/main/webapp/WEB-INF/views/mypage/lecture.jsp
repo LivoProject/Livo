@@ -51,26 +51,35 @@
                                             <i class="bi bi-stop-fill"></i>
                                         </button>
                                     </a>
-
                                 </div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="card-img-wrap">
+                                </c:when>
+                                <c:when test="${reservations.lectureStart gt today}">
+                                    <a href="javascript:void(0);" onclick="alert('수강 시작일 이후부터 시청할 수 있습니다.'); return false;">
+                                        <img src="${reservations.thumbnailUrl}" class="card-img-top" style="opacity:0.5;" alt="강의 썸네일"/>
+                                        <button class="play-btn" style="pointer-events:none; opacity:0.5;">
+                                            <i class="bi bi-play-fill"></i>
+                                        </button>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
                                     <a href="/lecture/view/${reservations.lectureId}">
                                         <img src="${reservations.thumbnailUrl}" class="card-img-top" alt="강의 썸네일"/>
                                         <button class="play-btn">
                                             <i class="bi bi-play-fill"></i>
                                         </button>
                                     </a>
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
                         <div class="card-body">
                             <a href="/lecture/content/${reservations.lectureId}">
                                 <h6 class="fw-bold text-ellipsis-2 lecture-title">
                                         ${reservations.title}
                                     <c:if test="${reservations.visibility eq 'DELETED'}">
                                         <span class="badge bg-secondary ms-1">판매 종료</span>
+                                    </c:if>
+                                    <c:if test="${reservations.lectureStart gt today}">
+                                        <span class="badge bg-warning ms-1">수강 대기</span>
                                     </c:if>
                                 </h6>
                                 <p class="text-muted">${reservations.tutorName}</p>
@@ -87,9 +96,13 @@
                                     <c:when test="${reservations.lectureStatus eq 'ENDED'}">
                                         <button class="btn-secondary" disabled style="background: #8a959f; color: #121212">수강 종료</button>
                                     </c:when>
+                                    <c:when test="${reservations.lectureStart le today and reservations.lectureEnd ge today}">
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>예약 취소</button>
+                                    </c:when>
                                     <c:otherwise>
                                         <button class="btn-unreserve btn-main"
                                                 data-lecture-id="${reservations.lectureId}"
+                                                data-price="${reservations.price}"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#reserveModal">
                                             예약 취소

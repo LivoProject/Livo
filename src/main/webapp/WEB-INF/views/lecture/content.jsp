@@ -81,7 +81,8 @@
                                 <c:choose>
                                     <%-- 이미 수강중 --%>
                                     <c:when test="${reservationStatus == 'CONFIRMED'}">
-                                        <button type="button" class="btn-cancel" disabled>신청한 강의</button>
+                                        <%--<button type="button" class="btn-cancel" disabled>신청한 강의</button>--%>
+                                        <a href="/mypage" class="btn-point">내 강의실로 이동</a>
                                     </c:when>
 
                                     <%-- 무료 수강 가능 --%>
@@ -97,34 +98,45 @@
                             <%-- 유료 강의 --%>
                             <c:otherwise>
                                 <c:choose>
-                                <%-- 강의 상태에 따른 버튼 --%>
-                                    <c:when test="${lecture.status == 'CLOSED' || lecture.status == 'ENDED'}">
-                                        <button type="button" class="btn-cancel" disabled>
-                                            <c:choose>
-                                                <c:when test="${lecture.status == 'CLOSED'}">예약 마감</c:when>
-                                                <c:when test="${lecture.status == 'ENDED'}">강의 종료</c:when>
-                                            </c:choose>
-                                        </button>
+                                 <%-- 예약 마감 --%>
+                                    <c:when test="${lecture.status == 'CLOSED'}">
+                                        <c:choose>
+                                            <c:when test="${reservationStatus == 'PAID' || reservationStatus == 'CONFIRMED'}">
+                                                <a href="/mypage" class="btn-point">내 강의실로 이동</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="btn-cancel" disabled>예약 마감</button>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
-                                    <%-- 아직 예약 자체가 없음 (전혀 신청 전) --%>
-                                    <c:when test="${empty reservationStatus}">
-                                        <button id="payButton" class="btn-point" onclick="requestPayment()">결제하기</button>
+                                    <%-- 강의 종료 --%>
+                                    <c:when test="${lecture.status == 'ENDED'}">
+                                        <c:choose>
+                                            <c:when test="${reservationStatus == 'PAID' || reservationStatus == 'CONFIRMED'}">
+                                                <button class="btn-cancel" disabled>수강 종료됨</button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="btn-cancel" disabled>강의 종료</button>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
-
-                                    <%-- 결제 대기 상태 (위젯닫힘/실패 등) --%>
-                                    <c:when test="${reservationStatus == 'PENDING'}">
-                                        <button class="btn-point" onclick="requestPayment()">결제 다시 시도</button>
-                                    </c:when>
-
-                                    <%-- 결제 완료됨 --%>
-                                    <c:when test="${reservationStatus == 'PAID' || reservationStatus == 'CONFIRMED'}">
-                                        <button type="button" class="btn-cancel" disabled>신청한 강의</button>
-                                    </c:when>
-
-                                    <%-- 환불됨 (다시 신청 가능) --%>
-                                    <c:when test="${reservationStatus == 'CANCEL'}">
-                                        <button id="payButton" class="btn-point" onclick="requestPayment()">환불 후 재결제하기</button>
-                                    </c:when>
+                                    <%-- 판매 중 --%>
+                                    <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${empty reservationStatus}">
+                                                <button id="payButton" class="btn-point" onclick="requestPayment()">결제하기</button>
+                                            </c:when>
+                                            <c:when test="${reservationStatus == 'PENDING'}">
+                                                <button id="payButton" class="btn-point" onclick="requestPayment()">결제 다시 시도</button>
+                                            </c:when>
+                                            <c:when test="${reservationStatus == 'CANCEL'}">
+                                                <button id="payButton" class="btn-point" onclick="requestPayment()">결제하기</button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="/mypage" class="btn-point">내 강의실로 이동</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:otherwise>
                                 </c:choose>
                             </c:otherwise>
                         </c:choose>

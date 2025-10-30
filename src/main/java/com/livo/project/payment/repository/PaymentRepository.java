@@ -10,4 +10,6 @@ public interface PaymentRepository extends JpaRepository<Payment,Integer> {
     Optional<Payment> findByOrderId(String paymentKey);
     Optional<Payment> findByPaymentKey(String paymentKey);
     List<Payment> findByUser_EmailOrderByApprovedAtDesc(String email);
+
+    Payment findTopByReservation_ReservationIdOrderByApprovedAtDesc(int reservationId);
 }

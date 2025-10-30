@@ -1,5 +1,6 @@
 package com.livo.project.mypage.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -28,8 +30,13 @@ public class MypageReservationDto {
     private String title;
     private String tutorName;
     private String thumbnailUrl;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate lectureStart;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate lectureEnd;
     private String visibility;
     private String lectureStatus;
+    private int price;
     // 수강률 추가
     private double progressPercent;
     private Long likeCount;
@@ -49,12 +56,15 @@ public class MypageReservationDto {
         return MypageReservationDto.builder()
                 .reservationId(r.getReservationId())
                 .email(r.getUser().getEmail())
-                .lectureId(l.getLectureId())   // ✅ Lecture에서 가져오기
+                .lectureId(l.getLectureId())   //  Lecture에서 가져오기
                 .createdAt(createdAt)
                 .status(r.getStatus().name())
+                .lectureStart(l.getLectureStart())
+                .lectureEnd(l.getLectureEnd())
                 .visibility(l.getVisibility() != null ? l.getVisibility().name() : "ACTIVE")
                 .lectureStatus(l.getStatus() != null ? l.getStatus().name() : "OPEN")
-                .title(l.getTitle())           // ✅ Lecture에서 가져오기
+                .price(l.getPrice())
+                .title(l.getTitle())           //  Lecture에서 가져오기
                 .tutorName(l.getTutorName())
                 .thumbnailUrl(l.getThumbnailUrl())
                 .progressPercent(progressPercent)
@@ -69,6 +79,11 @@ public class MypageReservationDto {
             String title,
             String tutorName,
             String thumbnailUrl,
+            LocalDate lectureStart,
+            LocalDate lectureEnd,
+            Lecture.LectureVisibility visibility,
+            Lecture.LectureStatus lectureStatus,
+            int price,
             Double progressPercent,
             Long likeCount
     ) {
@@ -77,8 +92,13 @@ public class MypageReservationDto {
         this.title = title;
         this.tutorName = tutorName;
         this.thumbnailUrl = thumbnailUrl;
-        this.progressPercent = progressPercent;
-        this.likeCount = likeCount;
+        this.lectureStart = lectureStart;
+        this.lectureEnd = lectureEnd;
+        this.visibility = visibility != null ? visibility.name() : null;
+        this.lectureStatus = lectureStatus != null ? lectureStatus.name() : null;
+        this.price = price;
+        this.progressPercent = progressPercent != null ? progressPercent : 0.0;
+        this.likeCount = likeCount != null ? likeCount : 0L;
     }
 
 }
