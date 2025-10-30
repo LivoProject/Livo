@@ -40,13 +40,15 @@
             <c:if test="${not empty reservations}">
                 <c:forEach var="reservations" items="${reservations}">
                     <div class="card">
-                        <div class="card-img-wrap">
-                            <c:choose>
-                                <c:when test="${reservations.lectureStatus eq 'ENDED'}">
-                                    <a href="javascript:void(0);" onclick="alert('수강 기간이 종료된 강의입니다. 다시 수강을 원하시면 재결제 후 이용해주세요.'); return false;">
-                                        <img src="${reservations.thumbnailUrl}" class="card-img-top" style="opacity:0.6; filter:grayscale(40%);" alt="강의 썸네일"/>
+                        <c:choose>
+                            <c:when test="${reservations.lectureStatus eq 'ENDED'}">
+                                <div class="card-img-wrap ended">
+                                    <a href="javascript:void(0);"
+                                       onclick="alert('수강 기간이 종료된 강의입니다. 다시 수강을 원하시면 재결제 후 이용해주세요.'); return false;">
+                                        <img src="${reservations.thumbnailUrl}" class="card-img-top"
+                                             style="opacity:0.6; filter:grayscale(40%);" alt="강의 썸네일"/>
                                         <button class="play-btn" style="pointer-events:none; opacity:0.5;">
-                                            <i class="bi bi-play-fill"></i>
+                                            <i class="bi bi-stop-fill"></i>
                                         </button>
                                     </a>
                                 </c:when>
@@ -71,7 +73,7 @@
                         <div class="card-body">
                             <a href="/lecture/content/${reservations.lectureId}">
                                 <h6 class="fw-bold text-ellipsis-2 lecture-title">
-                                    ${reservations.title}
+                                        ${reservations.title}
                                     <c:if test="${reservations.visibility eq 'DELETED'}">
                                         <span class="badge bg-secondary ms-1">판매 종료</span>
                                     </c:if>
@@ -91,7 +93,7 @@
                             <div class="button-wrap">
                                 <c:choose>
                                     <c:when test="${reservations.lectureStatus eq 'ENDED'}">
-                                        <button class="btn btn-sm btn-secondary" disabled>수강 종료</button>
+                                        <button class="btn-secondary" disabled style="background: #8a959f; color: #121212">수강 종료</button>
                                     </c:when>
                                     <c:when test="${reservations.lectureStart le today and reservations.lectureEnd ge today}">
                                         <button class="btn btn-sm btn-outline-secondary" disabled>예약 취소</button>

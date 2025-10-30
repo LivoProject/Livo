@@ -16,5 +16,7 @@ public class MypageLectureDto {
     private int price;
     private String thumbnailUrl;
     private int progressPercent;
+    private boolean reserved;
+
 
 }
