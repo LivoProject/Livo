@@ -12,6 +12,8 @@
                 <c:if test="${not empty gPic}">
                     <img src="${gPic}" alt="profile" style="width:35px;height:35px;border-radius:50%;vertical-align:middle;margin-right:6px;">
                 </c:if>
+
+                <strong>${mypage.username}</strong>
             </sec:authorize>
             <%-- 일반 로그인 --%>
             <sec:authorize
@@ -23,8 +25,8 @@
                     height="35"
                     class="rounded-circle"
                 />
-            </sec:authorize>
             <strong>${mypage.nickname}</strong>
+            </sec:authorize>
         </a>
 
         <ul class="dropdown-menu">

@@ -84,8 +84,10 @@
 
 
             <!-- 이름 -->
+
             <div class="field">
                 <label for="name" class="form-label"><span class="required-mark">*</span> 이름</label>
+
                 <input
                         type="text"
                         class="form-control"
@@ -94,6 +96,9 @@
                         placeholder="홍길동"
                         required
                         value="${mypage.username}"
+                        <c:if test="${mypage.provider == 'GOOGLE'}">
+                            disabled
+                        </c:if>
                 />
                 <span data-msg="username"></span>
             </div>
@@ -108,6 +113,9 @@
                         name="phone"
                         required
                         value="${mypage.phone}"
+                        <c:if test="${mypage.provider == 'GOOGLE'}">
+                            disabled
+                        </c:if>
                 />
                 <span data-msg="phone"></span>
             </div>
@@ -115,7 +123,11 @@
             <!-- 생년월일 -->
             <div class="field">
                 <label for="birth" class="form-label">생년월일</label>
-                <input type="date" class="form-control" id="birth" name="birth" required value="${mypage.birth}"/>
+                <input type="date" class="form-control" id="birth" name="birth" required value="${mypage.birth}"
+                    <c:if test="${mypage.provider == 'GOOGLE'}">
+                        disabled
+                    </c:if>
+                />
                 <span data-msg="birth"></span>
             </div>
 
@@ -149,6 +161,6 @@
 
 
 <script src="/js/mypage-info.js"></script>
-<script src="/js/mypage.js"></script>
+<script src="/js/mypage-modal.js"></script>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 
