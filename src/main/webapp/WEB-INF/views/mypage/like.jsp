@@ -89,6 +89,7 @@
 
 </section>
 <!-- 컨텐츠 끝 -->
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const $sort = $("#sortSelect");
@@ -125,30 +126,43 @@
 
                     let html = "";
                     list.forEach((r) => {
-                        const priceText = (r.price || 0).toLocaleString() + "원"; // ✅ JS 안에서만 toLocaleString 사용
-                        html += `
-                                <div class="card">
-                                  <div class="card-img-wrap">
-                                    <a href="/lecture/content/${r.lectureId}">
-                                      <img src="${r.thumbnailUrl}" class="card-img-top" alt="${r.title}">
-                                      <button class="play-btn"><i class="bi bi-play-fill"></i></button>
-                                    </a>
-                                  </div>
-                                  <div class="card-body">
-                                    <a href="/lecture/content/${r.lectureId}">
-                                      <h6 class="fw-bold mb-2 text-ellipsis-2">${r.title}</h6>
-                                      <p class="text-muted small mb-2">${r.tutorName}</p>
-                                      <span>${priceText}</span>
-                                      <div class="progress" style="height: 8px;">
-                                        <div class="progress-bar bg-success" style="width: \${r.progressPercent ?? 0}%;"></div>
-                                      </div>
-                                     <small class="text-muted">\${r.progressPercent ?? 0}%</small>
-                                    </a>
-                                  </div>
-                                </div>`;
+                        const priceText = (r.price || 0).toLocaleString() + "원";
+                        const progressPercent = r.progressPercent ?? 0;
+
+                        // 수강평 작성 버튼 HTML
+                        const reviewBtn = r.reserved == 1
+                            ? '<a href="/lecture/content/' + r.lectureId + '#review" class="btn-cancel">수강평 작성</a>'
+                            : '';
+
+                        html += '<div class="card">' +
+                            '<div class="card-img-wrap">' +
+                            '<a href="/lecture/content/' + r.lectureId + '">' +
+                            '<img src="' + r.thumbnailUrl + '" class="card-img-top" alt="' + r.title + '">' +
+                            '<button class="play-btn"><i class="bi bi-play-fill"></i></button>' +
+                            '</a>' +
+                            '</div>' +
+                            '<div class="card-body">' +
+                            '<a href="/lecture/content/' + r.lectureId + '">' +
+                            '<h6 class="fw-bold text-ellipsis-2 lecture-title">' + r.title + '</h6>' +
+                            '<p class="text-muted mb-3">' + r.tutorName + '</p>' +
+                            '<span>' + priceText + '</span>' +
+                            '<div class="progress" style="height: 8px;">' +
+                            '<div class="progress-bar bg-success" style="width: ' + progressPercent + '%;"></div>' +
+                            '</div>' +
+                            '<small class="text-muted">' + progressPercent + '%</small>' +
+                            '</a>' +
+                            '</div>' +
+                            '<div class="card-footer">' +
+                            '<div class="button-wrap">' +
+                            '<button class="btn-unlike btn-main" data-lecture-id="' + r.lectureId + '" data-bs-toggle="modal" data-bs-target="#likeModal">삭제하기</button>' +
+                            reviewBtn +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
                     });
 
                     container.innerHTML = html;
+
                 },
                 error: function (xhr) {
                     console.error("❌ 정렬 요청 실패:", xhr);
