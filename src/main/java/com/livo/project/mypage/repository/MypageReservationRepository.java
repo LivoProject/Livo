@@ -77,8 +77,13 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
                 l.title,
                 l.tutorName,
                 l.thumbnailUrl,
+                l.lectureStart,
+                l.lectureEnd,
+                l.visibility,
+                l.status,
+                l.price,
                 COALESCE(lp.progressPercent, 0),
-                0L /* likeCount 기본값 */
+                0L /* 기본 likeCount */
             )
             FROM Reservation r
             JOIN r.user u
@@ -86,10 +91,13 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
             LEFT JOIN LectureProgress lp
                 ON lp.lecture = l AND lp.email = u.email
             WHERE u.email = :email
+              AND l.visibility = 'ACTIVE'
               AND u.provider = :provider
               AND (:keyword IS NULL
                    OR l.title LIKE CONCAT('%', :keyword, '%')
                    OR l.tutorName LIKE CONCAT('%', :keyword, '%'))
+           GROUP BY r.reservationId, l.lectureId, l.title, l.tutorName, l.thumbnailUrl,
+                    l.lectureStart, l.lectureEnd, l.visibility, l.status, l.price, lp.progressPercent
             """)
     Page<MypageReservationDto> findMyReservationsForList(
             @Param("email") String email,
@@ -108,6 +116,11 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
                 l.title,
                 l.tutorName,
                 l.thumbnailUrl,
+                l.lectureStart,
+                l.lectureEnd,
+                l.visibility,
+                l.status,
+                l.price,
                 COALESCE(lp.progressPercent, 0),
                 COUNT(DISTINCT ll.likeId)
             )
@@ -119,11 +132,13 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
             LEFT JOIN LectureLike ll
                 ON ll.lecture = l
             WHERE u.email = :email
+              AND l.visibility = 'ACTIVE'
               AND u.provider = :provider
               AND (:keyword IS NULL
                    OR l.title LIKE CONCAT('%', :keyword, '%')
                    OR l.tutorName LIKE CONCAT('%', :keyword, '%'))
-            GROUP BY r.reservationId, l.lectureId, l.title, l.tutorName, l.thumbnailUrl, lp.progressPercent
+            GROUP BY r.reservationId, l.lectureId, l.title, l.tutorName, l.thumbnailUrl,
+                     l.lectureStart, l.lectureEnd, l.visibility, l.status, l.price, lp.progressPercent
             ORDER BY COUNT(DISTINCT ll.likeId) DESC, MAX(r.createdAt) DESC
             """)
     Page<MypageReservationDto> findMyReservationsOrderByLikes(

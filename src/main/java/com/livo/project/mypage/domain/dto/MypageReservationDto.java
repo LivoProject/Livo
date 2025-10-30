@@ -1,5 +1,6 @@
 package com.livo.project.mypage.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,9 @@ public class MypageReservationDto {
     private String title;
     private String tutorName;
     private String thumbnailUrl;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate lectureStart;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate lectureEnd;
     private String visibility;
     private String lectureStatus;
@@ -76,6 +79,11 @@ public class MypageReservationDto {
             String title,
             String tutorName,
             String thumbnailUrl,
+            LocalDate lectureStart,
+            LocalDate lectureEnd,
+            Lecture.LectureVisibility visibility,
+            Lecture.LectureStatus lectureStatus,
+            int price,
             Double progressPercent,
             Long likeCount
     ) {
@@ -84,8 +92,13 @@ public class MypageReservationDto {
         this.title = title;
         this.tutorName = tutorName;
         this.thumbnailUrl = thumbnailUrl;
-        this.progressPercent = progressPercent;
-        this.likeCount = likeCount;
+        this.lectureStart = lectureStart;
+        this.lectureEnd = lectureEnd;
+        this.visibility = visibility != null ? visibility.name() : null;
+        this.lectureStatus = lectureStatus != null ? lectureStatus.name() : null;
+        this.price = price;
+        this.progressPercent = progressPercent != null ? progressPercent : 0.0;
+        this.likeCount = likeCount != null ? likeCount : 0L;
     }
 
 }

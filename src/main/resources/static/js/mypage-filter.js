@@ -29,26 +29,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 let html = "";
                 list.forEach((r) => {
-                    const isSaleClosed = r.visibility === "DELETED";
-                    const isLectureFinished = r.lectureStatus === "ENDED";
+                    const visibility = (r.visibility || "").toUpperCase();
+                    const isSaleClosed = visibility === "DELETED";
+                    const isActive = visibility === "ACTIVE";
+
+                    const start = new Date(r.lectureStart);
+                    const end = new Date(r.lectureEnd);
+                    const now = new Date();
+
+                    const isBeforeStart = start > now;
+                    const isInProgress = start <= now && now <= end;
+                    const isLectureFinished = now > end;
 
                     const badgeHTML = isSaleClosed
                         ? `<span class="badge bg-secondary ms-1">판매 종료</span>`
+                        : (isBeforeStart ? `<span class="badge bg-warning ms-1">수강 대기</span>` : "");
+
+                    const playButtonDisabled = (!isInProgress)
+                        ? 'style="pointer-events:none; opacity:0.5;"'
                         : "";
 
-                    const playButtonDisabled = isLectureFinished
-                        ? 'style="pointer-events:none;opacity:0.5;"'
-                        : "";
-
-                    const buttonHTML = isLectureFinished
-                        ? `<button class="btn btn-sm btn-secondary" disabled>수강 종료됨</button>`
-                        : `<button class="btn-unreserve btn-main"
+                    let buttonHTML = "";
+                    if (isLectureFinished) {
+                        buttonHTML = `<button class="btn btn-sm btn-secondary" disabled>강의 종료</button>`;
+                    } else if (isInProgress) {
+                        buttonHTML = `<button class="btn btn-sm btn-outline-secondary" disabled>예약 취소</button>`;
+                    } else {
+                        buttonHTML = `
+                            <button class="btn-unreserve btn-main"
                                 data-lecture-id="${r.lectureId}"
+                                data-price="${r.price}"
                                 data-bs-toggle="modal"
-                                data-bs-target="#reserveModal">예약 취소</button>`;
-
+                                data-bs-target="#reserveModal">
+                                예약 취소
+                            </button>`;
+                    }
                     const viewLinkStart = isLectureFinished
-                        ? `<a href="javascript:void(0);" onclick="alert('수강 기간이 종료된 강의입니다. 다시 수강을 원하시면 재결제 후 이용해주세요.'); return false;">`
+                        ? `<a href="javascript:void(0);" onclick="alert('현재 시점에는 수강이 불가능합니다.'); return false;">`
                         : `<a href="/lecture/view/${r.lectureId}">`;
 
                     html += `
@@ -83,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         </div>`;
                 });
-
                 container.innerHTML = html;
             },
             error: function (xhr) {
