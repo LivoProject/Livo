@@ -54,13 +54,10 @@ public class PaymentService {
     @Transactional
     public Map<String, Object> confirmPayment(PaymentConfirmDTO dto) {
         Map<String, Object> res = new HashMap<>();
-        log.info("💳 [TOSS 결제 승인 요청] orderId={}, paymentKey={}, amount={}",
-                dto.getOrderId(), dto.getPaymentKey(), dto.getAmount());
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(secretKey, "");
         headers.setContentType(MediaType.APPLICATION_JSON);
-        log.info("🔑 secretKey=[{}]", secretKey);
         Map<String, Object> body = new HashMap<>();
         body.put("paymentKey", dto.getPaymentKey());
         body.put("orderId", dto.getOrderId());
@@ -70,7 +67,6 @@ public class PaymentService {
 
         try {
             ResponseEntity<Map> response = restTemplate.postForEntity(TOSS_API_URL, request, Map.class);
-            log.info("✅ [TOSS 응답] status={}, body={}", response.getStatusCode(), response.getBody());
             if (response.getStatusCode() == HttpStatus.OK) {
                 Map<String, Object> responseBody = response.getBody();
 
@@ -103,6 +99,9 @@ public class PaymentService {
                 // 예약 상태 변경
                 reservation.setStatus(Reservation.ReservationStatus.PAID);
                 reservationRepository.save(reservation);
+                //신청인원 증가
+                lecture.setReservationCount(lecture.getReservationCount() + 1);
+                lectureLectureRepository.save(lecture);
 
                 res.put("status", "SUCCESS");
                 res.put("orderName", orderName);
@@ -118,7 +117,6 @@ public class PaymentService {
 
         }catch(HttpClientErrorException e) {
             if(e.getMessage().contains("ALREADY_PROCESSED_PAYMENT")){
-                log.info("🔄 [DB 상태 동기화 시작] 이미 처리된 결제입니다.");
                 syncPaidPayment(dto.getPaymentKey());
                 res.put("status", "SUCCESS");
                 res.put("message", "이미 처리된 결제였으며, DB 상태를 동기화했습니다.");
@@ -128,7 +126,6 @@ public class PaymentService {
             res.put("error", e.getMessage());
         }
         catch (Exception e) {
-            log.error("❌ [TOSS 결제 승인 실패]", e);
             res.put("status", "FAIL");
             res.put("error", e.getMessage());
         }
@@ -137,7 +134,6 @@ public class PaymentService {
     }
     @Transactional
     public Map<String, Object> cancelPayment(String paymentKey, String cancelReason) {
-        log.info("🚨 [환불 요청] paymentKey={}, reason={}", paymentKey, cancelReason);
         Payment payment = paymentRepository.findByPaymentKey(paymentKey)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보 없음"));
 
@@ -156,31 +152,33 @@ public class PaymentService {
         Map<String, Object> res = new HashMap<>();
 
         try{
-            log.info("💳 [토스 환불 요청] url={}, paymentKey={}", url, paymentKey);
             ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
-            log.info("✅ [토스 환불 응답] status={}, body={}", response.getStatusCode(), response.getBody());
             if(response.getStatusCode() == HttpStatus.OK){
                 Map<String, Object> responseBody = response.getBody();
                 List<Map<String, Object>> cancels = (List<Map<String, Object>>) responseBody.get("cancels");
                 String canceledAtStr = (String) cancels.get(0).get("canceledAt");
-                log.info("🕒 [토스 canceledAt] {}", canceledAtStr);
                 OffsetDateTime canceledDate = OffsetDateTime.parse(canceledAtStr);
                 payment.setStatus(Payment.PaymentStatus.REFUND);
                 payment.setCanceledAt(canceledDate.toLocalDateTime());
                 paymentRepository.save(payment);
 
                 Reservation reservation = payment.getReservation();
+                boolean wasActive = reservation.getStatus() == Reservation.ReservationStatus.PAID;
+
                 reservation.setStatus(Reservation.ReservationStatus.CANCEL);
                 reservationRepository.save(reservation);
-                log.info("📝 [DB 업데이트 완료] payment={}, reservation={}", payment.getStatus(), reservation.getStatus());
+                if(wasActive){
+                    Lecture lecture = lectureLectureRepository.findById(reservation.getLectureId())
+                            .orElseThrow(() -> new IllegalArgumentException("해당 강의없음"));
+                    lecture.setReservationCount(Math.max(lecture.getReservationCount() - 1, 0));
+                    lectureLectureRepository.save(lecture);
+                }
                 res.put("status", "SUCCESS");
             }else {
-                log.warn("⚠️ [토스 환불 실패 응답] {}", response.getStatusCode());
                 res.put("status", "FAIL");
             }
         } catch (HttpClientErrorException e) {
             if (e.getMessage().contains("ALREADY_CANCELED_PAYMENT")) {
-                log.info("🔄 [DB 상태 동기화 시작] 이미 취소된 결제입니다.");
                 syncCanceledPayment(paymentKey);
                 res.put("status", "SUCCESS");
                 res.put("message", "이미 취소된 결제였으며, DB 상태를 동기화했습니다.");
@@ -243,9 +241,6 @@ public class PaymentService {
         // 예약 상태 PAID로
         reservation.setStatus(Reservation.ReservationStatus.PAID);
         reservationRepository.save(reservation);
-
-        log.info("✅ [DB 동기화 완료] paymentKey={}, reservationId={}, lectureId={}",
-                paymentKey, reservation.getReservationId(), lecture.getLectureId());
     }
 
     @Transactional
@@ -254,7 +249,6 @@ public class PaymentService {
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보 없음"));
 
         Map<String, Object> detail = getPaymentDetail(paymentKey);
-        log.info("🔄 [토스 조회 결과] status={}", detail.get("status"));
         if ("CANCELED".equals(detail.get("status"))) {
             List<Map<String, Object>> cancels = (List<Map<String, Object>>) detail.get("cancels");
             if (cancels != null && !cancels.isEmpty()) {
@@ -267,11 +261,6 @@ public class PaymentService {
                 Reservation reservation = payment.getReservation();
                 reservation.setStatus(Reservation.ReservationStatus.CANCEL);
                 reservationRepository.save(payment.getReservation());
-
-                log.info("✅ [DB 동기화 완료] paymentStatus={}, reservationStatus={}",
-                        payment.getStatus(), reservation.getStatus());
-            }else{
-                log.warn("⚠️ [동기화 실패] cancels 데이터 없음 → 토스 응답 확인 필요");
             }
         }
     }

@@ -229,3 +229,37 @@ html {
     margin-top: 0.8rem;     /* 별점 위쪽 간격 확보 */
     margin-bottom: 0.6rem;
 }
+
+.lecture-content p {
+    line-height: 1.6 !important;
+    margin-bottom: 10px;
+}
+
+/*.lecture-content img {*/
+/*    max-width: 100% !important;*/
+/*    height: auto !important;*/
+/*    display: block;*/
+/*}*/
+
+/* 본문 영역 폭 제한 + 가운데 정렬 */
+.lecture-content {
+    max-width: 800px;      /* 720~860px 사이가 가장 가독성 좋음 */
+    /*margin: 0 auto;        !* 가운데 정렬 *!*/
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+/* 이미지 크기 자동 조절 */
+.lecture-content img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    /*margin: 20px auto;*/
+}
+
+.review-content {
+    line-height: 1.6;
+    font-size: 15px;
+    white-space: normal;
+    word-break: keep-all; /* 한국어 줄바꿈 예쁘게 */
+}
