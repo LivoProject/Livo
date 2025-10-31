@@ -8,13 +8,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const modalTitle = modal.querySelector('.modal-title');
     const modalBody = modal.querySelector('.modal-body');
-    const btnMain = modal.querySelector('.btn-main');
+    let btnMain = modal.querySelector('.btn-main');
     const btnCancel = modal.querySelector('.btn-cancel');
     const bsModal = new bootstrap.Modal(modal);
 
     let currentAction = null;     // 현재 모달 동작 (like, reserve, review 등)
     let currentLectureId = null;  // 현재 선택된 강의 ID
 
+    function resetBtnMain() {
+        const newBtn = btnMain.cloneNode(true);
+        btnMain.parentNode.replaceChild(newBtn, btnMain);
+        btnMain = newBtn;
+    }
     // ====== 좋아요 해제 ====== //
     document.querySelectorAll(".btn-unlike").forEach(btn => {
         btn.addEventListener("click", function () {
@@ -33,9 +38,22 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.addEventListener("click", function () {
             currentAction = "unreserve";
             currentLectureId = this.dataset.lectureId;
-
+            const price = Number(this.dataset.price || 0);
             modalTitle.textContent = "";
-            modalBody.innerHTML = `선택하신 강의 예약을<br><strong>정말 취소하시겠습니까?</strong>`;
+            if (price > 0) {
+                //  유료 강의 → 환불 안내 포함
+                modalBody.innerHTML = `
+                선택하신 강의 예약을 취소하면<br>
+                <strong>결제 금액이 자동으로 환불</strong>됩니다.<br><br>
+                정말 취소하시겠습니까?
+            `;
+            } else {
+                // 무료 강의 → 단순 예약 취소 안내
+                modalBody.innerHTML = `
+                선택하신 강의 예약을<br>
+                <strong>정말 취소하시겠습니까?</strong>
+            `;
+            }
             btnMain.textContent = "확인";
             bsModal.show();
         });
@@ -62,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // === 공통 모달 확인 버튼 === //
     btnMain.addEventListener("click", function () {
         if (!currentAction) return;
-
+        resetBtnMain();
         // --- 좋아요 해제 처리 --- //
         if (currentAction === "unlike") {
             fetch("/mypage/like/delete", {
@@ -88,6 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // --- 예약 취소 처리 --- //
         else if (currentAction === "unreserve") {
+
             fetch("/mypage/lecture/delete", {
                 method: "POST",
                 headers: {
@@ -121,6 +140,5 @@ document.addEventListener("DOMContentLoaded", function () {
     modal.addEventListener("hidden.bs.modal", () => {
         currentAction = null;
         currentLectureId = null;
-        btnMain.onclick = null; // 이전 onClick 제거
     });
 });

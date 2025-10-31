@@ -8,6 +8,7 @@ import com.livo.project.auth.security.AppUserDetails;
 import com.livo.project.lecture.domain.Lecture;
 import com.livo.project.lecture.domain.Reservation;
 import com.livo.project.lecture.repository.LectureRepository;
+import com.livo.project.lecture.repository.ReservationRepository;
 import com.livo.project.mypage.domain.dto.*;
 import com.livo.project.mypage.domain.entity.LectureProgress;
 import com.livo.project.mypage.repository.*;
@@ -15,6 +16,8 @@ import com.livo.project.mypage.repository.projection.LikedLectureProjection;
 import com.livo.project.notice.domain.dto.NoticeDto;
 import com.livo.project.notice.domain.entity.Notice;
 import com.livo.project.payment.domain.Payment;
+import com.livo.project.payment.repository.PaymentRepository;
+import com.livo.project.payment.service.PaymentService;
 import com.livo.project.review.domain.Review;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -66,6 +69,9 @@ public class MypageService {
 
     private final MypageProgressRepository mypageProgressRepository;
     private final MypagePaymentRepository mypagePaymentRepository;
+    private final PaymentRepository paymentRepository;
+    private final ReservationRepository reservationRepository;
+    private final PaymentService paymentService;
 
 
     /**
@@ -269,7 +275,7 @@ public class MypageService {
                     .price(row.getPrice() == null ? 0 : row.getPrice())
                     .thumbnailUrl(row.getThumbnailUrl())
                     .progressPercent(row.getProgressPercent() != null ? row.getProgressPercent() : 0.0)
-                    .reserved(isReserved) //
+                    .reserved(row.getReserved() != null && row.getReserved() == 1)
                     .build();
         });
     }
@@ -322,19 +328,24 @@ public class MypageService {
     @Transactional
     @CacheEvict(cacheNames = {"chartTopLectures", "chartMonthlyRevenue"}, allEntries = true)
     public void removeReservationLecture(Integer lectureId, String email) {
-        int changed = mypageReservationRepository.cancelByLectureIdAndEmail(lectureId, email);
-        System.out.println("변경된 행 수: " + changed);
-        if (changed == 0) {
-            throw new RuntimeException("해당 예약을 찾을 수 없거나 이미 취소되었습니다.");
+        Reservation reservation = reservationRepository.findByLectureIdAndUser_Email(lectureId, email)
+                .orElseThrow(() -> new RuntimeException("해당 예약 정보를 찾을 수 없습니다."));
+        if (reservation.getStatus() == Reservation.ReservationStatus.CANCEL) {
+            throw new RuntimeException("이미 취소된 예약입니다.");
+        }
+        Payment payment = paymentRepository.findTopByReservation_ReservationIdOrderByApprovedAtDesc(reservation.getReservationId());
+        if (payment != null && payment.getStatus() != Payment.PaymentStatus.REFUND) {
+            paymentService.cancelPayment(payment.getPaymentKey(), "사용자 예약 취소");
+        } else {
+            reservation.setStatus(Reservation.ReservationStatus.CANCEL);
+            reservationRepository.save(reservation);
         }
     }
-
 
     // 내 리뷰 조회
     public Page<Review> getMyReviews(String email, Pageable pageable) {
         return mypageReviewRepository.findAllByEmail(email, pageable);
     }
-
 
     // 현재 진행률 저장
     @Transactional
@@ -445,22 +456,33 @@ public class MypageService {
     }
 
     // 내 강좌 검색
+    // Service
     @Transactional(readOnly = true)
-    public Page<MypageReservationDto> searchMyReservations(String email, String provider, String keyword, Pageable pageable) {
+    public Page<MypageReservationDto> searchMyReservations(
+            String email, String provider, String keyword, String sort, Pageable pageable
+    ) {
+        if ("popular".equals(sort)) {
+            // 인기순은 아래 별도 메서드 사용 (쿼리 내부 ORDER BY)
+            Pageable unSorted = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+            return mypageReservationRepository.findMyReservationsOrderByLikes(email, provider, keyword, unSorted);
+        }
 
-        return mypageReservationRepository.searchByKeyword(email, provider, keyword, pageable)
-                .map(r -> {
-                    Lecture lecture = r.getLecture();
+        // 최신/오래된 — Pageable 정렬로 처리 (결제일)
+        Sort.Direction dir = "old".equals(sort) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                Sort.by(dir, "r.createdAt")); // JPA가 alias를 인식 못하면 "createdAt"만 써도 됨
 
-                    // 이메일 기준으로 진도율 조회
-                    double progress = mypageProgressRepository
-                            .findProgressPercentByLectureAndEmail(lecture.getLectureId(), email)
-                            .orElse(0.0);
-
-                    return MypageReservationDto.of(r, lecture, progress);
-                });
+        return mypageReservationRepository.findMyReservationsForList(email, provider, keyword, sortedPageable);
     }
 
+    // 좋아요 한 강좌 정렬
+    public List<LikedLectureProjection> getLikedLectures(
+            String email,
+            String provider,
+            String sort
+    ) {
+        return mypageLectureRepository.findLikedLecturesDynamicSortSimple(email, provider, sort);
+    }
 
 }
 

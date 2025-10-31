@@ -59,9 +59,31 @@ public class ReservationServiceImpl implements ReservationService {
     public int createPendingReservation(int lectureId, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원 정보 없음"));
-        if(reservationRepository.existsByEmailAndLectureIdAndStatusNot(email, lectureId, Reservation.ReservationStatus.CANCEL)) {
-            throw new IllegalArgumentException("이미 예약된 강의입니다.");
+        // 가장 최근 예약 검색
+        Optional<Reservation> existingOpt = reservationRepository
+                .findTopByLecture_LectureIdAndUser_EmailOrderByCreatedAtDesc(lectureId, email);
+
+        if (existingOpt.isPresent()) {
+            Reservation existing = existingOpt.get();
+
+            // 이미 수강 중이면 새 예약 불가
+            if (existing.getStatus() == Reservation.ReservationStatus.CONFIRMED || existing.getStatus() == Reservation.ReservationStatus.PAID) {
+                return existing.getReservationId();
+            }
+
+            // 예약 대기(PENDING) 재시도 → 재사용
+            if (existing.getStatus() == Reservation.ReservationStatus.PENDING) {
+                return existing.getReservationId();
+            }
+
+            // 환불(CANCEL)된 기록 → 되살려서 다시 예약 상태로
+            if (existing.getStatus() == Reservation.ReservationStatus.CANCEL) {
+                existing.setStatus(Reservation.ReservationStatus.PENDING);
+                reservationRepository.save(existing);
+                return existing.getReservationId();
+            }
         }
+
         Reservation reservation = new Reservation();
         reservation.setLectureId(lectureId);
         reservation.setUser(user);
@@ -71,8 +93,6 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.save(reservation);
         return reservation.getReservationId();
     }
-
-
 
     @Override
     public Reservation.ReservationStatus getReservationStatus(String email, int lectureId) {

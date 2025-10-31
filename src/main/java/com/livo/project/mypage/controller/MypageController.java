@@ -9,6 +9,8 @@ import com.livo.project.mypage.domain.dto.MypageLikedLectureDto;
 import com.livo.project.mypage.domain.dto.MypageProgressDto;
 import com.livo.project.mypage.domain.dto.MypageReservationDto;
 import com.livo.project.mypage.domain.entity.LectureProgress;
+import com.livo.project.mypage.repository.MypageReservationRepository;
+import com.livo.project.mypage.repository.projection.LikedLectureProjection;
 import com.livo.project.mypage.service.MypageService;
 import com.livo.project.payment.domain.Payment;
 import com.livo.project.review.domain.Review;
@@ -17,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -45,6 +48,7 @@ import java.util.*;
 public class MypageController {
 
     private final MypageService mypageService;
+    private final MypageReservationRepository mypageReservationRepository;
 
     // 마이페이지 메인
     @GetMapping
@@ -132,7 +136,7 @@ public class MypageController {
         model.addAttribute("reservations", reservations.getContent());
         model.addAttribute("page", reservations);
         model.addAttribute("menu", "lecture");
-
+        model.addAttribute("today", java.time.LocalDate.now());
         return "mypage/lecture";
     }
 
@@ -296,9 +300,11 @@ public class MypageController {
     // 검색
     @PostMapping("/lecture/search")
     @ResponseBody
-    public Map<String, Object> searchLecturesAjax(@RequestParam("keyword") String keyword,
-                                                  Pageable pageable) {
-
+    public Map<String, Object> searchLecturesAjax(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(value = "sort", required = false, defaultValue = "latest") String sort,
+            Pageable pageable
+    ) {
         Map<String, String> user = AuthUtil.getLoginUserInfo();
         String email = user.get("email");
         String provider = user.get("provider");
@@ -307,15 +313,36 @@ public class MypageController {
             return Map.of("success", false, "error", "UNAUTHORIZED");
         }
 
-        Page<MypageReservationDto> reservations = mypageService.searchMyReservations(email, provider, keyword, pageable);
+        Page<MypageReservationDto> reservations =
+                mypageService.searchMyReservations(email, provider, keyword, sort, pageable);
 
-        // JSON 구조로 반환
-        return Map.of(
-                "success", true,
-                "data", reservations.getContent()
-        );
+        return Map.of("success", true, "data", reservations.getContent());
+
     }
 
+    // 좋아요한 강좌 정렬
+    @PostMapping("/like/sort")
+    @ResponseBody
+    public Map<String, Object> sortLikedLecturesAjax(
+            @RequestParam("sort") String sort
+    ) {
+        Map<String, String> user = AuthUtil.getLoginUserInfo();
+        String email = user.get("email");
+        String provider = user.get("provider");
 
+        if (email == null) {
+            return Map.of("success", false, "error", "UNAUTHORIZED");
+        }
+        // 서비스 호출
+        List<LikedLectureProjection> likedLectures =
+                mypageService.getLikedLectures(email, provider, sort);
+
+        // 바로 리스트를 JSON으로 반환
+        return Map.of(
+                "success", true,
+                "data", likedLectures
+        );
+
+    }
 
 }

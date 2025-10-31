@@ -7,7 +7,7 @@
 
 
 <link rel="stylesheet" href="/css/mypage.css">
-<script src="/js/mypage.js"></script>
+<script src="/js/mypage-modal.js"></script>
 
 <!-- 컨텐츠 -->
 <section id="mypage" class="container">

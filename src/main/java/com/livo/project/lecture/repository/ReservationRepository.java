@@ -45,4 +45,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     """)
     int countActiveReservations(@Param("lectureId") int lectureId);
 
+    Optional<Reservation> findByLectureIdAndUser_Email(Integer lectureId, String email);
 }

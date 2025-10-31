@@ -6,7 +6,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 <link rel="stylesheet" href="/css/mypage.css">
-<script src="/js/mypage.js"></script>
+<script src="/js/mypage-modal.js"></script>
 
 <!-- 컨텐츠 -->
 <section id="mypage" class="container">
@@ -159,7 +159,7 @@
                             <div class="card-footer">
                                 <div class="button-wrap">
                                     <c:choose>
-                                        <c:when test="${lecture.reserved == true}">
+                                        <c:when test="${lecture.reserved}">
                                             <button class="btn-unlike btn-main"
                                                     data-lecture-id="${lecture.lectureId}"
                                                     data-bs-toggle="modal"
