@@ -76,4 +76,5 @@ public class Lecture {
         ACTIVE, DELETED
     }
 
+
 }

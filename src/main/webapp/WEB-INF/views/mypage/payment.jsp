@@ -55,7 +55,7 @@
                                         </button>
                                     </c:when>
                                     <c:otherwise>
-                                        <button class="btn-disabled" disabled>
+                                        <button class="btn-cancel" disabled>
                                             환불 불가
                                         </button>
                                     </c:otherwise>
