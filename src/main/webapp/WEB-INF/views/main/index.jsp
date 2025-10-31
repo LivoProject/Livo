@@ -64,10 +64,10 @@
                         <button class="play-btn">
                             <i class="bi bi-play-fill"></i>
                         </button>
-                        <div class="card-body">
-                            <h6 class="fw-bold text-ellipsis-2 lecture-title">${lecture.title}</h6>
-                            <p class="text-muted mb-3">${lecture.tutorName}</p>
-                            <span><fmt:formatNumber value="${lecture.price}" type="number"/>원</span>
+                        <div class="card-body justify-content-between" style="gap:0;">
+                            <h6 class="fw-bold text-ellipsis-2 mb-2 lh-base">${lecture.title}</h6>
+                            <p class="text-muted mb-2">${lecture.tutorName}</p>
+                            <span class="mb-2"><fmt:formatNumber value="${lecture.price}" type="number"/>원</span>
                             <div class="card-review">
                                 <div>
                                     <span>⭐4.8</span>
@@ -136,11 +136,11 @@
                                 <button class="play-btn">
                                     <i class="bi bi-play-fill"></i>
                                 </button>
-                                <div class="card-body">
+                                <div class="card-body justify-content-between" style="gap:0;">
                                     <span class="badge bg-danger">HOT</span>
-                                    <h6 class="fw-bold text-ellipsis-2 lecture-title">${lectureP.title}</h6>
-                                    <p class="text-muted mb-3">${lectureP.tutorName}</p>
-                                    <span><fmt:formatNumber value="${lectureP.price}" type="number"/>원</span>
+                                    <h6 class="fw-bold text-ellipsis-2 mb-2 lh-base">${lectureP.title}</h6>
+                                    <p class="text-muted mb-2">${lectureP.tutorName}</p>
+                                    <span class="mb-2"><fmt:formatNumber value="${lectureP.price}" type="number"/>원</span>
                                     <div class="card-review">
                                         <div>
                                             <span>⭐4.8</span>
