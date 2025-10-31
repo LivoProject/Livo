@@ -52,7 +52,8 @@ public class Lecture {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private LectureVisibility visibility;
+    private LectureVisibility visibility = LectureVisibility.ACTIVE;
+
 
     private String thumbnailUrl;
     private boolean customThumbnail;
@@ -75,5 +76,6 @@ public class Lecture {
     public enum LectureVisibility{
         ACTIVE, DELETED
     }
+
 
 }
