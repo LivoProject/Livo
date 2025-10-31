@@ -44,8 +44,6 @@ public class LectureListController {
         lecturePage.getContent().forEach(lecture -> {
             Double avgStar = reviewService.getAverageStarByLecture(lecture.getLectureId());
             int reviewCount = reviewService.getReviewsByLectureId(lecture.getLectureId()).size();
-            int activeCount = reservationRepository.countActiveReservations(lecture.getLectureId());
-            lecture.setReservationCount(activeCount);
 
             avgStarMap.put(lecture.getLectureId(), avgStar != null ? avgStar : 0.0);
             reviewCountMap.put(lecture.getLectureId(), reviewCount);
@@ -76,8 +74,6 @@ public class LectureListController {
         lecturePage.getContent().forEach(lecture -> {
             Double avgStar = reviewService.getAverageStarByLecture(lecture.getLectureId());
             int reviewCount = reviewService.getReviewsByLectureId(lecture.getLectureId()).size();
-            int activeCount = reservationRepository.countActiveReservations(lecture.getLectureId());
-            lecture.setReservationCount(activeCount);
 
             avgStarMap.put(lecture.getLectureId(), avgStar != null ? avgStar : 0.0);
             reviewCountMap.put(lecture.getLectureId(), reviewCount);
@@ -142,11 +138,10 @@ public class LectureListController {
 
             Double avgStar = reviewService.getAverageStarByLecture(lecture.getLectureId());
             int reviewCount = reviewService.getReviewsByLectureId(lecture.getLectureId()).size();
-            int activeCount = reservationRepository.countActiveReservations(lecture.getLectureId());
 
             map.put("avgStar", avgStar != null ? avgStar : 0.0);
             map.put("reviewCount", reviewCount);
-            map.put("reservationCount", activeCount);
+            map.put("reservationCount", lecture.getReservationCount());
             return map;
         }).toList();
 

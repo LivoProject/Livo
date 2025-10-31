@@ -182,7 +182,9 @@
                 <fmt:formatNumber value="${avgStarMap[lecture.lectureId]}" type="number" maxFractionDigits="1" />
             </li>
         </ul>
-        <h4 class="mt-3">${lecture.content}</h4>
+        <div class="lecture-content mt-3">
+            <c:out value="${lecture.content}" escapeXml="false"/>
+        </div>
     </div>
 
     <!-- 강좌운영진 -->
@@ -305,7 +307,9 @@
                                     <span class="text-muted fst-italic">🚫 신고된 리뷰입니다.</span>
                                 </c:when>
                                 <c:otherwise>
-                                    <strong>${review.reviewContent}</strong>
+                                    <p class="review-content">
+                                        ${review.reviewContent}
+                                    </p>
                                 </c:otherwise>
                             </c:choose>
                         </h4>

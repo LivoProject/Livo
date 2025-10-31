@@ -339,6 +339,11 @@ public class MypageService {
         } else {
             reservation.setStatus(Reservation.ReservationStatus.CANCEL);
             reservationRepository.save(reservation);
+
+            Lecture lecture = lectureRepository.findById(lectureId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 강의를 찾을 수 없습니다."));
+            lecture.setReservationCount(Math.max(lecture.getReservationCount() - 1,0));
+            lectureRepository.save(lecture);
         }
     }
 

@@ -76,12 +76,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/faq-page/list">자주묻는질문</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/mypage">마이페이지</a>
-                    </li>
-<%--                    <li class="nav-item">--%>
-<%--                        <a class="nav-link" href="${pageContext.request.contextPath}/common/ui-guide">UI가이드</a>--%>
-<%--                    </li>--%>
+                    <sec:authorize access="hasRole('USER')">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/mypage">마이페이지</a>
+                        </li>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('ADMIN')">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">관리자 페이지</a>
+                        </li>
+                    </sec:authorize>
                     <li>
                         <button id="searchToggle" class="nav-link">
                             <i class="bi bi-search"></i>
@@ -153,9 +157,7 @@
                             <i class="bi bi-box-arrow-right"></i> 로그아웃
                         </span>
                     </sec:authorize>
-
                 </div>
-
             </div>
         </nav>
     </div>

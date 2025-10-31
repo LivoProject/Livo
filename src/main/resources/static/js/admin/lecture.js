@@ -3,6 +3,20 @@ $(document).ready(function () {
         height: 300,
         lang: 'ko-KR',
         placeholder: '강의 내용을 입력하세요...',
+        lineHeights: ['0.8', '1.0', '1.2', '1.4', '1.6', '2.0', '3.0'],
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['lineHeight']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['codeview', 'help']]
+        ],
+        codeviewFilter: true,
+        codeviewIframeFilter: true,
         callbacks: {
             onImageUpload: function(files) {
                 uploadImage(files[0]);

@@ -54,7 +54,6 @@ public class Lecture {
     @Column(nullable = false)
     private LectureVisibility visibility = LectureVisibility.ACTIVE;
 
-
     private String thumbnailUrl;
     private boolean customThumbnail;
     @ManyToOne(fetch = FetchType.EAGER)
