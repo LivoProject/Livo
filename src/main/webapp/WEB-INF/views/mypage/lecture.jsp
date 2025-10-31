@@ -38,78 +38,86 @@
         <!-- 강의 카드 목록 (Ajax 결과도 여기에 덮어씀) -->
         <div id="lectureContainer" class="lecture-grid large">
             <c:if test="${not empty reservations}">
-                <c:forEach var="reservations" items="${reservations}">
+                <c:forEach var="r" items="${reservations}">
                     <div class="card">
                         <c:choose>
-                            <c:when test="${reservations.lectureStatus eq 'ENDED'}">
+                            <c:when test="${r.lectureStatus eq 'ENDED'}">
                                 <div class="card-img-wrap ended">
                                     <a href="javascript:void(0);"
-                                       onclick="alert('수강 기간이 종료된 강의입니다. 다시 수강을 원하시면 재결제 후 이용해주세요.'); return false;">
-                                        <img src="${reservations.thumbnailUrl}" class="card-img-top"
+                                       onclick="alert('수강 기간이 종료된 강의입니다.'); return false;">
+                                        <img src="${r.thumbnailUrl}" class="card-img-top"
                                              style="opacity:0.6; filter:grayscale(40%);" alt="강의 썸네일"/>
                                         <button class="play-btn" style="pointer-events:none; opacity:0.5;">
                                             <i class="bi bi-stop-fill"></i>
                                         </button>
                                     </a>
                                 </div>
-                                </c:when>
-                                <c:when test="${reservations.lectureStart gt today}">
-                                    <a href="javascript:void(0);" onclick="alert('수강 시작일 이후부터 시청할 수 있습니다.'); return false;">
-                                        <img src="${reservations.thumbnailUrl}" class="card-img-top" style="opacity:0.5;" alt="강의 썸네일"/>
+                            </c:when>
+                            <c:when test="${r.lectureStart gt today}">
+                                <div class="card-img-wrap">
+                                    <a href="javascript:void(0);"
+                                       onclick="alert('수강 시작일 이후부터 시청할 수 있습니다.'); return false;">
+                                        <img src="${r.thumbnailUrl}" class="card-img-top"
+                                             style="opacity:0.5;" alt="강의 썸네일"/>
                                         <button class="play-btn" style="pointer-events:none; opacity:0.5;">
                                             <i class="bi bi-play-fill"></i>
                                         </button>
                                     </a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a href="/lecture/view/${reservations.lectureId}">
-                                        <img src="${reservations.thumbnailUrl}" class="card-img-top" alt="강의 썸네일"/>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="card-img-wrap">
+                                    <a href="/lecture/view/${r.lectureId}">
+                                        <img src="${r.thumbnailUrl}" class="card-img-top" alt="강의 썸네일"/>
                                         <button class="play-btn">
                                             <i class="bi bi-play-fill"></i>
                                         </button>
                                     </a>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                         <div class="card-body">
-                            <a href="/lecture/content/${reservations.lectureId}">
+                            <a href="/lecture/content/${r.lectureId}">
                                 <h6 class="fw-bold text-ellipsis-2 lecture-title">
-                                        ${reservations.title}
-                                    <c:if test="${reservations.visibility eq 'DELETED'}">
+                                        ${r.title}
+                                    <c:if test="${r.visibility eq 'DELETED'}">
                                         <span class="badge bg-secondary ms-1">판매 종료</span>
                                     </c:if>
-                                    <c:if test="${reservations.lectureStart gt today}">
+                                    <c:if test="${r.lectureStart gt today}">
                                         <span class="badge bg-warning ms-1">수강 대기</span>
                                     </c:if>
                                 </h6>
-                                <p class="text-muted">${reservations.tutorName}</p>
+                                <p class="text-muted">${r.tutorName}</p>
                                 <div class="progress" style="height: 8px;">
                                     <div class="progress-bar bg-success"
-                                         style="width: ${reservations.progressPercent}%;"></div>
+                                         style="width: ${r.progressPercent}%;"></div>
                                 </div>
-                                <small class="text-muted">${reservations.progressPercent}%</small>
+                                <small class="text-muted">${r.progressPercent}%</small>
                             </a>
                         </div>
                         <div class="card-footer">
                             <div class="button-wrap">
                                 <c:choose>
-                                    <c:when test="${reservations.lectureStatus eq 'ENDED'}">
-                                        <button class="btn-secondary" disabled style="background: #8a959f; color: #121212">수강 종료</button>
+                                    <c:when test="${r.lectureStatus eq 'ENDED'}">
+                                        <button class="btn-secondary" disabled style="background: #8a959f; color: #121212">강의 종료</button>
                                     </c:when>
-                                    <c:when test="${reservations.lectureStart le today and reservations.lectureEnd ge today}">
-                                        <button class="btn btn-sm btn-outline-secondary" disabled>예약 취소</button>
+                                    <c:when test="${r.visibility eq 'DELETED'}">
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>예약 취소 불가</button>
+                                    </c:when>
+                                    <c:when test="${r.lectureStart le today and r.lectureEnd ge today}">
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>예약 취소 불가 </button>
                                     </c:when>
                                     <c:otherwise>
                                         <button class="btn-unreserve btn-main"
-                                                data-lecture-id="${reservations.lectureId}"
-                                                data-price="${reservations.price}"
+                                                data-lecture-id="${r.lectureId}"
+                                                data-price="${r.price}"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#reserveModal">
                                             예약 취소
                                         </button>
                                     </c:otherwise>
                                 </c:choose>
-                                <a href="/lecture/content/${reservations.lectureId}#review" class="btn-cancel">
+                                <a href="/lecture/content/${r.lectureId}#review" class="btn-cancel">
                                     수강평 작성
                                 </a>
                             </div>

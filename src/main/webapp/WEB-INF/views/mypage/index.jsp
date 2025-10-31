@@ -98,14 +98,20 @@
                                 </a>
                             </div>
                             <div class="card-footer">
-
                                 <div class="button-wrap">
-                                    <button class="btn-unreserve btn-main"
-                                            data-lecture-id="${lecture.lectureId}"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#reserveModal">
-                                        예약 취소
-                                    </button>
+                                    <c:choose>
+                                        <c:when test="${lecture.visibility eq 'DELETED'}">
+                                            <button class="btn btn-sm btn-outline-secondary" disabled>예약 취소 불가</button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button class="btn-unreserve btn-main"
+                                                    data-lecture-id="${lecture.lectureId}"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#reserveModal">
+                                                예약 취소
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <a href="/lecture/content/${lecture.lectureId}#review" class="btn-cancel">
                                         수강평 작성
                                     </a>

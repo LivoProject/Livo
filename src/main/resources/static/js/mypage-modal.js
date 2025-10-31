@@ -34,29 +34,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ====== 예약 취소 ====== //
-    document.querySelectorAll(".btn-unreserve").forEach(btn => {
-        btn.addEventListener("click", function () {
-            currentAction = "unreserve";
-            currentLectureId = this.dataset.lectureId;
-            const price = Number(this.dataset.price || 0);
-            modalTitle.textContent = "";
-            if (price > 0) {
-                //  유료 강의 → 환불 안내 포함
-                modalBody.innerHTML = `
-                선택하신 강의 예약을 취소하면<br>
-                <strong>결제 금액이 자동으로 환불</strong>됩니다.<br><br>
-                정말 취소하시겠습니까?
-            `;
-            } else {
-                // 무료 강의 → 단순 예약 취소 안내
-                modalBody.innerHTML = `
-                선택하신 강의 예약을<br>
-                <strong>정말 취소하시겠습니까?</strong>
-            `;
-            }
-            btnMain.textContent = "확인";
-            bsModal.show();
-        });
+    document.addEventListener("click", function (e) {
+        const btn = e.target.closest(".btn-unreserve");
+        if (!btn) return;
+
+        currentAction = "unreserve";
+        currentLectureId = btn.dataset.lectureId;
+        const price = Number(btn.dataset.price || 0);
+
+        modalTitle.textContent = "";
+
+        if (price > 0) {
+            modalBody.innerHTML = `
+            선택하신 강의 예약을 취소하면<br>
+            <strong>결제 금액이 자동으로 환불</strong>됩니다.<br><br>
+            정말 취소하시겠습니까?
+        `;
+        } else {
+            modalBody.innerHTML = `
+            선택하신 강의 예약을<br>
+            <strong>정말 취소하시겠습니까?</strong>
+        `;
+        }
+
+        btnMain.textContent = "확인";
+        bsModal.show();
     });
 
     // ====== 리뷰 보기 ====== //
