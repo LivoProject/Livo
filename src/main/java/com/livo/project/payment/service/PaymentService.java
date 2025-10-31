@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -136,7 +137,8 @@ public class PaymentService {
     public Map<String, Object> cancelPayment(String paymentKey, String cancelReason) {
         Payment payment = paymentRepository.findByPaymentKey(paymentKey)
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보 없음"));
-
+        Reservation reservation = payment.getReservation();
+        validateRefundAvailable(reservation);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(secretKey, "");
@@ -162,9 +164,8 @@ public class PaymentService {
                 payment.setCanceledAt(canceledDate.toLocalDateTime());
                 paymentRepository.save(payment);
 
-                Reservation reservation = payment.getReservation();
-                boolean wasActive = reservation.getStatus() == Reservation.ReservationStatus.PAID;
 
+                boolean wasActive = reservation.getStatus() == Reservation.ReservationStatus.PAID;
                 reservation.setStatus(Reservation.ReservationStatus.CANCEL);
                 reservationRepository.save(reservation);
                 if(wasActive){
@@ -262,6 +263,14 @@ public class PaymentService {
                 reservation.setStatus(Reservation.ReservationStatus.CANCEL);
                 reservationRepository.save(payment.getReservation());
             }
+        }
+    }
+    public void validateRefundAvailable(Reservation reservation) {
+        Lecture lecture = reservation.getLecture();
+
+        if (lecture.getLectureStart() != null &&
+                lecture.getLectureStart().isBefore(LocalDate.now())) {
+            throw new IllegalStateException("환불 가능 기간이 지났습니다.");
         }
     }
 

@@ -431,7 +431,14 @@ public class MypageService {
     // 내 결제 내역
     @Transactional
     public Page<Payment> getMyPayments(String email, Pageable pageable) {
-        return mypagePaymentRepository.findAllByEmail(email, pageable);
+        Page<Payment> page = mypagePaymentRepository.findAllByEmail(email, pageable);
+
+        page.getContent().forEach(p -> {
+            if (p.getReservation() != null && p.getReservation().getLecture() != null) {
+                p.getReservation().getLecture().getLectureStart(); // 아무 필드나 접근
+            }
+        });
+        return page;
     }
 
     public List<Payment> getRecentPayments(String email, int limit) {
@@ -487,6 +494,11 @@ public class MypageService {
             String sort
     ) {
         return mypageLectureRepository.findLikedLecturesDynamicSortSimple(email, provider, sort);
+    }
+
+    public boolean isRefundAvailable(Payment payment) {
+        Lecture lecture = payment.getLecture();
+        return lecture.getStatus() == Lecture.LectureStatus.OPEN;
     }
 
 }
