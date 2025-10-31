@@ -57,7 +57,7 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
                 JOIN r.user u
                 WHERE u.email = :email
                   AND u.provider = :provider
-                  AND r.status = 'CONFIRMED'
+                  AND r.status IN ('CONFIRMED', 'PAID')
                   AND (
                       LOWER(l.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
                       OR LOWER(l.tutorName) LIKE LOWER(CONCAT('%', :keyword, '%'))
@@ -91,7 +91,7 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
             LEFT JOIN LectureProgress lp
                 ON lp.lecture = l AND lp.email = u.email
             WHERE u.email = :email
-              AND l.visibility = 'ACTIVE'
+              AND r.status IN ('CONFIRMED', 'PAID')
               AND u.provider = :provider
               AND (:keyword IS NULL
                    OR l.title LIKE CONCAT('%', :keyword, '%')
@@ -132,7 +132,7 @@ public interface MypageReservationRepository extends JpaRepository<Reservation, 
             LEFT JOIN LectureLike ll
                 ON ll.lecture = l
             WHERE u.email = :email
-              AND l.visibility = 'ACTIVE'
+              AND r.status IN ('CONFIRMED', 'PAID')
               AND u.provider = :provider
               AND (:keyword IS NULL
                    OR l.title LIKE CONCAT('%', :keyword, '%')

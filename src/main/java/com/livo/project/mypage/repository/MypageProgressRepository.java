@@ -56,8 +56,11 @@ public interface MypageProgressRepository extends JpaRepository<LectureProgress,
     @Query("""
         SELECT COUNT(lp)
         FROM LectureProgress lp
+        JOIN Reservation r ON r.lecture = lp.lecture AND r.email = lp.email
         WHERE lp.email = :email
           AND lp.progressPercent < 100
+          AND r.status IN ('CONFIRMED', 'PAID')
+          AND r.lecture.status <> 'ENDED'
     """)
     long countInProgressByEmail(@Param("email") String email);
 
