@@ -289,9 +289,15 @@ public class MypageController {
         MypageDto mypageDto = mypageService.getUserData(email, provider);
         Page<Payment> payments = mypageService.getMyPayments(email, pageable);
 
+        Map<Integer, Boolean> refundAvailableMap = new HashMap<>();
+        payments.getContent().forEach(p ->
+                refundAvailableMap.put(p.getPaymentId(), mypageService.isRefundAvailable(p))
+        );
+
         model.addAttribute("mypage", mypageDto);
         model.addAttribute("payments", payments.getContent());
         model.addAttribute("page", payments);
+        model.addAttribute("refundAvailableMap", refundAvailableMap);
         model.addAttribute("menu", "payment");
 
         return "mypage/payment";
