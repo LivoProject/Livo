@@ -10,7 +10,7 @@
     <!-- 메인 콘텐츠 -->
     <div class="container-fluid py-4 px-5">
         <div class="form-section">
-            <h5 class="mb-4 fw-bold">1단계 강의 수정</h5>
+            <h5 class="mb-4 fw-bold">1단계: 강의 수정</h5>
 
             <form id="lectureEditForm" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

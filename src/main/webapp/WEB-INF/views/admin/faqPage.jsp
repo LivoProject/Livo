@@ -24,44 +24,50 @@
                             <th>번호</th>
                             <th>질문</th>
                             <th>답변</th>
-                            <th>관리</th>
+                            <th class="text-center">관리</th>
                         </tr>
                       </thead>
-                      <tbody>
-                          <c:forEach var="faq" items="${faq}" varStatus="status">
-                              <tr>
-                                  <td class="text-center">${status.index + 1}</td>
-                                  <td class="text-start">${faq.question}</td>
-                                  <td class="text-start">
-                                    <c:choose>
-                                        <c:when test="${fn:length(faq.answer) > 70}">
-                                          ${fn:substring(faq.answer, 0, 70)}...
-                                        </c:when>
-                                        <c:otherwise>
-                                          ${faq.answer}
-                                        </c:otherwise>
-                                      </c:choose>
-                                  </td>
-                                  <td class="text-center d-flex">
-                                      <a href="/admin/faq/edit?id=${faq.id}" class="btn btn-sm btn-primary">수정</a>
-                                      <form action="/admin/faq/delete" method="post">
-                                          <input type="hidden" name="id" value="${faq.id}">
-                                          <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
-                                      </form>
-                                  </td>
-                              </tr>
-                          </c:forEach>
+                      <tbody id="faqTableBody">
+<%--                          <c:forEach var="faq" items="${faq}" varStatus="status">--%>
+<%--                              <tr class="text-center">--%>
+<%--                                  <td>${status.index + 1}</td>--%>
+<%--                                  <td class="text-start">${faq.question}</td>--%>
+<%--                                  <td class="text-start">--%>
+<%--                                    <c:choose>--%>
+<%--                                        <c:when test="${fn:length(faq.answer) > 70}">--%>
+<%--                                          ${fn:substring(faq.answer, 0, 70)}...--%>
+<%--                                        </c:when>--%>
+<%--                                        <c:otherwise>--%>
+<%--                                          ${faq.answer}--%>
+<%--                                        </c:otherwise>--%>
+<%--                                      </c:choose>--%>
+<%--                                  </td>--%>
+<%--                                  <td class="text-center">--%>
+<%--                                      <div class="d-flex justify-content-center gap-2">--%>
+<%--                                          <a href="/admin/faq/edit?id=${faq.id}" class="btn btn-sm btn-primary me-1">수정</a>--%>
+<%--                                          <form action="/admin/faq/delete" method="post">--%>
+<%--                                              <input type="hidden" name="id" value="${faq.id}">--%>
+<%--                                              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>--%>
+<%--                                          </form>--%>
+<%--                                      </div>--%>
+
+<%--                                  </td>--%>
+<%--                              </tr>--%>
+<%--                          </c:forEach>--%>
                         </tbody>
                     </table>
                   </div>
+
                 </div>
               </div>
+                <ul id="pagination" class="pagination justify-content-center"></ul>
             </div>
           </div>
         </div>
       </main>
     </div>
   </div>
+<script src="/js/admin/faq.js"></script>
 </body>
 
 </html>

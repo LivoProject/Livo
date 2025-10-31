@@ -111,9 +111,16 @@
 
 .text-truncate{
     -webkit-line-clamp: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 400px;
+}
+.text-truncate-notice{
+    -webkit-line-clamp: 1;
     padding: 0.8rem 0;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    max-width: 520px;
+    max-width: 650px;
 }

@@ -7,7 +7,7 @@
         <!-- 메인 콘텐츠 -->
         <div class="container-fluid py-4 px-5">
             <div class="form-section">
-                <h5 class="mb-4 fw-bold">FAQ 등록</h5>
+                <h5 class="mb-4 fw-bold">FAQ 수정</h5>
 
                 <form action="/admin/faq/edit" method="post">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
@@ -27,3 +27,12 @@
                 </form>
             </div>
         </div>
+</main>
+</div>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('updated') === 'true') {
+        alert("수정 되었습니다.");
+    }
+</script>
+</body>
