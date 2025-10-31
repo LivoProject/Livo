@@ -2,7 +2,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 
@@ -47,13 +46,20 @@
                                 ₩<fmt:formatNumber value="${payment.amount}" pattern="#,###"/>
                               </span>
 
-                                <c:if test="${payment.status == 'SUCCESS'}">
-                                    <button class="btn-point btn-refund"
-                                            data-payment-key="${payment.paymentKey}"
-                                            data-payment-id="${payment.paymentId}">
-                                        환불 요청
-                                    </button>
-                                </c:if>
+                                <c:choose>
+                                    <c:when test="${refundAvailableMap[payment.paymentId]}">
+                                        <button class="btn-point btn-refund"
+                                                data-payment-key="${payment.paymentKey}"
+                                                data-payment-id="${payment.paymentId}">
+                                            환불 요청
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button class="btn-disabled" disabled>
+                                            환불 불가
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </div>
