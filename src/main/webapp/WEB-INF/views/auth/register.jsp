@@ -30,6 +30,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <!-- Bootstrap Icons CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        [data-msg] {
+            display: none;
+        }
+        [data-msg].error,
+        [data-msg].valid {
+            display: block;
+        }
+    </style>
 </head>
 
 <body id="loginAndReg">
@@ -66,7 +75,7 @@
             </div>
 
             <small id="verifyInfo" class="text-success"></small>
-            <span data-msg="email" class="error">올바른 이메일 주소를 입력해주세요.</span>
+            <span data-msg="email" class="">올바른 이메일 주소를 입력해주세요.</span>
         </div>
 
 
