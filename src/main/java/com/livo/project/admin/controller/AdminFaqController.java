@@ -35,6 +35,13 @@ public class AdminFaqController {
         model.addAttribute("faq",faqPage.getContent());
         return "admin/faqPage";
     }
+    @GetMapping("/list")
+    @ResponseBody
+    public Page<Faq> getFaqList(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "9") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return faqAdminService.getFaqPage(pageable);
+    }
 
     @GetMapping("/insert")
     public String showFaqForm(){
@@ -79,13 +86,7 @@ public class AdminFaqController {
                                      @RequestParam String question,
                                      @RequestParam String answer){
         faqAdminService.updateFaq(id, question, answer);
-        return "redirect:/admin/faq";
+        return "redirect:/admin/faq?updated=true";
     }
 
-//    @PostMapping("/rebuild-vector")
-//    @ResponseBody
-//    public String rebuildFaqVector(){
-//        faqService.rebuildVectorStore();
-//        return "OK";
-//    }
 }

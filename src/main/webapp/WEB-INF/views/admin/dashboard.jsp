@@ -66,10 +66,17 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:if test="${empty recentLectures}">
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted pt-4">
+                                            등록된 강의가 없습니다.
+                                        </td>
+                                    </tr>
+                                </c:if>
                                 <c:forEach var="lecture" items="${recentLectures}" varStatus="status">
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
-                                    <td class="text-center">${lecture.title}</td>
+                                    <td class="text-start">${lecture.title}</td>
                                     <td class="text-center">${lecture.tutorName}</td>
                                     <td class="text-center">
                                         <button class="btn btn-sm editBtn"
@@ -114,6 +121,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:if test="${empty reports}">
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-4">
+                                            미처리된 신고가 없습니다.
+                                        </td>
+                                    </tr>
+                                </c:if>
                                 <c:forEach var="report" items="${reports}" varStatus="status">
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
@@ -173,19 +187,25 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:if test="${empty notices}">
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-4">
+                                            등록된 공지사항이 없습니다.
+                                        </td>
+                                    </tr>
+                                </c:if>
                                 <c:forEach var="notice" items="${notices}" varStatus="status">
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
-                                    <td class="text-center">${notice.title}</td>
-                                    <td class="text-center">
-                                    <c:choose>
-                                        <c:when test="${fn:length(notice.content) > 50}">
-                                          ${fn:substring(notice.content, 0, 50)}...
-                                        </c:when>
-                                        <c:otherwise>
-                                          ${notice.content}
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <td class="text-start">
+                                        <div class="text-truncate">
+                                            ${notice.title}
+                                        </div>
+                                    </td>
+                                    <td class="text-start">
+                                        <div class="text-truncate">
+                                            ${notice.content}
+                                        </div>
                                     </td>
                                     <td class="text-center">
                                         <button class="btn btn-sm toggle-notice-status"
@@ -224,14 +244,27 @@
                                 <tr>
                                     <th class="text-center">#</th>
                                     <th class="text-center">질문</th>
+                                    <th class="text-center">답변</th>
                                     <th class="text-center">관리</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <c:if test="${empty recentFaqs}">
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-4">
+                                            등록된 FAQ가 없습니다.
+                                        </td>
+                                    </tr>
+                                </c:if>
                                  <c:forEach var="faq" items="${recentFaqs}" varStatus="status">
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
-                                    <td class="text-center">${faq.question}</td>
+                                    <td class="text-start">${faq.question}</td>
+                                    <td class="text-start">
+                                        <div class="text-truncate">
+                                            ${faq.answer}
+                                        </div>
+                                    </td>
                                     <td class="text-center">
                                         <button class="btn btn-sm editBtn"
                                                 data-type="faq"

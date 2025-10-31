@@ -11,7 +11,19 @@ function loadReports(page = 0) {
         success: function (pageData) {
             const tbody = $("#reportTable tbody");
             tbody.empty();
+            if (!pageData.content || pageData.content.length === 0) {
+                tbody.append(`
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            신고된 리뷰가 없습니다.
+                        </td>
+                    </tr>
+                `);
 
+                // 페이지네이션도 비우기
+                $("#pagination").empty();
+                return;
+            }
             // 데이터 반복 출력
             pageData.content.forEach((r, idx) => {
                 tbody.append(`

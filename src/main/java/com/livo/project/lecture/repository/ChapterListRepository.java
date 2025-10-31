@@ -9,4 +9,6 @@ import java.util.List;
 public interface ChapterListRepository extends JpaRepository<ChapterList, Integer> {
     List<ChapterList> findByLecture_LectureIdOrderByChapterOrderAsc(int lectureId);
     void deleteByLecture_LectureId(int lectureId);
+
+    List<ChapterList> findByLecture_LectureId(int lectureId);
 }

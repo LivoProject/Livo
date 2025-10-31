@@ -150,6 +150,16 @@ public class LectureAdminServiceImpl implements LectureAdminService {
         lecture.setThumbnailUrl(thumbnailUrl);
         lectureRepository.save(lecture);
     }
+    @Transactional
+    public void resetToDefaultThumbnail(Lecture lecture) {
+        List<ChapterList> chapters = chapterListRepository.findByLecture_LectureId(lecture.getLectureId());
+
+        // 기존 updateLectureThumbnail 재사용
+        updateLectureThumbnail(lecture.getLectureId(), chapters);
+
+        // 사용자 정의 썸네일 상태 해제
+        lecture.setCustomThumbnail(false);
+    }
 
     private String extractVideoId(String url) {
         if (url == null || url.isEmpty()) return null;

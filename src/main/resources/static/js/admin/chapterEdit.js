@@ -19,7 +19,7 @@ $(document).ready(function () {
 
                 if (!chapters || chapters.length === 0) {
                     container.append(`
-                        <p class="text-muted text-center">등록된 챕터가 없습니다.</p>
+                        <p class="text-muted text-center empty-message">등록된 챕터가 없습니다.</p>
                     `);
                     return;
                 }
@@ -66,6 +66,7 @@ $(document).ready(function () {
 
     // 챕터 추가 버튼
     $("#addChapterBtn").click(function () {
+        $("#chapterContainer").find(".empty-message").remove();
         chapterIndex++;
         const html = `
             <div class="chapter border rounded p-3 mb-3">

@@ -23,11 +23,15 @@
             $('#summernote').summernote({
                 height: 350,
                 placeholder: '공지 내용을 입력하세요.',
+                codeviewFilter: true,
+                codeviewIframeFilter: true,
                 lang: 'ko-KR',
+                lineHeights: ['0.8', '1.0', '1.2', '1.4', '1.6', '2.0', '3.0'],
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'clear']],
                     ['font', ['fontsize', 'color']],
-                    ['para', ['ul', 'ol', 'paragraph']]
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['lineHeight']]
                 ]
             });
         }
