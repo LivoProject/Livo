@@ -12,9 +12,8 @@ const subCategories = {
 const mainSelect = document.getElementById("mainCategory");
 const subSelect = document.getElementById("subCategory");
 const gridContainer = document.querySelector(".recommend-grid");
-const paginationContainer = document.querySelector(".pagination-wrap"); // ✅ nav 요소 선택으로 변경
+const paginationContainer = document.querySelector(".pagination-wrap");
 
-// ✅ 세부분류 옵션 변경
 mainSelect.addEventListener("change", function () {
     const selected = this.value;
     subSelect.innerHTML = '<option value="">세부분류</option>';
@@ -30,19 +29,16 @@ mainSelect.addEventListener("change", function () {
     fetchLectures(selected, null, 0);
 });
 
-// ✅ 세부분류 선택 시 필터링 요청
 subSelect.addEventListener("change", function () {
     const mainCategory = mainSelect.value;
     const subCategory = this.value;
     fetchLectures(mainCategory, subCategory, 0);
 });
 
-let currentKeyword = null; // ✅ 전역변수 추가
+let currentKeyword = null;
 
-// ✅ 강좌 불러오기 (비동기)
 async function fetchLectures(mainCategory, subCategory, page = 0, keyword = null) {
     try {
-        // keyword가 새로 입력된 경우에만 currentKeyword 갱신
         if (keyword !== null) currentKeyword = keyword;
 
         const params = new URLSearchParams();
@@ -62,7 +58,7 @@ async function fetchLectures(mainCategory, subCategory, page = 0, keyword = null
     }
 }
 
-// ✅ 렉처 렌더링 (UI 동일)
+// ✅ list.jsp와 동일한 강좌 카드 UI
 function renderLectures(lectures) {
     gridContainer.innerHTML = "";
 
@@ -72,107 +68,114 @@ function renderLectures(lectures) {
     }
 
     lectures.forEach(lecture => {
-        const card = document.createElement("a");
-        card.href = `/lecture/content/${lecture.lectureId}`;
-        card.className = "card popular-card";
+        const statusBadge = (() => {
+            if (lecture.status === "CLOSED") return `<button type="button" class="badge bg-secondary flex-shrink-0" disabled style="width:max-content">예약 마감</button>`;
+            if (lecture.status === "ENDED") return `<button type="button" class="badge bg-secondary flex-shrink-0" disabled style="width:max-content">강의 종료</button>`;
+            return `<button type="button" class="badge bg-success" style="width:max-content">예약 가능</button>`;
+        })();
 
-        card.innerHTML = `
-          <!-- 썸네일 -->
-          <div class="card-thumb" style="height: 200px; border-radius: 12px 12px 0 0; overflow: hidden;">
-            <img src="${lecture.thumbnailUrl || '/img/common/no-image.png'}"
-                 onerror="this.src='/img/common/no-image.png';"
-                 alt="lecture thumbnail"
-                 class="img-fluid rounded shadow-sm border"
-                 style="max-height: 280px; object-fit: cover;">
-          </div>
-
-          <!-- 강좌정보 -->
-          <div class="card-body">
-            <h6 class="fw-bold mb-2 text-ellipsis-2">${lecture.title}</h6>
-            <p class="text-muted mb-3">${lecture.tutorName}</p>
-            <span>${(lecture.price ?? 0).toLocaleString()}원</span>
-            <div class="card-review">
-              <div>
-                <span>⭐ ${(lecture.avgStar ?? 0).toFixed(1)}</span>
-                <span>(${lecture.reviewCount ?? 0})</span>
-              </div>
-              <div>
-                <i class="bi bi-person-fill"></i>
-                <span>${lecture.reservationCount ?? 0}</span>
-              </div>
+        const cardHTML = `
+        <a href="/lecture/content/${lecture.lectureId}" class="card popular-card">
+            <!-- 썸네일 -->
+            <div class="card-thumb" style="height:180px; border-radius:12px 12px 0 0; overflow:hidden;">
+                <img src="${lecture.thumbnailUrl || '/img/common/no-image.png'}"
+                     onerror="this.src='/img/common/no-image.png';"
+                     alt="lecture thumbnail"
+                     class="img-fluid rounded shadow-sm border"
+                     style="height:100%; object-fit:cover;">
             </div>
-          </div>
-        `;
 
-        gridContainer.appendChild(card);
+            <!-- 강좌정보 -->
+            <div class="card-body justify-content-between" style="gap:0;">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h6 class="fw-bold text-ellipsis-2 mb-0 flex-grow-1 lh-base">
+                        ${lecture.title}
+                        ${statusBadge}
+                    </h6>
+                </div>
+                <p class="text-muted mb-2">${lecture.tutorName}</p>
+                <span class="mb-2">${(lecture.price ?? 0).toLocaleString()}원</span>
+                <div class="card-review">
+                    <div>
+                        <span>⭐ ${(lecture.avgStar ?? 0).toFixed(1)}</span>
+                        <span>(${lecture.reviewCount ?? 0})</span>
+                    </div>
+                    <div>
+                        <i class="bi bi-person-fill"></i>
+                        <span>${lecture.reservationCount ?? 0}</span>
+                    </div>
+                </div>
+            </div>
+        </a>`;
+        gridContainer.insertAdjacentHTML("beforeend", cardHTML);
     });
 }
 
-// ✅ 페이지네이션 렌더링 (pagination.jsp 스타일 그대로 복제)
+// ✅ list.jsp의 JSP 페이징 로직 그대로 복제
 function renderPagination(totalPages, currentPage, mainCategory, subCategory) {
     paginationContainer.innerHTML = "";
 
     if (totalPages <= 1) return;
 
-    const nav = document.createElement("nav");
-    nav.className = "pagination-wrap mt-4";
+    const pageGroupSize = 5;
+    const current = currentPage + 1; // 0-based → 1-based
+    const total = totalPages;
+
+    const currentGroup = Math.floor((current - 1) / pageGroupSize);
+    const startPage = currentGroup * pageGroupSize + 1;
+    let endPage = startPage + pageGroupSize - 1;
+    if (endPage > total) endPage = total;
 
     const ul = document.createElement("ul");
     ul.className = "pagination justify-content-center";
 
-    // ⬅ 이전 버튼
+    // ◀ 이전
     if (currentPage > 0) {
-        const prevLi = document.createElement("li");
-        prevLi.className = "page-item";
-        prevLi.innerHTML = `
-            <a class="page-link" href="#">
-                <i class="bi bi-chevron-left"></i>
-            </a>`;
-        prevLi.onclick = () => fetchLectures(mainCategory, subCategory, currentPage - 1);
-        ul.appendChild(prevLi);
+        const prev = document.createElement("li");
+        prev.className = "page-item";
+        prev.innerHTML = `<a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a>`;
+        prev.onclick = () => fetchLectures(mainCategory, subCategory, currentPage - 1, currentKeyword);
+        ul.appendChild(prev);
     }
 
-    // 🔢 페이지 번호
-    for (let i = 0; i < totalPages; i++) {
+    // 🔢 페이지 그룹
+    for (let i = startPage; i <= endPage; i++) {
         const li = document.createElement("li");
-        li.className = `page-item ${i === currentPage ? "active" : ""}`;
-        li.innerHTML = `<a class="page-link" href="#">${i + 1}</a>`;
-        li.onclick = () => fetchLectures(mainCategory, subCategory, i, currentKeyword);
+        li.className = `page-item ${i === current ? "active" : ""}`;
+        li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        li.onclick = () => fetchLectures(mainCategory, subCategory, i - 1, currentKeyword);
         ul.appendChild(li);
     }
 
-    // ➡ 다음 버튼
+    // ▶ 다음
     if (currentPage < totalPages - 1) {
-        const nextLi = document.createElement("li");
-        nextLi.className = "page-item next";
-        nextLi.innerHTML = `
-            <a class="page-link" href="#">
-                <i class="bi bi-chevron-right"></i>
-            </a>`;
-        nextLi.onclick = () => fetchLectures(mainCategory, subCategory, currentPage + 1);
-        ul.appendChild(nextLi);
+        const next = document.createElement("li");
+        next.className = "page-item";
+        next.innerHTML = `<a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a>`;
+        next.onclick = () => fetchLectures(mainCategory, subCategory, currentPage + 1, currentKeyword);
+        ul.appendChild(next);
     }
 
+    const nav = document.createElement("nav");
+    nav.className = "pagination-wrap mt-5";
     nav.appendChild(ul);
+
     paginationContainer.appendChild(nav);
 }
 
-// ✅ 페이지 로드시 mainCategory 파라미터가 있으면 자동으로 로드
 document.addEventListener("DOMContentLoaded", function () {
     const params = new URLSearchParams(window.location.search);
     const mainCategory = params.get("mainCategory");
+    const keyword = params.get("keyword");
 
-    const keyword = params.get("keyword"); // ✅ header.jsp에서 넘어온 검색어 감지
-
-    if (keyword) { // ✅ keyword가 있을 때 바로 검색 실행
+    if (keyword) {
         const keywordInput = document.querySelector("input[name='keyword']");
-        if (keywordInput) keywordInput.value = keyword; // 검색창에 값 유지
-        fetchLectures(null, null, 0, keyword); // 비동기 검색 실행
-        return; // ✅ 중복 실행 방지
+        if (keywordInput) keywordInput.value = keyword;
+        fetchLectures(null, null, 0, keyword);
+        return;
     }
 
-    // 초기 로드 시 mainCategory 파라미터가 있으면 자동 선택 + 세부분류 로드
-    if (mainCategory) {
+    if (mainCategory && !keyword) {
         mainSelect.value = mainCategory;
 
         subSelect.innerHTML = '<option value="">세부분류</option>';
@@ -188,18 +191,14 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchLectures(mainCategory, null, 0);
     }
 
-    // ✅ (추가) 검색 기능
     const searchForm = document.getElementById("searchForm");
     const keywordInput = searchForm.querySelector("input[name='keyword']");
 
     searchForm.addEventListener("submit", function (e) {
-        e.preventDefault(); // 기본 form 제출 막기 (새로고침 방지)
-
+        e.preventDefault();
         const mainCategory = mainSelect.value;
         const subCategory = subSelect.value;
         const keyword = keywordInput.value.trim();
-
         fetchLectures(mainCategory, subCategory, 0, keyword);
     });
 });
-

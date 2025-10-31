@@ -44,12 +44,6 @@
             <div class="container">
                 <%-- 필터 --%>
                 <div class="d-flex align-items-center justify-content-end mb-3">
-                    <%-- 정렬 --%>
-                    <select class="form-select w-25" style="max-width: 227px">
-                        <option selected="">무료</option>
-                        <option value="">최신순</option>
-                        <option value="popular">인기순</option>
-                    </select>
                 </div>
 
                 <div class="recommend-grid">
@@ -126,8 +120,52 @@
             </div>
         </div>
 
-        <c:set var="page" value="${lecturePage}"/>
-        <%@ include file="/WEB-INF/views/common/pagination.jsp" %>
+ <!-- ✅ 페이지네이션 시작 -->
+<c:set var="pageGroupSize" value="5" />
+<c:set var="currentPage" value="${lecturePage.number + 1}" /> <!-- 0-based → 1-based -->
+<c:set var="totalPages" value="${lecturePage.totalPages}" />
+
+<!-- ✅ ‘고정 그룹 유지’ 계산 로직 -->
+<c:set var="currentGroup" value="${((currentPage - 1) / pageGroupSize) - ((currentPage - 1) mod pageGroupSize) / pageGroupSize}" />
+<c:set var="startPage" value="${(currentGroup * pageGroupSize) + 1}" />
+<c:set var="endPage" value="${startPage + pageGroupSize - 1}" />
+<c:if test="${endPage > totalPages}">
+    <c:set var="endPage" value="${totalPages}" />
+</c:if>
+
+<nav class="pagination-wrap mt-5">
+  <ul class="pagination justify-content-center">
+
+    <!-- ◀ 한 페이지 이전 -->
+    <c:if test="${not lecturePage.first}">
+      <li class="page-item">
+        <a class="page-link" href="?page=${lecturePage.number - 1}">
+          <i class="bi bi-chevron-left"></i>
+        </a>
+      </li>
+    </c:if>
+
+    <!-- 현재 그룹 페이지 번호 -->
+    <c:forEach var="i" begin="${startPage}" end="${endPage}">
+      <li class="page-item ${i == currentPage ? 'active' : ''}">
+        <a class="page-link" href="?page=${i - 1}">${i}</a>
+      </li>
+    </c:forEach>
+
+    <!-- ▶ 한 페이지 다음 -->
+    <c:if test="${not lecturePage.last}">
+      <li class="page-item">
+        <a class="page-link" href="?page=${lecturePage.number + 1}">
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </li>
+    </c:if>
+
+  </ul>
+</nav>
+<!-- ✅ 페이지네이션 끝 -->
+
+
     </section>
 
     <script src="/js/lectureList.js"></script>
