@@ -30,9 +30,9 @@ function loadReports(page = 0) {
                     <tr class="text-center">
                         <td>${page * 10 + idx + 1}</td>
                         <td class="text-start">
-                            <div class="text-truncate-one" title="${r.reviewContent}" style="max-width: 100px">${r.reviewContent}</div>
+                            <div class="text-truncate-one" title="${r.reviewContent}" style="max-width: 400px">${r.reviewContent}</div>
                         </td>
-                        <td class="text-start">${r.reportReason}</td>
+                        <td>${r.reportReason}</td>
                         <td>${r.email}</td>
                         <td>${r.reportTime}</td>
                         <td>
