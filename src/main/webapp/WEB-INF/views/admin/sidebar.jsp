@@ -79,5 +79,13 @@
                 <li><a href="/admin/faq" class="nav-link"><i class="bi bi-gear me-2"></i>FAQ 관리</a></li>
             </ul>
 
+            <form action="${pageContext.request.contextPath}/auth/logout" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                <button type="submit" class="btn btn-outline-danger btn-sm px-3 mt-4 mx-4">
+                    <i class="fa fa-sign-out me-sm-1"></i>
+                    <span class="d-sm-inline d-none">Logout</span>
+                </button>
+            </form>
+
         </div>
     </div>

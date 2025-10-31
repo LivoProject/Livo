@@ -10,7 +10,6 @@ label {
 .nav-pills .nav-link.active {
     background-color: #14a7b9;
     color: #fff;
-    border-radius: 50px;
 }
 .form-section {
     background: #fff;

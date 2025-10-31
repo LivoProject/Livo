@@ -34,9 +34,11 @@ function loadNotices(page = 0) {
                 const num = page * pageData.size + idx + 1;
                 const date = n.createdAt ? n.createdAt.substring(0, 16).replace('T', ' ') : '-';
                 const pinnedBadge = n.pinned ? `<span class="badge bg-success me-1">고정</span>` : '';
-                const visibleText = n.visible ? '' : ' · <span class="text-danger">비노출</span>';
+                const visibleText = n.isVisible ? '' : ' · <span class="text-danger">비노출</span>';
                 const nickName = n.nickname ? n.nickname : '알 수 없음';
                 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                console.log(`id: ${n.id}, visible: ${n.visible}, visibleText: "${visibleText}"`);
+
                 tbody.append(`
 
                     <tr>
@@ -46,9 +48,10 @@ function loadNotices(page = 0) {
                         </td>
                       <td class="text-start">
                         ${n.title}
+                        ${visibleText}
                         </td>
                         <td class="text-start">
-                            <div class="text-truncate">
+                            <div class="text-truncate-notice">
                                 ${n.content}
                             </div>
                         </td>

@@ -7,7 +7,7 @@
 
     <div class="container-fluid py-4 px-5">
         <div class="form-section">
-            <h5 class="mb-4 fw-bold">챕터 수정</h5>
+            <h5 class="mb-4 fw-bold">2단계: 챕터 수정</h5>
 
             <div id="chapterContainer" class="sortable">
                 <input type="hidden" id="chapterId" value="${chapter.chapterId}" />
