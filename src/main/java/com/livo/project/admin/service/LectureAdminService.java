@@ -18,6 +18,7 @@ public interface LectureAdminService {
 
     Lecture updateLecture(LectureUpdateRequest ureq, int categoryId);
 
+    void resetToDefaultThumbnail(Lecture lecture);
     // 강좌 상세 조회 (PK 기준)
     Lecture findById(int lectureId);
 
