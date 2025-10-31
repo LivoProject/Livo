@@ -132,14 +132,9 @@
                                 <tr>
                                     <td class="text-center">${status.index + 1}</td>
                                     <td class="text-center">
-                                    <c:choose>
-                                        <c:when test="${fn:length(report.review.reviewContent) > 100}">
-                                          ${fn:substring(report.review.reviewContent, 0, 100)}...
-                                        </c:when>
-                                        <c:otherwise>
-                                          ${report.review.reviewContent}
-                                        </c:otherwise>
-                                    </c:choose>
+                                        <div class="text-truncate-notice">
+                                            ${report.review.reviewContent}
+                                        </div>
                                     </td>
                                     <td class="text-center">${report.reportReason}</td>
                                     <td class="text-center">
