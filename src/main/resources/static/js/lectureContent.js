@@ -175,7 +175,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         const stars = "⭐".repeat(r.reviewStar) + "☆".repeat(5 - r.reviewStar);
                         const reviewContentHtml = r.blocked
                             ? `<span class="text-muted fst-italic">🚫 신고된 리뷰입니다.</span>`
-                            : `<strong>${r.reviewContent}</strong>`;
+                            : `<p class="review-content" style="white-space: pre-line;
+                                                                line-height: 1.6;
+                                                                font-size: 15px;
+                                                                word-break: keep-all;
+                                                                overflow-wrap: anywhere;">
+                                        ${r.reviewContent}
+                               </p>`;
 
                         // 🚨 신고 / 수정 / 삭제 버튼 조건 로직
                         let actionBtns = "";
