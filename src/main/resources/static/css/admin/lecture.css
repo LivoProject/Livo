@@ -44,3 +44,7 @@ label {
     vertical-align: middle;
     line-height: 1.2;         /* 위아래 여백 안정화 */
 }
+.note-editor .note-editable p {
+    line-height: 1.6 !important;
+}
+
