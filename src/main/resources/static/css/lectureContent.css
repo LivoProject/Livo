@@ -258,8 +258,9 @@ html {
 }
 
 .review-content {
+    white-space: pre-line;
     line-height: 1.6;
     font-size: 15px;
-    white-space: normal;
-    word-break: keep-all; /* 한국어 줄바꿈 예쁘게 */
+    word-break: keep-all;
+    overflow-wrap: anywhere;
 }
