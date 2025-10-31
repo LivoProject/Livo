@@ -44,12 +44,6 @@
             <div class="container">
                 <%-- 필터 --%>
                 <div class="d-flex align-items-center justify-content-end mb-3">
-                    <select id="filterSelect" name="filter" class="form-select w-25" style="max-width: 227px">
-                        <option value="">전체</option>
-                        <option value="free" <c:if test="${param.filter == 'free'}">selected</c:if>>무료</option>
-                        <option value="latest" <c:if test="${param.filter == 'latest'}">selected</c:if>>최신순</option>
-                        <option value="popular" <c:if test="${param.filter == 'popular'}">selected</c:if>>인기순</option>
-                    </select>
                 </div>
 
                 <div class="recommend-grid">
@@ -126,7 +120,7 @@
             </div>
         </div>
 
-<!-- ✅ 페이지네이션 시작 -->
+ <!-- ✅ 페이지네이션 시작 -->
 <c:set var="pageGroupSize" value="5" />
 <c:set var="currentPage" value="${lecturePage.number + 1}" /> <!-- 0-based → 1-based -->
 <c:set var="totalPages" value="${lecturePage.totalPages}" />
@@ -170,6 +164,7 @@
   </ul>
 </nav>
 <!-- ✅ 페이지네이션 끝 -->
+
 
     </section>
 

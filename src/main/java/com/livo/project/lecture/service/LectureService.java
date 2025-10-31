@@ -34,15 +34,5 @@ public interface LectureService {
     // 민영 추가 (상위카테고리 + 키워드)
     Page<Lecture> searchByMainCategoryAndKeyword(int mainCategoryId, String keyword, Pageable pageable);
 
-    // 민영 또 추가
-    Page<Lecture> getFilteredLecturePage(
-            String filter,
-            String mainCategory,
-            String subCategory,
-            String keyword,
-            Pageable pageable
-    );
 
 }
-
-
