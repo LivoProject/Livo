@@ -35,9 +35,9 @@
                             </a>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body justify-content-between d-flex" style="gap: 0;">
                             <a href="/lecture/content/${lecture.lectureId}">
-                                <h6 class="fw-bold text-ellipsis-2 lecture-title">${lecture.title}</h6>
+                                <h6 class="fw-bold text-ellipsis-2">${lecture.title}</h6>
                                 <p class="text-muted mb-3">${lecture.tutorName}</p>
                                 <span><fmt:formatNumber value="${lecture.price}" type="number"/>원</span>
                                 <div class="progress" style="height: 8px;">
@@ -143,7 +143,7 @@
                             '</div>' +
                             '<div class="card-body">' +
                             '<a href="/lecture/content/' + r.lectureId + '">' +
-                            '<h6 class="fw-bold text-ellipsis-2 lecture-title">' + r.title + '</h6>' +
+                            '<h6 class="fw-bold text-ellipsis-2">' + r.title + '</h6>' +
                             '<p class="text-muted mb-3">' + r.tutorName + '</p>' +
                             '<span>' + priceText + '</span>' +
                             '<div class="progress" style="height: 8px;">' +

@@ -597,13 +597,13 @@
     color: #666;
 }
 
-.lecture-title {
-    height: auto;
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: var(--color-black);
-}
+/*.lecture-title {*/
+/*    height: auto;*/
+/*    font-weight: 600;*/
+/*    font-size: 1rem;*/
+/*    margin-bottom: 0.5rem;*/
+/*    color: var(--color-black);*/
+/*}*/
 
 .lecture-sub {
     font-size: 0.9rem;
