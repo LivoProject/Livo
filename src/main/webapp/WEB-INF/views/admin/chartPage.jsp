@@ -35,9 +35,9 @@
                 <button class="lv-tab" data-tab="instructors">강사 Top5</button>
                 <button class="lv-tab" data-tab="lectures">인기 강좌 Top5</button>
 
-                <div class="lv-tabs-right">
-                    <button id="applyFilter" class="btn btn-primary">불러오기</button>
-                </div>
+<%--                <div class="lv-tabs-right">--%>
+<%--                    <button id="applyFilter" class="btn btn-primary">불러오기</button>--%>
+<%--                </div>--%>
             </div>
         </div>
 
