@@ -76,6 +76,7 @@
 
             <small id="verifyInfo" class="text-success"></small>
             <span data-msg="email" class="">올바른 이메일 주소를 입력해주세요.</span>
+            <small id="sendCountdown"></small>
         </div>
 
 
