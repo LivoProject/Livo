@@ -14,10 +14,10 @@
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/auth/login.css">
-    <link rel="stylesheet" href="/css/form.css">
+    <link rel="stylesheet" href="<c:url value='/css/reset.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/common.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/auth/login.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/form.css'/>">
 </head>
 
 <body id="loginAndReg">

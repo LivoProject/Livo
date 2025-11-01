@@ -2,7 +2,7 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<link rel="stylesheet" href="/css/mypage.css">
+<link rel="stylesheet" href="<c:url value='/css/mypage.css'/>">
 <script src="/js/mypage-modal.js"></script>
 
 
@@ -44,8 +44,8 @@
                             <c:when test="${r.lectureStatus eq 'ENDED'}">
                                 <div class="card-img-wrap ended">
                                     <a href="javascript:void(0);"
-                                       onclick="alert('수강 기간이 종료된 강의입니다.'); return false;">
-                                        <img src="${r.thumbnailUrl}" class="card-img-top"
+                                       onclick="showMessageModal('수강 기간이 종료된 강의입니다.'); return false;">
+                                        <img src="<c:url value='${r.thumbnailUrl}'/>" class="card-img-top"
                                              style="opacity:0.6; filter:grayscale(40%);" alt="강의 썸네일"/>
                                         <button class="play-btn" style="pointer-events:none; opacity:0.5;">
                                             <i class="bi bi-stop-fill"></i>
@@ -56,8 +56,8 @@
                             <c:when test="${r.lectureStart gt today}">
                                 <div class="card-img-wrap">
                                     <a href="javascript:void(0);"
-                                       onclick="alert('수강 시작일 이후부터 시청할 수 있습니다.'); return false;">
-                                        <img src="${r.thumbnailUrl}" class="card-img-top"
+                                       onclick="showMessageModal('수강 시작일 이후부터 시청할 수 있습니다.'); return false;">
+                                        <img src="<c:url value='${r.thumbnailUrl}'/>" class="card-img-top"
                                              style="opacity:0.5;" alt="강의 썸네일"/>
                                         <button class="play-btn" style="pointer-events:none; opacity:0.5;">
                                             <i class="bi bi-play-fill"></i>
@@ -68,7 +68,7 @@
                             <c:otherwise>
                                 <div class="card-img-wrap">
                                     <a href="/lecture/view/${r.lectureId}">
-                                        <img src="${r.thumbnailUrl}" class="card-img-top" alt="강의 썸네일"/>
+                                        <img src="<c:url value='${r.thumbnailUrl}'/>" class="card-img-top" alt="강의 썸네일"/>
                                         <button class="play-btn">
                                             <i class="bi bi-play-fill"></i>
                                         </button>

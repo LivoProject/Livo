@@ -25,7 +25,7 @@ function showCommonModal(title, message, confirmText = "확인", showCancel = fa
 
     const confirmBtn = modalEl.querySelector(".btn-main");
 
-// ✅ 확인 버튼 클릭 시 페이지 이동
+//  확인 버튼 클릭 시 페이지 이동
     confirmBtn.onclick = () => {
         modal.hide();
 
@@ -55,7 +55,7 @@ function showCommonModal(title, message, confirmText = "확인", showCancel = fa
 document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
 
-    // 🚨 신고 완료
+    //  신고 완료
     if (urlParams.get("reported") === "success") {
         showCommonModal(
             "신고 완료",
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
-    // ⭐ 리뷰 등록 완료
+    //  리뷰 등록 완료
     if (urlParams.get("reviewed") === "success") {
         showCommonModal(
             "리뷰 등록 완료",
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
-    // 🎓 수강 신청 완료 (무료 강의)
+    //  수강 신청 완료 (무료 강의)
     if (urlParams.get("enrolled") === "success") {
         showCommonModal(
             "수강 신청 완료",
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // =====================================================
-// ✏️ 신고 모달에서 '기타' 선택 시 직접입력칸 토글
+//  신고 모달에서 '기타' 선택 시 직접입력칸 토글
 // =====================================================
 document.addEventListener("DOMContentLoaded", function () {
     const etcRadio = document.getElementById("etc");
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // =====================================================
-// 🗑️ 리뷰 삭제 함수 (공통 모달 사용)
+//  리뷰 삭제 함수 (공통 모달 사용)
 // =====================================================
 function deleteReview(reviewUId) {
     showCommonModal(

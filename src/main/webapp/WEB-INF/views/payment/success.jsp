@@ -4,8 +4,8 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<link rel="stylesheet" href="/css/main.css" />
-<link rel="stylesheet" href="/css/paymentSuccess.css" />
+<link rel="stylesheet" href="<c:url value='/css/main.css'/>" />
+<link rel="stylesheet" href="<c:url value='/css/paymentSuccess.css'/>" />
 
 <section class="container" style="margin-top: 100px;">
     <div class="success-container">

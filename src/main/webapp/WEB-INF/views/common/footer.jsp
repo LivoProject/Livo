@@ -9,7 +9,7 @@
 <div class="floating-buttons">
     <!-- 챗봇 -->
     <button id="chat-fab" class="chat-fab" aria-label="챗봇 열기" title="챗봇">
-        <img src="/img/common/chat_icon01.svg" alt="챗봇">
+        <img src="<c:url value='/img/common/chat_icon01.svg'/>" alt="챗봇">
     </button>
 
     <!-- 배경음악 -->
@@ -57,7 +57,7 @@
 
     <%--
         <c:if test="${BGM_ALLOWED}">
-            <link rel="stylesheet" href="/css/bgm-toggle.css"/>
+            <link rel="stylesheet" href="<c:url value='/css/bgm-toggle.css'/>"/>
             <link rel="preload" href="/audio/login_success.mp3" as="audio" type="audio/mpeg"/>
 
             <div id="bgmToggle"

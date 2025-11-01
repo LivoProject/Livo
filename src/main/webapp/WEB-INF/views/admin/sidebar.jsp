@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -15,14 +16,14 @@
     <!-- Swiper -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/reset.css"/>
-    <link rel="stylesheet" href="/css/common.css"/>
-    <link rel="stylesheet" href="/css/admin/dashboard.css"/>
-    <link rel="stylesheet" href="/css/admin/sidebar.css"/>
-    <!--<link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="/css/sub.css" /> -->
+    <link rel="stylesheet" href="<c:url value='/css/reset.css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/css/common.css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/css/admin/dashboard.css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/css/admin/sidebar.css'/>"/>
+    <!--<link rel="stylesheet" href="<c:url value='/css/main.css'/>" />
+    <link rel="stylesheet" href="<c:url value='/css/sub.css'/>" /> -->
     <!-- chart -->
-<%--    <link rel="stylesheet" href="/css/admin/chart.css"/>--%>
+<%--    <link rel="stylesheet" href="<c:url value='/css/admin/chart.css'/>"/>--%>
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <!-- Chart.js -->
@@ -46,7 +47,7 @@
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-xl-none" aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand m-0" href="/" target="_blank">
-                <img src="/img/common/logo.svg" alt="logo" style="width: 70%">
+                <img src="<c:url value='/img/common/logo.svg'/>" alt="logo" style="width: 70%">
             </a>
         </div>
         <hr class="horizontal dark mt-0">

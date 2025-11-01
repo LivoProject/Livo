@@ -2,8 +2,8 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<link rel="stylesheet" href="/css/mypage.css">
-<link rel="stylesheet" href="/css/form.css">
+<link rel="stylesheet" href="<c:url value='/css/mypage.css'/>">
+<link rel="stylesheet" href="<c:url value='/css/form.css'/>">
 
 <style>
     [data-msg] {

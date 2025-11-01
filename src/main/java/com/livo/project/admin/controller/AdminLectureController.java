@@ -88,7 +88,7 @@ public class AdminLectureController {
     public ResponseEntity<?> resetLectureThumbnail(@RequestParam("lectureId") int lectureId) {
         try {
             Lecture lecture = lectureAdminService.editLecture(lectureId);
-            // 유튜브 기반 썸네일로 복원 (형이 아까 만든 updateLectureThumbnail 메서드 활용 가능)
+
             lectureAdminService.resetToDefaultThumbnail(lecture);
             return ResponseEntity.ok(Map.of(
                     "success", true,

@@ -31,10 +31,6 @@ ext {
 }
 
 dependencies {
-    //spring security
-    //implementation 'org.springframework.boot:spring-boot-starter-security'
-    //testImplementation 'org.springframework.security:spring-security-test'
-
     //spring web
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -59,7 +55,6 @@ dependencies {
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl'
     implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
     implementation 'org.springframework.security:spring-security-taglibs:6.5.5'
-
 
     //ai
     implementation "org.springframework.ai:spring-ai-starter-model-openai"
@@ -92,4 +87,12 @@ dependencyManagement {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootJar {
+    enabled = false
+}
+
+bootWar {
+    enabled = true
 }

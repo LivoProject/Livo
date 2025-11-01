@@ -4,7 +4,7 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<link rel="stylesheet" href="/css/main.css"/>
+<link rel="stylesheet" href="<c:url value='/css/main.css'/>"/>
 
 <main id="main">
     <section class="container sub">
@@ -56,7 +56,7 @@
                                     <!-- 썸네일 -->
                                     <div class="card-thumb"
                                          style="height: 180px; border-radius: 12px 12px 0 0; overflow: hidden;">
-                                        <img src="${lecture.thumbnailUrl}"
+                                        <img src="<c:url value='${lecture.thumbnailUrl}'/>"
                                              onerror="this.src='/img/common/no-image.png';"
                                              alt="lecture thumbnail"
                                              class="img-fluid rounded shadow-sm border"

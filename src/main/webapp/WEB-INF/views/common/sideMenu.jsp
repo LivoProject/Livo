@@ -10,7 +10,7 @@
                 <sec:authentication var="gEmail" property="principal.attributes['email']"/>
                 <sec:authentication var="gPic" property="principal.attributes['picture']"/>
                 <c:if test="${not empty gPic}">
-                    <img src="${gPic}" alt="profile" style="width:35px;height:35px;border-radius:50%;vertical-align:middle;margin-right:6px;">
+                    <img src="<c:url value='${gPic}'/>" alt="profile" style="width:35px;height:35px;border-radius:50%;vertical-align:middle;margin-right:6px;">
                 </c:if>
 
                 <strong>${mypage.username}</strong>
@@ -19,7 +19,7 @@
             <sec:authorize
                     access="!(principal instanceof T(org.springframework.security.oauth2.core.user.OAuth2User))">
                 <img
-                    src="/img/common/profile-icon.svg"
+                    src="<c:url value='/img/common/profile-icon.svg'/>"
                     alt=""
                     width="35"
                     height="35"

@@ -4,7 +4,7 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="<c:url value='/css/main.css'/>">
 <script src="/js/main.js"></script>
 
 <!-- 컨텐츠 -->
@@ -59,7 +59,7 @@
                 <c:forEach var="lecture" items="${recommendedLectures}">
                     <a href="/lecture/content/${lecture.lectureId}" class="card popular-card">
                         <div>
-                            <img src="${lecture.thumbnailUrl}">
+                            <img src="<c:url value='${lecture.thumbnailUrl}'/>">
                         </div>
                         <button class="play-btn">
                             <i class="bi bi-play-fill"></i>
@@ -131,7 +131,7 @@
                         <div class="swiper-slide">
                             <a href="/lecture/content/${lectureP.lectureId}" class="card popular-card">
                                 <div>
-                                    <img src="${lectureP.thumbnailUrl}">
+                                    <img src="<c:url value='${lectureP.thumbnailUrl}'/>">
                                 </div>
                                 <button class="play-btn">
                                     <i class="bi bi-play-fill"></i>

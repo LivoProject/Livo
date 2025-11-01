@@ -144,3 +144,24 @@ document.addEventListener("DOMContentLoaded", function () {
         currentLectureId = null;
     });
 });
+
+function showMessageModal(message, callback = null) {
+    const modal = document.getElementById('exampleModal');
+    if (!modal) return alert(message); // 모달 없으면 fallback
+
+    const modalTitle = modal.querySelector('.modal-title');
+    const modalBody  = modal.querySelector('.modal-body');
+    const btnMain    = modal.querySelector('.btn-main');
+
+    modalTitle.textContent = "";
+    modalBody.innerHTML = message.replace(/\n/g, "<br>");
+
+    // 버튼 초기화
+    btnMain.textContent = "확인";
+    btnMain.onclick = function () {
+        if (callback) callback();
+        bootstrap.Modal.getInstance(modal).hide();
+    };
+
+    bootstrap.Modal.getOrCreateInstance(modal).show();
+}

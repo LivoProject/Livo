@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <div class="col-md-12 mb-3 fade-in-up">
                                 <div class="h-100 review-box" data-review-id="${r.reviewUId}">
                                     <h4 class="review-username">
-                                        <img src="/img/common/favicon.ico" alt="user icon" class="user-icon">
+                                        <img src="<c:url value='/img/common/favicon.ico'/>" alt="user icon" class="user-icon">
                                         ${r.userName}
                                     </h4>
                                     <h5>

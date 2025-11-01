@@ -13,9 +13,6 @@ import java.util.UUID;
 @Service
 public class FileService {
     private final FileConfig fileConfig;
-    public String saveFile(MultipartFile file) {
-        return saveFile(file, "uploads"); // 기본 uploads 폴더로 리다이렉트
-    }
 
     public String saveFile(MultipartFile file, String folder) {
         try {

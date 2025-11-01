@@ -5,7 +5,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
 
-<link rel="stylesheet" href="/css/mypage.css">
+<link rel="stylesheet" href="<c:url value='/css/mypage.css'/>">
 <script src="/js/mypage-modal.js"></script>
 
 <!-- 컨텐츠 -->
@@ -47,6 +47,11 @@
                               </span>
 
                                 <c:choose>
+                                    <c:when test="${payment.status.name() eq 'REFUND'}">
+                                        <button class="btn-complete" disabled>
+                                            환불 완료
+                                        </button>
+                                    </c:when>
                                     <c:when test="${refundAvailableMap[payment.paymentId]}">
                                         <button class="btn-point btn-refund"
                                                 data-payment-key="${payment.paymentKey}"
@@ -55,7 +60,7 @@
                                         </button>
                                     </c:when>
                                     <c:otherwise>
-                                        <button class="btn-cancel" disabled>
+                                        <button class="btn-cancel btn-cancel-payment" disabled>
                                             환불 불가
                                         </button>
                                     </c:otherwise>

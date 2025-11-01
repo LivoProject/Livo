@@ -2,7 +2,7 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<link rel="stylesheet" href="/css/faq.css"/>
+<link rel="stylesheet" href="<c:url value='/css/faq.css'/>"/>
 
 
 <section id="faq" class="container sub">

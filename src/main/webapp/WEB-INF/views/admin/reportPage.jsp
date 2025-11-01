@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
-<link rel="stylesheet" href="/css/admin/report.css"/>
+<link rel="stylesheet" href="<c:url value='/css/admin/report.css'/>"/>
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
@@ -42,7 +42,7 @@
 </main>
 </div>
 </div>
-<script src="/js/admin/report.js"></script>
+<script src="<c:url value='/js/admin/report.js'/>"></script>
 </body>
 </html>
 
