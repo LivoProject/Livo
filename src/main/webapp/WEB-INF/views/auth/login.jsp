@@ -7,12 +7,12 @@
     <meta charset="UTF-8"/>
     <title>로그인</title>
     <!-- 파비콘 (브라우저 탭 아이콘) -->
-    <link rel="shortcut icon" href="/img/common/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="<c:url value='/img/common/favicon.ico'/>" type="image/x-icon"/>
 
     <!-- 스타일 -->
-    <link rel="stylesheet" href="/css/auth/reset.css"/>
-    <link rel="stylesheet" href="/css/common.css">
-    <link rel="stylesheet" href="/css/auth/login.css"/>
+    <link rel="stylesheet" href="<c:url value='/css/auth/reset.css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/css/common.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/auth/login.css'/>"/>
     <!-- Bootstrap Icons CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -41,7 +41,7 @@
 <form method="post" action="<c:url value='/auth/login'/>" accept-charset="UTF-8" autocomplete="on">
 
     <h2>
-        <img src="/img/common/logo.svg" alt="LiVO">
+        <img src="<c:url value='/img/common/logo.svg'/>" alt="LiVO">
     </h2>
 
     <div>

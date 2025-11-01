@@ -3,7 +3,7 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
-<link rel="stylesheet" href="/css/mypage.css">
+<link rel="stylesheet" href="<c:url value='/css/mypage.css'/>">
 <script src="/js/mypage-modal.js"></script>
 
 <!-- 컨텐츠 -->
@@ -28,7 +28,7 @@
                     <div class="card">
                         <div class="card-img-wrap">
                             <a href="/lecture/content/${lecture.lectureId}">
-                                <img src="${lecture.thumbnailUrl}" class="card-img-top" alt="${lecture.title}"/>
+                                <img src="<c:url value='${lecture.thumbnailUrl}'/>"class="card-img-top" alt="${lecture.title}"/>
                                 <button class="play-btn">
                                     <i class="bi bi-play-fill"></i>
                                 </button>

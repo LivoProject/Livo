@@ -15,15 +15,15 @@
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
 
     <!-- 파비콘 (브라우저 탭 아이콘) -->
-    <link rel="shortcut icon" href="/img/common/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="<c:url value='/img/common/favicon.ico'/>" type="image/x-icon"/>
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
     <!-- Swiper -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/reset.css"/>
-    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="<c:url value='/css/reset.css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/css/common.css'/>"/>
     <link rel="preload" href="/audio/login_success.mp3" as="audio" type="audio/mpeg"/>
 
     <!-- jQuery  -->
@@ -49,7 +49,7 @@
     <div class="container">
         <nav class="navbar navbar-expand-lg">
             <a class="logo navbar-brand logo" href="/main">
-                <img src="/img/common/logo.svg" alt="로고"/>
+                <img src="<c:url value='/img/common/logo.svg'/>" alt="로고"/>
             </a>
             <!-- 모바일 토글 버튼 -->
             <button
@@ -123,7 +123,7 @@
                                     </c:choose>
                                 </P>
                                 <c:if test="${not empty gPic}">
-                                    <img src="${gPic}" alt="profile"
+                                    <img src="<c:url value='${gPic}'/>" alt="profile"
                                          style="width:35px;height:35px;border-radius:50%;vertical-align:middle;margin-right:6px;">
                                 </c:if>
                             </a>
@@ -138,7 +138,7 @@
                                     <sec:authentication property="principal.nickname"/>
                                 </P>
                                 <img
-                                        src="/img/common/profile-icon.svg"
+                                        src="<c:url value='/img/common/profile-icon.svg'/>"
                                         alt=""
                                         width="35"
                                         height="35"

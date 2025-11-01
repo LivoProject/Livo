@@ -14,16 +14,16 @@
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
 
     <!-- 파비콘 (브라우저 탭 아이콘) -->
-    <link rel="shortcut icon" href="/img/common/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="<c:url value='/img/common/favicon.ico'/>" type="image/x-icon"/>
     <!-- Bootstrap -->
     <link  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
     <!-- Swiper -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/reset.css"/>
-    <link rel="stylesheet" href="/css/common.css"/>
-    <link rel="stylesheet" href="/css/lecture-play.css"/>
+    <link rel="stylesheet" href="<c:url value='/css/reset.css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/css/common.css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/css/lecture-play.css'/>"/>
 
     <!-- jQuery 관련 -->
     <%--      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--%>

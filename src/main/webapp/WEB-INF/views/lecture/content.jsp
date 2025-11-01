@@ -5,8 +5,8 @@
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <%@ include file="/WEB-INF/views/common/modal.jsp" %>
-<link rel="stylesheet" href="/css/main.css" />
-<link rel="stylesheet" href="/css/lectureContent.css">
+<link rel="stylesheet" href="<c:url value='/css/main.css'/>" />
+<link rel="stylesheet" href="<c:url value='/css/lectureContent.css'/>">
 <script src="https://js.tosspayments.com/v2/standard"></script>
 
 <!-- 강좌 상세 페이지 시작 -->
@@ -145,8 +145,8 @@
 
                 <!-- 오른쪽: 썸네일 -->
                 <div class="">
-                    <img src="${lecture.thumbnailUrl}"
-                         onerror="this.src='/img/common/no-image.png';"
+                    <img src="<c:url value='${lecture.thumbnailUrl}'/>"
+                         onerror="this.src='<c:url value="/img/common/no-image.png"/>'"
                          alt="lecture thumbnail"
                          class="img-fluid rounded shadow-sm border"
                          style="max-height: 280px; object-fit: cover;">
@@ -282,7 +282,7 @@
                 <div class="col-md-12 mb-3">
                     <div class="h-100 review-box" data-review-id="${review.reviewUId}">
                         <h4 class="review-username">
-                            <img src="/img/common/favicon.ico" alt="user icon" class="user-icon">
+                            <img src="<c:url value='/img/common/favicon.ico'/>" alt="user icon" class="user-icon">
                             ${review.userName}
                         </h4>
                         <h5>

@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/views/admin/sidebar.jsp" %>
 
-<link rel="stylesheet" href="/css/admin/lecture.css"/>
+<link rel="stylesheet" href="<c:url value='/css/admin/lecture.css'/>"/>
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ps ps--active-y">
     <%@ include file="/WEB-INF/views/admin/navbar.jsp" %>
@@ -19,7 +19,7 @@
                     <label class="form-label fw-semibold">썸네일</label>
                     <div class="d-flex align-items-center gap-3">
                         <img id="lectureThumbnailPreview"
-                             src="${lecture.thumbnailUrl}"
+                             src="<c:url value='${lecture.thumbnailUrl}'/>"
                              alt="thumbnail"
                              class="img-thumbnail">
 
@@ -132,8 +132,8 @@
 <!-- Summernote -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
-<script src="/js/admin/lecture.js"></script>
-<script src="/js/admin/lectureEdit.js"></script>
+<script src="<c:url value='/js/admin/lecture.js'/>"></script>
+<script src="<c:url value='/js/admin/lectureEdit.js'/>"></script>
 
 </body>
 </html>

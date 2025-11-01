@@ -4,7 +4,7 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<link rel="stylesheet" href="/css/notice.css">
+<link rel="stylesheet" href="<c:url value='/css/notice.css'/>">
 
 <section id="noticeDetail" class="container sub">
     <div class="notice-detail-wrap">

@@ -38,14 +38,14 @@ public class AuthUtil {
         if (auth == null || !auth.isAuthenticated()) return result;
         Object principal = auth.getPrincipal();
 
-        // 1️⃣ 로컬 로그인
+        //  로컬 로그인
         if (principal instanceof AppUserDetails user) {
             result.put("email", user.getEmail());
             result.put("provider", user.getProvider() != null ? user.getProvider().toUpperCase() : "LOCAL");
             return result;
         }
 
-        // 2️⃣ OAuth2 로그인 (Google / Naver / Kakao)
+        // OAuth2 로그인 (Google / Naver / Kakao)
         if (principal instanceof DefaultOAuth2User oAuth2User) {
             String email = null;
             String provider = "OAUTH2";
